@@ -1,36 +1,28 @@
+language: node_js
+node_js:
+  - 10
+  -
 ---
 matrix:
   include:
-    -
-      language: node_js
-      node_js:
-        - 10
-        
-      cache:
+    - cache:
         yarn: true
         directories:
           - node_modules
-          
+    
       before_install:
         - "cd frontend"
-        
+    
       script:
         - yarn build
-        
-      after_script:
-        - "cd .."
-    -
-      language: node_js
-      node_js:
-        - 10
-        
-      cache:
+
+    - cache:
         yarn: true
         directories:
           - node_modules
-
+    
       before_install:
         - "cd backend"
-
+    
       script:
         - yarn build
