@@ -1,11 +1,11 @@
-language: node_js
-node_js:
-  - 10
-
 ---
 matrix:
   include:
-    - cache:
+    - language: node_js
+      node_js:
+        - 10
+    
+      cache:
         yarn: true
         directories:
           - node_modules
@@ -16,7 +16,11 @@ matrix:
       script:
         - yarn build
 
-    - cache:
+    - language: node_js
+      node_js:
+        - 10
+    
+      cache:
         yarn: true
         directories:
           - node_modules
