@@ -1,0 +1,18 @@
+---
+matrix:
+  include:
+    -
+      language: node_js
+      node_js:
+        - 10
+        
+      cache:
+        yarn: true
+        directories:
+          - node_modules
+          
+      before_script:
+        - "cd frontend"
+        
+      script:
+        - yarn build
