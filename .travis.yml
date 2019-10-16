@@ -11,7 +11,7 @@ matrix:
         directories:
           - node_modules
           
-      before_script:
+      before_install:
         - "cd frontend"
         
       script:
