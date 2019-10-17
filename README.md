@@ -16,6 +16,12 @@ A Sportify web application as a semestral work for the 4IT445 Agile web applicat
 - Tomáš Horáček as [heracek](https://github.com/heracek)
 - Patr Čaněk as [CorwinCZ](https://github.com/CorwinCZ)
 
+## Documentation
+- Wireframes: [My Balsamiq](https://4it445.mybalsamiq.com/projects/sportify8)
+- Backlog: [Trello](https://trello.com/b/xdKjZ1aC/sportify)
+- Technical documentation: [GitHub Wiki](https://github.com/Nikolas-Charalambidis/4IT445/wiki)
+- Other documents (read only): [Google Drive](https://drive.google.com/drive/folders/1HR7KYamV8zcGRj8VAkLtMEJI15myPq_-?usp=sharing)  
+
 ## How to run locally
 
 ### Database
@@ -41,7 +47,7 @@ In case you are not happy to use Docker, feel free to use your own MySQL instanc
 
 **Develop**
 1. Execute `yarn dev` for happy coding. The REST endpoints should be exposed to [http://localhost:3001](http://localhost:3001).
-2. Test `[http://localhost:3001/foo](http://localhost:3001/foo)` and change the code, the response should change upon new `GET` request.
+2. Test [http://localhost:3001/foo](http://localhost:3001/foo) and change the code, the response should change upon new `GET` request.
 
 **Contribute**
 1. Make sure `yarn build` executes successfully. This is run on the Travis CI server as well.
@@ -63,3 +69,11 @@ In case you are not happy to use Docker, feel free to use your own MySQL instanc
 1. Make sure `yarn build` executes successfully. This is run on the Travis CI server as well.
 2. Run `yarn start` and verify the correct behavior of the build.
 3. Commit & push to your feature/personal branch and merge into `dev` branch. 
+
+## Deployment
+
+... to be done
+
+## Production servers
+
+... to be done
