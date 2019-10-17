@@ -20,12 +20,12 @@ A Sportify web application as a semestral work for the 4IT445 Agile web applicat
 
 ### Database
 
-** Create a new container **
+**Create a new container**
 1. Build the `\database\Dockerfile` navigating to `\database` and running `docker build -t mysql_sportify .` Mind the `.` dot at the end of the command!
 2. Run the container and name it the as same as the image `docker run -p 3306:3306 --name mysql_sportify mysql_sportify`. If you want to run it as a daemon, execute with the `-d` parameter.
 3. Enjoy the connection on `localhost:3306` with credentials `root:password`.
 
-** Stop/start an existing container
+**Stop/start an existing container**
 - Stop container: `docker stop mysql_sportify`.
 - Start container: `docker start mysql_sportify`.
 - Remove container: `docker rm mysql_sportify`. Then it has to be created again.
