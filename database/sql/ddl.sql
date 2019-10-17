@@ -1,3 +1,7 @@
+DROP SCHEMA `sportify`;
+CREATE SCHEMA `sportify`;
+USE `sportify`;
+
 CREATE TABLE `users` (
   `id_user` int PRIMARY KEY AUTO_INCREMENT,
   `email` varchar(255) UNIQUE NOT NULL,
