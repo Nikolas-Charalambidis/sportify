@@ -46,11 +46,13 @@ In case you are not happy to use Docker, feel free to use your own MySQL instanc
 3. After a few minutes, you should notice the generated `node_modules` folder and be able to execute commands defined in the `package.json` (`scripts`).
 
 **Develop**
-1. Execute `yarn dev` for happy coding. The REST endpoints should be exposed to [http://localhost:3001](http://localhost:3001).
+1. Execute `yarn dev` for happy coding. The REST endpoints should be exposed to [`http://localhost:3001`](http://localhost:3001).
 2. Test [`http://localhost:3001/foo`](http://localhost:3001/foo) and change the code, the response should change upon new `GET` request.
 
 **Swagger and versioning**
-The first version of generated Swagger documentation is available at [`http://localhost:3001/docs/v1`](http://localhost:3001/docs/v1). The API itself is versioned as well starting with the base path [`http://localhost:3001/api/v1`](http://localhost:3001/api/v1). The API V1 documentatioin is available at [Wiki](https://github.com/Nikolas-Charalambidis/4IT445/wiki/v1).
+ - The first version of generated Swagger documentation is available at [`http://localhost:3001/docs/v1`](http://localhost:3001/docs/v1). 
+  - The API itself is versioned as well starting with the base path [`http://localhost:3001/api/v1`](http://localhost:3001/api/v1). 
+  - The API V1 documentatioin is available at [Wiki](https://github.com/Nikolas-Charalambidis/4IT445/wiki/v1).
 
 **Contribute**
 1. Make sure `yarn build` executes successfully. This is run on the Travis CI server as well.
