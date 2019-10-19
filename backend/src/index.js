@@ -13,6 +13,11 @@ const {PORT = 3001} = process.env;
 const api = express();
 api.listen(PORT, () => console.log(`API started at http://localhost:${PORT}!`));
 
+// Sanity test
+api.get('/foo', (req, res, next) => {
+	res.json({foo: 'bar'});
+});
+
 // API v1
 users_v1(api);
 teams_v1(api);
@@ -20,9 +25,11 @@ teams_v1(api);
 // Swagger documentation
 swagger_v1(api);
 
+// Error handling
 api.use((req, res, next) => {
 	res.status(404);
 	res.json({error: '404: Not found'});
 });
 
+// Initialization
 api.use((err, req, res, next) => console.error('There was an error', err));
