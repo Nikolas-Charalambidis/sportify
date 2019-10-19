@@ -13,7 +13,7 @@ const {PORT = 3001} = process.env;
 const api = express();
 api.listen(PORT, () => console.log(`API started at http://localhost:${PORT}!`));
 
-// Sanity test
+// Sanity endpoint test
 api.get('/foo', (req, res, next) => {
 	res.json({foo: 'bar'});
 });
