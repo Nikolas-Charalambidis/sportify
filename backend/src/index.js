@@ -1,36 +1,28 @@
-import dotenv from 'dotenv';
 import express from 'express';
+import dotenv from 'dotenv';
+import swagger_v1 from './swagger/v1';
+
+import users_v1 from './v1/users';
+import teams_v1 from './v1/teams'
 
 dotenv.config();
 dotenv.config({path: '.env.local'});
 
 const {PORT = 3001} = process.env;
 
-const app = express();
+const api = express();
+api.listen(PORT, () => console.log(`API started at http://localhost:${PORT}!`));
 
-const foos = [{id: 1, text: 'Foo 1'}, {id: 2, text: 'Foo 2'}];
+// API v1
+users_v1(api);
+teams_v1(api);
 
-app.get('/foo/:bar', (req, res, next) => {
-	const {bar} = req.params;
-	const foo = foos.find(item => Number(item.id) === Number(bar));
+// Swagger documentation
+swagger_v1(api);
 
-	if (!foo) {
-		res.status(404);
-		res.json({error: true, msg: 'No Foo for you!'});
-		return;
-	}
-	res.send(foo.text);
-});
-
-app.use('/foo', (req, res, next) => {
-	req.res.send('Foo');
-});
-
-app.use((req, res, next) => {
+api.use((req, res, next) => {
 	res.status(404);
 	res.json({error: '404: Not found'});
 });
 
-app.listen(PORT, () => {
-	console.log(`Server started poky on http://localhost:${PORT}!`);
-});
+api.use((err, req, res, next) => console.error('There was an error', err));
