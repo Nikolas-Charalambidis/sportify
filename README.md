@@ -3,16 +3,22 @@
 # 4IT445 Agile web application development | Sportify
 
 A Sportify web application as a semestral work for the 4IT445 Agile web application development course.
-- `master` [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=master)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches)
-- `dev` [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=dev)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches)
+
+| Branch | Status |
+|-------------|--------|
+| `master` | [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=master)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches) |
+| `dev` | [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=dev)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches) |
 
 ## Contributors
-- Nikolas Charalambidis as [Nikolas-Charalambidis](https://github.com/Nikolas-Charalambidis), branch `feature/nikolas-ch` [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=feature%2Fnikolas-ch)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches)
-- Jakub Jaroš as [jjaros587](https://github.com/jjaros587), branch `feature/jakub-j` [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=feature%2Fjakub-j)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches)
-- Vladimír Kozohorský as [kozohorsky](https://github.com/kozohorsky), branch `feature/vladimir-k` [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=feature%2Fvladimir-k)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches)
-- Vladimír Lešek as [vlesek](https://github.com/vlesek), branch `feature/vladimir-l` [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=feature%2Fvladimir-l)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches)
-- Jurij Povoroznyk as [povj01](https://github.com/povj01), branch `feature/jurij-p` [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=feature%2Fjurij-p)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches)
-- David Voráček as [Davis94](https://github.com/Davis94), branch `feature/david-v` [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=feature%2Fdavid-v)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches)
+
+| Contributor | GitHub account | Feature branch | Status |
+|-------------|----------------|----------------|--------|
+| Nikolas Charalambidis | [Nikolas-Charalambidis](https://github.com/Nikolas-Charalambidis) | `feature/nikolas-ch` | [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=feature%2Fnikolas-ch)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches) |
+| Jakub Jaroš | [jjaros587](https://github.com/jjaros587) | `feature/jakub-j` | [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=feature%2Fjakub-j)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches) |
+| Vladimír Kozohorský | [kozohorsky](https://github.com/kozohorsky) | `feature/vladimir-k` | [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=feature%2Fvladimir-k)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches) |
+| Vladimír Lešek | [vlesek](https://github.com/vlesek) | `feature/vladimir-l` | [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=feature%2Fvladimir-l)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches) |
+| Jurij Povoroznyk | [povj01](https://github.com/povj01) |`feature/jurij-p` | [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=feature%2Fjurij-p)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches) |
+| David Voráček | [Davis94](https://github.com/Davis94) | `feature/david-v` | [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=feature%2Fdavid-v)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches) |
 
 ## Code reviewers
 - Tomáš Horáček as [heracek](https://github.com/heracek)
