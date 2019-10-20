@@ -1,10 +1,10 @@
-[![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=master)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches) | Master
 
-[![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=dev)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches) | Dev
 
 # 4IT445 Agile web application development | Sportify
 
 A Sportify web application as a semestral work for the 4IT445 Agile web application development course.
+- `master` [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=master)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches)
+- `dev` [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=dev)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches)
 
 ## Contributors
 - Nikolas Charalambidis as [Nikolas-Charalambidis](https://github.com/Nikolas-Charalambidis), branch `feature/nikolas-ch` [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=feature%2Fnikolas-ch)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches)
