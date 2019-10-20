@@ -1,16 +1,18 @@
-[![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=dev)](https://travis-ci.org/Nikolas-Charalambidis/4IT445)
+
 
 # 4IT445 Agile web application development | Sportify
 
 A Sportify web application as a semestral work for the 4IT445 Agile web application development course.
+- `master` [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=master)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches)
+- `dev` [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=dev)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches)
 
 ## Contributors
-- Nikolas Charalambidis as [Nikolas-Charalambidis](https://github.com/Nikolas-Charalambidis)
-- Jakub Jaroš as [jjaros587](https://github.com/jjaros587)
-- Vladimír Kozohorský as [kozohorsky](https://github.com/kozohorsky)
-- Vladimír Lešek as [vlesek](https://github.com/vlesek)
-- Jurij Povoroznyk as [povj01](https://github.com/povj01)
-- David Voráček as [Davis94](https://github.com/Davis94)
+- Nikolas Charalambidis as [Nikolas-Charalambidis](https://github.com/Nikolas-Charalambidis), branch `feature/nikolas-ch` [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=feature%2Fnikolas-ch)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches)
+- Jakub Jaroš as [jjaros587](https://github.com/jjaros587), branch `feature/jakub-j` [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=feature%2Fjakub-j)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches)
+- Vladimír Kozohorský as [kozohorsky](https://github.com/kozohorsky), branch `feature/vladimir-k` [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=feature%2Fvladimir-k)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches)
+- Vladimír Lešek as [vlesek](https://github.com/vlesek), branch `feature/vladimir-l` [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=feature%2Fvladimir-l)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches)
+- Jurij Povoroznyk as [povj01](https://github.com/povj01), branch `feature/jurij-p` [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=feature%2Fjurij-p)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches)
+- David Voráček as [Davis94](https://github.com/Davis94), branch `feature/david-v` [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=feature%2Fdavid-v)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches)
 
 ## Code reviewers
 - Tomáš Horáček as [heracek](https://github.com/heracek)
@@ -46,8 +48,13 @@ In case you are not happy to use Docker, feel free to use your own MySQL instanc
 3. After a few minutes, you should notice the generated `node_modules` folder and be able to execute commands defined in the `package.json` (`scripts`).
 
 **Develop**
-1. Execute `yarn dev` for happy coding. The REST endpoints should be exposed to [http://localhost:3001](http://localhost:3001).
-2. Test [http://localhost:3001/foo](http://localhost:3001/foo) and change the code, the response should change upon new `GET` request.
+1. Execute `yarn dev` for happy coding. The REST endpoints should be exposed to [`http://localhost:3001`](http://localhost:3001).
+2. Test [`http://localhost:3001/foo`](http://localhost:3001/foo) and change the code, the response should change upon new `GET` request.
+
+**Swagger and versioning**
+ - The first version of generated Swagger documentation is available at [`http://localhost:3001/docs/v1`](http://localhost:3001/docs/v1). 
+  - The API itself is versioned as well starting with the base path [`http://localhost:3001/api/v1`](http://localhost:3001/api/v1). 
+  - The API V1 documentatioin is available at [Wiki](https://github.com/Nikolas-Charalambidis/4IT445/wiki/v1).
 
 **Contribute**
 1. Make sure `yarn build` executes successfully. This is run on the Travis CI server as well.
@@ -62,7 +69,7 @@ In case you are not happy to use Docker, feel free to use your own MySQL instanc
 3. After a few minutes, you should notice the generated `node_modules` folder and be able to execute commands defined in the `package.json` (`scripts`).
 
 **Develop**
-1. Execute `yarn start` for happy coding. The web application should be available on [http://localhost:3000](http://localhost:3000).
+1. Execute `yarn start` for happy coding. The web application should be available on [`http://localhost:3000`](http://localhost:3000).
 2. Remove line `BROWSER=none` at the `\frontend.env` file if you wish to open a browser with the webpage immediately. 
 
 **Contribute**
