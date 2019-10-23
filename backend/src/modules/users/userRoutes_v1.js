@@ -53,6 +53,8 @@ router.use('/', (req, res, next) => {
 });
 
 /**
+ * Team object Swagger definition
+ *
  * @swagger
  * definitions:
  *   User:
@@ -68,6 +70,6 @@ router.use('/', (req, res, next) => {
  *       surname:
  *         type: string
  */
-const definition = null;
 
+// Export the Router
 export default router;

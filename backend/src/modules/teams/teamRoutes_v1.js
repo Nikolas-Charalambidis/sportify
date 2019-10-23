@@ -52,7 +52,10 @@ router.get('/', (req, res, next) => {
 	res.json(teamService.allTeams());
 });
 
+
 /**
+ * User object Swagger definition
+ *
  * @swagger
  * definitions:
  *   Team:
@@ -64,6 +67,6 @@ router.get('/', (req, res, next) => {
  *       leader:
  *         type: integer
  */
-const definition = null;
 
+// Export the Router
 export default router;
