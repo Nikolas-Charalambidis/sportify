@@ -10,9 +10,6 @@ matrix:
       - docker build -t mysql_sportify .
     
     - language: node_js
-      os: linux
-      arch: arm64
-      dist: bionic
       node_js:
         - 10
       cache:
@@ -25,9 +22,6 @@ matrix:
         - yarn build
 
     - language: node_js
-      os: linux
-      arch: arm64
-      dist: bionic
       node_js:
         - 10
       cache:
