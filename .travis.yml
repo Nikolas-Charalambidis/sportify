@@ -11,7 +11,7 @@ matrix:
     
     - language: node_js
       node_js:
-        - 10
+        - 11
       cache:
         yarn: true
         directories:
@@ -23,7 +23,7 @@ matrix:
 
     - language: node_js
       node_js:
-        - 10
+        - 11
       cache:
         yarn: true
         directories:
