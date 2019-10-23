@@ -1,4 +1,4 @@
----
+  ---
 matrix:
   include:
     - language: python
@@ -10,10 +10,9 @@ matrix:
       - docker build -t mysql_sportify .
     
     - language: node_js
-      arch:
-        - amd64
-        - arm64
       os: linux
+      arch: arm64
+      dist: bionic
       node_js:
         - 10
       cache:
@@ -26,10 +25,9 @@ matrix:
         - yarn build
 
     - language: node_js
-      arch:
-        - amd64
-        - arm64
       os: linux
+      arch: arm64
+      dist: bionic
       node_js:
         - 10
       cache:
