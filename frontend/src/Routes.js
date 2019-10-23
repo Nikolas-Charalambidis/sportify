@@ -12,10 +12,10 @@ export function Routes() {
 	return (
 		<Switch>
 			<Route path="/" exact component={HomePage}/>
-			<Route path="/teams" exact component={Teams}/>
-			<Route path="/leagues" exact component={Leagues}/>
-			<Route path="/fixtures" exact component={Fixtures}/>
-			<Route path="/statistics" exact component={Statistics}/>
+			<Route path="/tymy" exact component={Teams}/>
+			<Route path="/souteze" exact component={Leagues}/>
+			<Route path="/zapasy" exact component={Fixtures}/>
+			<Route path="/statistiky" exact component={Statistics}/>
 			<Route path="*" component={Page404}/>
 		</Switch>
 	);
