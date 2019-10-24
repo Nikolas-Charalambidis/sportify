@@ -13,7 +13,7 @@ import {
 } from 'react-bootstrap';
 
 export function Profile() {
-  const [validated, setValidated] = useState(false);
+  const [validated] = useState(false);
   const [show, setShow] = useState(false);
   const [password, setPassword] = useState('');
   const [newpassword, setNewpassword] = useState('');

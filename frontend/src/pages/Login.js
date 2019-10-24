@@ -35,7 +35,7 @@ export function Login() {
                         <Form.Label>Heslo</Form.Label>
                         <Form.Control required type="password" name="password" placeholder="Heslo" value={password} onChange={e => setPassword(e.target.value)} />
                     </Form.Group>
-                    <a href="#">Zapomenuté heslo</a>
+                    <a href="/#">Zapomenuté heslo</a>
                     <Button variant="primary" type="button" onClick={onLogin}>Pøihlásit</Button>
                     <Button variant="secondary" href="#">Registrovat</Button>
                 </Form>
