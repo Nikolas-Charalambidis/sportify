@@ -1,9 +1,11 @@
 # idea
 *.iml
 .idea
+.vs
 
 # dependencies
 /node_modules
+node_modules
 /.pnp
 .pnp.js
 
@@ -12,6 +14,7 @@
 
 # production
 /build
+build
 
 # miscellaneous
 .DS_Store
@@ -23,3 +26,7 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+.vs/4IT445/v16/.suo
+
+.vs/slnx.sqlite
