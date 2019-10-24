@@ -1,9 +1,10 @@
 import dotenv from 'dotenv';
+import { DB_CONNECTION_KEY } from '../../libs/connection';
 
 dotenv.config();
 dotenv.config({ path: '.env' });
 
-const { MOCK, DB_NAME, DB_PASSWORD, DB_USER, DB_PORT } = process.env;
+const { MOCK } = process.env;
 
 const data = [
 	{
