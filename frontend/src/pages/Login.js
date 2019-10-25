@@ -20,26 +20,26 @@ export function Login() {
         setValidated(true);
     };
 
-    return (
-        <div>
-            <TopNavigation />
-            <MainSection>
-                <Heading>Login</Heading>
-                <Form validated={validated}>
-                    <Form.Group controlId="formBasicEmail">
-                        <Form.Label>E-mail</Form.Label>
-                        <Form.Control required type="email" name="email" placeholder="E-mail" value={email} onChange={e => setEmail(e.target.value)} />
-                    </Form.Group>
+	return (
+		<div>
+			<TopNavigation/>
+			<MainSection>
+				<Heading>Login</Heading>
+				<Form validated={validated}>
+					<Form.Group controlId="formBasicEmail">
+						<Form.Label>E-mail</Form.Label>
+						<Form.Control required type="email" name="email" placeholder="E-mail" value={email} onChange={e => setEmail(e.target.value)}/>
+					</Form.Group>
 
-                    <Form.Group controlId="formBasicPassword">
-                        <Form.Label>Heslo</Form.Label>
-                        <Form.Control required type="password" name="password" placeholder="Heslo" value={password} onChange={e => setPassword(e.target.value)} />
-                    </Form.Group>
-                    <a href="/#">Zapomenuté heslo</a>
-                    <Button variant="primary" type="button" onClick={onLogin}>Pøihlásit</Button>
-                    <Button variant="secondary" href="#">Registrovat</Button>
-                </Form>
-            </MainSection>
-        </div>
-    );
+					<Form.Group controlId="formBasicPassword">
+						<Form.Label>Heslo</Form.Label>
+						<Form.Control required type="password" name="password" placeholder="Heslo" value={password} onChange={e => setPassword(e.target.value)}/>
+					</Form.Group>
+					<a href="/#">ZapomenutÃ© heslo</a>
+					<Button variant="primary" type="button" onClick={onLogin}>PÅ™ihlÃ¡sit</Button>
+					<Button variant="secondary" href="#">Registrovat</Button>
+				</Form>
+			</MainSection>
+		</div>
+	);
 }

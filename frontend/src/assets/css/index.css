@@ -1,0 +1,108 @@
+@font-face {
+	font-family: Proxima;
+	font-weight: 300;
+	font-style: normal;
+	src: url("../fonts/proxima.otf");
+}
+
+@font-face {
+	font-family: Proxima;
+	font-weight: bold;
+	font-style: normal;
+	src: url("../fonts/proxima_bold.otf");
+}
+
+.pre-line {
+	white-space: pre-line;
+}
+
+#navigation {
+	background-color: black !important;
+	padding:0;
+}
+
+#navigation .navbar-collapse ul {
+	display: inherit;
+	padding:0;
+}
+
+#navigation ul li .nav-link {
+	color: white;
+	font-family: "Proxima", Arial, sans-serif;
+	text-transform: uppercase;
+	font-weight: 300;
+	display:table-cell;
+	vertical-align: middle;
+	height:60px;
+	font-size:16px;
+	padding: 0 20px;
+}
+
+#navigation ul li:hover > a:before {
+	content: "";
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 4px;
+	background: #FFF30A;
+}
+
+#navigation ul li {
+	height: 60px;
+	position: relative;
+	list-style-type: none;
+}
+
+#navigation .navbar-nav .nav-link:hover {
+	border-bottom: 1px solid red;
+}
+
+#navigation .navbar-brand {
+	background-image: url('../images/sportify_logo.svg');
+	background-repeat: no-repeat, repeat;
+	width: 190px;
+	height: 50px;
+	background-size: contain;
+	padding: 0;
+	margin: 0;
+	background-position: right center;
+}
+
+@media only screen and (max-width: 1025px) {
+	#navigation .navbar-brand {
+		background-image: url('../images/sportify_logo_mini.svg');
+		background-repeat: no-repeat, repeat;
+		width: 65px;
+		height: 50px;
+		background-size: contain;
+		padding: 0;
+		margin: 0;
+		background-position: right center;
+	}
+}
+
+#navigation .signUp {
+	padding-right: 15px;
+}
+
+.btn-primary {
+	background: #FFF30A !important;
+	color: black !important;
+	font-family: "Proxima", Arial, sans-serif !important;
+	text-transform: uppercase;
+	padding: 8px 25px !important;
+	border-radius: 2px !important;
+	border-color: #FFF30A !important;
+	font-weight: 600 !important;
+}
+
+.btn-primary:hover {
+	background:white !important;
+	color: black;
+	border-color: white !important;
+}
+
+.navbar-toggler-icon {
+	background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E") !important;
+}
