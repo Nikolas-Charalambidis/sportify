@@ -10,6 +10,7 @@ import {AboutUs} from './pages/AboutUs';
 import {Contact} from './pages/Contact';
 import {Page404} from './pages/error/Page404';
 import { Login } from './pages/Login';
+import { Register } from './pages/Register';
 import {Profile} from "./pages/Profile";
 
 export function Routes() {
@@ -24,6 +25,8 @@ export function Routes() {
 			<Route path="/kontakt" exact component={Contact}/>
 			<Route path="/login" exact component={Login} />
             <Route path="/statistiky" exact component={Statistics} />
+            <Route path="/login" exact component={Login} />
+            <Route path="/register" exact component={Register} />
             <Route path="/profile" exact component={Profile} />
 			<Route path="*" component={Page404}/>
 		</Switch>

@@ -37,7 +37,7 @@ export function Login() {
 					</Form.Group>
 					<a href="/#">Zapomenuté heslo</a>
 					<Button variant="primary" type="button" onClick={onLogin}>Přihlásit</Button>
-					<Button variant="secondary" href="#">Registrovat</Button>
+					<Button variant="secondary" href="/register">Registrovat</Button>
 				</Form>
 			</MainSection>
 		</div>
