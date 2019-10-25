@@ -1,9 +1,12 @@
 import React from 'react';
 
+import {Container} from "react-bootstrap";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 export function MainSection({children}) {
 	return (
-		<div className="pa3 bt b--black-10">
-			<section className="mw6 center">{children}</section>
-		</div>
+		<Container className="mt-3">
+			<section>{children}</section>
+		</Container>
 	);
 }
