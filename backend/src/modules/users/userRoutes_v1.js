@@ -1,6 +1,5 @@
 import { Router } from 'express';
-
-import userService from './userService';
+import UserService from "./userService";
 
 const router = Router();
 
@@ -25,9 +24,9 @@ const router = Router();
  *       404:
  *         description: User not found
  */
-router.get('/:id_user', (req, res, next) => {
+router.get('/:id_user', async (req, res, next) => {
 	const {id_user} = req.params;
-	const user = userService.findUserById(id_user);
+	const user = await new UserService(req).findUserById(id_user);
 	if (!user) {
 		res.status(404);
 		res.json({});
@@ -48,8 +47,9 @@ router.get('/:id_user', (req, res, next) => {
  *       200:
  *         description: All users returned
  */
-router.use('/', (req, res, next) => {
-	res.json(userService.allUsers());
+router.use('/', async (req, res, next) => {
+	const users = await new UserService(req).allUsers();
+	res.json(users);
 });
 
 /**

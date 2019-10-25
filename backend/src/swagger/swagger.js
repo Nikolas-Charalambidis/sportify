@@ -30,7 +30,7 @@ const swagger = (router, apiVersion) => {
 			options_ui
 		)
 	);
-	console.log(`[initialized] Swagger         /docs/${apiVersion}`);
+	console.log(`[initialized] Swagger            /docs/${apiVersion}`);
 };
 
 export default swagger;

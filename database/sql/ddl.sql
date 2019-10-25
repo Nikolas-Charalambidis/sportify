@@ -109,5 +109,5 @@ ALTER TABLE `matchup` ADD FOREIGN KEY (`team`) REFERENCES `teams` (`id_team`);
 ALTER TABLE `matchup` ADD FOREIGN KEY (`user`) REFERENCES `users` (`id_user`);
 
 -- Data ----------------------------------------------------------------------------------------------------------------
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`) values (1, 'user1@test.cz', 'asdf', 'user1_name', 'user1_surname');
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`) values (2, 'user2@test.cz', 'asdf', 'user2_name', 'user2_surname');
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`) values (1, 'user1@test.cz', 'password', 'user1_name', 'user1_surname');
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`) values (2, 'user2@test.cz', 'password', 'user2_name', 'user2_surname');
