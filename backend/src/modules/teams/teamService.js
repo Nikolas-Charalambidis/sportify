@@ -1,49 +1,21 @@
 import dotenv from 'dotenv';
+import {DB_CONNECTION_KEY} from '../../libs/connection';
 
 dotenv.config();
-dotenv.config({ path: '.env' });
+dotenv.config({path: '.env'});
 
-const { MOCK, DB_NAME, DB_PASSWORD, DB_USER, DB_PORT } = process.env;
+export default class TeamService {
 
-const data = [
-	{
-		id_team: 1,
-		name: 'Team 01',
-		leader: 1
-	}, {
-		id_team: 2,
-		name: 'Team 02',
-		leader: 2
+	constructor(req) {
+		this.dbConnection = req[DB_CONNECTION_KEY];
 	}
-];
 
-const service = {
-	findTeamById: function(id_team) {
-		return {data: "NO DATABASE IMPLEMENTED YET"};
-	},
-
-	allTeams: function() {
-		return [{data: "NO DATABASE IMPLEMENTED YET"}];
+	async allTeams() {
+		return await this.dbConnection.query(`SELECT * FROM teams`);
 	}
-};
 
-const serviceMock = {
-	findTeamById: function(id_team) {
-		return data.find(team => team.id_team === Number(id_team));
-	},
-
-	allTeams: function() {
-		return data;
+	async findTeamById(id_team) {
+		const id = Number(id_team);
+		return await this.dbConnection.query('SELECT * FROM teams WHERE id_team=?', id);
 	}
-};
-
-var exportedService;
-if (MOCK.toLowerCase() === 'true') {
-	exportedService = serviceMock;
-	console.log("[mocked]      teamService");
-} else {
-	exportedService = service;
-	console.log("[initialized] teamService");
 }
-
-export default exportedService;

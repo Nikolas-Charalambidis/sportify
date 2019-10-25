@@ -1,54 +1,21 @@
 import dotenv from 'dotenv';
-import { DB_CONNECTION_KEY } from '../../libs/connection';
+import {DB_CONNECTION_KEY} from '../../libs/connection';
 
 dotenv.config();
-dotenv.config({ path: '.env' });
+dotenv.config({path: '.env'});
 
-const { MOCK } = process.env;
+export default class UserService {
 
-const data = [
-	{
-		id_user: 1,
-		email: 'user01@sportify.cz',
-		password: 'password',
-		name: 'User',
-		surname: '01'
-	}, {
-		id_user: 2,
-		email: 'user02@sportify.cz',
-		password: 'password',
-		name: 'User',
-		surname: '02'
+	constructor(req) {
+		this.dbConnection = req[DB_CONNECTION_KEY];
 	}
-];
 
-const service = {
-	findUserById: function(id_user) {
-		return {data: "NO DATABASE IMPLEMENTED YET"};
-	},
-
-	allUsers: function() {
-		return [{data: "NO DATABASE IMPLEMENTED YET"}];
+	async allUsers() {
+		return await this.dbConnection.query(`SELECT * FROM users`);
 	}
-};
 
-const serviceMock = {
-	findUserById: function(id_user) {
-		return data.find(user => user.id_user === Number(id_user));
-	},
-
-	allUsers: function() {
-		return data;
+	async findUserById(id_user) {
+		const id = Number(id_user);
+		return await this.dbConnection.query('SELECT * FROM users WHERE id_user=?', id);
 	}
-};
-
-var exportedService;
-if (MOCK.toLowerCase() === 'true') {
-	exportedService = serviceMock;
-	console.log("[mocked]      userService");
-} else {
-	exportedService = service;
-	console.log("[initialized] userService");
 }
-
-export default exportedService;

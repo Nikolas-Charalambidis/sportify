@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import teamService from './teamService';
+import TeamService from './teamService';
 
 const router = Router();
 
@@ -27,7 +27,7 @@ const router = Router();
  */
 router.get('/:id_team', (req, res, next) => {
 	const {id_team} = req.params;
-	const team = teamService.findTeamById(id_team);
+	const team = new TeamService(req).findTeamById(id_team);
 	if (!team) {
 		res.status(404);
 		res.json({});
@@ -49,7 +49,8 @@ router.get('/:id_team', (req, res, next) => {
  *         description: All teams returned
  */
 router.get('/', (req, res, next) => {
-	res.json(teamService.allTeams());
+	const teams = new TeamService(req).allTeams();
+	res.json(teams);
 });
 
 
