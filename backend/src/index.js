@@ -2,17 +2,14 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-
-import {DB_CONNECTION_KEY} from './libs/connection';
 import router from "./routes";
+import { addDbToRequest, DB_CONNECTION_KEY } from './libs/connection';
 import {logErrors, clientErrorHandler, errorHandler } from "./handler"
-import {addDbToRequest} from './libs/connection';
 
 dotenv.config();
 dotenv.config({path: '.env.local'});
 
 const {PORT = 3001} = process.env;
-
 const api = express();
 
 api.use(bodyParser.json());
