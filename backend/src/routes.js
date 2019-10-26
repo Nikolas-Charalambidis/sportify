@@ -17,7 +17,7 @@ router.use('/api/v1/users', userRoutes_v1);
 console.log("[initialized] userRoutes_v1      /api/v1/users");
 
 router.use('/api/v1/sports', sportRoutes_v1);
-console.log("[initialized] userRoutes_v1   /api/v1/sports");
+console.log("[initialized] sportRoutes_v1     /api/v1/sports");
 
 swagger(router, "v1");
 

@@ -6,7 +6,7 @@ dotenv.config({path: '.env'});
 
 export default class UserService {
 
-	constructor(req, res) {
+	constructor(req) {
 		this.dbConnection = req[DB_CONNECTION_KEY];
 	}
 
