@@ -20,7 +20,7 @@ export default class UserService {
 
 	async addNewUser(email, password, name, surname) {
 		return this.dbConnection.query(
-			'INSERT INTO userss (id_user, email, password, name, surname) VALUES ("", ?, ?, ?, ?)',
+			'INSERT INTO users (id_user, email, password, name, surname) VALUES ("", ?, ?, ?, ?)',
 			[email, password, name, surname], (err, res) => {
 				if(!err){
 					return res.insertId;
