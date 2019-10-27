@@ -28,12 +28,14 @@ export function Login() {
 				<Form validated={validated}>
 					<Form.Group controlId="formBasicEmail">
 						<Form.Label>E-mail</Form.Label>
-						<Form.Control required type="email" name="email" placeholder="E-mail" value={email} onChange={e => setEmail(e.target.value)}/>
+                        <Form.Control required type="email" name="email" placeholder="E-mail" value={email} onChange={e => setEmail(e.target.value)} />
+                        <Form.Control.Feedback type="invalid">Vyplňte e-mailovou adresu.</Form.Control.Feedback>
 					</Form.Group>
 
 					<Form.Group controlId="formBasicPassword">
 						<Form.Label>Heslo</Form.Label>
-						<Form.Control required type="password" name="password" placeholder="Heslo" value={password} onChange={e => setPassword(e.target.value)}/>
+                        <Form.Control required type="password" name="password" placeholder="Heslo" value={password} onChange={e => setPassword(e.target.value)} />
+                        <Form.Control.Feedback type="invalid">Vyplňte heslo.</Form.Control.Feedback>
 					</Form.Group>
 					<a href="/forgot-password">Zapomenuté heslo</a>
 					<Button variant="primary" type="button" onClick={onLogin}>Přihlásit</Button>

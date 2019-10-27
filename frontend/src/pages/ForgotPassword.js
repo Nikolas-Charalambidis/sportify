@@ -27,6 +27,7 @@ export function ForgotPassword() {
                     <Form.Group controlId="formBasicEmail">
                         <Form.Label>E-mail</Form.Label>
                         <Form.Control required type="email" name="email" placeholder="E-mail" value={email} onChange={e => setEmail(e.target.value)} />
+                        <Form.Control.Feedback type="invalid">E-mailová adresa je ve špatném tvaru.</Form.Control.Feedback>
                     </Form.Group>
                     <Button variant="primary" type="button" onClick={onReset}>Resetovat</Button>
                 </Form>
