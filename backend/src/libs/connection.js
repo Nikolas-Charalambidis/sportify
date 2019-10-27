@@ -28,9 +28,7 @@ const getConnection = async () => {
 };
 
 export const addDbToRequest = async (req, res, next) => {
-  const connection = await getConnection();
-  req[DB_CONNECTION_KEY] = connection;
-
+  req[DB_CONNECTION_KEY] = await getConnection();
   next();
 
   if (req[DB_CONNECTION_KEY]) {
