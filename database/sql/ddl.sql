@@ -120,10 +120,10 @@ INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verifie
 INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (7, 'user7@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'user7_name', 'user7_surname', true);
 INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (8, 'user8@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'user8_name', 'user8_surname', true);
 
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (5, 'unverified1@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'unverified1_name', 'unverified1_surname', false);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (6, 'unverified2@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'unverified2_name', 'unverified2_surname', false);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (7, 'unverified3@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'unverified3_name', 'unverified3_surname', false);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (8, 'unverified4@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'unverified4_name', 'unverified4_surname', false);
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (9, 'unverified1@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'unverified1_name', 'unverified1_surname', false);
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (10, 'unverified2@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'unverified2_name', 'unverified2_surname', false);
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (11, 'unverified3@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'unverified3_name', 'unverified3_surname', false);
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (12, 'unverified4@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'unverified4_name', 'unverified4_surname', false);
 
 INSERT INTO `sports` (`id_sport`, `sport`) VALUES (1, 'hokej');
 INSERT INTO `sports` (`id_sport`, `sport`) VALUES (2, 'florbal');
