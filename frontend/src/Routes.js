@@ -1,17 +1,18 @@
 import React from 'react';
-import {Route, Switch} from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
-import {HomePage} from './pages/HomePage';
-import {Teams} from './pages/Teams';
-import {Leagues} from './pages/Leagues';
-import {Fixtures} from './pages/Fixtures';
-import {Statistics} from './pages/Statistics';
-import {AboutUs} from './pages/AboutUs';
-import {Contact} from './pages/Contact';
-import {Page404} from './pages/error/Page404';
+import { HomePage } from './pages/HomePage';
+import { Teams } from './pages/Teams';
+import { Leagues } from './pages/Leagues';
+import { Fixtures } from './pages/Fixtures';
+import { Statistics } from './pages/Statistics';
+import { AboutUs } from './pages/AboutUs';
+import { Contact } from './pages/Contact';
+import { Page404 } from './pages/error/Page404';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
-import {Profile} from "./pages/Profile";
+import { Profile } from "./pages/Profile";
+import { ForgotPassword } from './pages/ForgotPassword';
 
 export function Routes() {
 	return (
@@ -28,6 +29,7 @@ export function Routes() {
             <Route path="/login" exact component={Login} />
             <Route path="/register" exact component={Register} />
             <Route path="/profile" exact component={Profile} />
+            <Route path="/forgot-password" exact component={ForgotPassword} />
 			<Route path="*" component={Page404}/>
 		</Switch>
 	);
