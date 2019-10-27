@@ -9,28 +9,28 @@ function Confirm(url, params){
         isConfirming: true
     });
 
-    const fetchData = () => {
+    const getData = () => {
         api
             .post(url, {id_user: id_user, hash: hash})
             .then(({ data, status }) => {
                 setState({ isConfirming: false });
-                const { error, msg, user } = data;
-                if(!error){
-                    // Do something
-                } else {
-                    // Do something
-                }
+                // const { error, msg, user } = data;
+                // if(!error){
+                //     // Do something
+                // } else {
+                //     // Do something
+                // }
             })
             .catch(error => {
-                setState( { isLoading: false });
+                setState( { isConfirming: false });
                 // Do something
             });
     };
     useEffect(() => {
-        fetchData();
+        getData();
     }, []);
 
-    return [state, fetchData];
+    return [state, getData];
 }
 
 export function ConfirmEmail() {
@@ -39,6 +39,5 @@ export function ConfirmEmail() {
         <div>
             { state.isConfirming && <div>Confirming email...</div> }
         </div>
-
     );
 }
