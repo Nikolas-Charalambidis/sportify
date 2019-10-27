@@ -1,54 +1,42 @@
 import dotenv from 'dotenv';
-import { DB_CONNECTION_KEY } from '../../libs/connection';
+import {DB_CONNECTION_KEY} from '../../libs/connection';
 
 dotenv.config();
-dotenv.config({ path: '.env' });
+dotenv.config({path: '.env'});
 
-const { MOCK } = process.env;
+export default class UserService {
 
-const data = [
-	{
-		id_user: 1,
-		email: 'user01@sportify.cz',
-		password: 'password',
-		name: 'User',
-		surname: '01'
-	}, {
-		id_user: 2,
-		email: 'user02@sportify.cz',
-		password: 'password',
-		name: 'User',
-		surname: '02'
+	constructor(req) {
+		this.dbConnection = req[DB_CONNECTION_KEY];
 	}
-];
 
-const service = {
-	findUserById: function(id_user) {
-		return {data: "NO DATABASE IMPLEMENTED YET"};
-	},
-
-	allUsers: function() {
-		return [{data: "NO DATABASE IMPLEMENTED YET"}];
+	async allUsers() {
+		return this.dbConnection.query(`SELECT * FROM users`);
 	}
-};
 
-const serviceMock = {
-	findUserById: function(id_user) {
-		return data.find(user => user.id_user === Number(id_user));
-	},
-
-	allUsers: function() {
-		return data;
+	async findUserById(id_user) {
+		return this.dbConnection.query('SELECT * FROM users WHERE id_user=?', id_user);
 	}
-};
 
-var exportedService;
-if (MOCK.toLowerCase() === 'true') {
-	exportedService = serviceMock;
-	console.log("[mocked]      userService");
-} else {
-	exportedService = service;
-	console.log("[initialized] userService");
+	async addNewUser(email, password, name, surname) {
+		return this.dbConnection.query(
+			'INSERT INTO users (id_user, email, password, name, surname) VALUES ("", ?, ?, ?, ?)',
+			[email, password, name, surname], (err, res) => {
+				if(!err){
+					return res.insertId;
+				}
+			}
+		);
+	}
+
+	async isEmailUsed(email){
+		const result = await this.dbConnection.query('SELECT * FROM users WHERE email=?', email);
+		return result.length > 0;
+	}
+
+	async login(email, password){
+		return this.dbConnection.query(
+			`SELECT id_user FROM users WHERE email=? AND password=? LIMIT 1`, [email, password]
+		);
+	}
 }
-
-export default exportedService;

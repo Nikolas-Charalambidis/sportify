@@ -1,23 +1,24 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
-import {Heading, MainSection} from '../atoms/';
-import {TopNavigation} from '../organisms/TopNavigation';
-import {Button, Form} from "react-bootstrap";
+import { Heading, MainSection } from '../atoms/';
+import { TopNavigation } from '../organisms/TopNavigation';
+import { Form, Button } from "react-bootstrap";
+
 
 export function Login() {
 
-	const [validated, setValidated] = useState(false);
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
+    const [validated, setValidated] = useState(false);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
-	const onLogin = event => {
-		event.preventDefault();
-		event.stopPropagation();
+    const onLogin = event => {
+        event.preventDefault();
+        event.stopPropagation();
 
-		const form = event.currentTarget;
-		form.checkValidity();
-		setValidated(true);
-	};
+        const form = event.currentTarget;
+        form.checkValidity();
+        setValidated(true);
+    };
 
 	return (
 		<div>
@@ -36,7 +37,7 @@ export function Login() {
 					</Form.Group>
 					<a href="/#">Zapomenuté heslo</a>
 					<Button variant="primary" type="button" onClick={onLogin}>Přihlásit</Button>
-					<Button variant="secondary" href="#">Registrovat</Button>
+					<Button variant="secondary" href="/register">Registrovat</Button>
 				</Form>
 			</MainSection>
 		</div>
