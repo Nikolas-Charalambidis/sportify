@@ -9,7 +9,7 @@ function Confirm(url, params){
         isConfirming: true
     });
 
-    const getData = () => {
+    const fetchData = () => {
         api
             .post(url, {id_user: id_user, hash: hash})
             .then(({ data, status }) => {
@@ -27,10 +27,10 @@ function Confirm(url, params){
             });
     };
     useEffect(() => {
-        getData();
-    }, []);
+        fetchData();
+    });
 
-    return [state, getData];
+    return [state, fetchData];
 }
 
 export function ConfirmEmail() {
