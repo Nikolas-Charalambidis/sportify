@@ -12,8 +12,6 @@ dotenv.config({path: '.env.local'});
 const {PORT = 3001} = process.env;
 const api = express();
 
-api.use(bodyParser.json());
-api.use(cors());
 api.listen(PORT, () => console.log(`\nAPI started at http://localhost:${PORT}`));
 
 api.use(bodyParser.json());
@@ -33,6 +31,9 @@ api.get('/health', async (req, res, next) => {
 api.use(router);
 
 // Handling errors and logging
+api.use(function (err, req, res, next) {
+	res.status(err.status || 500).json({status: err.status, error: true, message: err.msg})
+});
 api.use(logErrors);
 api.use(clientErrorHandler);
 api.use(errorHandler);

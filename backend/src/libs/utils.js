@@ -1,9 +1,9 @@
 const bcrypt = require('bcrypt');
 
-export const hashPassword = (password) => {
-  return bcrypt.hashSync(password, 10);
+export const hash = (toHash, rounds) => {
+  return bcrypt.hashSync(toHash, rounds);
 };
 
-export const verifyHash = (password, hash) => {
-  return !!bcrypt.compareSync('123', hash);
+export const verifyHash = (toVerify, hash) => {
+  return !!bcrypt.compareSync(toVerify, hash);
 };

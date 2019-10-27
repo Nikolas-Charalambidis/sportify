@@ -8,7 +8,15 @@ CREATE TABLE `users` (
     `email` varchar(255) UNIQUE NOT NULL,
     `password` varchar(255) NOT NULL,
     `name` varchar(255) NOT NULL,
-    `surname` varchar(255) NOT NULL
+    `surname` varchar(255) NOT NULL,
+    `verified` boolean NOT NULL
+);
+
+CREATE TABLE `confirmTokens` (
+    `id_token` int PRIMARY KEY AUTO_INCREMENT,
+    `id_user` int NOT NULL unique ,
+    `hash` varchar(255) NOT NULL,
+    `validity` datetime NOT NULL
 );
 
 CREATE TABLE `teams` (
@@ -78,6 +86,8 @@ CREATE TABLE `matchup` (
 ALTER TABLE `teams` ADD FOREIGN KEY (`id_sport`) REFERENCES `sports` (`id_sport`);
 ALTER TABLE `teams` ADD FOREIGN KEY (`id_leader`) REFERENCES `users` (`id_user`);
 
+ALTER TABLE `confirmTokens` ADD FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`);
+
 ALTER TABLE `competitions` ADD FOREIGN KEY (`leader`) REFERENCES `users` (`id_user`);
 ALTER TABLE `competitions` ADD FOREIGN KEY (`id_sport`) REFERENCES `sports` (`id_sport`);
 
@@ -100,15 +110,20 @@ ALTER TABLE `matchup` ADD FOREIGN KEY (`team`) REFERENCES `teams` (`id_team`);
 ALTER TABLE `matchup` ADD FOREIGN KEY (`user`) REFERENCES `users` (`id_user`);
 
 -- Data ----------------------------------------------------------------------------------------------------------------
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`) VALUES (1, 'user1@test.cz', '$2y$10$nliN59fhGC8vcy9dgJYyNepVEbdwFp4BF./RJ7C4nBeiNU4jmuBFS', 'user1_name', 'user1_surname');
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`) VALUES (2, 'user2@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'user2_name', 'user2_surname');
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`) VALUES (3, 'user3@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'user3_name', 'user3_surname');
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`) VALUES (4, 'user4@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'user4_name', 'user4_surname');
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (1, 'user1@test.cz', '$2y$10$nliN59fhGC8vcy9dgJYyNepVEbdwFp4BF./RJ7C4nBeiNU4jmuBFS', 'user1_name', 'user1_surname', true);
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (2, 'user2@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'user2_name', 'user2_surname', true);
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (3, 'user3@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'user3_name', 'user3_surname', true);
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (4, 'user4@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'user4_name', 'user4_surname', true);
 
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`) VALUES (5, 'user5@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'user5_name', 'user5_surname');
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`) VALUES (6, 'user6@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'user6_name', 'user6_surname');
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`) VALUES (7, 'user7@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'user7_name', 'user7_surname');
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`) VALUES (8, 'user8@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'user8_name', 'user8_surname');
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (5, 'user5@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'user5_name', 'user5_surname', true);
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (6, 'user6@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'user6_name', 'user6_surname', true);
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (7, 'user7@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'user7_name', 'user7_surname', true);
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (8, 'user8@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'user8_name', 'user8_surname', true);
+
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (5, 'unverified1@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'unverified1_name', 'unverified1_surname', false);
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (6, 'unverified2@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'unverified2_name', 'unverified2_surname', false);
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (7, 'unverified3@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'unverified3_name', 'unverified3_surname', false);
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (8, 'unverified4@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'unverified4_name', 'unverified4_surname', false);
 
 INSERT INTO `sports` (`id_sport`, `sport`) VALUES (1, 'hokej');
 INSERT INTO `sports` (`id_sport`, `sport`) VALUES (2, 'florbal');

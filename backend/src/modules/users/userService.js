@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import {DB_CONNECTION_KEY} from '../../libs/connection';
+import * as userValidation from './userValidations';
 
 dotenv.config();
 dotenv.config({path: '.env'});
@@ -15,18 +16,64 @@ export default class UserService {
 	}
 
 	async findUserById(id_user) {
-		return this.dbConnection.query('SELECT * FROM users WHERE id_user=?', id_user);
+		const user_id = Number(id_user);
+		userValidation.validateUserID(user_id);
+		const result = await this.dbConnection.query('SELECT * FROM users WHERE id_user=?', user_id);
+		if (result.length === 0) {
+			throw {status: 404, msg: 'User not found'};
+		}
+		return result[0];
 	}
 
 	async addNewUser(email, password, name, surname) {
-		return this.dbConnection.query(
-			'INSERT INTO users (id_user, email, password, name, surname) VALUES ("", ?, ?, ?, ?)',
-			[email, password, name, surname], (err, res) => {
-				if(!err){
-					return res.insertId;
-				}
-			}
+		userValidation.validateNewUserData(email, password, name, surname);
+		userValidation.validateEmail(email);
+		if(await this.isEmailUsed(email)){
+			throw {status: 400, msg: 'Email already exists'};
+		}
+		const result = await this.dbConnection.query(
+			'INSERT INTO users (id_user, email, password, name, surname, verified) VALUES ("", ?, ?, ?, ?, 0)',
+			[email, password, name, surname]
 		);
+		if(result.affectedRows === 1){
+			const hash = await this.genConfirmToken(result.insertId, email);
+			await this.sendConfirmEmail(email, result.insertId, hash);
+			return result.insertId;
+		}
+		throw {status: 500, msg: 'Unable to create user'};
+	}
+
+	async login(email, password){
+		userValidation.validateLoginData(email, password);
+		const result = await this.dbConnection.query(
+			`SELECT id_user, email, verified FROM users WHERE email=? AND password=?`, [email, password]
+		);
+		if(result.length === 0){
+			throw {status: 400, msg: 'User not found'};
+		}
+		if(result.length > 1){
+			throw {status: 400, msg: 'Returned more than one record'};
+		}
+		return result[0];
+	}
+
+	async confirmEmail(id_user, hash){
+		const user_id = Number(id_user);
+		userValidation.validateConfirmEmailData(user_id, hash);
+		await this.verifyToken(user_id, hash);
+		await this.setUserVerified(id_user);
+		return await this.findUserById(id_user);
+	}
+
+	async genConfirmToken(id_user, email){
+		const hash = require('bcrypt').hashSync(email, 1);
+		const validity = new Date();
+		validity.setDate(validity.getDate() + 1);
+
+		const result = await this.dbConnection.query(
+			`INSERT INTO confirmTokens (id_token, id_user, hash, validity) VALUES ('', ?, ?, ?)`,
+			[id_user, hash, validity]);
+		return hash;
 	}
 
 	async isEmailUsed(email){
@@ -34,9 +81,42 @@ export default class UserService {
 		return result.length > 0;
 	}
 
-	async login(email, password){
-		return this.dbConnection.query(
-			`SELECT id_user FROM users WHERE email=? AND password=? LIMIT 1`, [email, password]
+	async verifyToken(id_user, hash){
+		const result = await this.dbConnection.query(
+			`SELECT id_token, validity FROM confirmTokens WHERE id_user=? AND hash=?`, [id_user, hash]
 		);
+		if(result.length === 0){
+			throw {status: 404, msg: 'Invalid token'};
+		}
+		const { validity } = result[0];
+		if(validity < new Date()){
+			throw {status: 498, msg: 'Token expired'};
+		}
+		return result[0];
+	}
+
+	async setUserVerified(id_user){
+		const result = await this.dbConnection.query('UPDATE users SET verified=true WHERE id_user=?', id_user);
+		if(result.affectedRows === 0){
+			throw {status: 400, msg: 'Verification failed'};
+		}
+	}
+
+	async sendConfirmEmail(email, id_user, hash){
+		// console.log("email function");
+		// let nodemailer = require("nodemailer");
+		// console.log("mailer init");
+		// const transport = nodemailer.createTransport({
+		// 	host: "",
+		// 	port: "",
+		// 	secure: true
+		// });
+		// console.log("send");
+		// transport.sendMail({
+		// 	from: '<admin@sportify.cz>',
+		// 	to: `${email}`,
+		// 	subject: "Email confirmation",
+		// 	text: `Please confirm your email by clicking on this link \n ${link}`,
+		// }, console.error);
 	}
 }
