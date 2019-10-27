@@ -25,7 +25,7 @@ router.post('/login', async (req, res, next) => {
 		const user = await new UserService(req).login(email, password);
 		const { id_user } = user;
 		res.status(200).header('Location' , `/api/v1/teams/${id_user}`)
-			.json({ error: false, msq: 'OK', user: user});
+			.json({ error: false, msg: 'OK', user: user});
 	} catch(e) {
 		next(e);
 	}
@@ -53,7 +53,7 @@ router.post('/confirmEmail', async (req, res, next) => {
 	try {
 		const { id_user, hash } = req.body;
 		const user = await new UserService(req).confirmEmail(id_user, hash);
-		res.status(200).json({ error: false, msq: 'OK', user: user});
+		res.status(200).json({ error: false, msg: 'OK', user: user});
 	} catch(e) {
 		next(e);
 	}
@@ -86,7 +86,7 @@ router.get('/:id_user', async(req, res, next) => {
 	try {
 		const { id_user } = req.params;
 		const user = await new UserService(req).findUserById(id_user);
-		res.status(200).json({ error: false, msq: 'OK', user: user});
+		res.status(200).json({ error: false, msg: 'OK', user: user});
 	} catch(e) {
 		next(e);
 	}
@@ -106,7 +106,7 @@ router.get('/:id_user', async(req, res, next) => {
  */
 router.get('/', async (req, res, next) => {
 	const users = await new UserService(req).allUsers();
-	await res.status(200).json({ error: false, msq: 'OK', users: users});
+	await res.status(200).json({ error: false, msg: 'OK', users: users});
 });
 
 /**
@@ -140,7 +140,7 @@ router.post('/', async(req, res, next) => {
 	try {
 		const { email, password, name, surname } = req.body;
 		const id = await new UserService(req).addNewUser(email, password, name, surname);
-		res.status(201).header('Location' , `/api/v1/users/${id}`).send({ error: false, msq: 'OK', id_user: id});
+		res.status(201).header('Location' , `/api/v1/users/${id}`).send({ error: false, msg: 'OK', id_user: id});
 	} catch (e) {
 		next(e);
 	}

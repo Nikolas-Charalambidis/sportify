@@ -31,7 +31,7 @@ router.get('/:id_team', async (req, res, next) => {
 	try {
 		const { id_team } = req.params;
 		const team = await new TeamService(req).findTeamById(id_team);
-		res.status(200).json({ error: false, msq: 'OK', team: team});
+		res.status(200).json({ error: false, msg: 'OK', team: team});
 	} catch(e) {
 		next(e);
 	}
@@ -51,7 +51,7 @@ router.get('/:id_team', async (req, res, next) => {
  */
 router.get('/', async (req, res, next) => {
 	const teams = await new TeamService(req).allTeams();
-	await res.status(200).json({ error: false, msq: 'OK', teams: teams});
+	await res.status(200).json({ error: false, msg: 'OK', teams: teams});
 });
 
 /**
@@ -72,7 +72,7 @@ router.post('/', async (req, res, next) => {
 	try {
 		const { id_sport, name, id_leader } = req.body;
 		const id = await new TeamService(req).addNewTeam(id_sport, name, id_leader);
-		res.status(201).header('Location' , `/api/v1/teams/${id}`).send({ error: false, msq: 'OK', id_team: id});
+		res.status(201).header('Location' , `/api/v1/teams/${id}`).send({ error: false, msg: 'OK', id_team: id});
 	} catch(e) {
 		next(e);
 	}
