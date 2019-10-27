@@ -21,7 +21,9 @@
 		"swagger-jsdoc": "^3.4.0",
 		"swagger-ui-express": "^4.1.2",
 		"mariadb": "^2.1.2",
-		"bcrypt": "^3.0.6"
+		"bcrypt": "^3.0.6",
+		"nodemailer": "^6.3.1",
+		"sendmail": "^1.6.1"
 	},
 	"devDependencies": {
 		"backpack-core": "^0.8.4",
