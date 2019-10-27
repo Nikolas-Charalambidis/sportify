@@ -117,25 +117,46 @@ router.get('/', async (req, res, next) => {
  *         description: Invalid request
  */
 router.post('/', async(req, res, next) => {
-	const { email, password, name, surname } = req.body;
+	try {
+		const { email, password, name, surname } = req.body;
+		const id = await new UserService(req).addNewUser(email, password, name, surname);
+		res.status(201).header('Location' , `/api/v1/users/${id}`).send({ error: false, msq: 'OK', id_user: id});
+	} catch (e) {
+		next(e);
+	}
 
-	if(!email || !password || !name || !surname){
+});
+
+/**
+ * @swagger
+ * /users:
+ *   put:
+ *     tags:
+ *       - Users
+ *     name: Login
+ *     summary: Change user password
+ *     responses:
+ *       200:
+ *         description: Password changed
+ *       400:
+ *         description: Missing or incorrect data in request body
+ *       404:
+ *         description: Unable to chanbe password
+ */
+router.put('/changePassword', async(req, res, next) => {
+	const { id_user, password } = req.body;
+	const user_id = Number(id_user);
+	if(!user_id || !password ){
 		res.status(400);
 		await res.json({ error: true, msq: 'Missing data' });
 		return;
 	}
-	const emailRegex = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,4})$/;
-	if(!emailRegex.test(email)){
-		return res.status(400).json({ error: true, msq: 'Invalid email' });
+	const result = await new UserService(req).changePassword(user_id, password);
+	if(result.affectedRows === 1){
+		return res.status(200).json({ error: false, msq: 'OK'});
 	}
-	const emailExists = await new UserService(req).isEmailUsed(email);
-	if(emailExists){
-		return res.status(400).json({ error: true, msq: 'Email already exists' });
-	}
-	const id = await new UserService(req).addNewUser(email, password, name, surname);
-	res.status(201).header('Location' , `/api/v1/users/${id}`).send({ error: false, msq: 'OK'});
+	res.status(404).json({ error: true, msq: 'User not found'});
 });
-
 /**
  * Team object Swagger definition
  *
