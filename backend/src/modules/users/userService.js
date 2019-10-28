@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import {DB_CONNECTION_KEY} from '../../libs/connection';
 import * as userValidation from './userValidations';
-import { getRandomIntInRange } from '../../libs/utils';
+import { genConfirmToken } from '../../libs/utils';
 
 dotenv.config();
 dotenv.config({path: '.env'});
@@ -67,14 +67,7 @@ export default class UserService {
 	}
 
 	async genConfirmToken(id_user, email){
-		console.log('inside function');
-		const hash = Array
-			.apply(0, Array(8))
-			.map(() => { return getRandomIntInRange(0, 9); })
-			.join('')
-			.toString();
-		console.log('after hash');
-		console.log(hash);
+		const hash = genConfirmToken(0, 9);
 		const validity = new Date();
 		validity.setDate(validity.getDate() + 1);
 
@@ -111,16 +104,13 @@ export default class UserService {
 	}
 
 	async sendConfirmEmail(email, id_user, hash){
-		// const link = `http://localhost:3000/${id_user}/${hash}`
-		// console.log("email function");
+		// const link = `http://localhost:3000/confirmEmail/${id_user}/${hash}`
 		// let nodemailer = require("nodemailer");
-		// console.log("mailer init");
 		// const transport = nodemailer.createTransport({
 		// 	host: "",
 		// 	port: "",
 		// 	secure: true
 		// });
-		// console.log("send");
 		// transport.sendMail({
 		// 	from: '<admin@sportify.cz>',
 		// 	to: `${email}`,
