@@ -125,10 +125,10 @@ INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verifie
 INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (11, 'unverified3@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'unverified3_name', 'unverified3_surname', false);
 INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (12, 'unverified4@test.cz', '$2a$10$UVywx/9I3MbB/phygmL0EOL5Mo0XjDAT4/RMmCvL75LtwsxB0jV1S', 'unverified4_name', 'unverified4_surname', false);
 
-INSERT INTO `confirmTokens` (`id_token`, `id_user`, `hash`, `validity`) VALUES ('', 9, '39247677', '2019-11-29 00:09:33');
-INSERT INTO `confirmTokens` (`id_token`, `id_user`, `hash`, `validity`) VALUES ('', 10, '39247679', '2019-11-29 00:09:33');
-INSERT INTO `confirmTokens` (`id_token`, `id_user`, `hash`, `validity`) VALUES ('', 11, '39247678', '2019-11-29 00:09:33');
-INSERT INTO `confirmTokens` (`id_token`, `id_user`, `hash`, `validity`) VALUES ('', 12, '39247677', '2019-11-29 00:09:33');
+INSERT INTO `confirmTokens` (`id_token`, `id_user`, `hash`, `validity`) VALUES (1, 9, '39247677', '2019-11-29 00:09:33');
+INSERT INTO `confirmTokens` (`id_token`, `id_user`, `hash`, `validity`) VALUES (2, 10, '39247679', '2019-11-29 00:09:33');
+INSERT INTO `confirmTokens` (`id_token`, `id_user`, `hash`, `validity`) VALUES (3, 11, '39247678', '2019-11-29 00:09:33');
+INSERT INTO `confirmTokens` (`id_token`, `id_user`, `hash`, `validity`) VALUES (4, 12, '39247677', '2019-11-29 00:09:33');
 
 INSERT INTO `sports` (`id_sport`, `sport`) VALUES (1, 'hokej');
 INSERT INTO `sports` (`id_sport`, `sport`) VALUES (2, 'florbal');
