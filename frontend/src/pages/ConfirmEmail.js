@@ -38,7 +38,7 @@ function Confirm(url, params){
     };
     useEffect(() => {
         fetchData();
-    }, [0]);
+    }, [undefined]);
 
     return [state];
 }
