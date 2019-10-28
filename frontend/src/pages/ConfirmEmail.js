@@ -9,13 +9,12 @@ function Confirm(url, params){
         isConfirming: true
     });
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     const fetchData = () => {
         api
             .post(url, {id_user: id_user, hash: hash})
             .then(({ data }) => {
                 setState({ isConfirming: false });
-                // Destructured: const { user } = data;
+                // const { user } = data;
                 // Do something - for example login user
             })
             .catch(( { response } ) => {
@@ -35,7 +34,7 @@ function Confirm(url, params){
                         console.log(status + ' ' + data.message);
                         break;
                     default:
-                        // Do something - handle unresolved status
+                        // Do something - handle unresolved state
                         break;
                 }
             });
