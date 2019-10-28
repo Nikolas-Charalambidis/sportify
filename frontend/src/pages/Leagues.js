@@ -13,7 +13,7 @@ export function Leagues() {
 					<Breadcrumb.Item href="/">Domů</Breadcrumb.Item>
 					<Breadcrumb.Item active href="/leagues">Soutěže</Breadcrumb.Item>
 				</Breadcrumb>
-				<Heading>Leagues</Heading>
+				<Heading>Soutěže</Heading>
 				<p>This page is empty for now...</p>
 			</MainSection>
 		</div>

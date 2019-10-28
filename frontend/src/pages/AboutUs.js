@@ -8,7 +8,7 @@ export function AboutUs() {
 		<>
 			<TopNavigation/>
 			<MainSection>
-				<Heading>Teams</Heading>
+				<Heading>O nás</Heading>
 				<p>This page is empty for now...</p>
 			</MainSection>
 		</>

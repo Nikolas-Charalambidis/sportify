@@ -8,7 +8,7 @@ export function Contact() {
 		<>
 			<TopNavigation/>
 			<MainSection>
-				<Heading>Teams</Heading>
+				<Heading>Kontakt</Heading>
 				<p>This page is empty for now...</p>
 			</MainSection>
 		</>

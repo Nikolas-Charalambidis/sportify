@@ -3,7 +3,7 @@ import React from 'react';
 import {Heading, MainSection} from '../atoms/';
 import {TopNavigation} from '../organisms/TopNavigation';
 
-export function Fixtures() {
+export function Matches() {
 	return (
 		<>
 			<TopNavigation/>
