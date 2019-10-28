@@ -1,82 +1,33 @@
 import React from 'react';
 import {withRouter} from 'react-router-dom';
-import classNames from 'classnames';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../assets/css/index.css';
+import {Navbar, Nav, Button} from "react-bootstrap";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import * as Icons from "@fortawesome/free-solid-svg-icons"
 
-import {AvatarPhoto, Link} from '../atoms/';
-import {useAuth} from '../utils/auth';
-
-const navLinkTextStyle = 'f6 dib white';
-const navLinkStyle = classNames(navLinkTextStyle, 'dim');
-const navButtonStyle = classNames(
-	navLinkTextStyle,
-	'bg-transparent bg-animate hover-bg-white hover-black pv2 ph3 mh3 br-pill ba b--white-20',
-);
-
-function TopNavigationBase({history}) {
-	const {user, signout} = useAuth();
-
+function TopNavigationBase() {
 	return (
-		<nav className="flex justify-between bb b--white-10 bg-dark-blue white">
-			<Link to="/" noUnderline className="b white flex items-center pv2 ph3">
-				Sportify
-			</Link>
-			<div className="flex-grow flex items-center">
-				<Link to="/teams" className={classNames(navLinkStyle, 'pa3')}>
-					Teams
-				</Link>
-				<Link to="/Leagues" className={classNames(navLinkStyle, 'pa3')}>
-					Leagues
-				</Link>
-				<Link to="/Fixtures" className={classNames(navLinkStyle, 'pa3')}>
-					Fixtures
-				</Link>
-				<Link to="/Statistics" className={classNames(navLinkStyle, 'pa3')}>
-					Statistics
-				</Link>
-				{user ? (
-					<>
-						<Link to="/settings" className={classNames(navLinkStyle, 'pa3')}>
-							Settings
-						</Link>
-						<Link
-							to={`/${user.screenName}`}
-							noUnderline
-							className={classNames(
-								navLinkStyle,
-								'ph3 pv1 h-100 flex items-center',
-							)}
-						>
-							<AvatarPhoto
-								className="v-mid dib mr2"
-								src={user.profileImageUrl}
-								alt={user.screenName}
-								size={2}
-							/>{' '}
-							{user.name}
-						</Link>
-						<button
-							className={navButtonStyle}
-							onClick={() => {
-								signout();
-								history.push('/');
-								window.location.reload();
-							}}
-						>
-							Sign Out
-						</button>
-					</>
-				) : (
-					<>
-						<Link to="/auth/signin" className={classNames(navLinkStyle, 'pa3')}>
-							Sign In
-						</Link>
-						<Link to="/auth/signup" noUnderline className={navButtonStyle}>
-							Sign Up
-						</Link>
-					</>
-				)}
-			</div>
-		</nav>
+		<Navbar id="navigation" expand="md">
+			<Navbar.Brand href="/">
+			</Navbar.Brand>
+			<Navbar.Toggle aria-controls="basic-navbar-nav" />
+			<Navbar.Collapse id="basic-navbar-nav">
+				<ul className="m-auto">
+					<li><Nav.Link href="/teams">Týmy</Nav.Link></li>
+					<li><Nav.Link href="/souteze">Soutěže</Nav.Link></li>
+					<li><Nav.Link href="/zapasy">Zápasy</Nav.Link></li>
+					<li><Nav.Link href="/statistiky">Statistiky</Nav.Link></li>
+					<li><Nav.Link href="/onas">O nás</Nav.Link></li>
+					<li><Nav.Link href="/kontakt">Kontakt</Nav.Link></li>
+				</ul>
+
+				<div className="signUp">
+					<FontAwesomeIcon  className="hidden-lg mr-4 white" icon={Icons.faSearch} size="1x" />
+					<Button variant="primary" href="/login"><FontAwesomeIcon  className="mr-2" icon={Icons.faUser} size="1x" />Přihlásit se</Button>
+				</div>
+			</Navbar.Collapse>
+		</Navbar>
 	);
 }
 
