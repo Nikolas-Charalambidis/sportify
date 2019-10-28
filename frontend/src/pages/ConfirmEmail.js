@@ -12,25 +12,35 @@ function Confirm(url, params){
     const fetchData = () => {
         api
             .post(url, {id_user: id_user, hash: hash})
-            .then(({ data, status }) => {
+            .then(({ data }) => {
                 setState({ isConfirming: false });
-                // const { error, msg, user } = data;
-                // if(!error){
-                //     // Do something
-                // } else {
-                //     // Do something
-                // }
+                const { user } = data;
+                // Do something - for example login user
             })
-            .catch(error => {
-                setState( { isConfirming: false });
-                // Do something
+            .catch(( { response } ) => {
+                setState( { isLoading: false });
+                const { data, status } = response;
+                switch (status) {
+                    case 400:
+                        // Do something - show message/redirect...
+                        console.log(status + ' ' + data.message);
+                        break;
+                    case 404:
+                        // Do something - show message/redirect...
+                        console.log(status + ' ' + data.message);
+                        break;
+                    case 498:
+                        // Do something - show message/link to send new token...
+                        console.log(status + ' ' + data.message);
+                        break;
+                }
             });
     };
     useEffect(() => {
         fetchData();
-    });
+    }, [0]);
 
-    return [state, fetchData];
+    return [state];
 }
 
 export function ConfirmEmail() {
