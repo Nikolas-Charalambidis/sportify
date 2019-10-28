@@ -17,8 +17,8 @@ const router = Router();
  */
 router.get('/', async (req, res, next) => {
 	const dbConnection = req[DB_CONNECTION_KEY];
-	const users = await dbConnection.query(`SELECT * FROM sports`);
-	await res.json(users);
+	const sports = await dbConnection.query(`SELECT * FROM sports`);
+	await res.status(200).json({ error: false, msg: 'OK', sports: sports});
 });
 
 /**
@@ -29,7 +29,7 @@ router.get('/', async (req, res, next) => {
  *   Sport:
  *     properties:
  *       id_sport:
- *         type: string
+ *         type: integer
  *       sport:
  *         type: string
  */

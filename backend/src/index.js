@@ -12,7 +12,6 @@ dotenv.config({path: '.env.local'});
 const {PORT = 3001} = process.env;
 const api = express();
 
-
 api.listen(PORT, () => console.log(`\nAPI started at http://localhost:${PORT}`));
 
 api.use(bodyParser.json());
@@ -33,10 +32,8 @@ api.use(router);
 
 // Handling errors and logging
 api.use(function (err, req, res, next) {
-	res.status(err.status || 500).json({status: err.status, error: true, message: err.message})
+	res.status(err.status || 500).json({status: err.status, error: true, message: err.msg})
 });
 api.use(logErrors);
 api.use(clientErrorHandler);
 api.use(errorHandler);
-// Dispatcher
-api.use(router);

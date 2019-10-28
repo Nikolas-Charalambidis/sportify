@@ -27,17 +27,14 @@ const router = Router();
  *         description: Team not found
  */
 
-router.get('/:team_id', async (req, res, next) => {
-	const { team_id } = req.params;
-	const id_team = Number(team_id);
-	if (!id_team) {
-		return res.status(400).json({ error: true, msq: 'Wrong input' });
+router.get('/:id_team', async (req, res, next) => {
+	try {
+		const { id_team } = req.params;
+		const team = await new TeamService(req).findTeamById(id_team);
+		res.status(200).json({ error: false, msg: 'OK', team: team});
+	} catch(e) {
+		next(e);
 	}
-	const team = await new TeamService(req).findTeamById(id_team);
-	if (team.length === 0) {
-		return res.status(404).json({ error: true, msq: 'Team not found' });
-	}
-	await res.json(team);
 });
 
 /**
@@ -54,7 +51,7 @@ router.get('/:team_id', async (req, res, next) => {
  */
 router.get('/', async (req, res, next) => {
 	const teams = await new TeamService(req).allTeams();
-	await res.json(teams);
+	await res.status(200).json({ error: false, msg: 'OK', teams: teams});
 });
 
 /**
@@ -72,14 +69,14 @@ router.get('/', async (req, res, next) => {
  *         description: Invalid request
  */
 router.post('/', async (req, res, next) => {
-	const { id_sport, name, id_leader } = req.body;
-	const sport = Number(id_sport);
-	const leader = Number(id_leader);
-	if(!sport || !name || !leader){
-		return res.status(400).json({ error: true, msq: 'Missing data' });
+	try {
+		const { id_sport, name, id_leader } = req.body;
+		const id = await new TeamService(req).addNewTeam(id_sport, name, id_leader);
+		res.status(201).header('Location' , `/api/v1/teams/${id}`).send({ error: false, msg: 'OK', id_team: id});
+	} catch(e) {
+		next(e);
 	}
-	const id = await new TeamService(req).addNewTeam(sport, name, leader);
-	res.status(201).header('Location' , `/api/v1/teams/${id}`).send({ error: false, msq: 'OK'});
+
 });
 
 /**

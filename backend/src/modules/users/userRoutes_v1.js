@@ -20,20 +20,43 @@ const router = Router();
  *         description: User not found
  */
 router.post('/login', async (req, res, next) => {
-	const { email, password } = req.body;
-	if (!email || !password) {
-		return res.status(400).json({ error: true, msq: 'Missing params' });
+	try {
+		const { email, password } = req.body;
+		const user = await new UserService(req).login(email, password);
+		const { id_user } = user;
+		res.status(200).header('Location' , `/api/v1/teams/${id_user}`)
+			.json({ error: false, msg: 'OK', user: user});
+	} catch(e) {
+		next(e);
 	}
-	const result = await new UserService(req).login(email, password);
-	if(result.length === 0){
-		return res.status(404).json({ error: true, msq: 'User not found' });
-	} else if(result.length > 1){
-		return res.status(404).json({ error: true, msq: 'Returned more than one record' });
+
+});
+/**
+ * @swagger
+ * /users/confirmEmail:
+ *   post:
+ *     tags:
+ *       - Users
+ *     name: Login
+ *     summary: Verify user's email
+ *     responses:
+ *       200:
+ *         description: Email verified, returned user object
+ *       400:
+ *         description: Invalid request
+ *       404:
+ *         description: Invalid token
+ *       498:
+ *         description: Token expired
+ */
+router.post('/confirmEmail', async (req, res, next) => {
+	try {
+		const { id_user, hash } = req.body;
+		const user = await new UserService(req).confirmEmail(id_user, hash);
+		res.status(200).json({ error: false, msg: 'OK', user: user});
+	} catch(e) {
+		next(e);
 	}
-	const { id_user } = result[0];
-	res.status(200)
-		.header('Location' , `/api/v1/teams/${id_user}`)
-		.json({ error: false, msq: 'OK', id_user: id_user, email: email });
 });
 
 /**
@@ -59,17 +82,14 @@ router.post('/login', async (req, res, next) => {
  *       404:
  *         description: User not found
  */
-router.get('/:user_id', async(req, res, next) => {
-	const { user_id } = req.params;
-	const id_user = Number(user_id);
-	if (!id_user) {
-		return res.status(400).json({ error: true, msq: 'Wrong input' });
+router.get('/:id_user', async(req, res, next) => {
+	try {
+		const { id_user } = req.params;
+		const user = await new UserService(req).findUserById(id_user);
+		res.status(200).json({ error: false, msg: 'OK', user: user});
+	} catch(e) {
+		next(e);
 	}
-	const user = await new UserService(req).findUserById(id_user);
-	if (user.length === 0) {
-		return res.status(404).json({ error: true, msq: 'User not found' });
-	}
-	await res.json(user);
 });
 
 /**
@@ -86,7 +106,7 @@ router.get('/:user_id', async(req, res, next) => {
  */
 router.get('/', async (req, res, next) => {
 	const users = await new UserService(req).allUsers();
-	await res.json(users);
+	await res.status(200).json({ error: false, msg: 'OK', users: users});
 });
 
 /**
@@ -120,43 +140,13 @@ router.post('/', async(req, res, next) => {
 	try {
 		const { email, password, name, surname } = req.body;
 		const id = await new UserService(req).addNewUser(email, password, name, surname);
-		res.status(201).header('Location' , `/api/v1/users/${id}`).send({ error: false, msq: 'OK', id_user: id});
+		res.status(201).header('Location' , `/api/v1/users/${id}`).send({ error: false, msg: 'OK', id_user: id});
 	} catch (e) {
 		next(e);
 	}
 
 });
 
-/**
- * @swagger
- * /users:
- *   put:
- *     tags:
- *       - Users
- *     name: Login
- *     summary: Change user password
- *     responses:
- *       200:
- *         description: Password changed
- *       400:
- *         description: Missing or incorrect data in request body
- *       404:
- *         description: Unable to chanbe password
- */
-router.put('/changePassword', async(req, res, next) => {
-	const { id_user, password } = req.body;
-	const user_id = Number(id_user);
-	if(!user_id || !password ){
-		res.status(400);
-		await res.json({ error: true, msq: 'Missing data' });
-		return;
-	}
-	const result = await new UserService(req).changePassword(user_id, password);
-	if(result.affectedRows === 1){
-		return res.status(200).json({ error: false, msq: 'OK'});
-	}
-	res.status(404).json({ error: true, msq: 'User not found'});
-});
 /**
  * Team object Swagger definition
  *
@@ -174,6 +164,8 @@ router.put('/changePassword', async(req, res, next) => {
  *         type: string
  *       surname:
  *         type: string
+ *       verified:
+ *         type: boolean
  */
 
 export default router;
