@@ -14,7 +14,7 @@ function Confirm(url, params){
             .post(url, {id_user: id_user, hash: hash})
             .then(({ data }) => {
                 setState({ isConfirming: false });
-                const { user } = data;
+                // const { user } = data;
                 // Do something - for example login user
             })
             .catch(( { response } ) => {
@@ -33,11 +33,15 @@ function Confirm(url, params){
                         // Do something - show message/link to send new token...
                         console.log(status + ' ' + data.message);
                         break;
+                    default:
+                        // Do something - handle unresolved state
+                        break;
                 }
             });
     };
     useEffect(() => {
         fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return [state];
