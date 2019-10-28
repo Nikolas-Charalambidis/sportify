@@ -1,6 +1,6 @@
 # 4IT445 Agile web application development | Sportify
 
-A Sportify web application as a semestral work for the 4IT445 Agile web application development course.
+A web application Sportify, as a semestral work, manages teams, leagues, matches, and players with a huge load of statistics. Developed for the 4IT445 Agile web application development course.
 
 ## Frontend
 
