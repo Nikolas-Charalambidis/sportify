@@ -6,7 +6,8 @@ import {Navbar, Nav, Button} from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as Icons from "@fortawesome/free-solid-svg-icons"
 
-function TopNavigationBase() {
+function TopNavigationBase(props) {
+	const { location } = props;
 	return (
 		<Navbar id="navigation" sticky="top" expand="md">
 			<Navbar.Brand href="/">
@@ -16,12 +17,14 @@ function TopNavigationBase() {
 			<Button className="d-inline d-md-none loginButtonMobile" variant="primary" href="/login"><FontAwesomeIcon icon={Icons.faUser} size="1x" /></Button>
 			<Navbar.Collapse id="basic-navbar-nav">
 				<ul className="m-auto">
+					<Nav activeKey={location.pathname}>
 					<li><Nav.Link href="/teams">Týmy</Nav.Link></li>
-					<li><Nav.Link href="/souteze">Soutěže</Nav.Link></li>
-					<li><Nav.Link href="/zapasy">Zápasy</Nav.Link></li>
-					<li><Nav.Link href="/statistiky">Statistiky</Nav.Link></li>
-					<li><Nav.Link href="/onas">O nás</Nav.Link></li>
-					<li><Nav.Link href="/kontakt">Kontakt</Nav.Link></li>
+					<li><Nav.Link href="/leagues" >Soutěže</Nav.Link></li>
+					<li><Nav.Link href="/matches">Zápasy</Nav.Link></li>
+					<li><Nav.Link href="/statistics">Statistiky</Nav.Link></li>
+					<li><Nav.Link href="/aboutus">O nás</Nav.Link></li>
+					<li><Nav.Link href="/contact">Kontakt</Nav.Link></li>
+					</Nav>
 				</ul>
 
 				<div className="signUp d-none d-md-inline-block">
@@ -31,6 +34,7 @@ function TopNavigationBase() {
 				</div>
 			</Navbar.Collapse>
 		</Navbar>
+
 	);
 }
 

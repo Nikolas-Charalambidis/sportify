@@ -8,7 +8,7 @@ export function Statistics() {
 		<>
 			<TopNavigation/>
 			<MainSection>
-				<Heading>Statistics</Heading>
+				<Heading>Statistiky</Heading>
 				<p>This page is empty for now...</p>
 			</MainSection>
 		</>
