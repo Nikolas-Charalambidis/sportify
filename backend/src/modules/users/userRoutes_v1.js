@@ -11,6 +11,19 @@ const router = Router();
  *       - Users
  *     name: Login
  *     summary: Verify user email and password
+ *     consumes: application/json
+ *     produces: application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             email:
+ *               type: string
+ *             password:
+ *               type: string
  *     responses:
  *       200:
  *         description: User found
@@ -39,6 +52,19 @@ router.post('/login', async (req, res, next) => {
  *       - Users
  *     name: Login
  *     summary: Verify user's email
+ *     consumes: application/json
+ *     produces: application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             id_user:
+ *               type: integer
+ *             hash:
+ *               type: string
  *     responses:
  *       200:
  *         description: Email verified, returned user object
@@ -47,7 +73,7 @@ router.post('/login', async (req, res, next) => {
  *       404:
  *         description: Invalid token
  *       498:
- *         description: Token expired
+ *         description: Token expiredW
  */
 router.post('/confirmEmail', async (req, res, next) => {
 	try {
@@ -117,19 +143,23 @@ router.get('/', async (req, res, next) => {
  *       - Users
  *     name: Login
  *     summary: Add new user
- *     requestBody:
- *     	 content:
- *         application/json:
- *           schema:
- *     	       type: object
- *     		   properties:
- *               email:
- *                 type: string
- *               name:
- *                 type: string
- *     		   examples:
- *               email: email@test.cz
- *               name: Zdeněk
+ *     consumes: application/json
+ *     produces: application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             email:
+ *               type: string
+ *             password:
+ *               type: string
+ *             name:
+ *               type: string
+ *             surname:
+ *               type: string
  *     responses:
  *       201:
  *         description: User added
