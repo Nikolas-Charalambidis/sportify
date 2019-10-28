@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 export function MainSection({children}) {
 	return (
-		<Container className="mt-3">
+		<Container className="mainSection mt-3">
 			<section>{children}</section>
 		</Container>
 	);
