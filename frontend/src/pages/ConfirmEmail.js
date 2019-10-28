@@ -9,40 +9,39 @@ function Confirm(url, params){
         isConfirming: true
     });
 
-    const fetchData = () => {
-        api
-            .post(url, {id_user: id_user, hash: hash})
-            .then(({ data }) => {
-                setState({ isConfirming: false });
-                // const { user } = data;
-                // Do something - for example login user
-            })
-            .catch(( { response } ) => {
-                setState( { isLoading: false });
-                const { data, status } = response;
-                switch (status) {
-                    case 400:
-                        // Do something - show message/redirect...
-                        console.log(status + ' ' + data.message);
-                        break;
-                    case 404:
-                        // Do something - show message/redirect...
-                        console.log(status + ' ' + data.message);
-                        break;
-                    case 498:
-                        // Do something - show message/link to send new token...
-                        console.log(status + ' ' + data.message);
-                        break;
-                    default:
-                        // Do something - handle unresolved state
-                        break;
-                }
-            });
-    };
-    useEffect(() => {
-        fetchData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    useEffect( () => {
+        async function fetchData() {
+            await api
+                .post(url, {id_user: id_user, hash: hash})
+                .then(({ data }) => {
+                    setState({ isConfirming: false });
+                    // const { user } = data;
+                    // Do something - for example login user
+                })
+                .catch(( { response } ) => {
+                    setState( { isLoading: false });
+                    const { data, status } = response;
+                    switch (status) {
+                        case 400:
+                            // Do something - show message/redirect...
+                            console.log(status + ' ' + data.message);
+                            break;
+                        case 404:
+                            // Do something - show message/redirect...
+                            console.log(status + ' ' + data.message);
+                            break;
+                        case 498:
+                            // Do something - show message/link to send new token...
+                            console.log(status + ' ' + data.message);
+                            break;
+                        default:
+                            // Do something - handle unresolved state
+                            break;
+                    }
+                });
+        }
+        fetchData().then();
+    }, [api, hash, id_user, url]);
 
     return [state];
 }
