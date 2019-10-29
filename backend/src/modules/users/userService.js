@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import {DB_CONNECTION_KEY} from '../../libs/connection';
 import * as userValidation from './userValidations';
 import { genConfirmToken } from '../../libs/utils';
+import { config } from '../../../config';
 
 dotenv.config();
 dotenv.config({path: '.env'});
@@ -104,18 +105,18 @@ export default class UserService {
 	}
 
 	async sendConfirmEmail(email, id_user, hash){
-		// const link = `http://localhost:3000/confirmEmail/${id_user}/${hash}`
-		// let nodemailer = require("nodemailer");
-		// const transport = nodemailer.createTransport({
-		// 	host: "",
-		// 	port: "",
-		// 	secure: true
-		// });
-		// transport.sendMail({
-		// 	from: '<admin@sportify.cz>',
-		// 	to: `${email}`,
-		// 	subject: "Email confirmation",
-		// 	text: `Please confirm your email by clicking on this link \n ${link}`,
-		// }, console.error);
+		let link = config.LOCAL
+			? `http://localhost:3000/confirmEmail/${id_user}/${hash}`
+			: `http://sportify.cz/confirmEmail/${id_user}/${hash}`;
+
+		const sgMail = require('@sendgrid/mail');
+		sgMail.setApiKey(config.SENDGRID_API_KEY);
+		const msg = {
+			to: `${email}`,
+			from: 'admin@sportify.cz',
+			subject: 'Email confirmation',
+			text: `Please confirm your email by clicking on this link: \n ${link}`,
+		};
+		await sgMail.send(msg);
 	}
 }
