@@ -34,7 +34,6 @@ function TopNavigationBase(props) {
 				</div>
 			</Navbar.Collapse>
 		</Navbar>
-
 	);
 }
 
