@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useApi } from '../../utils/api';
 import { useHistory } from 'react-router-dom';
-import {config} from "../../../../backend/config";
+import {config} from "../../config";
 
 function Confirm(url, params){
     let { id_user, hash } = params;
