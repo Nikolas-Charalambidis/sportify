@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useApi } from '../utils/api';
+import { useApi } from '../../utils/api';
 
 function Confirm(url, params){
     let { id_user, hash } = params;

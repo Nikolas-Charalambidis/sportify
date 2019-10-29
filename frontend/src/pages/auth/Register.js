@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
-import { Heading, MainSection } from '../atoms/';
-import { TopNavigation } from '../organisms/TopNavigation';
-import { Form, Button, Row, Col } from "react-bootstrap";
+import { Heading, MainSection } from '../../atoms';
+import { TopNavigation } from '../../organisms/TopNavigation';
+import {Form, Button, Row, Col, Breadcrumb} from "react-bootstrap";
 
 export function Register() {
 
@@ -27,6 +27,10 @@ export function Register() {
         <div>
             <TopNavigation />
             <MainSection>
+                <Breadcrumb>
+                    <Breadcrumb.Item href="/">Domů</Breadcrumb.Item>
+                    <Breadcrumb.Item active>Registrace</Breadcrumb.Item>
+                </Breadcrumb>
                 <Heading>Registrace</Heading>
                 <Form validated={validated}>
 

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 
-import { Heading, MainSection } from '../atoms/';
-import { TopNavigation } from '../organisms/TopNavigation';
+import { Heading, MainSection } from '../../atoms';
+import { TopNavigation } from '../../organisms/TopNavigation';
 import {Row, Col, Form, Button, Breadcrumb} from "react-bootstrap";
-import '../assets/css/index.css';
+import '../../assets/css/index.css';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as Icons from "@fortawesome/free-solid-svg-icons";
-import {Footer} from "../organisms/Footer";
+import {Footer} from "../../organisms/Footer";
 
 
 export function Login() {
@@ -30,7 +30,7 @@ export function Login() {
 			<MainSection>
 				<Breadcrumb>
 					<Breadcrumb.Item href="/">Domů</Breadcrumb.Item>
-					<Breadcrumb.Item active href="/login">Přihlásit se</Breadcrumb.Item>
+					<Breadcrumb.Item active>Přihlásit se</Breadcrumb.Item>
 				</Breadcrumb>
 				<Heading className="pageHeading mt-4">Přihlásit se</Heading>
 				<p className="text-center mb-5">Využívejte webovou aplikaci <strong>Sportify</strong> naplno. <br /> S vytvořeným účtem získáte přístup do správy Vašeho profilu, týmů, soutěží a interaktivnímu zápisu výsledků.</p>

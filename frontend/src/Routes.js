@@ -9,10 +9,10 @@ import { Statistics } from './pages/Statistics';
 import { AboutUs } from './pages/AboutUs';
 import { Contact } from './pages/Contact';
 import { Page404 } from './pages/error/Page404';
-import { Login } from './pages/Login';
-import { Register } from './pages/Register';
-import { Profile } from "./pages/Profile";
-import { ConfirmEmail } from "./pages/ConfirmEmail";
+import { Login } from './pages/auth/Login';
+import { Register } from './pages/auth/Register';
+import { Profile } from "./pages/administration/Profile";
+import { ConfirmEmail } from "./pages/auth/ConfirmEmail";
 
 export function Routes() {
 	return (
@@ -20,7 +20,7 @@ export function Routes() {
 			<Route path="/" exact component={HomePage}/>
 			<Route path="/teams" exact component={Teams}/>
 			<Route path="/leagues" exact component={Leagues}/>
-			<Route path="/zapasy" exact component={Matches}/>
+			<Route path="/matches" exact component={Matches}/>
 			<Route path="/statistics" exact component={Statistics} />
 			<Route path="/aboutus" exact component={AboutUs}/>
 			<Route path="/contact" exact component={Contact}/>
@@ -28,7 +28,7 @@ export function Routes() {
             <Route path="/statistics" exact component={Statistics} />
             <Route path="/login" exact component={Login} />
             <Route path="/register" exact component={Register} />
-            <Route path="/profile" exact component={Profile} />
+            <Route path="/administration/profile" exact component={Profile} />
 			<Route path="/confirmEmail/:id_user/:hash" exact component={ConfirmEmail} />
 			<Route path="*" component={Page404}/>
 		</Switch>
