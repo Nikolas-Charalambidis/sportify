@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-import { Heading, MainSection } from '../atoms/';
-import { TopNavigation } from '../organisms/TopNavigation';
+import { Heading, MainSection } from '../../atoms';
+import { TopNavigation } from '../../organisms/TopNavigation';
 import {
   Form,
   Button,
@@ -10,7 +10,7 @@ import {
   Image,
   Modal, Breadcrumb,
 } from 'react-bootstrap';
-import {Footer} from "../organisms/Footer";
+import {Footer} from "../../organisms/Footer";
 
 export function Profile() {
   const [validated, setValidated] = useState(false);
@@ -39,9 +39,10 @@ export function Profile() {
       <MainSection>
         <Breadcrumb>
           <Breadcrumb.Item href="/">Domů</Breadcrumb.Item>
-          <Breadcrumb.Item active href="/profile">Profil</Breadcrumb.Item>
+          <Breadcrumb.Item active>Administrace</Breadcrumb.Item>
+          <Breadcrumb.Item active>Profil</Breadcrumb.Item>
         </Breadcrumb>
-        <Heading className="pageHeading mt-4">Profil</Heading>
+        <Heading>Profil</Heading>
 
         <Form validated={validated}>
           <Row>
