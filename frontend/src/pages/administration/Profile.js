@@ -12,8 +12,6 @@ import {
   Modal,
   Breadcrumb,
   Accordion,
-  Card,
-  Badge,
 } from 'react-bootstrap';
 import { Footer } from '../../organisms/Footer';
 import * as Icons from '@fortawesome/free-solid-svg-icons';
