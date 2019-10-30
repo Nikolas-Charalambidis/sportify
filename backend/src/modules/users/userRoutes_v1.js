@@ -39,6 +39,82 @@ router.get('/:id_user', async(req, res, next) => {
 /**
  * @swagger
  * /users:
+ *   patch:
+ *     tags:
+ *       - Users
+ *     name: Login
+ *     summary: Change user password
+ *     consumes: application/json
+ *     produces: application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             oldPassword:
+ *               type: string
+ *             newPassword1:
+ *               type: string
+ *             newPassword2:
+ *               type: string
+ *     responses:
+ *       201:
+ *         description: User password has been changed
+ *       400:
+ *         description: Invalid request
+ */
+router.patch('/', async(req, res, next) => {
+	try {
+		const { id_user, oldPassword, newPassword1, newPassword2 } = req.body;
+		await new UserService(req).changePassword(id_user, oldPassword, newPassword1, newPassword2);
+		res.status(201).send({ error: false, msg: 'OK', id_user: id_user});
+	} catch (e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
+ * /users:
+ *   put:
+ *     tags:
+ *       - Users
+ *     name: Login
+ *     summary: Change user data
+ *     consumes: application/json
+ *     produces: application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             name:
+ *               type: string
+ *             surname:
+ *               type: string
+ *     responses:
+ *       201:
+ *         description: User data has been changed
+ *       400:
+ *         description: Invalid request
+ */
+router.put('/', async(req, res, next) => {
+	try {
+		const { id_user, name, surname } = req.body;
+		await new UserService(req).changeUser(id_user, name, surname);
+		res.status(201).send({ error: false, msg: 'OK', id_user: id_user});
+	} catch (e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
+ * /users:
  *   get:
  *     tags:
  *       - Users
@@ -92,7 +168,6 @@ router.post('/', async(req, res, next) => {
 	} catch (e) {
 		next(e);
 	}
-
 });
 
 /**

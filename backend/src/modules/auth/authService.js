@@ -52,7 +52,6 @@ export default class AuthService {
 		let link = config.LOCAL
 			? `http://localhost:3000/confirmEmail/${id_user}/${hash}`
 			: `http://sportify.cz/confirmEmail/${id_user}/${hash}`;
-
 		const sgMail = require('@sendgrid/mail');
 		sgMail.setApiKey(config.SENDGRID_API_KEY);
 		const msg = {
