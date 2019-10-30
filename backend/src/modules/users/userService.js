@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import {DB_CONNECTION_KEY} from '../../libs/connection';
 import * as userValidation from './userValidations';
 import AuthService from "../auth/authService";
-import {hash} from '../../libs/utils';
+import {hash, verifyHash} from '../../libs/utils';
 
 dotenv.config();
 dotenv.config({path: '.env'});
@@ -41,12 +41,49 @@ export default class UserService {
 			[email, hashedPassword, name, surname]
 		);
 		if (result.affectedRows === 1) {
-			const authService = await AuthService(this.req);
+			const authService = new AuthService(this.req);
 			const hash = await authService.genConfirmToken(result.insertId);
 			await authService.sendConfirmEmail(email, result.insertId, hash);
 			return result.insertId;
 		}
 		throw {status: 500, msg: 'Unable to create user'};
+	}
+
+	async changePassword(id_user, oldPassword, newPassword1, newPassword2) {
+		const user_id = Number(id_user);
+		userValidation.validateChangePasswordData(user_id, oldPassword, newPassword1, newPassword2);
+		if(newPassword1 !== newPassword2) {
+			throw {status: 400, msg: 'Passwords do not match'};
+		}
+		const user = await this.dbConnection.query(
+			`SELECT password FROM users WHERE id_user=?`, [user_id]
+		);
+		if (user.length === 0) {
+			throw {status: 404, msg: 'User not found'};
+		}
+		if(!verifyHash(oldPassword, user[0].password)){
+			throw {status: 400, msg: 'Invalid data'};
+		}
+		const result = await this.dbConnection.query(
+			'UPDATE users SET password=? WHERE id_user=?',
+			[hash(newPassword1, 10), user_id]
+		);
+		if (result.affectedRows === 0) {
+			throw {status: 400, msg: 'Password change failed'};
+		}
+	}
+
+	async changeUser(id_user, name, surname) {
+		const user_id = Number(id_user);
+		userValidation.validateChangeUserData(user_id, name, surname);
+
+		const result = await this.dbConnection.query(
+			'UPDATE users SET name=?, surname=? WHERE id_user=?',
+			[name, surname, user_id]
+		);
+		if (result.affectedRows === 0) {
+			throw {status: 400, msg: 'Data change failed'};
+		}
 	}
 
 	async isEmailUsed(email) {

@@ -21,21 +21,21 @@ export default class AuthService {
 
 	async login(email, password){
 		authValidation.validateLoginData(email, password);
-		const user = await this.dbConnection.query(
+		const result = await this.dbConnection.query(
 			`SELECT id_user, email, verified, password FROM users WHERE email=?`, [email]
 		);
-
-		if (user.length > 1) {
+		const user = result[0];
+		if (result.length > 1) {
 			throw {status: 400, msg: 'Returned more than one record'};
 		}
-		if (user.length === 0 || !verifyHash(password, user[0].password)) {
+		if (result.length === 0 || !verifyHash(password, user.password)) {
 			throw {status: 404, msg: `User not found or the password doesn't match`};
 		}
-
-		const id_user = user[0].id_user;
-		const token = jwt.sign({ id_user: id_user }, env.JWT_SECRET);
-
-		return { id_user: id_user, token: token};
+		if (!user.verified) {
+			throw {status: 403, msg: `Unverified email`};
+		}
+		const token = jwt.sign({ id_user: user.id_user }, env.JWT_SECRET);
+		return { user: {id_user: user.id_user, email: user.email}, token: token};
 	}
 
 	async confirmEmail(id_user, hash){
@@ -52,7 +52,6 @@ export default class AuthService {
 		let link = config.LOCAL
 			? `http://localhost:3000/confirmEmail/${id_user}/${hash}`
 			: `http://sportify.cz/confirmEmail/${id_user}/${hash}`;
-
 		const sgMail = require('@sendgrid/mail');
 		sgMail.setApiKey(config.SENDGRID_API_KEY);
 		const msg = {
