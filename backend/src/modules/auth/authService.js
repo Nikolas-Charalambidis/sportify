@@ -28,18 +28,13 @@ export default class AuthService {
 		if (user.length > 1) {
 			throw {status: 400, msg: 'Returned more than one record'};
 		}
-		if (user.length === 0) {
-			throw {status: 404, msg: `User not found or the password doesn't match`};
-		}
-
-		const match = verifyHash(password, user[0].password);
-
-		if (!match) {
+		if (user.length === 0 || !verifyHash(password, user[0].password)) {
 			throw {status: 404, msg: `User not found or the password doesn't match`};
 		}
 
 		const id_user = user[0].id_user;
 		const token = jwt.sign({ id_user: id_user }, env.JWT_SECRET);
+
 		return { id_user: id_user, token: token};
 	}
 
