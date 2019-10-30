@@ -1,6 +1,7 @@
 # idea
 *.iml
 .idea
+.vs
 
 # dependencies
 /node_modules

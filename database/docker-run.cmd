@@ -1,0 +1,1 @@
+docker run -p 3306:3306 --name mysql_sportify mysql_sportify:latest

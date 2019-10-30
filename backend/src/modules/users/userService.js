@@ -1,53 +1,52 @@
 import dotenv from 'dotenv';
+import {DB_CONNECTION_KEY} from '../../libs/connection';
+import * as userValidation from './userValidations';
+import AuthService from "../auth/authService";
 
 dotenv.config();
-dotenv.config({ path: '.env' });
+dotenv.config({path: '.env'});
 
-const { MOCK, DB_NAME, DB_PASSWORD, DB_USER, DB_PORT } = process.env;
+export default class UserService {
 
-const data = [
-	{
-		id_user: 1,
-		email: 'user01@sportify.cz',
-		password: 'password',
-		name: 'User',
-		surname: '01'
-	}, {
-		id_user: 2,
-		email: 'user02@sportify.cz',
-		password: 'password',
-		name: 'User',
-		surname: '02'
+	constructor(req) {
+		this.req = req;
+		this.dbConnection = req[DB_CONNECTION_KEY];
 	}
-];
 
-const service = {
-	findUserById: function(id_user) {
-		return {data: "NO DATABASE IMPLEMENTED YET"};
-	},
-
-	allUsers: function() {
-		return [{data: "NO DATABASE IMPLEMENTED YET"}];
+	async allUsers() {
+		return this.dbConnection.query(`SELECT * FROM users`);
 	}
-};
 
-const serviceMock = {
-	findUserById: function(id_user) {
-		return data.find(user => user.id_user === Number(id_user));
-	},
-
-	allUsers: function() {
-		return data;
+	async findUserById(id_user) {
+		const user_id = Number(id_user);
+		userValidation.validateUserID(user_id);
+		const result = await this.dbConnection.query('SELECT * FROM users WHERE id_user=?', user_id);
+		if (result.length === 0) {
+			throw {status: 404, msg: 'User not found'};
+		}
+		return result[0];
 	}
-};
 
-var exportedService;
-if (MOCK.toLowerCase() === 'true') {
-	exportedService = serviceMock;
-	console.log("[mocked]      userService");
-} else {
-	exportedService = service;
-	console.log("[initialized] userService");
+	async addNewUser(email, password, name, surname) {
+		userValidation.validateNewUserData(email, password, name, surname);
+		userValidation.validateEmail(email);
+		if(await this.isEmailUsed(email)){
+			throw {status: 400, msg: 'Email already exists'};
+		}
+		const result = await this.dbConnection.query(
+			'INSERT INTO users (id_user, email, password, name, surname, verified) VALUES ("", ?, ?, ?, ?, 0)',
+			[email, password, name, surname]
+		);
+		if(result.affectedRows === 1){
+			const hash = await AuthService(this.req).genConfirmToken(result.insertId);
+			await AuthService.sendConfirmEmail(email, result.insertId, hash);
+			return result.insertId;
+		}
+		throw {status: 500, msg: 'Unable to create user'};
+	}
+
+	async isEmailUsed(email){
+		const result = await this.dbConnection.query('SELECT * FROM users WHERE email=?', email);
+		return result.length > 0;
+	}
 }
-
-export default exportedService;

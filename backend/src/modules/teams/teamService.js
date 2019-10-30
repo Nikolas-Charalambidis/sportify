@@ -1,49 +1,53 @@
 import dotenv from 'dotenv';
+import {DB_CONNECTION_KEY} from '../../libs/connection';
+import * as teamValidation from './teamValidations';
 
 dotenv.config();
-dotenv.config({ path: '.env' });
+dotenv.config({path: '.env'});
 
-const { MOCK, DB_NAME, DB_PASSWORD, DB_USER, DB_PORT } = process.env;
+export default class TeamService {
 
-const data = [
-	{
-		id_team: 1,
-		name: 'Team 01',
-		leader: 1
-	}, {
-		id_team: 2,
-		name: 'Team 02',
-		leader: 2
+	constructor(req) {
+		this.dbConnection = req[DB_CONNECTION_KEY];
 	}
-];
 
-const service = {
-	findTeamById: function(id_team) {
-		return {data: "NO DATABASE IMPLEMENTED YET"};
-	},
-
-	allTeams: function() {
-		return [{data: "NO DATABASE IMPLEMENTED YET"}];
+	async allTeams() {
+		return this.dbConnection.query(
+			`SELECT t.id_team, t.name, s.sport, CONCAT(u.name, ' ', u.surname) as leader
+				FROM teams as t 
+				JOIN sports as s ON t.id_sport=s.id_sport 
+				JOIN users as u ON t.id_leader=u.id_user`
+		);
 	}
-};
 
-const serviceMock = {
-	findTeamById: function(id_team) {
-		return data.find(team => team.id_team === Number(id_team));
-	},
-
-	allTeams: function() {
-		return data;
+	async findTeamById(id_team) {
+		const team_id = Number(id_team);
+		teamValidation.validateTeamID(team_id);
+		const result = await this.dbConnection.query(
+			'SELECT t.id_team, t.name, s.sport, CONCAT(u.name, " ", u.surname) as leader ' +
+			'FROM teams as t ' +
+			'JOIN sports as s ON t.id_sport=s.id_sport ' +
+			'JOIN users as u ON t.id_leader=u.id_user ' +
+			'WHERE id_team=?'
+			, team_id
+		);
+		if (result.length === 0) {
+			throw {status: 404, msg: 'Team not found'};
+		}
+		return result[0];
 	}
-};
 
-var exportedService;
-if (MOCK.toLowerCase() === 'true') {
-	exportedService = serviceMock;
-	console.log("[mocked]      teamService");
-} else {
-	exportedService = service;
-	console.log("[initialized] teamService");
+	async addNewTeam(id_sport, name, id_leader) {
+		const sport = Number(id_sport);
+		const leader = Number(id_leader);
+		teamValidation.validateNewTeamData(sport, name, leader);
+		const result = await this.dbConnection.query(
+			'INSERT INTO teams (id_team, id_sport, name, id_leader) VALUES ("", ?, ?, ?)',
+			[sport, name, leader]
+		);
+		if(result.affectedRows === 1){
+			return result.insertId;
+		}
+		throw {status: 500, msg: 'Unable to create team'};
+	}
 }
-
-export default exportedService;

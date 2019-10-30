@@ -1,6 +1,5 @@
 import { Router } from 'express';
-
-import teamService from './teamService';
+import TeamService from './teamService';
 
 const router = Router();
 
@@ -22,18 +21,20 @@ const router = Router();
  *     responses:
  *       200:
  *         description: Team found
+ *       400:
+ *         description: Invalid request
  *       404:
  *         description: Team not found
  */
-router.get('/:id_team', (req, res, next) => {
-	const {id_team} = req.params;
-	const team = teamService.findTeamById(id_team);
-	if (!team) {
-		res.status(404);
-		res.json({});
-		return;
+
+router.get('/:id_team', async (req, res, next) => {
+	try {
+		const { id_team } = req.params;
+		const team = await new TeamService(req).findTeamById(id_team);
+		res.status(200).json({ error: false, msg: 'OK', team: team});
+	} catch(e) {
+		next(e);
 	}
-	res.json(team);
 });
 
 /**
@@ -48,11 +49,47 @@ router.get('/:id_team', (req, res, next) => {
  *       200:
  *         description: All teams returned
  */
-router.get('/', (req, res, next) => {
-	res.json(teamService.allTeams());
+router.get('/', async (req, res, next) => {
+	const teams = await new TeamService(req).allTeams();
+	await res.status(200).json({ error: false, msg: 'OK', teams: teams});
 });
 
 /**
+ * @swagger
+ * /teams:
+ *   post:
+ *     tags:
+ *       - Teams
+ *     name: Login
+ *     summary: Add new team
+ *     consumes: application/json
+ *     produces: application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         required: true
+ *         schema:
+ *           $ref: "#/definitions/Team"
+ *     responses:
+ *       201:
+ *         description: Team added
+ *       400:
+ *         description: Invalid request
+ */
+router.post('/', async (req, res, next) => {
+	try {
+		const { id_sport, name, id_leader } = req.body;
+		const id = await new TeamService(req).addNewTeam(id_sport, name, id_leader);
+		res.status(201).header('Location' , `/api/v1/teams/${id}`).send({ error: false, msg: 'OK', id_team: id});
+	} catch(e) {
+		next(e);
+	}
+
+});
+
+/**
+ * User object Swagger definition
+ *
  * @swagger
  * definitions:
  *   Team:
@@ -61,9 +98,8 @@ router.get('/', (req, res, next) => {
  *         type: integer
  *       name:
  *         type: string
- *       leader:
- *         type: integer
+ *       id_leader:
+ *         type: string
  */
-const definition = null;
 
 export default router;
