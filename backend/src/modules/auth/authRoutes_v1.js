@@ -26,7 +26,7 @@ const router = Router();
  *               type: string
  *     responses:
  *       200:
- *         description: User found
+ *         description: User authenticated, JWT returned
  *       400:
  *         description: Invalid request
  *       404:
@@ -35,10 +35,8 @@ const router = Router();
 router.post('/login', async (req, res, next) => {
 	try {
 		const { email, password } = req.body;
-		const user = await new AuthService(req).login(email, password);
-		const { id_user } = user;
-		res.status(200).header('Location' , `/api/v1/teams/${id_user}`)
-			.json({ error: false, msg: 'OK', user: user});
+		const { id_user, token } = await new AuthService(req).login(email, password);
+		res.status(200).json({ error: false, msg: 'OK', user_id: id_user, token: token});
 	} catch(e) {
 		next(e);
 	}

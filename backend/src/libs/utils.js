@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+import bcrypt from 'bcrypt';
 
 export const hash = (toHash, rounds) => {
   return bcrypt.hashSync(toHash, rounds);
