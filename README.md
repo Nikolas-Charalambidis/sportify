@@ -39,7 +39,7 @@ A web application Sportify, as a semestral work, manages teams, leagues, matches
 3. Commit & push to your feature/personal branch.
 4. Create a pull request, which should be offered with GitHub. If all the CI pipelines succeed, feel free to merge into the `dev` branch using the button.
 
-**Warning :warning::** If the Travis CI build fails for a reason `npm` or another component cannot be downloaded (slow servers), the build fails. Ask me out or merge manually into `dev` if you are 100 % sure the build passes (no errors, no warnings) and you take full responsibility for the state of the `dev` branch. For this reason, I decided to leave the `dev` branch unlocked for the direct commits and merges.
+**Warning:** If the Travis CI build fails for a reason `npm` or another component cannot be downloaded (slow servers), the build fails. Ask me out or merge manually into `dev` if you are 100 % sure the build passes (no errors, no warnings) and you take full responsibility for the state of the `dev` branch. For this reason, I decided to leave the `dev` branch unlocked for the direct commits and merges.
 
 ## Nice to have, better CI and improvements
 
