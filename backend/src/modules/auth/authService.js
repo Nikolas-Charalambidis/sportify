@@ -24,6 +24,7 @@ export default class AuthService {
 		const user = await this.dbConnection.query(
 			`SELECT id_user, email, verified, password FROM users WHERE email=?`, [email]
 		);
+
 		if (user.length > 1) {
 			throw {status: 400, msg: 'Returned more than one record'};
 		}
@@ -31,8 +32,7 @@ export default class AuthService {
 			throw {status: 404, msg: `User not found or the password doesn't match`};
 		}
 
-		const hashedPassword = hash(password, 10);
-		const match = verifyHash(user[0].password, hashedPassword);
+		const match = verifyHash(password, user[0].password);
 
 		if (!match) {
 			throw {status: 404, msg: `User not found or the password doesn't match`};
