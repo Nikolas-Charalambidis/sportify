@@ -38,8 +38,9 @@ export default class UserService {
 			[email, password, name, surname]
 		);
 		if(result.affectedRows === 1){
-			const hash = await AuthService(this.req).genConfirmToken(result.insertId);
-			await AuthService.sendConfirmEmail(email, result.insertId, hash);
+			const authService = await AuthService(this.req);
+			const hash = await authService.genConfirmToken(result.insertId);
+			await authService.sendConfirmEmail(email, result.insertId, hash);
 			return result.insertId;
 		}
 		throw {status: 500, msg: 'Unable to create user'};
@@ -48,5 +49,12 @@ export default class UserService {
 	async isEmailUsed(email){
 		const result = await this.dbConnection.query('SELECT * FROM users WHERE email=?', email);
 		return result.length > 0;
+	}
+
+	async setUserVerified(id_user) {
+		const result = await this.dbConnection.query('UPDATE users SET verified=true WHERE id_user=?', id_user);
+		if (result.affectedRows === 0) {
+			throw {status: 400, msg: 'Verification failed'};
+		}
 	}
 }
