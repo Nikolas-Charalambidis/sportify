@@ -1,12 +1,16 @@
 import dotenv from 'dotenv';
-import {DB_CONNECTION_KEY} from '../../libs/connection';
-import { genConfirmToken } from '../../libs/utils';
+import { DB_CONNECTION_KEY } from '../../libs/connection';
+import { verifyHash, genConfirmToken } from '../../libs/utils';
 import { config } from '../../../config';
 import * as authValidation from "../auth/authValidations";
 import UserService from "../users/userService";
 
+import jwt from 'jsonwebtoken';
+
 dotenv.config();
 dotenv.config({path: '.env'});
+
+const env = process.env;
 
 export default class AuthService {
 
@@ -17,27 +21,34 @@ export default class AuthService {
 
 	async login(email, password){
 		authValidation.validateLoginData(email, password);
-		const result = await this.dbConnection.query(
-			`SELECT id_user, email, verified FROM users WHERE email=? AND password=?`, [email, password]
+		const user = await this.dbConnection.query(
+			`SELECT id_user, email, verified, password FROM users WHERE email=?`, [email]
 		);
-		if(result.length === 0){
-			throw {status: 400, msg: 'User not found'};
-		}
-		if(result.length > 1){
+
+		if (user.length > 1) {
 			throw {status: 400, msg: 'Returned more than one record'};
 		}
-		return result[0];
+		if (user.length === 0 || !verifyHash(password, user[0].password)) {
+			throw {status: 404, msg: `User not found or the password doesn't match`};
+		}
+
+		const id_user = user[0].id_user;
+		const token = jwt.sign({ id_user: id_user }, env.JWT_SECRET);
+
+		return { id_user: id_user, token: token};
 	}
 
 	async confirmEmail(id_user, hash){
 		const user_id = Number(id_user);
 		authValidation.validateConfirmEmailData(user_id, hash);
 		await this.verifyToken(user_id, hash);
-		await this.setUserVerified(id_user);
-		return await new UserService(this.req).findUserById(id_user);
+
+		const userService = new UserService(this.req);
+		await userService.setUserVerified(id_user);
+		return await userService.findUserById(id_user);
 	}
 
-	static async sendConfirmEmail(email, id_user, hash){
+	async sendConfirmEmail(email, id_user, hash){
 		let link = config.LOCAL
 			? `http://localhost:3000/confirmEmail/${id_user}/${hash}`
 			: `http://sportify.cz/confirmEmail/${id_user}/${hash}`;
@@ -76,12 +87,5 @@ export default class AuthService {
 			throw {status: 498, msg: 'Token expired'};
 		}
 		return result[0];
-	}
-
-	async setUserVerified(id_user){
-		const result = await this.dbConnection.query('UPDATE users SET verified=true WHERE id_user=?', id_user);
-		if(result.affectedRows === 0){
-			throw {status: 400, msg: 'Verification failed'};
-		}
 	}
 }

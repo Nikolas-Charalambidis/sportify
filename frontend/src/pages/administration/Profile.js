@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 import { Heading, MainSection } from '../../atoms';
 import { TopNavigation } from '../../organisms/TopNavigation';
+import { CardTemplate } from '../../templates/CardTemplate';
 import {
   Form,
   Button,
@@ -10,14 +11,10 @@ import {
   Image,
   Modal,
   Breadcrumb,
-  Card,
-  CardDeck,
-  Tooltip,
-  OverlayTrigger,
+  Accordion,
 } from 'react-bootstrap';
 import { Footer } from '../../organisms/Footer';
 import * as Icons from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export function Profile() {
   const [validated, setValidated] = useState(false);
@@ -173,34 +170,110 @@ export function Profile() {
             </Col>
           </Row>
         </Form>
-        <Row className="mt-4">
-          <Col lg={4}>
-            <CardDeck>
-              <Card>
-                <Card.Header>
-                  {' '}
-                  <Row>
-                    <Col>Tým 1</Col>
-                    <Col className="text-right">
-                      <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">Fotbal</Tooltip>}>
-                      <FontAwesomeIcon icon={Icons.faFutbol} size="2x" />
-                      </OverlayTrigger>
-                    </Col>
-                  </Row>{' '}
-                </Card.Header>
-                <Row>
-                  <Col>
-
-                    <Card.Img
-                      src="https://cdn.pixabay.com/photo/2015/09/15/21/26/cat-941821_1280.png"
-                    />
-
-                  </Col>
-                </Row>
-              </Card>
-            </CardDeck>
-          </Col>
+        <h2 className="mt-4">Týmy</h2>
+        <Row>
+          <CardTemplate
+            nazev="Tým 1"
+            icon={Icons.faFutbol}
+            sport="fotbal"
+            logo="http://bit.ly/32Z7Hfl"
+          />
+          <CardTemplate
+            nazev="Tým 2"
+            icon={Icons.faFutbol}
+            sport="fotbal"
+            logo="http://bit.ly/2PrDmSC"
+          />
+          <CardTemplate
+            nazev="Tým 3"
+            icon={Icons.faFutbol}
+            sport="fotbal"
+            logo="http://bit.ly/32Z7Hfl"
+          />
+          <CardTemplate
+            nazev="Tým 4"
+            icon={Icons.faHockeyPuck}
+            sport="hokej"
+            logo="http://bit.ly/32Z7Hfl"
+          />
+          <CardTemplate
+            nazev="Tým 3"
+            icon={Icons.faFutbol}
+            sport="fotbal"
+            logo="http://bit.ly/32Z7Hfl"
+          />
         </Row>
+        <h2 className="mt-4">Soutěže</h2>
+        <Row>
+          <CardTemplate
+            nazev="Jarov Liga"
+            pozice="Pozice: 1."
+            icon={Icons.faFutbol}
+            sport="fotbal"
+            logo="http://bit.ly/32Z7Hfl"
+            stav="Probíhá"
+          />
+          <CardTemplate
+            nazev="Extraliga"
+            pozice="Pozice: 2."
+            icon={Icons.faFutbol}
+            sport="fotbal"
+            logo="http://bit.ly/2PrDmSC"
+            stav="Ukončena"
+          />
+        </Row>
+
+          <Accordion defaultActiveKey="0">
+            <h2 className="mt4">
+              <Accordion.Toggle
+                as={Button}
+                variant="primary"
+                eventKey="0"
+                block
+              >
+                Týmy
+              </Accordion.Toggle>
+            </h2>
+            <Accordion.Collapse eventKey="0">
+
+              <CardTemplate
+                nazev="Extraliga"
+                pozice="Pozice: 2."
+                icon={Icons.faFutbol}
+                sport="fotbal"
+                logo="http://bit.ly/2PrDmSC"
+                stav="Ukončena"
+              />
+
+
+
+
+            </Accordion.Collapse>
+
+            <h2 className="mt4">
+              <Accordion.Toggle
+                as={Button}
+                variant="primary"
+                eventKey="1"
+                block
+              >
+                Soutěže
+              </Accordion.Toggle>
+            </h2>
+            <Accordion.Collapse eventKey="1">
+              <div>
+              <CardTemplate
+                nazev="Extraliga"
+                pozice="Pozice: 2."
+                icon={Icons.faFutbol}
+                sport="fotbal"
+                logo="http://bit.ly/2PrDmSC"
+                stav="Ukončena"
+              />
+              </div>
+            </Accordion.Collapse>
+          </Accordion>
+
       </MainSection>
       <Footer />
     </div>

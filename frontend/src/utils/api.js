@@ -11,7 +11,7 @@ import {useAuth} from './auth';
 import {config} from '../config';
 
 const globalApiInstance = axios.create({
-	baseURL: '/api',
+	baseURL: 'localhost:3001',
 });
 
 if (config.MOCK_API) {
