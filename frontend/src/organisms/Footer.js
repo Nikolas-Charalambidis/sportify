@@ -5,7 +5,7 @@ import '../assets/css/index.css';
 
 function FooterBase() {
 	return (
-		<footer className="mt-5 footer" >
+		<footer className="footer">
 			<div className="footer-copyright text-center py-3">© 2019 Copyright:
 				Sportify
 			</div>

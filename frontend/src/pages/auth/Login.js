@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 
-import { Heading, MainSection } from '../../atoms';
-import { TopNavigation } from '../../organisms/TopNavigation';
+import {Heading, MainSection} from '../../atoms';
+import {TopNavigation} from '../../organisms/TopNavigation';
 import {Row, Col, Form, Button, Breadcrumb} from "react-bootstrap";
 import '../../assets/css/index.css';
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import * as Icons from "@fortawesome/free-solid-svg-icons";
 import {Footer} from "../../organisms/Footer";
 import {useApi} from '../../utils/api';
 import {useAuth} from '../../utils/auth';
@@ -34,8 +32,8 @@ export function Login() {
         setValidated(true);
 
         if (validated) {
-        	login(email, password);
-		}
+            login(email, password);
+        }
     };
 
     const login = (email, password) => {
@@ -69,49 +67,62 @@ export function Login() {
 			});
 	};
 
-	return (
-		<div>
-			<TopNavigation/>
-			<MainSection>
-				<Breadcrumb>
-					<Breadcrumb.Item href="/">Domů</Breadcrumb.Item>
-					<Breadcrumb.Item active>Přihlásit se</Breadcrumb.Item>
-				</Breadcrumb>
-				<Heading className="pageHeading mt-4">Přihlásit se</Heading>
-				<p className="text-center mb-5">Využívejte webovou aplikaci <strong>Sportify</strong> naplno. <br /> S vytvořeným účtem získáte přístup do správy Vašeho profilu, týmů, soutěží a interaktivnímu zápisu výsledků.</p>
-				<Form id="loginForm" validated={validated}>
-					<Form.Group as={Row} controlId="formBasicEmail justify-content-md-center">
-						<Form.Label className="text-right col-md-offset-3" column lg={{ span: 1, offset: 4 }} md={{ span: 2, offset: 3 }} xs={{ span: 2 }}>
-							Email:
-						</Form.Label>
-						<Col lg={{ span: 3 }} md={{ span: 4 }} xs={{ span: 10 }}>
-							<Form.Control required type="email" name="email" value={email} onChange={e => setEmail(e.target.value)}/>
-						</Col>
-					</Form.Group>
-					<Form.Group as={Row} controlId="formBasicPassword mt-5">
-						<Form.Label className="text-right col-md-offset-3" column lg={{ span: 1, offset: 4 }} md={{ span: 2, offset: 3 }} xs={{ span: 2 }}>
-							Heslo:
-						</Form.Label>
-						<Col lg={{ span: 3 }} md={{ span: 4 }} xs={{ span: 10 }}>
-							<Form.Control required type="password" name="password" value={password} onChange={e => setPassword(e.target.value)}/>
-						</Col>
-					</Form.Group>
-					<Row className="mt-4">
-						<Col className="text-right">
-							<Button variant="primary" type="button" onClick={onLogin}>Přihlásit <FontAwesomeIcon className="d-none d-sm-inline-block" icon={Icons.faCaretRight} size="1x" /></Button>
-						</Col>
-						<Col className="text-left">
-							<Button variant="secondary" href="/register">Registrovat</Button>
-						</Col>
-					</Row>
-					<Row className="mt-2">
-						<Col lg={{ span: 2, offset: 4 }} md={{ span: 4, offset: 4 }} sm={{ offset: 2, span: 8}} className="text-center">
-							<a className="blackHref" href="/#">Zapomenuté heslo</a>
-						</Col>
-					</Row>
-				</Form>
-			</MainSection>
-			<Footer/>
-		</div>
-	);
+    return (
+        <div>
+            <TopNavigation/>
+            <MainSection>
+                <Breadcrumb>
+                    <Breadcrumb.Item href="/">Domů</Breadcrumb.Item>
+                    <Breadcrumb.Item active>Přihlásit se</Breadcrumb.Item>
+                </Breadcrumb>
+                <Heading className="pageHeading mt-4">Přihlásit se</Heading>
+                <p className="text-center mb-5">Využívejte webovou aplikaci <strong>Sportify</strong> naplno. <br/> S
+                    vytvořeným účtem získáte přístup do správy Vašeho profilu, týmů, soutěží a interaktivnímu zápisu
+                    výsledků.</p>
+                <Form id="loginForm" validated={validated}>
+                    <Form.Group controlId="formBasicEmail">
+                        <Row>
+                            <Col xl={{span: 4, offset: 4}} md={{span: 6, offset: 3}}>
+                                <Form.Label>E-mail:</Form.Label>
+                            </Col>
+                            <Col xl={{span: 4, offset: 4}} md={{span: 6, offset: 3}}>
+                                <Form.Control required type="email" name="email" value={email}
+                                              onChange={e => setEmail(e.target.value)}/>
+                            </Col>
+                        </Row>
+                    </Form.Group>
+
+                    <Form.Group controlId="formBasicPassword">
+                        <Row>
+                            <Col xl={{span: 4, offset: 4}} md={{span: 6, offset: 3}}>
+                                <Form.Label>Heslo:</Form.Label>
+                            </Col>
+                            <Col xl={{span: 4, offset: 4}} md={{span: 6, offset: 3}}>
+                                <Form.Control required type="password" name="password" value={password}
+                                              onChange={e => setPassword(e.target.value)}/>
+                            </Col>
+                        </Row>
+                    </Form.Group>
+
+
+                    <Row className="mt-4">
+                        <Col xl={{span: 2, offset: 4}} lg={{span: 3, offset: 3}} md={{span: 6, offset: 3}} className="">
+                            <Button className="btn-block mb-3 mb-lg-0" variant="primary" type="button"
+                                    onClick={onLogin}>Přihlásit</Button>
+                        </Col>
+                        <Col xl={{span: 2, offset: 0}} lg={{span: 3, offset: 0}} md={{span: 6, offset: 3}}>
+                            <Button className="btn-block" variant="secondary" type="button"
+                                    href="/register">Registrace</Button>
+                        </Col>
+                    </Row>
+                    <Row className="mt-2">
+                        <Col className="text-center">
+                            <a className="blackHref" href="/#">Zapomenuté heslo</a>
+                        </Col>
+                    </Row>
+                </Form>
+            </MainSection>
+            <Footer/>
+        </div>
+    );
 }
