@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import {DB_CONNECTION_KEY} from '../../libs/connection';
 import * as userValidation from './userValidations';
 import AuthService from "../auth/authService";
+import {hash} from '../../libs/utils';
 
 dotenv.config();
 dotenv.config({path: '.env'});
@@ -30,14 +31,16 @@ export default class UserService {
 	async addNewUser(email, password, name, surname) {
 		userValidation.validateNewUserData(email, password, name, surname);
 		userValidation.validateEmail(email);
-		if(await this.isEmailUsed(email)){
+		if (await this.isEmailUsed(email)) {
 			throw {status: 400, msg: 'Email already exists'};
 		}
+
+		const hashedPassword = hash(password, 10);
 		const result = await this.dbConnection.query(
 			'INSERT INTO users (id_user, email, password, name, surname, verified) VALUES ("", ?, ?, ?, ?, 0)',
-			[email, password, name, surname]
+			[email, hashedPassword, name, surname]
 		);
-		if(result.affectedRows === 1){
+		if (result.affectedRows === 1) {
 			const authService = await AuthService(this.req);
 			const hash = await authService.genConfirmToken(result.insertId);
 			await authService.sendConfirmEmail(email, result.insertId, hash);
@@ -46,7 +49,7 @@ export default class UserService {
 		throw {status: 500, msg: 'Unable to create user'};
 	}
 
-	async isEmailUsed(email){
+	async isEmailUsed(email) {
 		const result = await this.dbConnection.query('SELECT * FROM users WHERE email=?', email);
 		return result.length > 0;
 	}
