@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import { DB_CONNECTION_KEY } from '../../libs/connection';
-import { hash, verifyHash, genConfirmToken } from '../../libs/utils';
+import { verifyHash, genConfirmToken } from '../../libs/utils';
 import { config } from '../../../config';
 import * as authValidation from "../auth/authValidations";
 import UserService from "../users/userService";
