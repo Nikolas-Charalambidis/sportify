@@ -28,7 +28,6 @@ export function Routes() {
 			<Route path="/contact" exact component={Contact}/>
 			<Route path="/login" exact component={Login} />
             <Route path="/statistics" exact component={Statistics} />
-            <Route path="/login" exact component={Login} />
             <Route path="/register" exact component={Register} />
             <Route path="/administration/profile" exact component={Profile} />
 			<Route path="/confirmEmail/:id_user/:hash" exact component={ConfirmEmail} />

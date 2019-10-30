@@ -10,10 +10,14 @@ import {useAuth} from '../../utils/auth';
 import {useHistory} from "react-router";
 
 export function Login() {
+	const auth = useAuth();
+	const api = useApi();
+	const history = useHistory();
+	const { user } = auth;
 
-    const api = useApi();
-    const history = useHistory();
-    const auth = useAuth();
+	if(user) {
+		history.replace('/');
+	}
 
     const [validated, setValidated] = useState(false);
     const [email, setEmail] = useState("");
@@ -33,18 +37,35 @@ export function Login() {
     };
 
     const login = (email, password) => {
-        api
-            .post("http://localhost:3001/api/v1/auth/login", {email: email, password: password})
-            .then(({data}) => {
-                const {token, user_id} = data;
-                auth.signin({token, user_id});
-                history.replace('/administration/profile');
-
-                // Here you can receive the token and user_id from the LocalStorage, which is persisted
-                // View at: Chrome -> Inspect -> Application -> LocalStorage
-                console.log(window.localStorage.getItem('sportify-auth'));
-            });
-    };
+    	console.log("inside login function");
+		api
+			.post("http://localhost:3001/api/v1/auth/login", {email: email, password: password})
+			.then(({ data }) => {
+				const { token, user } = data;
+				auth.signin( {token, user} );
+				history.replace('/administration/profile');
+				// Here you can receive the token and user_id from the LocalStorage, which is persisted
+				// View at: Chrome -> Inspect -> Application -> LocalStorage
+				// console.log(window.localStorage.getItem('sportify-auth'));
+			})
+			.catch(( { response } ) => {
+				const { data, status } = response;
+				switch (status) {
+					case 400:
+						window.flash(data.message, 'danger');
+						break;
+					case 404:
+						window.flash(data.message, 'danger');
+						break;
+					case 403:
+						window.flash(data.message, 'warning');
+						break;
+					default:
+						window.flash(data.message, 'danger');
+						break;
+				}
+			});
+	};
 
     return (
         <div>
