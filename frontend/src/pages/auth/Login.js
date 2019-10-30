@@ -7,9 +7,15 @@ import '../../assets/css/index.css';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as Icons from "@fortawesome/free-solid-svg-icons";
 import {Footer} from "../../organisms/Footer";
-
+import {useApi} from '../../utils/api';
+import {useAuth} from '../../utils/auth';
+import {useHistory} from "react-router";
 
 export function Login() {
+
+	const api = useApi();
+	const history = useHistory();
+	const auth = useAuth();
 
     const [validated, setValidated] = useState(false);
     const [email, setEmail] = useState("");
@@ -22,7 +28,25 @@ export function Login() {
         const form = event.currentTarget;
         form.checkValidity();
         setValidated(true);
+
+        if (validated) {
+        	login(email, password);
+		}
     };
+
+    const login = (email, password) => {
+		api
+			.post("http://localhost:3001/api/v1/auth/login", {email: email, password: password})
+			.then(({ data }) => {
+				const { token, user_id } = data;
+				auth.signin( {token, user_id} );
+				history.replace('/administration/profile');
+
+				// Here you can receive the token and user_id from the LocalStorage, which is persisted
+				// View at: Chrome -> Inspect -> Application -> LocalStorage
+				console.log(window.localStorage.getItem('sportify-auth'));
+			});
+	};
 
 	return (
 		<div>
