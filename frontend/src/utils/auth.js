@@ -10,13 +10,13 @@ const LOCAL_STORAGE_AUTH_KEY = 'sportify-auth';
 
 const initialState = {
 	token: null,
-	user_id: null,
+	user: null,
 };
 
 const AuthContext = createContext(
 	createContextValue({
 		token: initialState.token,
-		user_id: initialState.user_id,
+		user: initialState.user,
 		setState: () =>
 			console.error('You are using AuthContext without AuthProvider!'),
 	}),
@@ -30,8 +30,8 @@ export function AuthProvider({ children }) {
 	const [state, setState] = usePersistedAuth(initialState);
 
 	const contextValue = useMemo(() => {
-		const { token, user_id } = state;
-		return createContextValue({ token, user_id, setState });
+		const { token, user } = state;
+		return createContextValue({ token, user, setState });
 	}, [state, setState]);
 
 	return (
@@ -39,12 +39,12 @@ export function AuthProvider({ children }) {
 	);
 }
 
-function createContextValue({ token, user_id, setState }) {
+function createContextValue({ token, user, setState }) {
 	return {
 		token,
-		user_id,
-		signin: ({ token, user_id }) => setState({ token, user_id }),
-		signout: () => setState({ token: null, user_id: null }),
+		user,
+		signin: ({ token, user }) => setState({ token, user }),
+		signout: () => setState({ token: null, user: null }),
 	};
 }
 
@@ -70,9 +70,9 @@ function getStorageState(defaultState) {
 	}
 
 	try {
-		const { user_id, token } = JSON.parse(rawData);
-		if (token && user_id) {
-			return { token, user_id };
+		const { user, token } = JSON.parse(rawData);
+		if (token && user) {
+			return { token, user };
 		}
 	} catch {}
 

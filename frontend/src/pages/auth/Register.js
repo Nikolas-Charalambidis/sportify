@@ -3,8 +3,16 @@ import React, { useState } from 'react';
 import { Heading, MainSection } from '../../atoms';
 import { TopNavigation } from '../../organisms/TopNavigation';
 import {Form, Button, Row, Col, Breadcrumb} from "react-bootstrap";
+import {useHistory} from "react-router";
+import {useAuth} from "../../utils/auth";
 
 export function Register() {
+    const history = useHistory();
+    const { user } = useAuth();
+
+    if(user) {
+        history.replace('/');
+    }
 
     const [validated, setValidated] = useState(false);
     const [givenName, setGivenName] = useState("");
