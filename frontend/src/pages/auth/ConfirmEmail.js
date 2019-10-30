@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useApi } from '../../utils/api';
+import { useHistory } from 'react-router-dom';
+import {config} from "../../config";
 
 function Confirm(url, params){
     let { id_user, hash } = params;
+    const history = useHistory();
     const api = useApi();
     const [state, setState] = useState({
         isConfirming: true
@@ -17,37 +20,41 @@ function Confirm(url, params){
                     setState({ isConfirming: false });
                     // const { user } = data;
                     // Do something - for example login user
+                    window.flash("Váš email byl úspěšně ověřen", 'success');
+                    history.replace('/');
                 })
                 .catch(( { response } ) => {
                     setState( { isLoading: false });
                     const { data, status } = response;
                     switch (status) {
                         case 400:
-                            // Do something - show message/redirect...
-                            console.log(status + ' ' + data.message);
+                            window.flash(data.message, 'danger');
+                            history.replace('/');
                             break;
                         case 404:
-                            // Do something - show message/redirect...
-                            console.log(status + ' ' + data.message);
+                            window.flash(data.message, 'danger');
+                            history.replace('/');
                             break;
                         case 498:
-                            // Do something - show message/link to send new token...
-                            console.log(status + ' ' + data.message);
+                            window.flash(data.message, 'danger');
+                            history.replace('/');
                             break;
                         default:
-                            // Do something - handle unresolved state
+                            window.flash(data.message, 'danger');
+                            history.replace('/');
                             break;
                     }
                 });
         }
         fetchData().then();
-    }, [api, hash, id_user, url]);
+    }, [api, hash, id_user, url, history]);
 
     return [state];
 }
 
 export function ConfirmEmail() {
-    const [state] = Confirm('http://localhost:3001/api/v1/users/confirmEmail', useParams());
+    let link = config.LOCAL ? 'localhost' : 'sportify.cz';
+    const [state] = Confirm(`http://${link}:3001/api/v1/auth/confirmEmail`, useParams());
     return (
         <div>
             { state.isConfirming && <div>Confirming email...</div> }
