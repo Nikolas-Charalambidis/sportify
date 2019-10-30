@@ -18,10 +18,6 @@ A web application Sportify, as a semestral work, manages teams, leagues, matches
 | Jurij Povoroznyk | [povj01](https://github.com/povj01) |`feature/jurij-p` | [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=feature%2Fjurij-p)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches) |
 | David Voráček | [Davis94](https://github.com/Davis94) | `feature/david-v` | [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=feature%2Fdavid-v)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches) |
 
-## Code reviewers
-- Tomáš Horáček as [heracek](https://github.com/heracek)
-- Patr Čaněk as [CorwinCZ](https://github.com/CorwinCZ)
-
 ## Documentation
 - Wireframes: [My Balsamiq](https://4it445.mybalsamiq.com/projects/sportify8)
 - Backlog: [Trello](https://trello.com/b/xdKjZ1aC/sportify)
