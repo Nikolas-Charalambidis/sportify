@@ -131,10 +131,9 @@ export function Register() {
                         <Col xl={{span: 4, offset: 0}} lg={{span: 4, offset: 0}} md={{span: 6, offset: 0}}>
                             <Form.Group controlId="passwordValidation">
                                 <Form.Label>Heslo znovu</Form.Label>
-                                <Form.Control
+                                <Form.Control  required type="password" name="password2" value={password2}
                                     isValid={password1 === password2}
                                     isInvalid={password1 !== password2}
-                                    required type="password" name="password2" value={password2}
                                     onChange={e => setPassword2(e.target.value)}/>
                                 <Form.Control.Feedback type="invalid">
                                     Hesla se musí shodovat

@@ -33,7 +33,6 @@ export function Login() {
     };
 
     const login = (email, password) => {
-        console.log({email: email, password: password});
 		api
 			.post("http://localhost:3001/api/v1/auth/login", {email: email, password: password})
 			.then(({ data }) => {
