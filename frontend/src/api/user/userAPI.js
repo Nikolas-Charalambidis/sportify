@@ -1,5 +1,6 @@
 import {useApi} from "../../utils/api";
 import {useEffect, useState} from "react";
+import {config} from '../../config';
 
 export function GetUser(id_user) {
     const api = useApi();
@@ -9,7 +10,7 @@ export function GetUser(id_user) {
     useEffect( () => {
         async function fetchData() {
             await api
-                .get(`http://localhost:3001/api/v1/users/${id_user}`)
+                .get(`http://${config.API_BASE_PATH}/api/v1/users/${id_user}`)
                 .then(({ data }) => {
                     const { user } = data;
                     setState({ gettingData: false, error: false, user_data: user });
@@ -37,7 +38,7 @@ export function GetUser(id_user) {
 
 export function ChangeData(api, id_user, name, surname) {
     api
-        .put(`http://localhost:3001/api/v1/users/`, {id_user: id_user, name: name, surname: surname})
+        .put(`http://${config.API_BASE_PATH}/api/v1/users/`, {id_user: id_user, name: name, surname: surname})
         .then(() => {
             window.flash("Uživatelské údaje byly úspěšně změněny", 'success');
             // return {error: false, message: "Uživatelské údaje byly úspěšně změněny", type: "success"};
@@ -67,7 +68,7 @@ export function ChangePassword(id_user, oldPassword, newPassword1, newPassword2)
     useEffect( () => {
         async function fetchData() {
             await api
-                .get(`http://localhost:3001/api/v1/users/${id_user}`)
+                .get(`http://${config.API_BASE_PATH}/api/v1/users/${id_user}`)
                 .then(({ data }) => {
                     const { user } = data;
                     setState({ gettingData: false, error: false, user_data: user });

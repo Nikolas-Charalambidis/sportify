@@ -53,8 +53,7 @@ function Confirm(url, params){
 }
 
 export function ConfirmEmail() {
-    let link = config.LOCAL ? 'localhost' : 'sportify.cz';
-    const [state] = Confirm(`http://${link}:3001/api/v1/auth/confirmEmail`, useParams());
+    const [state] = Confirm(`http://${config.API_BASE_PATH}/api/v1/auth/confirmEmail`, useParams());
     return (
         <div>
             { state.isConfirming && <div>Confirming email...</div> }
