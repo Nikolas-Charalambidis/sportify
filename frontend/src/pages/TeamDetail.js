@@ -1,38 +1,40 @@
 import React from 'react';
-import DatePicker from "react-datepicker";
+
 import { registerLocale } from "react-datepicker";
 import cs from 'date-fns/locale/cs';
 
 import "react-datepicker/dist/react-datepicker.css";
-import { Formik, Form, Field } from 'formik';
-import * as yup from 'yup';
+
 import { Heading, MainSection } from '../atoms';
 import { TopNavigation } from '../organisms/TopNavigation';
-import { Breadcrumb, Button, Row, Col, Image } from 'react-bootstrap';
+import { Breadcrumb, Row, Col, Image } from 'react-bootstrap';
 import { Footer } from '../organisms/Footer';
 import { CardTemplate } from '../templates/CardTemplate';
 import * as Icons from '@fortawesome/free-solid-svg-icons';
 
+//import DatePicker from "react-datepicker";
+//import * as yup from 'yup';
+
 registerLocale('cs', cs);
 
 export function TeamDetail() {
+    
+    //const schema = yup.object().shape({
+    //    type: yup.string(),
+    //    date: yup.string(),
+    //});
 
-    const schema = yup.object().shape({
-        type: yup.string(),
-        date: yup.string(),
-    });
-
-    const DatePickerField = ({ name, value, onChange }) => {
-        return (
-            <DatePicker
-                locale="cs"
-                selected={(value && new Date(value)) || null}
-                onChange={val => {
-                    onChange(name, val);
-                }}
-            />
-        );
-    };
+    //const datepickerfield = ({ name, value, onchange }) => {
+    //    return (
+    //        <datepicker
+    //            locale="cs"
+    //            selected={(value && new date(value)) || null}
+    //            onchange={val => {
+    //                onchange(name, val);
+    //            }}
+    //        />
+    //    );
+    //};
 
     // temporary CSS styles
 
@@ -49,11 +51,11 @@ export function TeamDetail() {
         fontWeight: '600',
     };
 
-    const form = {
-        display: 'flex',
-        justifyContent: 'space-between',
-        border: '1px solid',
-    };
+    //const form = {
+    //    display: 'flex',
+    //    justifyContent: 'space-between',
+    //    border: '1px solid',
+    //};
 
     return (
         <div>          
