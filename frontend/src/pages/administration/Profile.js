@@ -112,9 +112,9 @@ export function Profile() {
 
                 <h2 className="mt-4">Soutěže</h2>
                 <Row>
-                    <CardTemplate nazev="Jarov Liga" pozice="Pozice: 1." icon={Icons.faFutbol} sport="fotbal"
+                    <CardTemplate nazev="Jarov Liga" podnazev="Pozice: 1." icon={Icons.faFutbol} sport="fotbal"
                                   logo="http://bit.ly/32Z7Hfl" stav="Probíhá"/>
-                    <CardTemplate nazev="Extraliga" pozice="Pozice: 2." icon={Icons.faFutbol} sport="fotbal"
+                    <CardTemplate nazev="Extraliga" podnazev="Pozice: 2." icon={Icons.faFutbol} sport="fotbal"
                                   logo="http://bit.ly/2PrDmSC" stav="Ukončena"/>
                 </Row>
 
