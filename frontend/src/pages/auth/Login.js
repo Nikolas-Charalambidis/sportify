@@ -26,18 +26,14 @@ export function Login() {
     const onLogin = event => {
         event.preventDefault();
         event.stopPropagation();
-
-        const form = event.currentTarget;
-        form.checkValidity();
         setValidated(true);
-
-        if (validated) {
+        if (event.currentTarget.checkValidity()) {
             login(email, password);
         }
     };
 
     const login = (email, password) => {
-    	console.log("inside login function");
+        console.log({email: email, password: password});
 		api
 			.post("http://localhost:3001/api/v1/auth/login", {email: email, password: password})
 			.then(({ data }) => {
@@ -79,7 +75,8 @@ export function Login() {
                 <p className="text-center mb-5">Využívejte webovou aplikaci <strong>Sportify</strong> naplno. <br/> S
                     vytvořeným účtem získáte přístup do správy Vašeho profilu, týmů, soutěží a interaktivnímu zápisu
                     výsledků.</p>
-                <Form id="loginForm" validated={validated}>
+
+                <Form id="loginForm" noValidate validated={validated} onSubmit={onLogin}>
                     <Form.Group controlId="formBasicEmail">
                         <Row>
                             <Col xl={{span: 4, offset: 4}} md={{span: 6, offset: 3}}>
@@ -88,6 +85,9 @@ export function Login() {
                             <Col xl={{span: 4, offset: 4}} md={{span: 6, offset: 3}}>
                                 <Form.Control required type="email" name="email" value={email}
                                               onChange={e => setEmail(e.target.value)}/>
+                                <Form.Control.Feedback type="invalid">
+                                    Vyplňte prosím Váš email
+                                </Form.Control.Feedback>
                             </Col>
                         </Row>
                     </Form.Group>
@@ -100,19 +100,23 @@ export function Login() {
                             <Col xl={{span: 4, offset: 4}} md={{span: 6, offset: 3}}>
                                 <Form.Control required type="password" name="password" value={password}
                                               onChange={e => setPassword(e.target.value)}/>
+                                <Form.Control.Feedback type="invalid">
+                                    Vyplňte prosím Vaše heslo
+                                </Form.Control.Feedback>
                             </Col>
                         </Row>
                     </Form.Group>
 
-
                     <Row className="mt-4">
-                        <Col xl={{span: 2, offset: 4}} lg={{span: 3, offset: 3}} md={{span: 6, offset: 3}} className="">
-                            <Button className="btn-block mb-3 mb-lg-0" variant="primary" type="button"
-                                    onClick={onLogin}>Přihlásit</Button>
+                        <Col xl={{span: 2, offset: 4}} lg={{span: 3, offset: 3}} md={{span: 6, offset: 3}}>
+                            <Button className="btn-block mb-3 mb-lg-0" variant="primary" type="submit">
+                                Přihlásit
+                            </Button>
                         </Col>
                         <Col xl={{span: 2, offset: 0}} lg={{span: 3, offset: 0}} md={{span: 6, offset: 3}}>
-                            <Button className="btn-block" variant="secondary" type="button"
-                                    href="/register">Registrace</Button>
+                            <Button className="btn-block" variant="secondary" type="button" href="/register">
+                                Registrace
+                            </Button>
                         </Col>
                     </Row>
                     <Row className="mt-2">
