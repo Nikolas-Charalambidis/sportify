@@ -1,8 +1,6 @@
-
-
 # 4IT445 Agile web application development | Sportify
 
-A Sportify web application as a semestral work for the 4IT445 Agile web application development course.
+A web application Sportify, as a semestral work, manages teams, leagues, matches, and players with a huge load of statistics. Developed for the 4IT445 Agile web application development course.
 
 | Branch | Status |
 |-------------|--------|
@@ -20,73 +18,43 @@ A Sportify web application as a semestral work for the 4IT445 Agile web applicat
 | Jurij Povoroznyk | [povj01](https://github.com/povj01) |`feature/jurij-p` | [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=feature%2Fjurij-p)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches) |
 | David Voráček | [Davis94](https://github.com/Davis94) | `feature/david-v` | [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=feature%2Fdavid-v)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches) |
 
-## Code reviewers
-- Tomáš Horáček as [heracek](https://github.com/heracek)
-- Patr Čaněk as [CorwinCZ](https://github.com/CorwinCZ)
-
 ## Documentation
 - Wireframes: [My Balsamiq](https://4it445.mybalsamiq.com/projects/sportify8)
 - Backlog: [Trello](https://trello.com/b/xdKjZ1aC/sportify)
-- Technical documentation: [GitHub Wiki](https://github.com/Nikolas-Charalambidis/4IT445/wiki)
+- API documentation: [Swagger](http://localhost:3001/docs/v1)
 - Other documents (read only): [Google Drive](https://drive.google.com/drive/folders/1HR7KYamV8zcGRj8VAkLtMEJI15myPq_-?usp=sharing)  
 
 ## How to run locally
 
-### Database
+- Database: see at `/database/README.md`
+- Backend: see at `/backend/README.md`
+- Frontend: see at `/frontend/README.md`
 
-**Create a new container**
-1. Build the `\database\Dockerfile` navigating to `\database` and running `docker build -t mysql_sportify .` Mind the `.` dot at the end of the command!
-2. Run the container and name it the as same as the image `docker run -p 3306:3306 --name mysql_sportify mysql_sportify`. If you want to run it as a daemon, execute with the `-d` parameter.
-3. Enjoy the connection on `localhost:3306` with credentials `root:password`.
+## Contribution
 
-**Stop/start an existing container**
-- Stop container: `docker stop mysql_sportify`.
-- Start container: `docker start mysql_sportify`.
-- Remove container: `docker rm mysql_sportify`. Then it has to be created again.
+### Flow
+1. Checkout `dev` and `pull` from the origin.
+2. Checkout your `feature/xxx` branch and merge updated `dev` into `feature/xxx`. Resolve the conflicts if required.
+3. Develop, commit and push to the origin.
+4. Open a pull request, which is available upon pushing to the origin in the yellow panel. You can always create a pull request in any case from `feature/xxx` into `dev`.
+5. Wait until the [Travis](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches) CI checks pass and press "Merge".
+6. Check if the changed files were updated and the `dev` branch and the CI is green for the `dev` branch.
+7. Go to the step `1.` until we finish. :)
 
-In case you are not happy to use Docker, feel free to use your own MySQL instance with the initialization script(s) at the `\database\sql` directory.
+### Rule of thumb
+The `feature/xxx` branches can be red, the `dev` branch cannot. Why? All are dependant on the `dev` branch which we merge into our `feature/xxx` branches regularly to avoid possible immerse merge conflicts. If the `dev` is red (failing), we are forced to not rely on this branch and only on our own, which is wrong.
 
-### Backend
+- Make sure `yarn build` executes successfully. This is run on the Travis CI server as well.
+- Run `yarn start` on **Frontend** or/and `yarn dev` on **Backend** and verify the correct behavior of the build.
 
-**Install dependencies**
-1. Navigate to `\backend`
-2. Execute `yarn install` to install all the dependencies. 
-3. After a few minutes, you should notice the generated `node_modules` folder and be able to execute commands defined in the `package.json` (`scripts`).
+### Warning :warning:
+If the Travis CI build fails for a reason `npm` or another component cannot be downloaded (slow servers), the build fails.  Ask me out to trigger the build manually again or merge manually into `dev` or do by yourself if you are 100 % sure the build passes (no errors, no warnings)and  take full responsibility for the state of the `dev` branch. For this reason, I decided to leave the `dev` branch unlocked for the direct commits and merges.
 
-**Develop**
-1. Execute `yarn dev` for happy coding. The REST endpoints should be exposed to [`http://localhost:3001`](http://localhost:3001).
-2. Test [`http://localhost:3001/foo`](http://localhost:3001/foo) and change the code, the response should change upon new `GET` request.
+## Nice to have, better CI and improvements
 
-**Swagger and versioning**
- - The first version of generated Swagger documentation is available at [`http://localhost:3001/docs/v1`](http://localhost:3001/docs/v1). 
-  - The API itself is versioned as well starting with the base path [`http://localhost:3001/api/v1`](http://localhost:3001/api/v1). 
-  - The API V1 documentatioin is available at [Wiki](https://github.com/Nikolas-Charalambidis/4IT445/wiki/v1).
+- Deployment of the web application test version to GitHub pages using mock data.
+- Deployment of the Swagger documentation to GitHub Pages using mock data.
 
-**Contribute**
-1. Make sure `yarn build` executes successfully. This is run on the Travis CI server as well.
-2. Run `yarn start` and verify the correct behavior of the build.
-3. Commit & push to your feature/personal branch and merge into `dev` branch. 
-
-### Frontend
-
-**Install dependencies**
-1. Navigate to `\frontend`
-2. Execute `yarn install` to install all the dependencies. 
-3. After a few minutes, you should notice the generated `node_modules` folder and be able to execute commands defined in the `package.json` (`scripts`).
-
-**Develop**
-1. Execute `yarn start` for happy coding. The web application should be available on [`http://localhost:3000`](http://localhost:3000).
-2. Remove line `BROWSER=none` at the `\frontend.env` file if you wish to open a browser with the webpage immediately. 
-
-**Contribute**
-1. Make sure `yarn build` executes successfully. This is run on the Travis CI server as well.
-2. Run `yarn start` and verify the correct behavior of the build.
-3. Commit & push to your feature/personal branch and merge into `dev` branch. 
-
-## Deployment
-
-... to be done
-
-## Production servers
+## Deployment and production servers
 
 ... to be done

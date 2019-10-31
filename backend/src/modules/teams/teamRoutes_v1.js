@@ -62,6 +62,14 @@ router.get('/', async (req, res, next) => {
  *       - Teams
  *     name: Login
  *     summary: Add new team
+ *     consumes: application/json
+ *     produces: application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         required: true
+ *         schema:
+ *           $ref: "#/definitions/Team"
  *     responses:
  *       201:
  *         description: Team added
@@ -90,7 +98,7 @@ router.post('/', async (req, res, next) => {
  *         type: integer
  *       name:
  *         type: string
- *       leader:
+ *       id_leader:
  *         type: string
  */
 

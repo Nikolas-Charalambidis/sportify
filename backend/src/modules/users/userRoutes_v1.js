@@ -5,62 +5,6 @@ const router = Router();
 
 /**
  * @swagger
- * /users/login:
- *   post:
- *     tags:
- *       - Users
- *     name: Login
- *     summary: Verify user email and password
- *     responses:
- *       200:
- *         description: User found
- *       400:
- *         description: Invalid request
- *       404:
- *         description: User not found
- */
-router.post('/login', async (req, res, next) => {
-	try {
-		const { email, password } = req.body;
-		const user = await new UserService(req).login(email, password);
-		const { id_user } = user;
-		res.status(200).header('Location' , `/api/v1/teams/${id_user}`)
-			.json({ error: false, msg: 'OK', user: user});
-	} catch(e) {
-		next(e);
-	}
-
-});
-/**
- * @swagger
- * /users/confirmEmail:
- *   post:
- *     tags:
- *       - Users
- *     name: Login
- *     summary: Verify user's email
- *     responses:
- *       200:
- *         description: Email verified, returned user object
- *       400:
- *         description: Invalid request
- *       404:
- *         description: Invalid token
- *       498:
- *         description: Token expired
- */
-router.post('/confirmEmail', async (req, res, next) => {
-	try {
-		const { id_user, hash } = req.body;
-		const user = await new UserService(req).confirmEmail(id_user, hash);
-		res.status(200).json({ error: false, msg: 'OK', user: user});
-	} catch(e) {
-		next(e);
-	}
-});
-
-/**
- * @swagger
  * /users/{id_user}:
  *   get:
  *     tags:
@@ -95,6 +39,88 @@ router.get('/:id_user', async(req, res, next) => {
 /**
  * @swagger
  * /users:
+ *   patch:
+ *     tags:
+ *       - Users
+ *     name: Login
+ *     summary: Change user password
+ *     consumes: application/json
+ *     produces: application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             id_user:
+ *               type: integer
+ *             oldPassword:
+ *               type: string
+ *             newPassword1:
+ *               type: string
+ *             newPassword2:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: User password has been changed
+ *       400:
+ *         description: Invalid request
+ */
+router.patch('/', async(req, res, next) => {
+	try {
+		const { id_user, oldPassword, newPassword1, newPassword2 } = req.body;
+		await new UserService(req).changePassword(id_user, oldPassword, newPassword1, newPassword2);
+		res.status(200).send({ error: false, msg: 'OK', id_user: id_user});
+	} catch (e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
+ * /users:
+ *   put:
+ *     tags:
+ *       - Users
+ *     name: Login
+ *     summary: Change user data
+ *     consumes: application/json
+ *     produces: application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             id_user:
+ *               type: integer
+ *             name:
+ *               type: string
+ *             surname:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: User data has been changed
+ *       400:
+ *         description: Invalid request
+ *       404:
+ *         description: User not found
+ */
+router.put('/', async(req, res, next) => {
+	try {
+		const { id_user, name, surname } = req.body;
+		await new UserService(req).changeUser(id_user, name, surname);
+		res.status(200).send({ error: false, msg: 'OK', id_user: id_user});
+	} catch (e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
+ * /users:
  *   get:
  *     tags:
  *       - Users
@@ -117,19 +143,23 @@ router.get('/', async (req, res, next) => {
  *       - Users
  *     name: Login
  *     summary: Add new user
- *     requestBody:
- *     	 content:
- *         application/json:
- *           schema:
- *     	       type: object
- *     		   properties:
- *               email:
- *                 type: string
- *               name:
- *                 type: string
- *     		   examples:
- *               email: email@test.cz
- *               name: Zdeněk
+ *     consumes: application/json
+ *     produces: application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             email:
+ *               type: string
+ *             password:
+ *               type: string
+ *             name:
+ *               type: string
+ *             surname:
+ *               type: string
  *     responses:
  *       201:
  *         description: User added
@@ -144,7 +174,6 @@ router.post('/', async(req, res, next) => {
 	} catch (e) {
 		next(e);
 	}
-
 });
 
 /**

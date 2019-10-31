@@ -26,12 +26,12 @@ export function useAuth() {
 	return useContext(AuthContext);
 }
 
-export function AuthProvider({children}) {
+export function AuthProvider({ children }) {
 	const [state, setState] = usePersistedAuth(initialState);
 
 	const contextValue = useMemo(() => {
-		const {token, user} = state;
-		return createContextValue({token, user, setState});
+		const { token, user } = state;
+		return createContextValue({ token, user, setState });
 	}, [state, setState]);
 
 	return (
@@ -39,12 +39,12 @@ export function AuthProvider({children}) {
 	);
 }
 
-function createContextValue({token, user, setState}) {
+function createContextValue({ token, user, setState }) {
 	return {
 		token,
 		user,
-		signin: ({token, user}) => setState({token, user}),
-		signout: () => setState({token: null, user: null}),
+		signin: ({ token, user }) => setState({ token, user }),
+		signout: () => setState({ token: null, user: null }),
 	};
 }
 
@@ -70,13 +70,11 @@ function getStorageState(defaultState) {
 	}
 
 	try {
-		const {user, token} = JSON.parse(rawData);
-
-		if (token && user && user.screenName && user.id && user.name) {
-			return {token, user};
+		const { user, token } = JSON.parse(rawData);
+		if (token && user) {
+			return { token, user };
 		}
-	} catch {
-	}
+	} catch {}
 
 	return defaultState;
 }
