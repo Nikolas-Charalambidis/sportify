@@ -4,6 +4,8 @@ import {Heading, MainSection} from '../atoms/';
 import {TopNavigation} from '../organisms/TopNavigation';
 import {Breadcrumb} from "react-bootstrap";
 import {Footer} from "../organisms/Footer";
+import ReactTable from "react-table";
+import "react-table/react-table.css";
 
 export function Teams() {
     return (
@@ -15,9 +17,103 @@ export function Teams() {
                     <Breadcrumb.Item active>Týmy</Breadcrumb.Item>
                 </Breadcrumb>
                 <Heading>Týmy</Heading>
-                <p>This page is empty for now...</p>
+                <div>
+                    <ReactTable
+                        data={teams}
+                        filterable
+                        defaultFilterMethod={(filter, row) =>
+                            row[filter.id].startsWith(filter.value)}
+                        defaultSortMethod={(a, b) => {
+                            if (a === b) {
+                                return 0;
+                            }
+                            const aReverse = a.split("").reverse().join("");
+                            const bReverse = b.split("").reverse().join("");
+                            return aReverse > bReverse ? 1 : -1;
+                        }}
+                        noDataText="Nejsou data"
+                        defaultPageSize={10}
+                        columns={columns}
+                    />
+                </div>
             </MainSection>
             <Footer/>
         </div>
+
     );
 }
+
+const columns = [
+    {
+        Header: 'Nazev tymu',
+        accessor: 'nazevTymu',
+    },
+    {
+        Header: 'Kod',
+        accessor: 'kod',
+    },
+    {
+        Header: 'Vedouci',
+        accessor: 'vedouci',
+    },
+    {
+        Header: 'Trener',
+        accessor: 'trener',
+    },
+    {
+        Header: 'Web',
+        accessor: 'web',
+    }
+]
+
+const teams = [
+    {   nazevTymu: 'Vojta',
+        kod: 'LAB',
+        vedouci: 'Standa',
+        trener: 'Petr',
+        web: 'www.rab.cz'
+    },
+    {
+        nazevTymu: 'Aomas',
+        kod: 'RAB',
+        vedouci: 'Standa',
+        trener: 'Petr',
+        web: 'www.rab.cz'
+    },
+    {
+        nazevTymu: 'Tolas',
+        kod: 'CAB',
+        vedouci: 'Standa',
+        trener: 'Petr',
+        web: 'www.rab.cz'
+    },
+    {
+        nazevTymu: 'Tomas',
+        kod: 'RAB',
+        vedouci: 'Standa',
+        trener: 'Petr',
+        web: 'www.rab.cz'
+    },
+    {
+        nazevTymu: 'pomas',
+        kod: 'RAB',
+        vedouci: 'Standa',
+        trener: 'Petr',
+        web: 'www.rab.cz'
+    },
+    {
+        nazevTymu: 'Tomas',
+        kod: 'RAB',
+        vedouci: 'Standa',
+        trener: 'Petr',
+        web: 'www.rab.cz'
+    },
+    {
+        nazevTymu: 'gomas',
+        kod: 'RAB',
+        vedouci: 'Standa',
+        trener: 'Petr',
+        web: 'www.rab.cz'
+    },
+];
+
