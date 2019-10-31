@@ -7,7 +7,7 @@ import { addDbToRequest, DB_CONNECTION_KEY } from './libs/connection';
 import {logErrors, clientErrorHandler, errorHandler } from "./handler"
 
 dotenv.config();
-dotenv.config({path: '.env.local'});
+dotenv.config({path: '.env'});
 
 const {PORT = 3001} = process.env;
 const api = express();

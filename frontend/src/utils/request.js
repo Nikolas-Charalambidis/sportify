@@ -4,7 +4,7 @@ import {CancelToken} from 'axios';
 import {useApi} from './api';
 import {config} from '../config';
 
-const log = config.REQUEST_LOGGING ? console.info : () => {
+const log = config.API_LOG_REQUEST ? console.info : () => {
 };
 
 export function useRequest(initialState = {}) {
