@@ -2,7 +2,7 @@ import React from 'react';
 import {withRouter} from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../assets/css/index.css';
-import {Navbar, Nav, Button} from "react-bootstrap";
+import {Navbar, Nav, Button, Col} from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as Icons from "@fortawesome/free-solid-svg-icons"
 import { useAuth } from '../utils/auth';
@@ -38,15 +38,14 @@ function TopNavigationBase(props) {
 							<a href={`/administration/profile`} >
 								{user.email}
 							</a>
-							<button
-								onClick={() => {
-									signout();
-									history.push('/');
-									window.location.reload();
-								}}
-							>
+							<Button className="btn" variant="primary" type="button" href="/register"
+									onClick={() => {
+										signout();
+										history.push('/');
+										window.location.reload();
+									}}>
 								Odhlásit se
-							</button>
+							</Button>
 						</>
 					) : (
 						<Button className="d-none d-lg-inline-block d-xl-inline-block" variant="primary" href="/login">
