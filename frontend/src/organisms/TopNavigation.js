@@ -38,15 +38,14 @@ function TopNavigationBase(props) {
 							<a href={`/administration/profile`} >
 								{user.email}
 							</a>
-							<button
-								onClick={() => {
-									signout();
-									history.push('/');
-									window.location.reload();
-								}}
-							>
+							<Button className="btn" variant="primary" type="button"
+									onClick={() => {
+										signout();
+										history.replace('/login');
+										window.location.reload();
+									}}>
 								Odhlásit se
-							</button>
+							</Button>
 						</>
 					) : (
 						<Button className="d-none d-lg-inline-block d-xl-inline-block" variant="primary" href="/login">

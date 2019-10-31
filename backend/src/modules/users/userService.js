@@ -28,14 +28,12 @@ export default class UserService {
 		return result[0];
 	}
 
-	async addNewUser(email, password, name, surname) {
-		userValidation.validateNewUserData(email, password, name, surname);
-		userValidation.validateEmail(email);
+	async addNewUser(email, password1, password2, name, surname) {
+		userValidation.validateNewUserData(email, password1, password2, name, surname);
 		if (await this.isEmailUsed(email)) {
 			throw {status: 400, msg: 'Email already exists'};
 		}
-
-		const hashedPassword = hash(password, 10);
+		const hashedPassword = hash(password1, 10);
 		const result = await this.dbConnection.query(
 			'INSERT INTO users (id_user, email, password, name, surname, verified) VALUES ("", ?, ?, ?, ?, 0)',
 			[email, hashedPassword, name, surname]
@@ -52,9 +50,7 @@ export default class UserService {
 	async changePassword(id_user, oldPassword, newPassword1, newPassword2) {
 		const user_id = Number(id_user);
 		userValidation.validateChangePasswordData(user_id, oldPassword, newPassword1, newPassword2);
-		if(newPassword1 !== newPassword2) {
-			throw {status: 400, msg: 'Passwords do not match'};
-		}
+
 		const user = await this.dbConnection.query(
 			`SELECT password FROM users WHERE id_user=?`, [user_id]
 		);
@@ -64,6 +60,7 @@ export default class UserService {
 		if(!verifyHash(oldPassword, user[0].password)){
 			throw {status: 400, msg: 'Invalid data'};
 		}
+
 		const result = await this.dbConnection.query(
 			'UPDATE users SET password=? WHERE id_user=?',
 			[hash(newPassword1, 10), user_id]
