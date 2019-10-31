@@ -21,25 +21,14 @@ import {Formik} from "formik";
 import * as yup from 'yup';
 
 const schemaChangeData = yup.object().shape({
-    name: yup
-        .string()
-        .required(),
-    surname: yup
-        .string()
-        .required(),
+    name: yup.string().required(),
+    surname: yup.string().required(),
 });
 
 const schemaChangePassword = yup.object().shape({
-    oldPassword: yup
-        .string()
-        .required(),
-    newPassword1: yup
-        .string()
-        .matches(/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]){6}/)
-        .required(),
-    newPassword2: yup
-        .string()
-        .oneOf([yup.ref('newPassword1')]),
+    oldPassword: yup.string().required(),
+    newPassword1: yup.string().matches(/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]){6}/).required(),
+    newPassword2: yup.string().required().oneOf([yup.ref('newPassword1')]),
 });
 
 export function Profile() {
@@ -70,13 +59,13 @@ export function Profile() {
                 <div>
                     <Formik
                         validationSchema={schemaChangeData}
-                    initialValues={{
-                        name: state.user_data.name,
-                        surname: state.user_data.surname
-                    }}
-                    onSubmit={values => {
-                        const { name, surname } = values;
-                        ChangeData(api, user.id_user, name, surname);
+                        initialValues={{
+                            name: state.user_data.name,
+                            surname: state.user_data.surname
+                        }}
+                        onSubmit={values => {
+                            const { name, surname } = values;
+                            ChangeData(api, user.id_user, name, surname);
                     }}
                     >{({ handleSubmit, handleChange, errors }) => (
                         <Form noValidate onSubmit={handleSubmit}>
@@ -126,14 +115,14 @@ export function Profile() {
                                         </Col>
 
                                         <Col xl={{span: 3, offset: 0}} lg={{span: 4, offset: 2}}>
-                                            <Button className="mt4" type="button" block onClick={handleShow}>
-                                                Změna hesla
+                                            <Button className="mt4" type="submit" block>
+                                                Uložit Profil
                                             </Button>
                                         </Col>
 
                                         <Col xl={{span: 3, offset: 0}} lg={{span: 4, offset: 0}}>
-                                            <Button className="mt4" type="submit" block>
-                                                Uložit Profil
+                                            <Button className="mt4" type="button" block onClick={handleShow}>
+                                                Změna hesla
                                             </Button>
                                         </Col>
 
@@ -148,7 +137,6 @@ export function Profile() {
                         </Form>
                         )}
                     </Formik>
-
 
                     <h2 className="mt-4">Týmy</h2>
                     <Row>
@@ -169,21 +157,30 @@ export function Profile() {
                     </Row>
 
                     <Modal show={show} onHide={handleClose}>
-                        <Modal.Body>
-                            <Formik
-                                validationSchema={schemaChangePassword}
-                                onSubmit={values => {
-                                    const { oldPassword, newPassword1, newPassword2 } = values;
-                                    ChangePassword(api, user.id_user, oldPassword, newPassword1, newPassword2);
-                                }}
-                            >{({  handleSubmit, handleChange, errors  }) => (
-                                <Form noValidate onSubmit={handleSubmit}>
+                        <Formik
+                            validationSchema={schemaChangePassword}
+                            initialValues={{
+                                oldPassword: '',
+                                newPassword1: '',
+                                newPassword2: ''
+                            }}
+                            onSubmit={values => {
+                                const { oldPassword, newPassword1, newPassword2 } = values;
+                                ChangePassword(api, user.id_user, oldPassword, newPassword1, newPassword2);
+                                setShow(false);
+                            }}
+                        >{({  handleSubmit, handleChange, errors  }) => (
+                            <Form noValidate onSubmit={handleSubmit}>
+                                <Modal.Body>
                                     <Form.Group controlId="oldPassword">
                                         <Form.Label>Stávající heslo</Form.Label>
                                         <Form.Control type="password"
                                                       name="oldPassword"
                                                       onChange={handleChange}
                                                       isInvalid={!!errors.oldPassword}/>
+                                        <Form.Control.Feedback type="invalid">
+                                            Vyplňte prosím Vaše stávající heslo
+                                        </Form.Control.Feedback>
                                     </Form.Group>
                                     <Form.Group controlId="newPassword1">
                                         <Form.Label>Nové heslo</Form.Label>
@@ -201,28 +198,28 @@ export function Profile() {
                                         <Form.Control type="password"
                                                       name="newPassword2"
                                                       onChange={handleChange}
-                                                      isInvalid={!!errors.name}/>
+                                                      isInvalid={!!errors.newPassword2}/>
                                         <Form.Control.Feedback type="newPassword2">
                                             Hesla se musí shodovat
                                         </Form.Control.Feedback>
                                     </Form.Group>
-                                </Form>
-                                )}
-                            </Formik>
-                        </Modal.Body>
 
-                        <Modal.Footer>
-                            <Button variant="secondary" type="button" onClick={handleClose}>
-                                Close
-                            </Button>
-                            <Button variant="primary" type="button" onClick={handleClose}>
-                                Save Changes
-                            </Button>
-                        </Modal.Footer>
+                                </Modal.Body>
+
+                                <Modal.Footer>
+                                    <Button variant="secondary" type="button" onClick={handleClose}>
+                                        Close
+                                    </Button>
+                                    <Button variant="primary" type="submit">
+                                        Změnit heslo
+                                    </Button>
+                                </Modal.Footer>
+                            </Form>
+                            )}
+                        </Formik>
                     </Modal>
                 </div>
                 }
-
             </MainSection>
             <Footer/>
         </div>

@@ -69,8 +69,8 @@ router.get('/:id_user', async(req, res, next) => {
  */
 router.patch('/', async(req, res, next) => {
 	try {
-		const { id_user, name, surname, oldPassword, newPassword1, newPassword2 } = req.body;
-		await new UserService(req).changePassword(id_user, name, surname, oldPassword, newPassword1, newPassword2);
+		const { id_user, oldPassword, newPassword1, newPassword2 } = req.body;
+		await new UserService(req).changePassword(id_user, oldPassword, newPassword1, newPassword2);
 		res.status(200).send({ error: false, msg: 'OK', id_user: id_user});
 	} catch (e) {
 		next(e);

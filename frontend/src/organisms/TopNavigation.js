@@ -26,7 +26,7 @@ function TopNavigationBase(props) {
 					<li><Nav.Link href="/leagues" >Soutěže</Nav.Link></li>
 					<li><Nav.Link href="/matches">Zápasy</Nav.Link></li>
 					<li><Nav.Link href="/statistics">Statistiky</Nav.Link></li>
-					<li><Nav.Link href="/aboutus">O nás</Nav.Link></li>
+					<li><Nav.Link href="/aboutus">O&nbsp;nás</Nav.Link></li>
 					<li><Nav.Link href="/contact">Kontakt</Nav.Link></li>
 					</Nav>
 				</ul>

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 
 import {Heading, MainSection} from '../../atoms';
 import {TopNavigation} from '../../organisms/TopNavigation';
@@ -8,6 +8,13 @@ import {Footer} from "../../organisms/Footer";
 import {useApi} from '../../utils/api';
 import {useAuth} from '../../utils/auth';
 import {useHistory} from "react-router";
+import {Formik} from "formik";
+import * as yup from "yup";
+
+const schema = yup.object().shape({
+    email: yup.string().email().required(),
+    password: yup.string().required(),
+});
 
 export function Login() {
 	const auth = useAuth();
@@ -19,30 +26,14 @@ export function Login() {
 		history.replace('/');
 	}
 
-    const [validated, setValidated] = useState(false);
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-
-    const onLogin = event => {
-        event.preventDefault();
-        event.stopPropagation();
-        setValidated(true);
-        if (event.currentTarget.checkValidity()) {
-            login(email, password);
-        }
-    };
-
-    const login = (email, password) => {
-        console.log({email: email, password: password});
+    function login(email, password) {
+        console.log('inside login function');
 		api
 			.post("http://localhost:3001/api/v1/auth/login", {email: email, password: password})
 			.then(({ data }) => {
 				const { token, user } = data;
 				auth.signin( {token, user} );
 				history.replace('/administration/profile');
-				// Here you can receive the token and user_id from the LocalStorage, which is persisted
-				// View at: Chrome -> Inspect -> Application -> LocalStorage
-				// console.log(window.localStorage.getItem('sportify-auth'));
 			})
 			.catch(( { response } ) => {
 				const { data, status } = response;
@@ -61,7 +52,7 @@ export function Login() {
 						break;
 				}
 			});
-	};
+	}
 
     return (
         <div>
@@ -75,56 +66,72 @@ export function Login() {
                 <p className="text-center mb-5">Využívejte webovou aplikaci <strong>Sportify</strong> naplno. <br/> S
                     vytvořeným účtem získáte přístup do správy Vašeho profilu, týmů, soutěží a interaktivnímu zápisu
                     výsledků.</p>
+                <Formik
+                    validationSchema={schema}
+                    initialValues={{
+                        email: '',
+                        password: ''
+                    }}
+                    onSubmit={values => {
+                        const { email, password } = values;
+                        login(email, password);
+                    }}
+                >{({ handleSubmit, handleChange, errors }) => (
+                    <Form noValidate onSubmit={handleSubmit}>
+                        <Form.Group controlId="formBasicEmail">
+                            <Row>
+                                <Col xl={{span: 4, offset: 4}} md={{span: 6, offset: 3}}>
+                                    <Form.Label>E-mail:</Form.Label>
+                                </Col>
+                                <Col xl={{span: 4, offset: 4}} md={{span: 6, offset: 3}}>
+                                    <Form.Control type="email"
+                                                  name="email"
+                                                  onChange={handleChange}
+                                                  isInvalid={!!errors.email}/>
+                                    <Form.Control.Feedback type="invalid">
+                                        Vyplňte prosím Váš email
+                                    </Form.Control.Feedback>
+                                </Col>
+                            </Row>
+                        </Form.Group>
 
-                <Form id="loginForm" noValidate validated={validated} onSubmit={onLogin}>
-                    <Form.Group controlId="formBasicEmail">
-                        <Row>
-                            <Col xl={{span: 4, offset: 4}} md={{span: 6, offset: 3}}>
-                                <Form.Label>E-mail:</Form.Label>
+                        <Form.Group controlId="formBasicPassword">
+                            <Row>
+                                <Col xl={{span: 4, offset: 4}} md={{span: 6, offset: 3}}>
+                                    <Form.Label>Heslo:</Form.Label>
+                                </Col>
+                                <Col xl={{span: 4, offset: 4}} md={{span: 6, offset: 3}}>
+                                    <Form.Control type="password"
+                                                  name="password"
+                                                  onChange={handleChange}
+                                                  isInvalid={!!errors.password}/>
+                                    <Form.Control.Feedback type="invalid">
+                                        Vyplňte prosím Vaše heslo
+                                    </Form.Control.Feedback>
+                                </Col>
+                            </Row>
+                        </Form.Group>
+
+                        <Row className="mt-4">
+                            <Col xl={{span: 2, offset: 4}} lg={{span: 3, offset: 3}} md={{span: 6, offset: 3}}>
+                                <Button className="btn-block mb-3 mb-lg-0" variant="primary" type="submit">
+                                    Přihlásit
+                                </Button>
                             </Col>
-                            <Col xl={{span: 4, offset: 4}} md={{span: 6, offset: 3}}>
-                                <Form.Control required type="email" name="email" value={email}
-                                              onChange={e => setEmail(e.target.value)}/>
-                                <Form.Control.Feedback type="invalid">
-                                    Vyplňte prosím Váš email
-                                </Form.Control.Feedback>
+                            <Col xl={{span: 2, offset: 0}} lg={{span: 3, offset: 0}} md={{span: 6, offset: 3}}>
+                                <Button className="btn-block" variant="secondary" type="button" href="/register">
+                                    Registrace
+                                </Button>
                             </Col>
                         </Row>
-                    </Form.Group>
-
-                    <Form.Group controlId="formBasicPassword">
-                        <Row>
-                            <Col xl={{span: 4, offset: 4}} md={{span: 6, offset: 3}}>
-                                <Form.Label>Heslo:</Form.Label>
-                            </Col>
-                            <Col xl={{span: 4, offset: 4}} md={{span: 6, offset: 3}}>
-                                <Form.Control required type="password" name="password" value={password}
-                                              onChange={e => setPassword(e.target.value)}/>
-                                <Form.Control.Feedback type="invalid">
-                                    Vyplňte prosím Vaše heslo
-                                </Form.Control.Feedback>
+                        <Row className="mt-2">
+                            <Col className="text-center">
+                                <a className="blackHref" href="/#">Zapomenuté heslo</a>
                             </Col>
                         </Row>
-                    </Form.Group>
-
-                    <Row className="mt-4">
-                        <Col xl={{span: 2, offset: 4}} lg={{span: 3, offset: 3}} md={{span: 6, offset: 3}}>
-                            <Button className="btn-block mb-3 mb-lg-0" variant="primary" type="submit">
-                                Přihlásit
-                            </Button>
-                        </Col>
-                        <Col xl={{span: 2, offset: 0}} lg={{span: 3, offset: 0}} md={{span: 6, offset: 3}}>
-                            <Button className="btn-block" variant="secondary" type="button" href="/register">
-                                Registrace
-                            </Button>
-                        </Col>
-                    </Row>
-                    <Row className="mt-2">
-                        <Col className="text-center">
-                            <a className="blackHref" href="/#">Zapomenuté heslo</a>
-                        </Col>
-                    </Row>
-                </Form>
+                    </Form>
+                )}
+                </Formik>
             </MainSection>
             <Footer/>
         </div>
