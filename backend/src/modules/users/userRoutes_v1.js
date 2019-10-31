@@ -168,8 +168,8 @@ router.get('/', async (req, res, next) => {
  */
 router.post('/', async(req, res, next) => {
 	try {
-		const { email, password, name, surname } = req.body;
-		const id = await new UserService(req).addNewUser(email, password, name, surname);
+		const { email, password1, password2, name, surname } = req.body;
+		const id = await new UserService(req).addNewUser(email, password1, password2, name, surname);
 		res.status(201).header('Location' , `/api/v1/users/${id}`).send({ error: false, msg: 'OK', id_user: id});
 	} catch (e) {
 		next(e);
