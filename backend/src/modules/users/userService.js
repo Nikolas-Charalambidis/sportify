@@ -60,6 +60,7 @@ export default class UserService {
 		if(!verifyHash(oldPassword, user[0].password)){
 			throw {status: 400, msg: 'Invalid data'};
 		}
+
 		const result = await this.dbConnection.query(
 			'UPDATE users SET password=? WHERE id_user=?',
 			[hash(newPassword1, 10), user_id]
