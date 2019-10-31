@@ -5,9 +5,13 @@ import '../assets/css/index.css';
 import {Navbar, Nav, Button} from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as Icons from "@fortawesome/free-solid-svg-icons"
+import { useAuth } from '../utils/auth';
+import {useHistory} from "react-router";
 
 function TopNavigationBase(props) {
 	const { location } = props;
+	const { user, signout } = useAuth();
+	const history = useHistory();
 	return (
 		<Navbar id="navigation" sticky="top" expand="md">
 			<Navbar.Brand href="/">
@@ -29,8 +33,27 @@ function TopNavigationBase(props) {
 
 				<div className="signUp d-none d-md-inline-block">
 					<FontAwesomeIcon  className="hidden-lg mr-4 white" icon={Icons.faSearch} size="1x" />
-					<Button className="d-none d-lg-inline-block d-xl-inline-block" variant="primary" href="/login"><FontAwesomeIcon  className="mr-2" icon={Icons.faUser} size="1x" />Přihlásit se</Button>
-					<Button className="d-inline-block d-lg-none" variant="primary" href="/login"><FontAwesomeIcon icon={Icons.faUser} size="1x" /></Button>
+					{user ? (
+						<>
+							<a href={`/administration/profile`} >
+								{user.email}
+							</a>
+							<button
+								onClick={() => {
+									signout();
+									history.push('/');
+									window.location.reload();
+								}}
+							>
+								Odhlásit se
+							</button>
+						</>
+					) : (
+						<Button className="d-none d-lg-inline-block d-xl-inline-block" variant="primary" href="/login">
+							<FontAwesomeIcon  className="mr-2" icon={Icons.faUser} size="1x" />
+							Přihlásit se
+						</Button>
+					)}
 				</div>
 			</Navbar.Collapse>
 		</Navbar>
