@@ -42,7 +42,7 @@ export default class TeamService {
 		const leader = Number(id_leader);
 		teamValidation.validateNewTeamData(sport, name, leader);
 		const result = await this.dbConnection.query(
-			'INSERT INTO teams (id_team, id_sport, name, id_leader) VALUES ("", ?, ?, ?)',
+			`INSERT INTO teams (id_team, id_sport, name, id_leader) VALUES (NULL, ?, ?, ?)`,
 			[sport, name, leader]
 		);
 		if(result.affectedRows === 1){

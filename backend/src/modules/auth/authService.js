@@ -63,9 +63,8 @@ export default class AuthService {
 		const hash = genConfirmToken(0, 9);
 		const validity = new Date();
 		validity.setDate(validity.getDate() + 1);
-
-		const result = await this.dbConnection.query(
-			`INSERT INTO confirmTokens (id_token, id_user, hash, validity) VALUES ('', ?, ?, ?)`,
+		await this.dbConnection.query(
+			`INSERT INTO confirmTokens (id_token, id_user, hash, validity) VALUES (NULL, ?, ?, ?)`,
 			[id_user, hash, validity]);
 		return hash;
 	}

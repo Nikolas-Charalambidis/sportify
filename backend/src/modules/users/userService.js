@@ -35,7 +35,7 @@ export default class UserService {
 		}
 		const hashedPassword = hash(password1, 10);
 		const result = await this.dbConnection.query(
-			'INSERT INTO users (id_user, email, password, name, surname, verified) VALUES ("", ?, ?, ?, ?, 0)',
+			`INSERT INTO users (id_user, email, password, name, surname, verified) VALUES (NULL, ?, ?, ?, ?, 0)`,
 			[email, hashedPassword, name, surname]
 		);
 		if (result.affectedRows === 1) {

@@ -25,33 +25,33 @@ export function Login() {
         history.replace('/')
     }
 
-    function login(email, password) {
-        console.log('inside login function')
-        api
-            .post(`http://${config.API_BASE_PATH}/api/v1/auth/login`, {email: email, password: password})
-            .then(({data}) => {
-                const {token, user} = data
-                auth.signin({token, user})
-                history.replace('/administration/profile')
-            })
-            .catch(({response}) => {
-                const {data, status} = response
-                switch (status) {
-                    case 400:
-                        window.flash(data.message, 'danger')
-                        break
-                    case 404:
-                        window.flash(data.message, 'danger')
-                        break
-                    case 403:
-                        window.flash(data.message, 'warning')
-                        break
-                    default:
-                        window.flash(data.message, 'danger')
-                        break
-                }
-            })
-    }
+    function login(values) {
+		const { email, password } = values;
+		api
+			.post(`http://${config.API_BASE_PATH}/api/v1/auth/login`, {email: email, password: password})
+			.then(({ data }) => {
+				const { token, user } = data;
+				auth.signin( {token, user} );
+				history.replace('/administration/profile');
+			})
+			.catch(( { response } ) => {
+				const { data, status } = response;
+				switch (status) {
+					case 400:
+						window.flash(data.message, 'danger');
+						break;
+					case 404:
+						window.flash(data.message, 'danger');
+						break;
+					case 403:
+						window.flash(data.message, 'warning');
+						break;
+					default:
+						window.flash(data.message, 'danger');
+						break;
+				}
+			});
+	}
 
     return (
         <div>
