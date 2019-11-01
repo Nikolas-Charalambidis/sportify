@@ -1,7 +1,7 @@
-import React from 'react'
+import React from 'react';
 
-import {Heading} from '../atoms/'
-import {Breadcrumb} from "react-bootstrap"
+import {Heading} from '../atoms/';
+import {Breadcrumb} from "react-bootstrap";
 
 export function Contact() {
     return (
@@ -13,5 +13,5 @@ export function Contact() {
             <Heading>Kontakt</Heading>
             <p>This page is empty for now...</p>
         </div>
-    )
+    );
 }

@@ -1,31 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { useApi } from '../../utils/api';
-import { useHistory } from 'react-router-dom';
+import React, {useState, useEffect} from 'react';
+import {useParams} from 'react-router-dom';
+import {useApi} from '../../utils/api';
+import {useHistory} from 'react-router-dom';
 import {config} from "../../config";
 
-function Confirm(url, params){
-    let { id_user, hash } = params;
+function Confirm(url, params) {
+    let {id_user, hash} = params;
     const history = useHistory();
     const api = useApi();
     const [state, setState] = useState({
         isConfirming: true
     });
 
-    useEffect( () => {
+    useEffect(() => {
         async function fetchData() {
             await api
                 .post(url, {id_user: id_user, hash: hash})
-                .then(({ data }) => {
-                    setState({ isConfirming: false });
+                .then(({data}) => {
+                    setState({isConfirming: false});
                     // const { user } = data;
                     // Do something - for example login user
                     window.flash("Váš email byl úspěšně ověřen", 'success');
                     history.replace('/');
                 })
-                .catch(( { response } ) => {
-                    setState( { isLoading: false });
-                    const { data, status } = response;
+                .catch(({response}) => {
+                    setState({isLoading: false});
+                    const {data, status} = response;
                     switch (status) {
                         case 400:
                             window.flash(data.message, 'danger');
@@ -46,6 +46,7 @@ function Confirm(url, params){
                     }
                 });
         }
+
         fetchData().then();
     }, [api, hash, id_user, url, history]);
 
@@ -56,7 +57,7 @@ export function ConfirmEmail() {
     const [state] = Confirm(`http://${config.API_BASE_PATH}/api/v1/auth/confirmEmail`, useParams());
     return (
         <div>
-            { state.isConfirming && <div>Confirming email...</div> }
+            {state.isConfirming && <div>Confirming email...</div>}
         </div>
     );
 }

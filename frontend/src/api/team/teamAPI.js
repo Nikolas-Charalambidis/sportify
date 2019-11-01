@@ -2,22 +2,22 @@ import {useApi} from "../../utils/api";
 import {useEffect, useState} from "react";
 import {config} from '../../config';
 
-export function GetTeam(id_team) {
+export function useGetTeam(id_team) {
     const api = useApi();
     const [state, setState] = useState({
         gettingData: true
     });
-    useEffect( () => {
+    useEffect(() => {
         async function fetchData() {
             await api
                 .get(`http://${config.API_BASE_PATH}/api/v1/teams/${id_team}`)
-                .then(({ data }) => {
-                    const { team } = data;
-                    setState({ gettingData: false, error: false, team_data: team });
+                .then(({data}) => {
+                    const {team} = data;
+                    setState({gettingData: false, error: false, team_data: team});
                 })
-                .catch(( error ) => {
-                    const { data, status } = error;
-                    setState({ gettingData: false, error: true, team_data: null });
+                .catch((error) => {
+                    const {data, status} = error;
+                    setState({gettingData: false, error: true, team_data: null});
                     switch (status) {
                         case 400:
                             window.flash(data.message, 'danger');
@@ -31,12 +31,13 @@ export function GetTeam(id_team) {
                     }
                 });
         }
+
         fetchData().then();
     }, [api, id_team]);
     return [state];
 }
 
-export function ChangeData(api, id_team, values) {
+export function useChangeData(api, id_team, values) {
     const {sport, name} = values;
     api
         .put(`http://${config.API_BASE_PATH}/api/v1/teams/`, {id_team: id_team, sport: sport, name: name})
@@ -44,8 +45,8 @@ export function ChangeData(api, id_team, values) {
             window.flash("Tymove údaje byly úspěšně změněny", 'success');
             // return {error: false, message: "Uživatelské údaje byly úspěšně změněny", type: "success"};
         })
-        .catch(( { response } ) => {
-            const { status } = response;
+        .catch(({response}) => {
+            const {status} = response;
             switch (status) {
                 case 400:
                     window.flash("error", 'danger');

@@ -1,21 +1,21 @@
-import React, {useState} from 'react'
+import React, {useState} from 'react';
 
-import {Heading, MainSection} from '../atoms/'
-import {Form, Button} from 'react-bootstrap'
+import {Heading, MainSection} from '../atoms/';
+import {Form, Button} from 'react-bootstrap';
 
 export function ForgotPassword() {
-    const [validated, setValidated] = useState(false)
-    const [email, setEmail] = useState("")
+    const [validated, setValidated] = useState(false);
+    const [email, setEmail] = useState("");
 
     const onReset = event => {
-        event.preventDefault()
-        event.stopPropagation()
+        event.preventDefault();
+        event.stopPropagation();
 
-        const form = event.currentTarget
-        form.checkValidity()
-        setValidated(true)
-        console.log(email)
-    }
+        const form = event.currentTarget;
+        form.checkValidity();
+        setValidated(true);
+        console.log(email);
+    };
 
     return (
         <div>
@@ -31,5 +31,5 @@ export function ForgotPassword() {
                 <Button variant="primary" type="button" onClick={onReset}>Resetovat</Button>
             </Form>
         </div>
-    )
+    );
 }

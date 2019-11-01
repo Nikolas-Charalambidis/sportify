@@ -12,7 +12,7 @@ import {
 import {Footer} from '../../organisms/Footer';
 import * as Icons from '@fortawesome/free-solid-svg-icons';
 import {useApi} from "../../utils/api";
-import {GetTeam, ChangeData} from "../../api/user/teamAPI";
+import {useGetTeam, useChangeData} from "../../api/team/teamAPI";
 import {Formik} from "formik";
 import * as yup from 'yup';
 import {Field} from "../../atoms/Field";
@@ -23,10 +23,10 @@ const schemaChangeData = yup.object().shape({
 });
 
 export function Team() {
-   // const history = useHistory();
+    // const history = useHistory();
     const api = useApi();
 
-    const [state] = GetTeam(1);
+    const [state] = useGetTeam(1);
 
     return (
         <div>
@@ -47,9 +47,9 @@ export function Team() {
                             sport: state.team_data.sport
                         }}
                         onSubmit={values => {
-                            ChangeData(api, state.team_data.id_team, values);
+                            useChangeData(api, state.team_data.id_team, values);
                         }}
-                    >{({ handleSubmit, errors }) => (
+                    >{({handleSubmit, errors}) => (
                         <Form noValidate onSubmit={handleSubmit}>
                             <Row>
                                 <Col className="d-xl-none text-center mb-5">
@@ -63,15 +63,21 @@ export function Team() {
                                         <Col xl={{span: 6, offset: 0}} lg={{span: 4, offset: 2}}
                                              md={{span: 6, offset: 0}}>
                                             <Row>
-                                                <Col xl={{span: 6, offset: 0}} lg={{span: 4, offset: 2}} md={{span: 6, offset: 0}}>
-                                                    <Field label="Nazev tymu" name="name" type="text" message="Vyplnte nazev tymu" isInvalid={!!errors.name}/>
+                                                <Col xl={{span: 6, offset: 0}} lg={{span: 4, offset: 2}}
+                                                     md={{span: 6, offset: 0}}>
+                                                    <Field label="Nazev tymu" name="name" type="text"
+                                                           message="Vyplnte nazev tymu" isInvalid={!!errors.name}/>
                                                 </Col>
-                                                <Col xl={{span: 6, offset: 0}} lg={{span: 4, offset: 2}} md={{span: 6, offset: 0}}>
-                                                    <Field label="Sport" name="sport" type="text" message="Vyplňte sport, ktery tym hraje" isInvalid={!!errors.sport}/>
+                                                <Col xl={{span: 6, offset: 0}} lg={{span: 4, offset: 2}}
+                                                     md={{span: 6, offset: 0}}>
+                                                    <Field label="Sport" name="sport" type="text"
+                                                           message="Vyplňte sport, ktery tym hraje"
+                                                           isInvalid={!!errors.sport}/>
                                                 </Col>
                                                 <Col xl={{span: 8, offset: 0}} lg={{span: 4, offset: 0}}>
                                                     <Form.Label>Leader</Form.Label>
-                                                    <Form.Control readOnly name="leader" defaultValue={state.team_data.leader}/>
+                                                    <Form.Control readOnly name="leader"
+                                                                  defaultValue={state.team_data.leader}/>
                                                 </Col>
                                             </Row>
                                         </Col>

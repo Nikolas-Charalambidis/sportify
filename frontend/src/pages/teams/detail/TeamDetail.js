@@ -1,22 +1,22 @@
-import React from 'react'
+import React from 'react';
 
-import {registerLocale} from "react-datepicker"
-import cs from 'date-fns/locale/cs'
+import {registerLocale} from "react-datepicker";
+import cs from 'date-fns/locale/cs';
 
-import "react-datepicker/dist/react-datepicker.css"
+import "react-datepicker/dist/react-datepicker.css";
 
-import {Heading} from '../../../atoms'
-import {Breadcrumb, Row, Col, Image, Tabs, Tab} from 'react-bootstrap'
-import {CardTemplate} from '../../../templates/CardTemplate'
-import * as Icons from '@fortawesome/free-solid-svg-icons'
-import {TeamSquad} from "./components/TeamSquad"
+import {Heading} from '../../../atoms';
+import {Breadcrumb, Row, Col, Image, Tabs, Tab} from 'react-bootstrap';
+import {CardTemplate} from '../../../templates/CardTemplate';
+import * as Icons from '@fortawesome/free-solid-svg-icons';
+import {TeamSquad} from "./components/TeamSquad";
 
 //import DatePicker from "react-datepicker";
 //import * as yup from 'yup';
 
-registerLocale('cs', cs)
+registerLocale('cs', cs);
 
-export function Detail() {
+export function TeamDetail() {
 
     //const schema = yup.object().shape({
     //    type: yup.string(),
@@ -39,16 +39,16 @@ export function Detail() {
 
     const subTitleContainer = {
         width: '100%',
-    }
+    };
 
     const subTitleLeftLabel = {
         width: '15%',
         color: '#969696',
-    }
+    };
 
     const subTitleRightLabel = {
         fontWeight: '600',
-    }
+    };
 
     //const form = {
     //    display: 'flex',
@@ -161,5 +161,5 @@ export function Detail() {
                               logo="http://bit.ly/2PrDmSC" datum="23.09.2019" vysledekZapasu="2:0"/>
             </Row>
         </div>
-    )
+    );
 }
