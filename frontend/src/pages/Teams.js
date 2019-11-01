@@ -6,8 +6,10 @@ import {Breadcrumb} from "react-bootstrap";
 import {Footer} from "../organisms/Footer";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
+import {useGetTeams} from "../api/teams/teamsAPI";
 
 export function Teams() {
+    const [state] = useGetTeams();
     return (
         <div>
             <TopNavigation/>
@@ -19,7 +21,7 @@ export function Teams() {
                 <Heading>Týmy</Heading>
                 <div>
                     <ReactTable
-                        data={teams}
+                        data={state.teams_data}
                         filterable
                         defaultFilterMethod={(filter, row) =>
                             row[filter.id].startsWith(filter.value)}
@@ -46,74 +48,15 @@ export function Teams() {
 const columns = [
     {
         Header: 'Nazev tymu',
-        accessor: 'nazevTymu',
+        accessor: 'name',
     },
     {
-        Header: 'Kod',
-        accessor: 'kod',
+        Header: 'Sport',
+        accessor: 'sport',
     },
     {
-        Header: 'Vedouci',
-        accessor: 'vedouci',
+        Header: 'Leader',
+        accessor: 'leader',
     },
-    {
-        Header: 'Trener',
-        accessor: 'trener',
-    },
-    {
-        Header: 'Web',
-        accessor: 'web',
-    }
 ]
-
-const teams = [
-    {   nazevTymu: 'Vojta',
-        kod: 'LAB',
-        vedouci: 'Standa',
-        trener: 'Petr',
-        web: 'www.rab.cz'
-    },
-    {
-        nazevTymu: 'Aomas',
-        kod: 'RAB',
-        vedouci: 'Standa',
-        trener: 'Petr',
-        web: 'www.rab.cz'
-    },
-    {
-        nazevTymu: 'Tolas',
-        kod: 'CAB',
-        vedouci: 'Standa',
-        trener: 'Petr',
-        web: 'www.rab.cz'
-    },
-    {
-        nazevTymu: 'Tomas',
-        kod: 'RAB',
-        vedouci: 'Standa',
-        trener: 'Petr',
-        web: 'www.rab.cz'
-    },
-    {
-        nazevTymu: 'pomas',
-        kod: 'RAB',
-        vedouci: 'Standa',
-        trener: 'Petr',
-        web: 'www.rab.cz'
-    },
-    {
-        nazevTymu: 'Tomas',
-        kod: 'RAB',
-        vedouci: 'Standa',
-        trener: 'Petr',
-        web: 'www.rab.cz'
-    },
-    {
-        nazevTymu: 'gomas',
-        kod: 'RAB',
-        vedouci: 'Standa',
-        trener: 'Petr',
-        web: 'www.rab.cz'
-    },
-];
 
