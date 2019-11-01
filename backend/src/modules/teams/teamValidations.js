@@ -9,3 +9,11 @@ export const validateNewTeamData = (sport, name, leader) => {
 		throw {status: 400, msg: 'Missing data'};
 	}
 };
+
+export const validateChangeTeamData = (id_team, name, id_sport) => {
+	console.log("inside validation function");
+	if(!id_team || !name || !id_sport){
+		console.log("validation failed");
+		throw {status: 400, msg: 'Missing data'};
+	}
+};

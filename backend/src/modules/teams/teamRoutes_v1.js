@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import TeamService from './teamService';
+import UserService from "../users/userService";
 
 const router = Router();
 
@@ -33,6 +34,48 @@ router.get('/:id_team', async (req, res, next) => {
 		const team = await new TeamService(req).findTeamById(id_team);
 		res.status(200).json({ error: false, msg: 'OK', team: team});
 	} catch(e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
+ * /teams:
+ *   put:
+ *     tags:
+ *       - Teams
+ *     name: Login
+ *     summary: Change user data
+ *     consumes: application/json
+ *     produces: application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             id_team:
+ *               type: integer
+ *             name:
+ *               type: string
+ *             id_sport:
+ *               type: integer
+ *     responses:
+ *       200:
+ *         description: Team data has been changed
+ *       400:
+ *         description: Invalid request
+ *       500:
+ *         description: Data change failed
+ */
+router.put('/', async(req, res, next) => {
+	try {
+		const { id_team, name, id_sport } = req.body;
+		console.log("received data", { id_team, name, id_sport });
+		await new TeamService(req).changeTeam(id_team, name, id_sport);
+		res.status(200).send({ error: false, msg: 'OK', id_team: id_team});
+	} catch (e) {
 		next(e);
 	}
 });
