@@ -4,7 +4,7 @@ import { useField } from 'formik';
 import {Form} from "react-bootstrap";
 
 export function Field({ label, message, ...props }) {
-    const [field, meta] = useField(props);
+    const [field] = useField(props);
 
     return (
         <Form.Group>
