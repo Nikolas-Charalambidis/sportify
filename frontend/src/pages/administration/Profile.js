@@ -62,10 +62,8 @@ export function Profile() {
                     <Formik
                         validationSchema={schemaChangeData}
                         initialValues={{ name: state.user_data.name, surname: state.user_data.surname }}
-                        onSubmit={values => {
-                            ChangeData(api, user.id_user, values);
-                    }}
-                    >{({ handleSubmit, handleChange, errors }) => (
+                        onSubmit={values => { ChangeData(api, user.id_user, values); }}
+                    >{({ handleSubmit, errors }) => (
                         <Form noValidate onSubmit={handleSubmit}>
                             <Row>
                                 <Col className="d-xl-none text-center mb-5">
@@ -77,21 +75,10 @@ export function Profile() {
                                 <Col xl={10} lg={12}>
                                     <Row>
                                         <Col xl={{span: 6, offset: 0}} lg={{span: 4, offset: 2}} md={{span: 6, offset: 0}}>
-                                            <Field label="Jméno" name="name" type="text" message="Vyplňte Vaše jméno." isInvalid={!!errors.surname}/>
+                                            <Field label="Jméno" name="name" type="text" message="Vyplňte Vaše jméno." isInvalid={!!errors.name}/>
                                         </Col>
-                                        <Col xl={{span: 6, offset: 0}} lg={{span: 4, offset: 0}}
-                                             md={{span: 6, offset: 0}}>
-                                            <Form.Group controlId="surname">
-                                                <Form.Label>Příjmení</Form.Label>
-                                                <Form.Control type="text"
-                                                              name="surname"
-                                                              defaultValue={state.user_data.surname}
-                                                              onChange={handleChange}
-                                                              isInvalid={!!errors.surname}/>
-                                                <Form.Control.Feedback type="invalid">
-                                                    Vyplňte Vaše příjmení.
-                                                </Form.Control.Feedback>
-                                            </Form.Group>
+                                        <Col xl={{span: 6, offset: 0}} lg={{span: 4, offset: 0}} md={{span: 6, offset: 0}}>
+                                            <Field label="Příjmení" name="surname" type="text" message="Vyplňte Vaše příjmení." isInvalid={!!errors.surname}/>
                                         </Col>
                                     </Row>
 
@@ -100,19 +87,16 @@ export function Profile() {
                                             <Form.Label>Email</Form.Label>
                                             <Form.Control readOnly name="email" defaultValue={state.user_data.email}/>
                                         </Col>
-
                                         <Col xl={{span: 3, offset: 0}} lg={{span: 4, offset: 2}}>
                                             <Button className="mt4" type="submit" block>
                                                 Uložit Profil
                                             </Button>
                                         </Col>
-
                                         <Col xl={{span: 3, offset: 0}} lg={{span: 4, offset: 0}}>
                                             <Button className="mt4" type="button" block onClick={handleShow}>
                                                 Změna hesla
                                             </Button>
                                         </Col>
-
                                     </Row>
                                 </Col>
 
@@ -154,38 +138,9 @@ export function Profile() {
                         >{({  handleSubmit, handleChange, errors  }) => (
                             <Form noValidate onSubmit={handleSubmit}>
                                 <Modal.Body>
-                                    <Form.Group controlId="oldPassword">
-                                        <Form.Label>Stávající heslo</Form.Label>
-                                        <Form.Control type="password"
-                                                      name="oldPassword"
-                                                      onChange={handleChange}
-                                                      isInvalid={!!errors.oldPassword}/>
-                                        <Form.Control.Feedback type="invalid">
-                                            Vyplňte prosím Vaše stávající heslo
-                                        </Form.Control.Feedback>
-                                    </Form.Group>
-                                    <Form.Group controlId="newPassword1">
-                                        <Form.Label>Nové heslo</Form.Label>
-                                        <Form.Control minLength="6"
-                                                      type="password"
-                                                      name="newPassword1"
-                                                      onChange={handleChange}
-                                                      isInvalid={!!errors.newPassword1}/>
-                                        <Form.Control.Feedback type="invalid">
-                                            Heslo musí obsahovat alespoň 6 znaků a alespoň 1 velké písmeno, 1 malé písmeno a 1 číslo.
-                                        </Form.Control.Feedback>
-                                    </Form.Group>
-                                    <Form.Group controlId="newPassword2">
-                                        <Form.Label>Potvrzení hesla</Form.Label>
-                                        <Form.Control type="password"
-                                                      name="newPassword2"
-                                                      onChange={handleChange}
-                                                      isInvalid={!!errors.newPassword2}/>
-                                        <Form.Control.Feedback type="newPassword2">
-                                            Hesla se musí shodovat
-                                        </Form.Control.Feedback>
-                                    </Form.Group>
-
+                                    <Field label="Stávající heslo" name="oldPassword" type="password" message="Vyplňte prosím Vaše stávající heslo" isInvalid={!!errors.oldPassword}/>
+                                    <Field label="Nové heslo" name="newPassword1" type="password" message="Heslo musí obsahovat alespoň 6 znaků a alespoň 1 velké písmeno, 1 malé písmeno a 1 číslo." isInvalid={!!errors.newPassword1}/>
+                                    <Field label="Potvrzení hesla" name="newPassword2" type="password" message="Hesla se musí shodovat" isInvalid={!!errors.newPassword2}/>
                                 </Modal.Body>
 
                                 <Modal.Footer>
