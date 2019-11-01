@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {Alert, Modal} from "react-bootstrap";
 import {withRouter} from "react-router";
-import EventEmitter from 'events';
+import Event from '../utils/event';
 
 function FlashBase() {
     let [visibility, setVisibility] = useState(false);
@@ -9,7 +9,7 @@ function FlashBase() {
     let [type, setType] = useState('');
 
     useEffect(() => {
-        new EventEmitter().addListener('flash', ({message, type}) => {
+        Event.addListener('flash', ({message, type}) => {
             setVisibility(true);
             setMessage(message);
             setType(type);

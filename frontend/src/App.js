@@ -6,7 +6,7 @@ import {Flash} from './organisms/Flash';
 import {ApiProvider} from './utils/api';
 import {AuthProvider} from './utils/auth';
 import {Routes} from './Routes';
-import EventEmitter from 'events';
+import Event from './utils/event';
 
 function AllProviders({children}) {
 	return (
@@ -23,7 +23,7 @@ function AllProviders({children}) {
 }
 
 export function App() {
-	window.flash = (message, type="success") => new EventEmitter().emit('flash', ({message, type}));
+	window.flash = (message, type="success") => Event.emit('flash', ({message, type}));
 	return (
 		<AllProviders>
 			<Routes/>
