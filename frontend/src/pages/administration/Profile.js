@@ -63,7 +63,6 @@ export function Profile() {
                         validationSchema={schemaChangeData}
                         initialValues={{ name: state.user_data.name, surname: state.user_data.surname }}
                         onSubmit={values => {
-                            const { name, surname } = values;
                             ChangeData(api, user.id_user, values);
                     }}
                     >{({ handleSubmit, handleChange, errors }) => (
