@@ -4,40 +4,27 @@ import {TopNavigation} from '../../organisms/TopNavigation';
 import {CardTemplate} from '../../templates/CardTemplate';
 import {
     Form,
-    Button,
     Row,
     Col,
     Image,
-    Modal,
     Breadcrumb,
 } from 'react-bootstrap';
 import {Footer} from '../../organisms/Footer';
 import * as Icons from '@fortawesome/free-solid-svg-icons';
-import {useHistory} from "react-router";
-import {useAuth} from "../../utils/auth";
 import {useApi} from "../../utils/api";
 import {GetTeam, ChangeData} from "../../api/user/teamAPI";
 import {Formik} from "formik";
 import * as yup from 'yup';
+import {Field} from "../../atoms/Field";
 
 const schemaChangeData = yup.object().shape({
     name: yup.string().required(),
-    surname: yup.string().required(),
-});
-
-const schemaChangePassword = yup.object().shape({
-    oldPassword: yup.string().required(),
-    newPassword1: yup.string().matches(/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]){6}/).required(),
-    newPassword2: yup.string().required().oneOf([yup.ref('newPassword1')]),
+    sport: yup.string().required(),
 });
 
 export function Team() {
    // const history = useHistory();
     const api = useApi();
-
-    const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
 
     const [state] = GetTeam(1);
 
@@ -62,7 +49,7 @@ export function Team() {
                         onSubmit={values => {
                             ChangeData(api, state.team_data.id_team, values);
                         }}
-                    >{({ handleSubmit, handleChange, errors }) => (
+                    >{({ handleSubmit, errors }) => (
                         <Form noValidate onSubmit={handleSubmit}>
                             <Row>
                                 <Col className="d-xl-none text-center mb-5">
@@ -75,31 +62,18 @@ export function Team() {
                                     <Row>
                                         <Col xl={{span: 6, offset: 0}} lg={{span: 4, offset: 2}}
                                              md={{span: 6, offset: 0}}>
-                                            <Form.Group controlId="name">
-                                                <Form.Label>Nazev tymu</Form.Label>
-                                                <Form.Control type="text"
-                                                              name="name"
-                                                              defaultValue={state.team_data.name}
-                                                              onChange={handleChange}
-                                                              isInvalid={!!errors.name}/>
-                                                <Form.Control.Feedback type="invalid">
-                                                    Vyplňte tymove jméno.
-                                                </Form.Control.Feedback>
-                                            </Form.Group>
-                                        </Col>
-                                        <Col xl={{span: 6, offset: 0}} lg={{span: 4, offset: 0}}
-                                             md={{span: 6, offset: 0}}>
-                                            <Form.Group controlId="sport">
-                                                <Form.Label>sport</Form.Label>
-                                                <Form.Control type="text"
-                                                              name="sport"
-                                                              defaultValue={state.team_data.sport}
-                                                              onChange={handleChange}
-                                                              isInvalid={!!errors.sport}/>
-                                                <Form.Control.Feedback type="invalid">
-                                                    Vyplňte sport.
-                                                </Form.Control.Feedback>
-                                            </Form.Group>
+                                            <Row>
+                                                <Col xl={{span: 6, offset: 0}} lg={{span: 4, offset: 2}} md={{span: 6, offset: 0}}>
+                                                    <Field label="Nazev tymu" name="name" type="text" message="Vyplnte nazev tymu" isInvalid={!!errors.name}/>
+                                                </Col>
+                                                <Col xl={{span: 6, offset: 0}} lg={{span: 4, offset: 2}} md={{span: 6, offset: 0}}>
+                                                    <Field label="Sport" name="sport" type="text" message="Vyplňte sport, ktery tym hraje" isInvalid={!!errors.sport}/>
+                                                </Col>
+                                                <Col xl={{span: 8, offset: 0}} lg={{span: 4, offset: 0}}>
+                                                    <Form.Label>Leader</Form.Label>
+                                                    <Form.Control readOnly name="leader" defaultValue={state.team_data.leader}/>
+                                                </Col>
+                                            </Row>
                                         </Col>
                                     </Row>
                                 </Col>

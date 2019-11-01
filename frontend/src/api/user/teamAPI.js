@@ -25,9 +25,6 @@ export function GetTeam(id_team) {
                         case 500:
                             window.flash(data.message, 'warning');
                             break;
-                        default:
-                            window.flash(data.message, 'danger');
-                            break;
                     }
                 });
         }
@@ -37,7 +34,7 @@ export function GetTeam(id_team) {
 }
 
 export function ChangeData(api, id_team, values) {
-    const {sport, name } = values;
+    const {sport, name} = values;
     api
         .put(`http://${config.API_BASE_PATH}/api/v1/teams/`, {id_team: id_team, sport: sport, name: name})
         .then(() => {
