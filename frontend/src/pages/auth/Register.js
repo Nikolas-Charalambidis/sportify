@@ -30,7 +30,8 @@ export function Register() {
         history.replace('/');
     }
 
-    const register = (name, surname, email, password1, password2) => {
+    const register = (values) => {
+        const {name, surname, email, password1, password2} = values;
         api
             .post(`http://${config.API_BASE_PATH}/api/v1/users`, {name: name, surname: surname, email: email, password1: password1, password2: password2})
             .then(() => {

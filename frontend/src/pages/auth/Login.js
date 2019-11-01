@@ -28,17 +28,16 @@ export function Login() {
 		history.replace('/');
 	}
 
-    function login(email, password) {
+    function login(values) {
+		const { email, password } = values;
 		api
 			.post(`http://${config.API_BASE_PATH}/api/v1/auth/login`, {email: email, password: password})
 			.then(({ data }) => {
-				console.log('success');
 				const { token, user } = data;
 				auth.signin( {token, user} );
 				history.replace('/administration/profile');
 			})
 			.catch(( { response } ) => {
-				console.log('fail');
 				const { data, status } = response;
 				switch (status) {
 					case 400:
@@ -71,14 +70,8 @@ export function Login() {
                     výsledků.</p>
                 <Formik
                     validationSchema={schema}
-                    initialValues={{
-                        email: '',
-                        password: ''
-                    }}
-                    onSubmit={values => {
-                        const { email, password } = values;
-                        login(email, password);
-                    }}
+                    initialValues={{  email: '', password: '' }}
+                    onSubmit={values => { login(values); }}
                 >{({ handleSubmit, errors }) => (
                     <Form noValidate onSubmit={handleSubmit}>
 						<Row>
