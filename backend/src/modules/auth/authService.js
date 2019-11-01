@@ -1,7 +1,6 @@
 import dotenv from 'dotenv';
 import { DB_CONNECTION_KEY } from '../../libs/connection';
 import { verifyHash, genConfirmToken } from '../../libs/utils';
-import { config } from '../../../config';
 import * as authValidation from "../auth/authValidations";
 import UserService from "../users/userService";
 
@@ -13,7 +12,6 @@ dotenv.config({path: '.env'});
 const env = process.env;
 
 export default class AuthService {
-
 	constructor(req) {
 		this.req = req;
 		this.dbConnection = req[DB_CONNECTION_KEY];
@@ -49,11 +47,9 @@ export default class AuthService {
 	}
 
 	async sendConfirmEmail(email, id_user, hash){
-		let link = config.LOCAL
-			? `http://localhost:3000/confirmEmail/${id_user}/${hash}`
-			: `http://sportify.cz/confirmEmail/${id_user}/${hash}`;
+		const link = `http://${env.APP_BASE_PATH}/confirmEmail/${id_user}/${hash}`;
 		const sgMail = require('@sendgrid/mail');
-		sgMail.setApiKey(config.SENDGRID_API_KEY);
+		sgMail.setApiKey(env.SENDGRID_API_KEY);
 		const msg = {
 			to: `${email}`,
 			from: 'admin@sportify.cz',

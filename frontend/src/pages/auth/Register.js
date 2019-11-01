@@ -7,6 +7,7 @@ import {useHistory} from "react-router";
 import {useAuth} from "../../utils/auth";
 import {Footer} from "../../organisms/Footer";
 import {useApi} from "../../utils/api";
+import {config} from '../../config';
 import * as yup from "yup";
 import {Formik} from "formik";
 
@@ -30,7 +31,7 @@ export function Register() {
 
     const register = (name, surname, email, password1, password2) => {
         api
-            .post("http://localhost:3001/api/v1/users", {name: name, surname: surname, email: email, password1: password1, password2: password2})
+            .post(`http://${config.API_BASE_PATH}/api/v1/users`, {name: name, surname: surname, email: email, password1: password1, password2: password2})
             .then(() => {
                 window.flash("Byl jste úspěšně registrován. Ověřte prosím svůj email odkazem, který Vám byl zaslán na email uvedený při registraci.", 'success');
                 history.replace('/');

@@ -11,10 +11,10 @@ import {useAuth} from './auth';
 import {config} from '../config';
 
 const globalApiInstance = axios.create({
-	baseURL: 'localhost:3001',
+	baseURL: config.API_BASE_PATH,
 });
 
-if (config.MOCK_API) {
+if (config.API_MOCK_RESPONSE) {
 	const {installApiMocks} = require('./api-mock.js');
 	installApiMocks(globalApiInstance);
 }

@@ -8,6 +8,7 @@ import {Footer} from "../../organisms/Footer";
 import {useApi} from '../../utils/api';
 import {useAuth} from '../../utils/auth';
 import {useHistory} from "react-router";
+import {config} from '../../config';
 import {Formik} from "formik";
 import * as yup from "yup";
 
@@ -29,7 +30,7 @@ export function Login() {
     function login(email, password) {
         console.log('inside login function');
 		api
-			.post("http://localhost:3001/api/v1/auth/login", {email: email, password: password})
+			.post(`http://${config.API_BASE_PATH}/api/v1/auth/login`, {email: email, password: password})
 			.then(({ data }) => {
 				const { token, user } = data;
 				auth.signin( {token, user} );
