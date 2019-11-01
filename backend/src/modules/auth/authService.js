@@ -19,12 +19,10 @@ export default class AuthService {
 
 	async login(email, password){
 		authValidation.validateLoginData(email, password);
-		console.log('data validated');
 		const result = await this.dbConnection.query(
 			`SELECT id_user, email, verified, password FROM users WHERE email=?`, [email]
 		);
 		const user = result[0];
-		console.log(result.length);
 		if (result.length > 1) {
 			throw {status: 400, msg: 'Returned more than one record'};
 		}

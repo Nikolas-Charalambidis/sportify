@@ -61,7 +61,7 @@ export function ChangeData(api, id_user, values) {
 }
 
 export function ChangePassword(api, id_user, values) {
-    const {oldPassword, newPassword1, newPassword2} = values
+    const {oldPassword, newPassword1, newPassword2} = values;
     api
         .patch(`http://localhost:3001/api/v1/users/`, {id_user: id_user, oldPassword: oldPassword, newPassword1: newPassword1, newPassword2: newPassword2})
         .then(() => {
