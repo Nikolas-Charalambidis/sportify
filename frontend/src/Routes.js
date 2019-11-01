@@ -19,8 +19,8 @@ export function Routes() {
 	return (
 		<Switch>
 			<Route path="/" exact component={HomePage}/>
+			<Route path="/teams/:id_team" exact component={TeamDetail} />
             <Route path="/teams" exact component={Teams} />
-            <Route path="/teams/team-detail/:id_team" exact component={TeamDetail} />
 			<Route path="/leagues" exact component={Leagues}/>
 			<Route path="/matches" exact component={Matches}/>
 			<Route path="/statistics" exact component={Statistics} />

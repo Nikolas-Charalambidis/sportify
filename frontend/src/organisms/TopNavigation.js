@@ -26,7 +26,7 @@ function TopNavigationBase(props) {
 					<li><Nav.Link href="/leagues" >Soutěže</Nav.Link></li>
 					<li><Nav.Link href="/matches">Zápasy</Nav.Link></li>
 					<li><Nav.Link href="/statistics">Statistiky</Nav.Link></li>
-					<li><Nav.Link href="/aboutus">O nás</Nav.Link></li>
+					<li><Nav.Link href="/aboutus">O&nbsp;nás</Nav.Link></li>
 					<li><Nav.Link href="/contact">Kontakt</Nav.Link></li>
 					</Nav>
 				</ul>
@@ -38,10 +38,10 @@ function TopNavigationBase(props) {
 							<a href={`/administration/profile`} >
 								{user.email}
 							</a>
-							<Button className="btn" variant="primary" type="button"
+							<Button className="btn" variant="primary" type="button" href="/register"
 									onClick={() => {
 										signout();
-										history.replace('/login');
+										history.push('/');
 										window.location.reload();
 									}}>
 								Odhlásit se
