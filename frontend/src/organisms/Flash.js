@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import {Alert, Modal} from "react-bootstrap";
+import {Alert} from "react-bootstrap";
 import {withRouter} from "react-router";
 import Event from '../utils/event';
+import '../assets/css/index.css';
 
 function FlashBase() {
     let [visibility, setVisibility] = useState(false);
@@ -13,20 +14,20 @@ function FlashBase() {
             setVisibility(true);
             setMessage(message);
             setType(type);
-            // setTimeout(() => {
-            //     setVisibility(false);
-            // }, 4000);
+            setTimeout(() => {
+                setVisibility(false);
+            }, 5000);
         });
     });
 
     return (
-        <Modal show={visibility} onHide={() => setVisibility(false)}>
-            <Modal.Body>
-                <Alert variant={type} >
-                    <p>{ message }</p>
-                </Alert>
-            </Modal.Body>
-        </Modal>
+        <div>
+        { visibility &&
+            <Alert variant={type} onClose={() => setVisibility(false)} dismissible>
+                <p>{ message }</p>
+            </Alert>
+        }
+        </div>
     );
 }
 

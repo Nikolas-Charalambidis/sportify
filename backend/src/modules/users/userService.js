@@ -50,7 +50,6 @@ export default class UserService {
 	async changePassword(id_user, oldPassword, newPassword1, newPassword2) {
 		const user_id = Number(id_user);
 		userValidation.validateChangePasswordData(user_id, oldPassword, newPassword1, newPassword2);
-
 		const user = await this.dbConnection.query(
 			`SELECT password FROM users WHERE id_user=?`, [user_id]
 		);
