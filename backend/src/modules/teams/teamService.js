@@ -37,6 +37,18 @@ export default class TeamService {
 		return result[0];
 	}
 
+	async findPlayersByTeamId(id_team) {
+		const team_id = Number(id_team);
+		teamValidation.validateTeamID(team_id);
+		const players = await this.dbConnection.query(
+			`SELECT u.id_user, u.email, u.name, u.surname, t.position FROM team_membership AS t
+   			JOIN users u ON t.user = u.id_user
+   			WHERE team = ?;`
+			, team_id
+		);
+		return players;
+	}
+
 	async addNewTeam(id_sport, name, id_leader) {
 		const sport = Number(id_sport);
 		const leader = Number(id_leader);

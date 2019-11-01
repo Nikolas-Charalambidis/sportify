@@ -84,7 +84,40 @@ router.post('/', async (req, res, next) => {
 	} catch(e) {
 		next(e);
 	}
+});
 
+/**
+ * @swagger
+ * /teams/{id_team}/players:
+ *   get:
+ *     tags:
+ *       - Teams
+ *     name: Players by team
+ *     summary: Get all players of a team by ID
+ *     parameters:
+ *       - name: id_team
+ *         in: path
+ *         description: Team ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Players found
+ *       400:
+ *         description: Invalid request
+ *       404:
+ *         description: Players or team not found
+ */
+
+router.get('/:id_team/players', async (req, res, next) => {
+	try {
+		const { id_team } = req.params;
+		const players = await new TeamService(req).findPlayersByTeamId(id_team);
+		res.status(200).json({ error: false, msg: 'OK', players: players});
+	} catch(e) {
+		next(e);
+	}
 });
 
 /**

@@ -157,7 +157,7 @@ INSERT INTO `sports` (`id_sport`, `sport`) VALUES (3, 'hokejbal');
 INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`) VALUES (1, 1, 'Hokejisti pro srandu a žízeň', 1);
 INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`) VALUES (2, 1, 'The Rural Jurors', 6);
 INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`) VALUES (3, 1, 'Game of Throws', 14);
-INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`) VALUES (4, 3, 'The Rural Jurors', 19);
+INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`) VALUES (4, 3, 'Not Last Place', 19);
 INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`) VALUES (5, 3, 'The Salty Pretzels', 24);
 
 -- TEAM-MEMBERSHIP
@@ -189,8 +189,8 @@ INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `
 INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (22, 5, 25, 'active', 'defender');
 INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (23, 5, 26, 'active', 'defender');
 INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (24, 5, 27, 'active', 'defender');
-INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (24, 5, 28, 'active', 'attacker');
-INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (24, 5, 29, 'active', 'attacker');
+INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (25, 5, 28, 'active', 'attacker');
+INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (26, 5, 29, 'active', 'attacker');
 
 -- CONPETITIONS
 INSERT INTO `competitions` (`id_competition`, `name`, `leader`, `id_sport`, `start_date`, `end_date`) VALUES (1, 'Hokejová liga', 1, 1, '2019-09-01 23:59:59', '2020-04-01 23:59:59');
