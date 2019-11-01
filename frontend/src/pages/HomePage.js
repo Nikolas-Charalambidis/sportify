@@ -1,18 +1,11 @@
-import React from 'react';
+import React from 'react'
 
-import {Heading, MainSection} from '../atoms/';
-import {TopNavigation} from '../organisms/TopNavigation';
-import {Footer} from '../organisms/Footer';
+import {Heading} from '../atoms/'
 
 export function HomePage() {
     return (
         <div>
-            <TopNavigation/>
-            <MainSection>
-                <Heading>Sportify</Heading>
-            </MainSection>
-            <Footer/>
-            <Footer/>
+            <Heading>Sportify</Heading>
         </div>
-    );
+    )
 }

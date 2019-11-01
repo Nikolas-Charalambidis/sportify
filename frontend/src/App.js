@@ -1,12 +1,14 @@
 import React from 'react';
 import {BrowserRouter} from 'react-router-dom';
 
-import {ScrollToTop} from './atoms/';
+import {MainSection, ScrollToTop} from './atoms/'
 import {Flash} from './organisms/Flash';
 import {ApiProvider} from './utils/api';
 import {AuthProvider} from './utils/auth';
 import {Routes} from './Routes';
 import Event from './utils/event';
+import {Footer} from "./organisms/Footer"
+import {TopNavigation} from "./organisms/TopNavigation"
 
 function AllProviders({children}) {
 	return (
@@ -15,7 +17,11 @@ function AllProviders({children}) {
 				<BrowserRouter>
 					<Flash />
 					<ScrollToTop/>
-					{children}
+					<TopNavigation/>
+					<MainSection>
+						{children}
+					</MainSection>
+					<Footer/>
 				</BrowserRouter>
 			</ApiProvider>
 		</AuthProvider>
