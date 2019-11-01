@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {Alert, Modal} from "react-bootstrap";
+import {Alert} from "react-bootstrap";
 import {withRouter} from "react-router";
 import Event from '../utils/event';
 import '../assets/css/index.css';
@@ -21,7 +21,7 @@ function FlashBase() {
     });
 
     return (
-        <div className="flash-message">
+        <div>
         { visibility &&
             <Alert variant={type} onClose={() => setVisibility(false)} dismissible>
                 <p>{ message }</p>
