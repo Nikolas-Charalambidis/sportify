@@ -50,4 +50,20 @@ export default class TeamService {
 		}
 		throw {status: 500, msg: 'Unable to create team'};
 	}
+
+	async changeTeam(id_team, name, id_sport) {
+		const team_id = Number(id_team);
+		const sport_id = Number(id_sport);
+		console.log("before");
+		teamValidation.validateChangeTeamData(team_id, name, sport_id);
+		console.log("validation ok");
+		const result = await this.dbConnection.query(
+			`UPDATE teams SET name=?, id_sport=? WHERE id_team=?`,
+			[name, id_sport, id_team]
+		);
+		if(result.affectedRows === 1){
+			return result.insertId;
+		}
+		throw {status: 500, msg: 'Unable to change team'};
+	}
 }
