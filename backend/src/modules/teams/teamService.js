@@ -24,11 +24,11 @@ export default class TeamService {
 		const team_id = Number(id_team);
 		teamValidation.validateTeamID(team_id);
 		const result = await this.dbConnection.query(
-			'SELECT t.id_team, t.name, s.sport, CONCAT(u.name, " ", u.surname) as leader ' +
-			'FROM teams as t ' +
-			'JOIN sports as s ON t.id_sport=s.id_sport ' +
-			'JOIN users as u ON t.id_leader=u.id_user ' +
-			'WHERE id_team=?'
+			`SELECT t.id_team, t.name, s.sport, CONCAT(u.name, " ", u.surname) as leader
+			FROM teams as t
+			JOIN sports as s ON t.id_sport=s.id_sport
+			JOIN users as u ON t.id_leader=u.id_user
+			WHERE id_team=?`
 			, team_id
 		);
 		if (result.length === 0) {

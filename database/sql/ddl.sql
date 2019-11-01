@@ -110,7 +110,7 @@ ALTER TABLE `matchup` ADD FOREIGN KEY (`team`) REFERENCES `teams` (`id_team`);
 ALTER TABLE `matchup` ADD FOREIGN KEY (`user`) REFERENCES `users` (`id_user`);
 
 -- Data ----------------------------------------------------------------------------------------------------------------
--- Password is hashed using bcrypt "abc123", 10 rounds
+-- Password is hashed using bcrypt "Heslo123", 10 rounds
 INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (1, 'user1@test.cz', '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'user1_name', 'user1_surname', true);
 INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (2, 'user2@test.cz', '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'user2_name', 'user2_surname', true);
 INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (3, 'user3@test.cz', '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'user3_name', 'user3_surname', true);
@@ -138,6 +138,10 @@ INSERT INTO `sports` (`id_sport`, `sport`) VALUES (3, 'hokejbal');
 INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`) VALUES (1, 1, 'team_hokej', 1);
 INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`) VALUES (2, 3, 'team_hokejbal', 5);
 
+INSERT INTO `competitions` (`id_competition`, `name`, `leader`, `id_sport`, `start_date`, `end_date`) VALUES (1, 'Hokejová liga', 1, 1, '2019-09-01 23:59:59', '2020-04-01 23:59:59');
+INSERT INTO `competitions` (`id_competition`, `name`, `leader`, `id_sport`, `start_date`, `end_date`) VALUES (2, 'Florbalová liga', 1, 2, '2017-09-01 23:59:59', '2018-04-01 23:59:59');
+INSERT INTO `competitions` (`id_competition`, `name`, `leader`, `id_sport`, `start_date`, `end_date`) VALUES (3, 'Hokejbalová liga', 1, 3, '2019-09-01 23:59:59', '2020-04-01 23:59:59');
+
 INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (1, 1, 1, 'active', 'goalkeeper');
 INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (2, 1, 2, 'active', 'defender');
 INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (3, 1, 3, 'active', 'attacker');
@@ -147,6 +151,10 @@ INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `
 INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (6, 2, 6, 'active', 'defender');
 INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (7, 2, 7, 'active', 'attacker');
 INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (8, 2, 8, 'active', 'attacker');
+INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (9, 2, 1, 'active', 'attacker');
+
+INSERT INTO `competition_membership` (`id_competition_membership`, `competition`, `team`, `status`) VALUES (1, 1, 1, 'active');
+INSERT INTO `competition_membership` (`id_competition_membership`, `competition`, `team`, `status`) VALUES (2, 3, 2, 'active');
 
 -- INSERT INTO `matches` (`id_match`, `competition`, `host`, `guest`, `date`) VALUES ();
 

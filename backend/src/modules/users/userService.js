@@ -38,6 +38,7 @@ export default class UserService {
 			`INSERT INTO users (id_user, email, password, name, surname, verified) VALUES (NULL, ?, ?, ?, ?, 0)`,
 			[email, hashedPassword, name, surname]
 		);
+
 		if (result.affectedRows === 1) {
 			const authService = new AuthService(this.req);
 			const hash = await authService.genConfirmToken(result.insertId);
@@ -92,5 +93,31 @@ export default class UserService {
 		if (result.affectedRows === 0) {
 			throw {status: 400, msg: 'Verification failed'};
 		}
+	}
+
+	async userTeamMemberships(id_user) {
+		const user_id = Number(id_user);
+		userValidation.validateUserID(user_id);
+		const teams = await this.dbConnection.query(
+				`SELECT t.name, tm.position, s.sport FROM team_membership AS tm
+				JOIN teams AS t ON tm.team=t.id_team
+				JOIN sports AS s ON t.id_sport=s.id_sport
+				WHERE tm.user=? AND tm.status='active'`
+			, user_id);
+		return teams;
+	}
+
+	async userCompetitionMemberships(id_user) {
+		const user_id = Number(id_user);
+		userValidation.validateUserID(user_id);
+		const competitions = await this.dbConnection.query(
+				`SELECT t.name, tm.position, s.sport, c.name, c.start_date, c.end_date, 'is_active' FROM team_membership AS tm
+  				JOIN teams t ON tm.team = t.id_team
+  				JOIN competition_membership cm ON t.id_team = cm.team
+  				JOIN competitions c ON cm.competition = c.id_competition
+  				JOIN sports AS s ON t.id_sport=s.id_sport
+  				WHERE tm.user=6 AND cm.status='active'`
+			, user_id);
+		return competitions;
 	}
 }
