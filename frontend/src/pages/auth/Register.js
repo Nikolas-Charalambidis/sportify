@@ -68,7 +68,7 @@ export function Register() {
                     validationSchema={schema}
                     initialValues={{ name: '', surname: '',  email: '', nickname: '',  password1: '', password2: '' }}
                     onSubmit={values => { register(values); }}
-                >{({ handleSubmit, handleChange, errors }) => (
+                >{({ handleSubmit, errors }) => (
                     <Form noValidate onSubmit={handleSubmit}>
                         <Row>
                             <Col xl={{span: 4, offset: 2}} lg={{span: 4, offset: 2}} md={{span: 6, offset: 0}}>
