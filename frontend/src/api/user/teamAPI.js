@@ -25,6 +25,9 @@ export function GetTeam(id_team) {
                         case 500:
                             window.flash(data.message, 'warning');
                             break;
+                        default:
+                            window.flash(data.message, 'danger');
+                            break;
                     }
                 });
         }

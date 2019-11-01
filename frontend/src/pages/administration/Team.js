@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Heading, MainSection} from '../../atoms';
 import {TopNavigation} from '../../organisms/TopNavigation';
 import {CardTemplate} from '../../templates/CardTemplate';
