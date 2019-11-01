@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {Heading, MainSection} from '../atoms/'
+import {Heading} from '../atoms/'
 import {Breadcrumb} from "react-bootstrap"
 
 export function Statistics() {
