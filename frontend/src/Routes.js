@@ -14,6 +14,7 @@ import { Register } from './pages/auth/Register';
 import { Profile } from "./pages/administration/Profile";
 import { ConfirmEmail } from "./pages/auth/ConfirmEmail";
 import { TeamDetail } from './pages/TeamDetail';
+import { Team } from './pages/administration/Team';
 
 export function Routes() {
 	return (
@@ -31,6 +32,7 @@ export function Routes() {
             <Route path="/register" exact component={Register} />
             <Route path="/administration/profile" exact component={Profile} />
 			<Route path="/confirmEmail/:id_user/:hash" exact component={ConfirmEmail} />
+			<Route path="/administration/team" exact component={Team} />
 			<Route path="*" component={Page404}/>
 		</Switch>
 	);
