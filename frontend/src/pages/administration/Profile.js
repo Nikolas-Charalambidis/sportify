@@ -19,6 +19,8 @@ import {useApi} from "../../utils/api";
 import {GetUser, ChangeData, ChangePassword} from "../../api/user/userAPI";
 import {Formik} from "formik";
 import * as yup from 'yup';
+import {Field} from "../../atoms/Field";
+
 
 const schemaChangeData = yup.object().shape({
     name: yup.string().required(),
@@ -59,13 +61,9 @@ export function Profile() {
                 <div>
                     <Formik
                         validationSchema={schemaChangeData}
-                        initialValues={{
-                            name: state.user_data.name,
-                            surname: state.user_data.surname
-                        }}
+                        initialValues={{ name: state.user_data.name, surname: state.user_data.surname }}
                         onSubmit={values => {
-                            const { name, surname } = values;
-                            ChangeData(api, user.id_user, name, surname);
+                            ChangeData(api, user.id_user, values);
                     }}
                     >{({ handleSubmit, handleChange, errors }) => (
                         <Form noValidate onSubmit={handleSubmit}>
@@ -78,19 +76,8 @@ export function Profile() {
 
                                 <Col xl={10} lg={12}>
                                     <Row>
-                                        <Col xl={{span: 6, offset: 0}} lg={{span: 4, offset: 2}}
-                                             md={{span: 6, offset: 0}}>
-                                            <Form.Group controlId="name">
-                                                <Form.Label>Jméno</Form.Label>
-                                                <Form.Control type="text"
-                                                              name="name"
-                                                              defaultValue={state.user_data.name}
-                                                              onChange={handleChange}
-                                                              isInvalid={!!errors.name}/>
-                                                <Form.Control.Feedback type="invalid">
-                                                    Vyplňte Vaše jméno.
-                                                </Form.Control.Feedback>
-                                            </Form.Group>
+                                        <Col xl={{span: 6, offset: 0}} lg={{span: 4, offset: 2}} md={{span: 6, offset: 0}}>
+                                            <Field label="Jméno" name="name" type="text" message="Vyplňte Vaše jméno." isInvalid={!!errors.surname}/>
                                         </Col>
                                         <Col xl={{span: 6, offset: 0}} lg={{span: 4, offset: 0}}
                                              md={{span: 6, offset: 0}}>
@@ -159,14 +146,9 @@ export function Profile() {
                     <Modal show={show} onHide={handleClose}>
                         <Formik
                             validationSchema={schemaChangePassword}
-                            initialValues={{
-                                oldPassword: '',
-                                newPassword1: '',
-                                newPassword2: ''
-                            }}
+                            initialValues={{ oldPassword: '',  newPassword1: '', newPassword2: '' }}
                             onSubmit={values => {
-                                const { oldPassword, newPassword1, newPassword2 } = values;
-                                ChangePassword(api, user.id_user, oldPassword, newPassword1, newPassword2);
+                                ChangePassword(api, user.id_user, values);
                                 setShow(false);
                             }}
                         >{({  handleSubmit, handleChange, errors  }) => (

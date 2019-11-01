@@ -28,15 +28,16 @@ export function Login() {
 	}
 
     function login(email, password) {
-        console.log('inside login function');
 		api
 			.post(`http://${config.API_BASE_PATH}/api/v1/auth/login`, {email: email, password: password})
 			.then(({ data }) => {
+				console.log('success');
 				const { token, user } = data;
 				auth.signin( {token, user} );
 				history.replace('/administration/profile');
 			})
 			.catch(( { response } ) => {
+				console.log('fail');
 				const { data, status } = response;
 				switch (status) {
 					case 400:

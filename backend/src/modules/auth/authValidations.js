@@ -1,4 +1,5 @@
 export const validateLoginData = (email, password) => {
+	console.log('validation');
 	if(!email || !password){
 		throw {status: 400, msg: 'Missing data'};
 	}

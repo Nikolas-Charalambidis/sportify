@@ -36,7 +36,8 @@ export function GetUser(id_user) {
     return [state];
 }
 
-export function ChangeData(api, id_user, name, surname) {
+export function ChangeData(api, id_user, values) {
+    const {name, surname} = values;
     api
         .put(`http://${config.API_BASE_PATH}/api/v1/users/`, {id_user: id_user, name: name, surname: surname})
         .then(() => {
@@ -59,7 +60,8 @@ export function ChangeData(api, id_user, name, surname) {
         });
 }
 
-export function ChangePassword(api, id_user, oldPassword, newPassword1, newPassword2) {
+export function ChangePassword(api, id_user, values) {
+    const {oldPassword, newPassword1, newPassword2} = values
     api
         .patch(`http://localhost:3001/api/v1/users/`, {id_user: id_user, oldPassword: oldPassword, newPassword1: newPassword1, newPassword2: newPassword2})
         .then(() => {
