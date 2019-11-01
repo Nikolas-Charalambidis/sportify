@@ -35,7 +35,7 @@ export default class UserService {
 		}
 		const hashedPassword = hash(password1, 10);
 		const result = await this.dbConnection.query(
-			'INSERT INTO users (id_user, email, password, name, surname, verified) VALUES ("", ?, ?, ?, ?, 0)',
+			'INSERT INTO users (id_user, email, password, name, surname, verified) VALUES (null, ?, ?, ?, ?, 0)',
 			[email, hashedPassword, name, surname]
 		);
 		if (result.affectedRows === 1) {
@@ -50,7 +50,6 @@ export default class UserService {
 	async changePassword(id_user, oldPassword, newPassword1, newPassword2) {
 		const user_id = Number(id_user);
 		userValidation.validateChangePasswordData(user_id, oldPassword, newPassword1, newPassword2);
-
 		const user = await this.dbConnection.query(
 			`SELECT password FROM users WHERE id_user=?`, [user_id]
 		);
