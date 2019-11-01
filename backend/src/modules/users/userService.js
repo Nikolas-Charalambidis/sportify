@@ -99,7 +99,7 @@ export default class UserService {
 		const user_id = Number(id_user);
 		userValidation.validateUserID(user_id);
 		const teams = await this.dbConnection.query(
-				`SELECT t.name, tm.position, s.sport FROM team_membership AS tm
+				`SELECT t.name, tm.position, s.sport, s.id_sport FROM team_membership AS tm
 				JOIN teams AS t ON tm.team=t.id_team
 				JOIN sports AS s ON t.id_sport=s.id_sport
 				WHERE tm.user=? AND tm.status='active'`
@@ -111,7 +111,7 @@ export default class UserService {
 		const user_id = Number(id_user);
 		userValidation.validateUserID(user_id);
 		const competitions = await this.dbConnection.query(
-				`SELECT t.name, tm.position, s.sport, c.name, c.start_date, c.end_date, 'is_active' FROM team_membership AS tm
+				`SELECT t.name, tm.position, s.sport, s.id_sport, c.name, c.start_date, c.end_date, 'is_active' FROM team_membership AS tm
   				JOIN teams t ON tm.team = t.id_team
   				JOIN competition_membership cm ON t.id_team = cm.team
   				JOIN competitions c ON cm.competition = c.id_competition
