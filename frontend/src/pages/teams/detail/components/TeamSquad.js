@@ -6,10 +6,10 @@ const positionEnum = {
     STRIKER: 'striker',
     DEFENDER: 'defender',
     GOALKEEPER: 'goalkeeper',
-}
+};
 
-export function TeamSquad({className, ...rest}) {
-    const data = [
+export function TeamSquad({teamId}) {
+    const [state] = [
         {
             name: "Alice",
             surname: "fwqfqwf",

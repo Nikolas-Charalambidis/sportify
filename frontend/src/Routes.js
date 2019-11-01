@@ -20,7 +20,7 @@ export function Routes() {
 	return (
 		<Switch>
 			<Route path="/" exact component={HomePage}/>
-			<Route path="/teams/:id_team" exact component={TeamDetail} />
+			<Route path="/team/:id_team" exact component={TeamDetail} />
             <Route path="/teams" exact component={TeamList} />
 			<Route path="/leagues" exact component={Leagues}/>
 			<Route path="/matches" exact component={Matches}/>
