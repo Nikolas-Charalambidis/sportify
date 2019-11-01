@@ -141,7 +141,7 @@ router.get('/', async (req, res, next) => {
  *   post:
  *     tags:
  *       - Users
- *     name: Login
+ *     name: Register
  *     summary: Add new user
  *     consumes: application/json
  *     produces: application/json
@@ -154,7 +154,9 @@ router.get('/', async (req, res, next) => {
  *           properties:
  *             email:
  *               type: string
- *             password:
+ *             password1:
+ *               type: string
+ *             password2:
  *               type: string
  *             name:
  *               type: string

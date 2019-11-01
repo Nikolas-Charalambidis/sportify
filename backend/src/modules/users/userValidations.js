@@ -1,12 +1,12 @@
 export const validateUserID = (id_user) => {
 	if(!id_user){
-		throw {status: 400, msg: 'Missing data'};
+		throw {status: 400, msg: 'Invalid user ID'};
 	}
 };
 
 export const validateNewUserData = (email, password1, password2, name, surname) => {
 	if(!email || !password1|| !password2  || !name || !surname){
-		throw {status: 400, msg: 'Missing data'};
+		throw {status: 400, msg: 'Invalid or missing data (email, password1, password2, name, surname)'};
 	}
 	const emailRegex = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,4})$/;
 	if(!emailRegex.test(email)){
@@ -23,7 +23,7 @@ export const validateNewUserData = (email, password1, password2, name, surname) 
 
 export const validateNewUserPasswords = (email, password1, password2, name, surname) => {
 	if(!email || !password1|| !password2  || !name || !surname){
-		throw {status: 400, msg: 'Missing data'};
+		throw {status: 400, msg: 'Invalid or missing data (email, password1, password2, name, surname)'};
 	}
 };
 
@@ -38,6 +38,6 @@ export const validateChangePasswordData = (id_user, oldPassword, newPassword1, n
 
 export const validateChangeUserData = (id_user, name, surname) => {
 	if(!id_user || !name || !surname){
-		throw {status: 400, msg: 'Missing data'};
+		throw {status: 400, msg: 'Invalid or missing data (id_user, name, surname)'};
 	}
 };
