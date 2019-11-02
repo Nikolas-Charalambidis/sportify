@@ -2,22 +2,23 @@ import {useApi} from "../../utils/api";
 import {useEffect, useState} from "react";
 import {config} from '../../config';
 
-export function GetUser(id_user) {
+export function useGetUser(id_user) {
     const api = useApi();
     const [state, setState] = useState({
-        gettingData: true
+        isLoading: true
     });
     useEffect( () => {
         async function fetchData() {
-            await api
-                .get(`http://${config.API_BASE_PATH}/api/v1/users/${id_user}`)
+            api
+                .get(`${config.API_BASE_PATH}/api/v1/users/${id_user}`)
                 .then(({ data }) => {
                     const { user } = data;
-                    setState({ gettingData: false, error: false, user_data: user });
+                    setState({ isLoading: false, error: false, user_data: user });
                 })
-                .catch(( { response } ) => {
-                    const { data, status } = response;
-                    setState({ gettingData: false, error: true, user_data: null });
+                .catch(error => {
+                    console.log(error);
+                    const { data, status } = error;
+                    setState({ isLoading: false, error: true, user_data: null });
                     switch (status) {
                         case 400:
                             window.flash(data.message, 'danger');
@@ -26,7 +27,7 @@ export function GetUser(id_user) {
                             window.flash(data.message, 'warning');
                             break;
                         default:
-                            window.flash(data.message, 'danger');
+                            window.flash("Unexpected error", 'danger');
                             break;
                     }
                 });
@@ -39,22 +40,21 @@ export function GetUser(id_user) {
 export function ChangeData(api, id_user, values) {
     const {name, surname} = values;
     api
-        .put(`http://${config.API_BASE_PATH}/api/v1/users/`, {id_user: id_user, name: name, surname: surname})
+        .put(`${config.API_BASE_PATH}/api/v1/users/`, {id_user: id_user, name: name, surname: surname})
         .then(() => {
             window.flash("Uživatelské údaje byly úspěšně změněny", 'success');
-            // return {error: false, message: "Uživatelské údaje byly úspěšně změněny", type: "success"};
         })
         .catch(( { response } ) => {
-            const { status } = response;
+            const { data, status } = response;
             switch (status) {
                 case 400:
-                    window.flash("error", 'danger');
-                    return {error: true, message: "Error message", type: "danger"};
+                    window.flash(data.message, 'danger');
+                    break;
                 case 500:
-                    window.flash("error", 'danger');
-                    return {error: true, message: "Error message", type: "danger"};
+                    window.flash(data.message, 'danger');
+                    break;
                 default:
-                    window.flash("error", "danger");
+                    window.flash("Neočekávaná chyba", "danger");
                     break;
             }
         });
@@ -63,9 +63,8 @@ export function ChangeData(api, id_user, values) {
 export function ChangePassword(api, id_user, values) {
     const {oldPassword, newPassword1, newPassword2} = values;
     api
-        .patch(`http://localhost:3001/api/v1/users/`, {id_user: id_user, oldPassword: oldPassword, newPassword1: newPassword1, newPassword2: newPassword2})
+        .patch(`${config.API_BASE_PATH}/api/v1/users/`, {id_user: id_user, oldPassword: oldPassword, newPassword1: newPassword1, newPassword2: newPassword2})
         .then(() => {
-            //result = {error: false, message: "Heslo bylo úspěšně změněno", type: "success"};
             window.flash("Heslo bylo úspěšně změněno", 'success');
         })
         .catch(( { response } ) => {
@@ -78,7 +77,7 @@ export function ChangePassword(api, id_user, values) {
                     window.flash(data.message, 'warning');
                     break;
                 default:
-                    window.flash(data.message, 'danger');
+                    window.flash("Neočekávaná chyba", 'danger');
                     break;
             }
         });

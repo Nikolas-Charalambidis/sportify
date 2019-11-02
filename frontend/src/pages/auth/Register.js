@@ -33,19 +33,13 @@ export function Register() {
     const register = (values) => {
         const {name, surname, email, password1, password2} = values;
         api
-            .post(`http://${config.API_BASE_PATH}/api/v1/users`, {
-                name: name,
-                surname: surname,
-                email: email,
-                password1: password1,
-                password2: password2
-            })
+            .post(`${config.API_BASE_PATH}/api/v1/users`, {name: name, surname: surname, email: email, password1: password1, password2: password2})
             .then(() => {
                 window.flash("Byl jste úspěšně registrován. Ověřte prosím svůj email odkazem, který Vám byl zaslán na email uvedený při registraci.", 'success');
                 history.replace('/');
             })
-            .catch(({response}) => {
-                const {data, status} = response;
+            .catch(( { error } ) => {
+                const { data, status } = error;
                 switch (status) {
                     case 400:
                         window.flash(data.message, 'danger');

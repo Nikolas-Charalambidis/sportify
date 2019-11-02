@@ -12,11 +12,12 @@ CREATE TABLE `users` (
     `verified` boolean NOT NULL
 );
 
-CREATE TABLE `confirmTokens` (
+CREATE TABLE `tokens` (
     `id_token` int PRIMARY KEY AUTO_INCREMENT,
-    `id_user` int NOT NULL unique ,
+    `id_user` int NOT NULL ,
     `hash` varchar(255) NOT NULL,
-    `validity` datetime NOT NULL
+    `validity` datetime NOT NULL,
+    `type` ENUM ('confirm', 'reset')
 );
 
 CREATE TABLE `teams` (
@@ -86,7 +87,7 @@ CREATE TABLE `matchup` (
 ALTER TABLE `teams` ADD FOREIGN KEY (`id_sport`) REFERENCES `sports` (`id_sport`);
 ALTER TABLE `teams` ADD FOREIGN KEY (`id_leader`) REFERENCES `users` (`id_user`);
 
-ALTER TABLE `confirmTokens` ADD FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`);
+ALTER TABLE `tokens` ADD FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`);
 
 ALTER TABLE `competitions` ADD FOREIGN KEY (`leader`) REFERENCES `users` (`id_user`);
 ALTER TABLE `competitions` ADD FOREIGN KEY (`id_sport`) REFERENCES `sports` (`id_sport`);
@@ -144,9 +145,9 @@ INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verifie
 INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (29, 'user29@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'user8_name', 'user8_surname', true);
 
 -- CONFIRM TOKENS
-INSERT INTO `confirmTokens` (`id_token`, `id_user`, `hash`, `validity`) VALUES (1, 11, '39247679', '2019-12-29 00:09:33');
-INSERT INTO `confirmTokens` (`id_token`, `id_user`, `hash`, `validity`) VALUES (2, 12, '39247678', '2019-12-29 00:09:33');
-INSERT INTO `confirmTokens` (`id_token`, `id_user`, `hash`, `validity`) VALUES (3, 13, '39247677', '2019-12-29 00:09:33');
+INSERT INTO `tokens` (`id_token`, `id_user`, `hash`, `validity`, `type`) VALUES (1, 11, '39247679', '2019-12-29 00:09:33', 'confirm');
+INSERT INTO `tokens` (`id_token`, `id_user`, `hash`, `validity`, `type`) VALUES (2, 12, '39247678', '2019-12-29 00:09:33', 'confirm');
+INSERT INTO `tokens` (`id_token`, `id_user`, `hash`, `validity`, `type`) VALUES (3, 13, '39247677', '2019-12-29 00:09:33', 'confirm');
 
 -- SPORTS
 INSERT INTO `sports` (`id_sport`, `sport`) VALUES (1, 'hokej');

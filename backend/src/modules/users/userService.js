@@ -38,14 +38,11 @@ export default class UserService {
 			`INSERT INTO users (id_user, email, password, name, surname, verified) VALUES (NULL, ?, ?, ?, ?, 0)`,
 			[email, hashedPassword, name, surname]
 		);
-
-		if (result.affectedRows === 1) {
-			const authService = new AuthService(this.req);
-			const hash = await authService.genConfirmToken(result.insertId);
-			await authService.sendConfirmEmail(email, result.insertId, hash);
-			return result.insertId;
+		if (result.affectedRows < 0) {
+			throw {status: 500, msg: 'Unable to create user'};
 		}
-		throw {status: 500, msg: 'Unable to create user'};
+		await new AuthService(this.req).genConfirmToken(result.insertId, email);
+		return result.insertId;
 	}
 
 	async changePassword(id_user, oldPassword, newPassword1, newPassword2) {
@@ -60,7 +57,6 @@ export default class UserService {
 		if(!verifyHash(oldPassword, user[0].password)){
 			throw {status: 400, msg: 'Invalid data'};
 		}
-
 		const result = await this.dbConnection.query(
 			'UPDATE users SET password=? WHERE id_user=?',
 			[hash(newPassword1, 10), user_id]
@@ -86,13 +82,6 @@ export default class UserService {
 	async isEmailUsed(email) {
 		const result = await this.dbConnection.query('SELECT * FROM users WHERE email=?', email);
 		return result.length > 0;
-	}
-
-	async setUserVerified(id_user) {
-		const result = await this.dbConnection.query('UPDATE users SET verified=true WHERE id_user=?', id_user);
-		if (result.affectedRows === 0) {
-			throw {status: 400, msg: 'Verification failed'};
-		}
 	}
 
 	async userTeamMemberships(id_user) {
