@@ -16,7 +16,6 @@ export function useGetUser(id_user) {
                     setState({ isLoading: false, error: false, user_data: user });
                 })
                 .catch(error => {
-                    console.log(error);
                     const { data, status } = error;
                     setState({ isLoading: false, error: true, user_data: null });
                     switch (status) {

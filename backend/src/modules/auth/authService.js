@@ -26,18 +26,14 @@ export default class AuthService {
 		);
 		const user = result[0];
 		if (result.length > 1) {
-			console.log('inside count verification');
 			throw {status: 400, msg: 'Returned more than one record'};
 		}
 		if (result.length === 0 || !utils.verifyHash(password, user.password)) {
-			console.log('inside password verification');
 			throw {status: 404, msg: `User not found or the password doesn't match`};
 		}
-		console.log('before verified');
 		if (!user.verified) {
 			throw {status: 403, msg: `Unverified email`};
 		}
-		console.log('user received');
 		const token = jwt.sign({ id_user: user.id_user }, env.JWT_SECRET);
 		return { user: {id_user: user.id_user, email: user.email}, token: token};
 	}
@@ -97,12 +93,9 @@ export default class AuthService {
 			throw {status: 404, msg: 'User not found'};
 		}
 		const hash = utils.genToken(0, 9);
-		console.log('user found');
-		console.log('user', user[0].id_user);
 		const result = await this.dbConnection.query(
 			`INSERT INTO tokens (id_token, id_user, hash, validity, type) VALUES (NULL, ?, ?, ?, 'reset')`,
 			[user[0].id_user, hash, utils.genValidityDate()]);
-		console.log('result', result);
 		if (result.affectedRows === 0) {
 			throw {status: 500, msg: `Token generating failed`};
 		}

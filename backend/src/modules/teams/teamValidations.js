@@ -4,16 +4,22 @@ export const validateTeamID = (team_id) => {
 	}
 };
 
-export const validateNewTeamData = (sport, name, leader) => {
-	if(!sport || !name || !leader){
+export const validateNewTeamData = (sport, name, type, leader) => {
+	if(!sport || !name || !type || !leader){
 		throw {status: 400, msg: 'Missing data'};
 	}
+	teamTypeValidation(type);
 };
 
-export const validateChangeTeamData = (id_team, name, id_sport) => {
-	console.log("inside validation function");
-	if(!id_team || !name || !id_sport){
-		console.log("validation failed");
+export const validateChangeTeamData = (id_team, name, type, id_sport, id_contact_person) => {
+	if(!id_team || !name || !type || !id_sport || !id_contact_person){
 		throw {status: 400, msg: 'Missing data'};
 	}
+	teamTypeValidation(type);
 };
+
+function teamTypeValidation(type) {
+	if(type !== 'profi' && type !== 'amatéři'){
+		throw {status: 400, msg: 'Invalid type of team. Can be "profi" or "amatéři"'};
+	}
+}

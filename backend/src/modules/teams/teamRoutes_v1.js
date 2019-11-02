@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import TeamService from './teamService';
-import UserService from "../users/userService";
 
 const router = Router();
 
@@ -61,6 +60,10 @@ router.get('/:id_team', async (req, res, next) => {
  *               type: string
  *             id_sport:
  *               type: integer
+ *             type:
+ *               type: string
+ *             id_contact_person:
+ *               type: integer
  *     responses:
  *       200:
  *         description: Team data has been changed
@@ -71,9 +74,8 @@ router.get('/:id_team', async (req, res, next) => {
  */
 router.put('/', async(req, res, next) => {
 	try {
-		const { id_team, name, id_sport } = req.body;
-		console.log("received data", { id_team, name, id_sport });
-		await new TeamService(req).changeTeam(id_team, name, id_sport);
+		const { id_team, name, type, id_sport, id_contact_person} = req.body;
+		await new TeamService(req).changeTeam(id_team, name, type, id_sport, id_contact_person);
 		res.status(200).send({ error: false, msg: 'OK', id_team: id_team});
 	} catch (e) {
 		next(e);
@@ -121,8 +123,8 @@ router.get('/', async (req, res, next) => {
  */
 router.post('/', async (req, res, next) => {
 	try {
-		const { id_sport, name, id_leader } = req.body;
-		const id = await new TeamService(req).addNewTeam(id_sport, name, id_leader);
+		const { id_sport, name, type, id_leader } = req.body;
+		const id = await new TeamService(req).addNewTeam(id_sport, name, type, id_leader);
 		res.status(201).header('Location' , `/api/v1/teams/${id}`).send({ error: false, msg: 'OK', id_team: id});
 	} catch(e) {
 		next(e);
@@ -173,6 +175,8 @@ router.get('/:id_team/players', async (req, res, next) => {
  *       id_team:
  *         type: integer
  *       name:
+ *         type: string
+ *       type:
  *         type: string
  *       id_leader:
  *         type: string
