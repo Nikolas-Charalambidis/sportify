@@ -1,0 +1,82 @@
+.accountAdvantages {
+  margin-top: 60px !important;
+
+  .inner-wrapper {
+    background: #FFF;
+    color: #333;
+  }
+
+  .bullets {
+    margin-top: 70px;
+    padding-left: 100px;
+    padding-right: 100px;
+
+    li {
+      display: inline-block;
+      vertical-align: top;
+      list-style: none;
+      width: 50%;
+      margin-bottom: 30px;
+
+      .item-outer-wrapper {
+        display: inline-block;
+        float: left;
+
+        .item {
+          background: black;
+          width: 100px;
+          height: 100px;
+          position: relative;
+          z-index: 3;
+          border-radius: 50%;
+          display: inline-block;
+          text-align: center;
+
+          .item-icon {
+            color: #FEDF00 !important;
+            position: relative;
+            font-size: 40px;
+            top: 29px;
+          }
+        }
+      }
+
+      .text-col {
+        font-size: 18px;
+        line-height: 30px;
+        display: inline-block;
+        padding: 0;
+        width: calc(100% - 120px);
+        float: right;
+      }
+    }
+  }
+
+  @media only screen and (max-width: 992px) {
+    .bullets {
+      margin-top: 35px;
+      padding-left: 20px;
+      padding-right: 20px;
+
+      li {
+        width: 100%;
+        margin-bottom: 0;
+
+        .item {
+          width: auto !important;
+          background-color: transparent !important;
+          height: 60px !important;
+
+          .item-icon {
+            top: 0 !important;
+            font-size: 28px !important;
+          }
+        }
+
+        .text-col {
+          width: calc(100% - 65px) !important;
+        }
+      }
+    }
+  }
+}

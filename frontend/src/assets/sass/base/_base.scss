@@ -1,0 +1,141 @@
+html, body {
+  background: #F5F5F5 !important;
+}
+
+html {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100%;
+  position: relative;
+  background: #F5F5F5 !important;
+  padding-bottom: 10rem;
+}
+
+a {
+  color: black !important;
+  text-decoration: underline !important;
+
+  &:hover {
+    text-decoration: none !important;
+    color: black !important;
+  }
+}
+
+a:hover, a:active, a:focus {
+  text-decoration: none;
+  color: black;
+  outline: none;
+}
+
+button:focus {
+  box-shadow: none !important;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+#root {
+  background: #F5F5F5 !important;
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"],
+.form-control[readonly] {
+  border-radius: 2px;
+  border: 0;
+  background-color: #FFF;
+  padding: 13px 15px;
+  display: block;
+  outline: none;
+  resize: none;
+  line-height: 24px;
+  font-size: 16px;
+  font-family: "Proxima N", Arial, sans-serif;
+  font-weight: 500;
+  box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.3);
+  height: 40px;
+}
+
+footer {
+  background-color: black;
+  color: white;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+label {
+  font-size: 18px;
+}
+
+.btn-primary {
+  background: #FEDF00 !important;
+  color: black !important;
+  font-family: "Proxima", Arial, sans-serif !important;
+  text-transform: uppercase;
+  padding: 8px 25px !important;
+  font-size:16px !important;
+  letter-spacing: 2px;
+  border-radius: 2px !important;
+  text-decoration: none !important;
+  border: 1px solid #c3ac00 !important;
+
+  &:hover {
+    background: black !important;
+    color: white !important;
+    border-color: black !important;
+  }
+}
+
+.btn-secondary {
+  background: white !important;
+  color: black !important;
+  font-family: "Proxima", Arial, sans-serif !important;
+  text-transform: uppercase;
+  padding: 8px 20px !important;
+  font-size:16px !important;
+  letter-spacing: 2px;
+  border-radius: 2px !important;
+  border-color: #9c9c9c !important;
+  text-decoration: none !important;
+
+  &:hover {
+    background: black !important;
+    color: white !important;
+    border-color: black !important;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .btn-secondary, .btn-primary {
+    padding: 8px 10px !important;
+  }
+}
+
+.alert {
+  z-index: 10 !important;
+  position: fixed !important;
+  width: 100% !important;
+  border-radius: 0 !important;
+
+  p {
+    padding-top: 1rem;
+    font-size: 18px;
+  }
+
+  .close {
+    padding: 0.6rem 0.6rem;
+  }
+
+  .alert-dismissible {
+    padding-right: 0rem;
+  }
+}

@@ -1,15 +1,16 @@
 import React from 'react';
 
-import {Heading} from '../../atoms';
+import {NavLink as Link} from "react-router-dom";
 import {Row, Col, Form, Button, Breadcrumb} from "react-bootstrap";
-import '../../assets/css/index.css';
+import {config} from '../../config';
+import {Heading} from '../../atoms';
 import {useApi} from '../../utils/api';
 import {useAuth} from '../../utils/auth';
 import {useHistory} from "react-router";
-import {config} from '../../config';
 import {Formik} from "formik";
-import * as yup from "yup";
 import {Field} from "../../atoms/Field";
+import * as yup from "yup";
+import {AccountAdvantages} from "./components/AccountAdvantages";
 
 const schema = yup.object().shape({
     email: yup.string().email().required(),
@@ -57,13 +58,18 @@ export function Login() {
     return (
         <div>
             <Breadcrumb>
-                <Breadcrumb.Item href="/">Domů</Breadcrumb.Item>
-                <Breadcrumb.Item active>Přihlásit se</Breadcrumb.Item>
+                <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
+                <li className="breadcrumb-item"><span className="active">Přihlásit se</span></li>
             </Breadcrumb>
-            <Heading className="pageHeading mt-4">Přihlásit se</Heading>
-            <p className="text-center mb-5">Využívejte webovou aplikaci <strong>Sportify</strong> naplno. <br/> S
-                vytvořeným účtem získáte přístup do správy Vašeho profilu, týmů, soutěží a interaktivnímu zápisu
-                výsledků.</p>
+            <Heading size="xl" className="mt-4">Přihlásit se</Heading>
+            <Row>
+                <Col lg={{span: 8, offset: 2}}>
+                    <p className="text-center mb-5">Využívejte webovou aplikaci <strong>Sportify</strong> naplno. S
+                        vytvořeným účtem získáte přístup do správy Vašeho profilu, týmů, soutěží a interaktivnímu zápisu
+                        výsledků.</p>
+                </Col>
+            </Row>
+
             <Formik
                 validationSchema={schema}
                 initialValues={{email: '', password: ''}}
@@ -78,12 +84,14 @@ export function Login() {
                                    isInvalid={!!errors.email}/>
                         </Col>
                     </Row>
+
                     <Row>
                         <Col xl={{span: 4, offset: 4}} md={{span: 6, offset: 3}}>
                             <Field label="Heslo:" name="password" type="password" message="Vyplňte prosím Vaše heslo"
                                    isInvalid={!!errors.password}/>
                         </Col>
                     </Row>
+
                     <Row className="mt-4">
                         <Col xl={{span: 2, offset: 4}} lg={{span: 3, offset: 3}} md={{span: 6, offset: 3}}>
                             <Button className="btn-block mb-3 mb-lg-0" variant="primary" type="submit">
@@ -91,19 +99,26 @@ export function Login() {
                             </Button>
                         </Col>
                         <Col xl={{span: 2, offset: 0}} lg={{span: 3, offset: 0}} md={{span: 6, offset: 3}}>
-                            <Button className="btn-block" variant="secondary" type="button" href="/register">
-                                Registrace
-                            </Button>
+                            <Link className="text-decoration-none" to="/register">
+                                <Button className="btn-block" variant="secondary" type="button">
+                                    Registrace
+                                </Button>
+                            </Link>
                         </Col>
                     </Row>
+
                     <Row className="mt-2">
                         <Col className="text-center">
-                            <a className="blackHref" href="/#">Zapomenuté heslo</a>
+                            <Link to="/forgot-password">
+                                Zapomenuté heslo
+                            </Link>
                         </Col>
                     </Row>
                 </Form>
             )}
             </Formik>
+
+            <AccountAdvantages/>
         </div>
     );
 }

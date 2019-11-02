@@ -9,6 +9,8 @@ import {config} from '../../config';
 import * as yup from "yup";
 import {Formik} from "formik";
 import {Field} from "../../atoms/Field";
+import {AccountAdvantages} from "./components/AccountAdvantages";
+import {NavLink as Link} from "react-router-dom";
 
 const schema = yup.object().shape({
     name: yup.string().required(),
@@ -61,12 +63,17 @@ export function Register() {
     return (
         <div>
             <Breadcrumb>
-                <Breadcrumb.Item href="/">Domů</Breadcrumb.Item>
-                <Breadcrumb.Item active>Registrace</Breadcrumb.Item>
+                <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
+                <li className="breadcrumb-item"><span className="active">Registrace</span></li>
             </Breadcrumb>
-            <Heading className="pageHeading mt-4">Registrace</Heading>
-            <p className="text-center mb-5">Po dokončení registrace Vám bude zaslán potvrzovací e-mail. <br/>Po
-                potvrzení tohoto e-mailu se budete moci přihlásit do Vašeho vytvořeného účtu.</p>
+            <Heading className="mt-4">Registrace</Heading>
+            <Row>
+                <Col lg={{span: 8, offset: 2}}>
+                    <p className="text-center mb-5">Po dokončení registrace Vám bude zaslán potvrzovací e-mail. Po
+                        potvrzení tohoto e-mailu se budete moci přihlásit do Vašeho vytvořeného účtu.</p>
+                </Col>
+            </Row>
+
             <Formik
                 validationSchema={schema}
                 initialValues={{name: '', surname: '', email: '', nickname: '', password1: '', password2: ''}}
@@ -76,11 +83,12 @@ export function Register() {
             >{({handleSubmit, errors}) => (
                 <Form noValidate onSubmit={handleSubmit}>
                     <Row>
-                        <Col xl={{span: 4, offset: 2}} lg={{span: 4, offset: 2}} md={{span: 6, offset: 0}}>
+                        <Col xl={{span: 4, offset: 4}} lg={{span: 8, offset: 2}} md={{span: 12, offset: 0}}>
                             <Field label="E-mail" name="email" type="email"
                                    message="Vyplňte Vaši e-mailovou adresu." isInvalid={!!errors.email}/>
                         </Col>
                     </Row>
+
                     <Row>
                         <Col xl={{span: 4, offset: 2}} lg={{span: 4, offset: 2}} md={{span: 6, offset: 0}}>
                             <Field label="Jméno" name="name" type="text" message="Vyplňte Vaše jméno."
@@ -103,6 +111,7 @@ export function Register() {
                                    message="Hesla se musí shodovat" isInvalid={!!errors.password2}/>
                         </Col>
                     </Row>
+
                     <Row className="mt-4">
                         <Col xl={{span: 4, offset: 4}} lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}}>
                             <Button className="btn-block mb-3 mb-lg-0" variant="primary" type="submit">
@@ -113,6 +122,8 @@ export function Register() {
                 </Form>
             )}
             </Formik>
+
+            <AccountAdvantages/>
         </div>
     );
 }

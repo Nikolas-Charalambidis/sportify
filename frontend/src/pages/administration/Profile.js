@@ -55,7 +55,7 @@ export function Profile() {
                 <Breadcrumb.Item active>Administrace</Breadcrumb.Item>
                 <Breadcrumb.Item active>Profil</Breadcrumb.Item>
             </Breadcrumb>
-            <Heading className="pageHeading mt-4 mb-5">Uživatelský profil</Heading>
+            <Heading className="mt-4 mb-5">Uživatelský profil</Heading>
             {!state.gettingData &&
             <div>
                 <Formik

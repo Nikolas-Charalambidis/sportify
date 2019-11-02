@@ -1,9 +1,9 @@
 import React from 'react';
-import { useField } from 'formik';
+import {useField} from 'formik';
 
 import {Form} from "react-bootstrap";
 
-export function Field({ label, message, ...props }) {
+export function Field({label, message, ...props}) {
     const [field] = useField(props);
 
     return (
