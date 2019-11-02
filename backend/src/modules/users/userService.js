@@ -23,7 +23,7 @@ export default class UserService {
 		userValidation.validateUserID(user_id);
 		const result = await this.dbConnection.query('SELECT * FROM users WHERE id_user=?', user_id);
 		if (result.length === 0) {
-			throw {status: 404, msg: 'User not found'};
+			throw {status: 404, msg: 'Uživatel nebyl nalezen v databázi'};
 		}
 		return result[0];
 	}
@@ -31,7 +31,7 @@ export default class UserService {
 	async addNewUser(email, password1, password2, name, surname) {
 		userValidation.validateNewUserData(email, password1, password2, name, surname);
 		if (await this.isEmailUsed(email)) {
-			throw {status: 400, msg: 'Email already exists'};
+			throw {status: 400, msg: 'Email již existuje'};
 		}
 		const hashedPassword = hash(password1, 10);
 		const result = await this.dbConnection.query(
@@ -39,7 +39,7 @@ export default class UserService {
 			[email, hashedPassword, name, surname]
 		);
 		if (result.affectedRows < 0) {
-			throw {status: 500, msg: 'Unable to create user'};
+			throw {status: 500, msg: 'Vytvoření nového uživatele selhalo'};
 		}
 		await new AuthService(this.req).genConfirmToken(result.insertId, email);
 		return result.insertId;
@@ -52,17 +52,17 @@ export default class UserService {
 			`SELECT password FROM users WHERE id_user=?`, [user_id]
 		);
 		if (user.length === 0) {
-			throw {status: 404, msg: 'User not found'};
+			throw {status: 404, msg: 'Uživatel nebyl nalezen v databázi'};
 		}
 		if(!verifyHash(oldPassword, user[0].password)){
-			throw {status: 400, msg: 'Invalid data'};
+			throw {status: 400, msg: 'Bylo zadáno neplatné stávající heslo'};
 		}
 		const result = await this.dbConnection.query(
 			'UPDATE users SET password=? WHERE id_user=?',
 			[hash(newPassword1, 10), user_id]
 		);
 		if (result.affectedRows === 0) {
-			throw {status: 400, msg: 'Password change failed'};
+			throw {status: 400, msg: 'Změna hesla se nezdařila'};
 		}
 	}
 
@@ -75,7 +75,7 @@ export default class UserService {
 			[name, surname, user_id]
 		);
 		if (result.affectedRows === 0) {
-			throw {status: 400, msg: 'Data change failed'};
+			throw {status: 400, msg: 'Změna uživatelských údajů se nezdařila'};
 		}
 	}
 

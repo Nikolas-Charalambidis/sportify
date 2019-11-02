@@ -48,16 +48,16 @@ export function Login() {
 				const { data, status } = response;
 				switch (status) {
 					case 400:
-						window.flash(data.message, 'danger');
+						window.flash(data.msg, 'danger');
 						break;
 					case 404:
-						window.flash(data.message, 'danger');
+						window.flash(data.msg, 'danger');
 						break;
 					case 403:
-						window.flash(data.message, 'danger');
+						window.flash(data.msg, 'danger');
 						break;
 					default:
-						window.flash(data.message, 'danger');
+						window.flash(data.msg, 'danger');
 						break;
 				}
 			});
@@ -75,16 +75,16 @@ export function Login() {
 				const { data, status } = response;
 				switch (status) {
 					case 400:
-						window.flash(data.message, 'danger');
+						window.flash(data.msg, 'danger');
 						break;
 					case 404:
-						window.flash(data.message, 'danger');
+						window.flash(data.msg, 'danger');
 						break;
 					case 403:
-						window.flash(data.message, 'warning');
+						window.flash(data.msg, 'warning');
 						break;
 					default:
-						window.flash(data.message, 'danger');
+						window.flash("Neočekávaná chyba", 'danger');
 						break;
 				}
 			});

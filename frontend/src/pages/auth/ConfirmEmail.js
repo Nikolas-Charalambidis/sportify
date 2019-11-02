@@ -26,19 +26,19 @@ function Confirm(url, params) {
                     const {data, status} = response;
                     switch (status) {
                         case 400:
-                            window.flash(data.message, 'danger');
+                            window.flash(data.msg, 'danger');
                             history.replace('/');
                             break;
                         case 404:
-                            window.flash(data.message, 'danger');
+                            window.flash(data.msg, 'danger');
                             history.replace('/');
                             break;
                         case 498:
-                            window.flash(data.message, 'danger');
+                            window.flash(data.msg, 'danger');
                             history.replace('/');
                             break;
                         default:
-                            window.flash(data.message, 'danger');
+                            window.flash("Neočekávaná chyba", 'danger');
                             history.replace('/');
                             break;
                     }

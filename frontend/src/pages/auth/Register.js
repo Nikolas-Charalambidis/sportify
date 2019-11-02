@@ -38,17 +38,17 @@ export function Register() {
                 window.flash("Byl jste úspěšně registrován. Ověřte prosím svůj email odkazem, který Vám byl zaslán na email uvedený při registraci.", 'success');
                 history.replace('/login');
             })
-            .catch(( { error } ) => {
-                const { data, status } = error;
+            .catch(( { response } ) => {
+                const { data, status } = response;
                 switch (status) {
                     case 400:
-                        window.flash(data.message, 'danger');
+                        window.flash(data.msg, 'danger');
                         break;
                     case 500:
-                        window.flash(data.message, 'warning');
+                        window.flash(data.msg, 'warning');
                         break;
                     default:
-                        window.flash(data.message, 'danger');
+                        window.flash("Neočekávaná chyba", 'danger');
                         break;
                 }
             });

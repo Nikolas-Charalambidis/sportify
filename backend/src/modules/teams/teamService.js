@@ -32,7 +32,7 @@ export default class TeamService {
 			, team_id
 		);
 		if (result.length === 0) {
-			throw {status: 404, msg: 'Team not found'};
+			throw {status: 404, msg: 'Tým nebyl nalezen v databázi'};
 		}
 		return result[0];
 	}
@@ -60,7 +60,7 @@ export default class TeamService {
 		if(result.affectedRows === 1){
 			return result.insertId;
 		}
-		throw {status: 500, msg: 'Unable to create team'};
+		throw {status: 500, msg: 'Vytvoření nového týmu se nezdařilo'};
 	}
 
 	async changeTeam(id_team, name, type, id_sport, id_contact_person) {
@@ -75,6 +75,6 @@ export default class TeamService {
 		if(result.affectedRows === 1){
 			return result.insertId;
 		}
-		throw {status: 500, msg: 'Unable to change team'};
+		throw {status: 500, msg: 'Změna týmových údajů se nezdařila'};
 	}
 }
