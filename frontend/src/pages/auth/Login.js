@@ -1,13 +1,12 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import {NavLink as Link} from "react-router-dom";
-import {Row, Col, Form, Button, Breadcrumb} from "react-bootstrap";
+import {Row, Col, Form, Button, Breadcrumb, Modal} from "react-bootstrap";
 import {config} from '../../config';
 import {Heading} from '../../atoms';
 import {useApi} from '../../utils/api';
 import {useAuth} from '../../utils/auth';
 import {useHistory} from "react-router";
-import {config} from '../../config';
 import {Formik} from "formik";
 import {Field} from "../../atoms/Field";
 import * as yup from "yup";
@@ -145,7 +144,7 @@ export function Login() {
 
                     <Row className="mt-2">
                         <Col className="text-center">
-                            <Link to="/forgot-password">
+                            <Link to="#" onClick={handleShow}>
                                 Zapomenuté heslo
                             </Link>
                         </Col>
@@ -157,7 +156,10 @@ export function Login() {
                 <Formik
                     validationSchema={schemaResetPassword}
                     initialValues={{ email: '' }}
-                    onSubmit={values => { resetPassword(values); }}
+                    onSubmit={values => {
+                    	resetPassword(values);
+						setShow(false);
+                    }}
                 >{({  handleSubmit, errors  }) => (
                     <Form noValidate onSubmit={handleSubmit}>
                         <Modal.Header>

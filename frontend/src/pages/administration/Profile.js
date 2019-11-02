@@ -76,10 +76,12 @@ export function Profile() {
                             <Col xl={10} lg={12}>
                                 <Row>
                                     <Col xl={{span: 6, offset: 0}} lg={{span: 4, offset: 2}} md={{span: 6, offset: 0}}>
-                                        <Field label="Jméno" name="name" type="text" message="Vyplňte Vaše jméno." isInvalid={!!errors.name}/>
+                                        <Field label="Jméno" name="name" type="text" message="Vyplňte Vaše jméno."
+                                               isInvalid={!!errors.name}/>
                                     </Col>
                                     <Col xl={{span: 6, offset: 0}} lg={{span: 4, offset: 0}} md={{span: 6, offset: 0}}>
-                                        <Field label="Příjmení" name="surname" type="text" message="Vyplňte Vaše příjmení." isInvalid={!!errors.surname}/>
+                                        <Field label="Příjmení" name="surname" type="text"
+                                               message="Vyplňte Vaše příjmení." isInvalid={!!errors.surname}/>
                                     </Col>
                                 </Row>
 
@@ -88,13 +90,13 @@ export function Profile() {
                                         <Form.Label>Email</Form.Label>
                                         <Form.Control readOnly name="email" defaultValue={state.user_data.email}/>
                                     </Col>
-                                    <Col xl={{span: 3, offset: 0}} lg={{span: 4, offset: 2}}>
+                                    <Col xl={{span: 3, offset: 0}} lg={{span: 4, offset: 0}}>
                                         <Button className="mt4" type="submit" block>
                                             Uložit Profil
                                         </Button>
                                     </Col>
                                     <Col xl={{span: 3, offset: 0}} lg={{span: 4, offset: 0}}>
-                                        <Button className="mt4" type="button" variant="secondary" block onClick={handleShow}>
+                                        <Button variant="secondary" className="mt4" type="button" block onClick={handleShow}>
                                             Změna hesla
                                         </Button>
                                     </Col>
@@ -150,32 +152,36 @@ export function Profile() {
                         setShow(false);
                     }}
                 >{({handleSubmit, errors}) => (
-                    <Form noValidate onSubmit={handleSubmit}>
-                        <Modal.Body>
-                            <Field label="Stávající heslo" name="oldPassword" type="password"
-                                   message="Vyplňte prosím Vaše stávající heslo" isInvalid={!!errors.oldPassword}/>
-                            <Field label="Nové heslo" name="newPassword1" type="password"
-                                   message="Heslo musí obsahovat alespoň 6 znaků a alespoň 1 velké písmeno, 1 malé písmeno a 1 číslo."
-                                   isInvalid={!!errors.newPassword1}/>
-                            <Field label="Potvrzení hesla" name="newPassword2" type="password"
-                                   message="Hesla se musí shodovat" isInvalid={!!errors.newPassword2}/>
-                        </Modal.Body>
+                <Form noValidate onSubmit={handleSubmit}>
+                    <Modal.Header>
+                        <Modal.Title className="modal-title">
+                            Změna hesla
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Field label="Stávající heslo" name="oldPassword" type="password"
+                               message="Vyplňte prosím Vaše stávající heslo" isInvalid={!!errors.oldPassword}/>
+                        <Field label="Nové heslo" name="newPassword1" type="password"
+                               message="Heslo musí obsahovat alespoň 6 znaků a alespoň 1 velké písmeno, 1 malé písmeno a 1 číslo."
+                               isInvalid={!!errors.newPassword1}/>
+                        <Field label="Potvrzení hesla" name="newPassword2" type="password"
+                               message="Hesla se musí shodovat" isInvalid={!!errors.newPassword2}/>
+                    </Modal.Body>
 
-                                <Modal.Footer>
-                                    <Button variant="primary" type="submit">
-                                        Změnit heslo
-                                    </Button>
-                                    <Button variant="secondary" type="button" onClick={handleClose}>
-                                        Close
-                                    </Button>
-                                </Modal.Footer>
-                            </Form>
-                            )}
-                        </Formik>
-                    </Modal>
-                </div> : null
-                }
-            </MainSection>
-        </div>
+                    <Modal.Footer>
+                        <Button variant="primary" type="submit">
+                            Změnit heslo
+                        </Button>
+                        <Button variant="secondary" type="button" onClick={handleClose}>
+                            Close
+                        </Button>
+                    </Modal.Footer>
+                </Form>
+                )}
+                </Formik>
+            </Modal>
+        </div> : null
+        }
+    </div>
     );
 }

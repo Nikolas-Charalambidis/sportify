@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {Heading, MainSection} from '../../atoms';
 import {TopNavigation} from '../../organisms/TopNavigation';
 import {Row, Col, Form, Button, Breadcrumb, Modal} from "react-bootstrap";
-import '../../assets/css/index.css';
 import {Footer} from "../../organisms/Footer";
 import {useApi} from '../../utils/api';
 import {useAuth} from '../../utils/auth';
@@ -59,41 +58,38 @@ export function ResetPassword() {
     }
     return (
         <div>
-            <TopNavigation/>
-            <MainSection>
                 <Breadcrumb>
-                    <Breadcrumb.Item href="/">Domů</Breadcrumb.Item>
-                    <Breadcrumb.Item active>Obnova hesla</Breadcrumb.Item>
-                </Breadcrumb>
-                <Heading className="pageHeading mt-4">Obnova hesla</Heading>
-                <br/>
-                <Formik
-                    validationSchema={schema}
-                    initialValues={{  email: '', password: '' }}
-                    onSubmit={values => { resetPassword(values, params); }}
-                >{({ handleSubmit, errors }) => (
-                    <Form noValidate onSubmit={handleSubmit}>
-                        <Row>
-                            <Col xl={{span: 4, offset: 4}} md={{span: 6, offset: 3}}>
-                                <Field label="Nové heslo" name="password1" type="password" message="Heslo musí obsahovat alespoň 6 znaků a alespoň 1 velké písmeno, 1 malé písmeno a 1 číslo." isInvalid={!!errors.password1}/>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col xl={{span: 4, offset: 4}} md={{span: 6, offset: 3}}>
-                                <Field label="Heslo znovu" name="password2" type="password" message="Hesla se musí shodovat" isInvalid={!!errors.password2}/>
-                            </Col>
-                        </Row>
-                        <Row className="mt-4">
-                            <Col xl={{span: 4, offset: 4}} lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}}>
-                                <Button className="btn-block mb-3 mb-lg-0" variant="primary" type="submit">
-                                    Obnovit heslo
-                                </Button>
-                            </Col>
-                        </Row>
-                    </Form>
-                )}
-                </Formik>
-            </MainSection>
+                <Breadcrumb.Item href="/">Domů</Breadcrumb.Item>
+                <Breadcrumb.Item active>Obnova hesla</Breadcrumb.Item>
+            </Breadcrumb>
+            <Heading className="pageHeading mt-4">Obnova hesla</Heading>
+            <br/>
+            <Formik
+                validationSchema={schema}
+                initialValues={{  email: '', password: '' }}
+                onSubmit={values => { resetPassword(values, params); }}
+            >{({ handleSubmit, errors }) => (
+                <Form noValidate onSubmit={handleSubmit}>
+                    <Row>
+                        <Col xl={{span: 4, offset: 4}} md={{span: 6, offset: 3}}>
+                            <Field label="Nové heslo" name="password1" type="password" message="Heslo musí obsahovat alespoň 6 znaků a alespoň 1 velké písmeno, 1 malé písmeno a 1 číslo." isInvalid={!!errors.password1}/>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xl={{span: 4, offset: 4}} md={{span: 6, offset: 3}}>
+                            <Field label="Heslo znovu" name="password2" type="password" message="Hesla se musí shodovat" isInvalid={!!errors.password2}/>
+                        </Col>
+                    </Row>
+                    <Row className="mt-4">
+                        <Col xl={{span: 4, offset: 4}} lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}}>
+                            <Button className="btn-block mb-3 mb-lg-0" variant="primary" type="submit">
+                                Obnovit heslo
+                            </Button>
+                        </Col>
+                    </Row>
+                </Form>
+            )}
+            </Formik>
             <Footer/>
         </div>
     );

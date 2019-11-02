@@ -36,7 +36,7 @@ export function Register() {
             .post(`${config.API_BASE_PATH}/api/v1/users`, {name: name, surname: surname, email: email, password1: password1, password2: password2})
             .then(() => {
                 window.flash("Byl jste úspěšně registrován. Ověřte prosím svůj email odkazem, který Vám byl zaslán na email uvedený při registraci.", 'success');
-                history.replace('/');
+                history.replace('/login');
             })
             .catch(( { error } ) => {
                 const { data, status } = error;
@@ -77,7 +77,7 @@ export function Register() {
             >{({handleSubmit, errors}) => (
                 <Form noValidate onSubmit={handleSubmit}>
                     <Row>
-                        <Col xl={{span: 4, offset: 4}} lg={{span: 8, offset: 2}} md={{span: 12, offset: 0}}>
+                        <Col xl={{span: 4, offset: 2}} lg={{span: 4, offset: 2}} md={{span: 6, offset: 0}}>
                             <Field label="E-mail" name="email" type="email"
                                    message="Vyplňte Vaši e-mailovou adresu." isInvalid={!!errors.email}/>
                         </Col>

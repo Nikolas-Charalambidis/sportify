@@ -19,7 +19,7 @@ function Confirm(url, params) {
                 .then(({ data }) => {
                     setState({ isConfirming: false });
                     window.flash("Váš email byl úspěšně ověřen, nyní se můžete přihlásit", 'success');
-                    history.replace('/');
+                    history.replace('/login');
                 })
                 .catch(({response}) => {
                     setState({isLoading: false});
