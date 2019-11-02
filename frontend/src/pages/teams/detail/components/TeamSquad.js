@@ -1,6 +1,6 @@
-import React from 'react'
-import ReactTable from "react-table"
-import "react-table/react-table.css"
+import React from 'react';
+import ReactTable from "react-table";
+import "react-table/react-table.css";
 
 const positionEnum = {
     STRIKER: 'striker',
@@ -9,7 +9,7 @@ const positionEnum = {
 };
 
 export function TeamSquad({teamId}) {
-    const [state] = [
+    const [data] = [
         {
             name: "Alice",
             surname: "fwqfqwf",
@@ -160,9 +160,9 @@ export function TeamSquad({teamId}) {
             surname: "Starý",
             position: "brankář",
         },
-    ]
+    ];
 
-    console.log(data)
+    console.log(data);
 
 
     return (
@@ -193,12 +193,12 @@ export function TeamSquad({teamId}) {
                                 filterMethod: (filter, row) =>
                                     row[filter.id].toLowerCase().startsWith(filter.value.toLowerCase())
                             },
-							{
-								Header: "Pozice",
-								accessor: "position",
-								id: "over",
-								filterMethod: (filter, row) => {
-                                    switch(filter.value){
+                            {
+                                Header: "Pozice",
+                                accessor: "position",
+                                id: "over",
+                                filterMethod: (filter, row) => {
+                                    switch (filter.value) {
                                         case positionEnum.STRIKER:
                                             return row[filter.id] === "útočník";
                                         case positionEnum.DEFENDER:
@@ -208,19 +208,19 @@ export function TeamSquad({teamId}) {
                                         default:
                                             return true;
                                     }
-								},
-								Filter: ({ filter, onChange }) =>
-									<select
-										onChange={event => onChange(event.target.value)}
-										style={{ width: "100%" }}
-										value={filter ? filter.value : "all"}
-									>
-										<option value="all">Vše</option>
-										<option value="striker">Útočník</option>
-										<option value="defender">Obránce</option>
-										<option value="goalkeeper">Brankář</option>
-									</select>
-							}
+                                },
+                                Filter: ({filter, onChange}) =>
+                                    <select
+                                        onChange={event => onChange(event.target.value)}
+                                        style={{width: "100%"}}
+                                        value={filter ? filter.value : "all"}
+                                    >
+                                        <option value="all">Vše</option>
+                                        <option value="striker">Útočník</option>
+                                        <option value="defender">Obránce</option>
+                                        <option value="goalkeeper">Brankář</option>
+                                    </select>
+                            }
                         ]
                     }
                 ]}
@@ -228,5 +228,5 @@ export function TeamSquad({teamId}) {
                 className="-striped -highlight"
             />
         </div>
-    )
+    );
 }

@@ -9,8 +9,7 @@ import {
     Breadcrumb,
 } from 'react-bootstrap';
 import * as Icons from '@fortawesome/free-solid-svg-icons';
-import {useApi} from "../../utils/api";
-import {useGetTeam, useChangeData} from "../../api/team/teamAPI";
+import {useGetTeam} from "../../api/team/teamAPI";
 import {Formik} from "formik";
 import * as yup from 'yup';
 import {Field} from "../../atoms/Field";
@@ -22,7 +21,7 @@ const schemaChangeData = yup.object().shape({
 
 export function Team() {
     // const history = useHistory();
-    const api = useApi();
+    // const api = useApi();
 
     const [state] = useGetTeam(1);
 
@@ -43,7 +42,7 @@ export function Team() {
                         sport: state.team_data.sport
                     }}
                     onSubmit={values => {
-                        useChangeData(api, state.team_data.id_team, values);
+                        //useChangeData(api, state.team_data.id_team, values);
                     }}
                 >{({handleSubmit, errors}) => (
                     <Form noValidate onSubmit={handleSubmit}>
