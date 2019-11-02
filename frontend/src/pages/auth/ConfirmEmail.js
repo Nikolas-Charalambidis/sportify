@@ -12,16 +12,14 @@ function Confirm(url, params) {
         isConfirming: true
     });
 
-    useEffect(() => {
+    useEffect( () => {
         async function fetchData() {
             await api
                 .post(url, {id_user: id_user, hash: hash})
-                .then(({data}) => {
-                    setState({isConfirming: false});
-                    // const { user } = data;
-                    // Do something - for example login user
-                    window.flash("Váš email byl úspěšně ověřen", 'success');
-                    history.replace('/');
+                .then(({ data }) => {
+                    setState({ isConfirming: false });
+                    window.flash("Váš email byl úspěšně ověřen, nyní se můžete přihlásit", 'success');
+                    history.replace('/login');
                 })
                 .catch(({response}) => {
                     setState({isLoading: false});
@@ -46,7 +44,6 @@ function Confirm(url, params) {
                     }
                 });
         }
-
         fetchData().then();
     }, [api, hash, id_user, url, history]);
 
@@ -54,7 +51,7 @@ function Confirm(url, params) {
 }
 
 export function ConfirmEmail() {
-    const [state] = Confirm(`http://${config.API_BASE_PATH}/api/v1/auth/confirmEmail`, useParams());
+    const [state] = Confirm(`${config.API_BASE_PATH}/api/v1/auth/confirmEmail`, useParams());
     return (
         <div>
             {state.isConfirming && <div>Confirming email...</div>}

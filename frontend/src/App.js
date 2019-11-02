@@ -11,28 +11,29 @@ import {Footer} from "./organisms/Footer";
 import {TopNavigation} from "./organisms/TopNavigation";
 
 function AllProviders({children}) {
-    return (
-        <AuthProvider>
-            <ApiProvider>
-                <BrowserRouter>
-                    <ScrollToTop/>
-                    <TopNavigation/>
-                    <Flash/>
-                    <MainSection>
-                        {children}
-                    </MainSection>
-                    <Footer/>
-                </BrowserRouter>
-            </ApiProvider>
-        </AuthProvider>
-    );
+	return (
+		<AuthProvider>
+			<ApiProvider>
+				<BrowserRouter>
+
+					<ScrollToTop/>
+					<TopNavigation/>
+					<Flash />
+					<MainSection>
+						{children}
+					</MainSection>
+					<Footer/>
+				</BrowserRouter>
+			</ApiProvider>
+		</AuthProvider>
+	);
 }
 
 export function App() {
-    window.flash = (message, type = "success") => Event.emit('flash', ({message, type}));
-    return (
-        <AllProviders>
-            <Routes/>
-        </AllProviders>
-    );
+	window.flash = (message, type, timeout=4000) => Event.emit('flash', ({message, type, timeout}));
+	return (
+		<AllProviders>
+			<Routes/>
+		</AllProviders>
+	);
 }

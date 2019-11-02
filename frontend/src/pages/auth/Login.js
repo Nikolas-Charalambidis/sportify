@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import {NavLink as Link} from "react-router-dom";
-import {Row, Col, Form, Button, Breadcrumb} from "react-bootstrap";
+import {Row, Col, Form, Button, Breadcrumb, Modal} from "react-bootstrap";
 import {config} from '../../config';
 import {Heading} from '../../atoms';
 import {useApi} from '../../utils/api';
@@ -12,9 +12,13 @@ import {Field} from "../../atoms/Field";
 import * as yup from "yup";
 import {AccountAdvantages} from "./components/AccountAdvantages";
 
-const schema = yup.object().shape({
+const schemaLogin = yup.object().shape({
     email: yup.string().email().required(),
     password: yup.string().required(),
+});
+
+const schemaResetPassword = yup.object().shape({
+	email: yup.string().email().required(),
 });
 
 export function Login() {
@@ -27,33 +31,64 @@ export function Login() {
         history.replace('/');
     }
 
-    function login(values) {
-        const {email, password} = values;
-        api
-            .post(`http://${config.API_BASE_PATH}/api/v1/auth/login`, {email: email, password: password})
-            .then(({data}) => {
-                const {token, user} = data;
-                auth.signin({token, user});
-                history.replace('/administration/profile');
-            })
-            .catch(({response}) => {
-                const {data, status} = response;
-                switch (status) {
-                    case 400:
-                        window.flash(data.message, 'danger');
-                        break;
-                    case 404:
-                        window.flash(data.message, 'danger');
-                        break;
-                    case 403:
-                        window.flash(data.message, 'warning');
-                        break;
-                    default:
-                        window.flash(data.message, 'danger');
-                        break;
-                }
-            });
-    }
+	const [show, setShow] = useState(false);
+	const handleClose = () => setShow(false);
+	const handleShow = () => setShow(true);
+
+	function login(values) {
+		const { email, password } = values;
+		api
+			.post(`${config.API_BASE_PATH}/api/v1/auth/login`, {email: email, password: password})
+			.then(({ data }) => {
+				const { token, user } = data;
+				auth.signin( {token, user} );
+				history.replace('/administration/profile');
+			})
+			.catch(( { response } ) => {
+				const { data, status } = response;
+				switch (status) {
+					case 400:
+						window.flash(data.message, 'danger');
+						break;
+					case 404:
+						window.flash(data.message, 'danger');
+						break;
+					case 403:
+						window.flash(data.message, 'danger');
+						break;
+					default:
+						window.flash(data.message, 'danger');
+						break;
+				}
+			});
+	}
+
+	function resetPassword(values) {
+		const { email } = values;
+		api
+			.post(`${config.API_BASE_PATH}/api/v1/auth/resetLink`, {email: email})
+			.then(() => {
+				setShow(false);
+				window.flash("Link pro reset hesla Vám byl zaslán na email", 'success');
+			})
+			.catch(( { response } ) => {
+				const { data, status } = response;
+				switch (status) {
+					case 400:
+						window.flash(data.message, 'danger');
+						break;
+					case 404:
+						window.flash(data.message, 'danger');
+						break;
+					case 403:
+						window.flash(data.message, 'warning');
+						break;
+					default:
+						window.flash(data.message, 'danger');
+						break;
+				}
+			});
+	}
 
     return (
         <div>
@@ -71,7 +106,7 @@ export function Login() {
             </Row>
 
             <Formik
-                validationSchema={schema}
+                validationSchema={schemaLogin}
                 initialValues={{email: '', password: ''}}
                 onSubmit={values => {
                     login(values);
@@ -109,7 +144,7 @@ export function Login() {
 
                     <Row className="mt-2">
                         <Col className="text-center">
-                            <Link to="/forgot-password">
+                            <Link to="#" onClick={handleShow}>
                                 Zapomenuté heslo
                             </Link>
                         </Col>
@@ -117,7 +152,36 @@ export function Login() {
                 </Form>
             )}
             </Formik>
-
+            <Modal show={show} onHide={handleClose}>
+                <Formik
+                    validationSchema={schemaResetPassword}
+                    initialValues={{ email: '' }}
+                    onSubmit={values => {
+                    	resetPassword(values);
+						setShow(false);
+                    }}
+                >{({  handleSubmit, errors  }) => (
+                    <Form noValidate onSubmit={handleSubmit}>
+                        <Modal.Header>
+                            <Modal.Title className="modal-title">
+                                Reset hesla
+                            </Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Field label="Váš email" name="email" type="email" message="Vyplňte prosím svůj email" isInvalid={!!errors.email}/>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="primary" type="submit">
+                                Odeslat link
+                            </Button>
+                            <Button variant="secondary" type="button" onClick={handleClose}>
+                                Close
+                            </Button>
+                        </Modal.Footer>
+                    </Form>
+                )}
+                </Formik>
+            </Modal>
             <AccountAdvantages/>
         </div>
     );

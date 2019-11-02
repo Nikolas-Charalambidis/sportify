@@ -10,7 +10,7 @@ export function useGetTeams() {
     useEffect(() => {
         async function fetchData() {
             await api
-                .get(`http://${config.API_BASE_PATH}/api/v1/teams`)
+                .get(`${config.API_BASE_PATH}/api/v1/teams`)
                 .then(({data}) => {
                     const {teams} = data;
                     setState({gettingData: false, error: false, teams_data: teams});
@@ -45,7 +45,7 @@ export function useGetTeam(id_team) {
     useEffect(() => {
         async function fetchData() {
             await api
-                .get(`http://${config.API_BASE_PATH}/api/v1/teams/${id_team}`)
+                .get(`${config.API_BASE_PATH}/api/v1/teams/${id_team}`)
                 .then(({data}) => {
                     const {team} = data;
                     setState({gettingData: false, error: false, team_data: team});
@@ -80,7 +80,7 @@ export function useGetMembers(id_team) {
     useEffect(() => {
         async function fetchData() {
             await api
-                .get(`http://${config.API_BASE_PATH}/api/v1/teams/${id_team}/players`)
+                .get(`${config.API_BASE_PATH}/api/v1/teams/${id_team}/players`)
                 .then(({data}) => {
                     const {team} = data;
                     setState({gettingData: false, error: false, team_data: team});
@@ -110,7 +110,7 @@ export function useGetMembers(id_team) {
 export function useChangeData(api, id_team, values) {
     const {sport, name} = values;
     api
-        .put(`http://${config.API_BASE_PATH}/api/v1/teams/`, {id_team: id_team, sport: sport, name: name})
+        .put(`${config.API_BASE_PATH}/api/v1/teams/`, {id_team: id_team, sport: sport, name: name})
         .then(() => {
             window.flash("Tymove údaje byly úspěšně změněny", 'success');
             // return {error: false, message: "Uživatelské údaje byly úspěšně změněny", type: "success"};

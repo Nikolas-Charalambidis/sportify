@@ -120,22 +120,14 @@ label {
   }
 }
 
-.alert {
-  z-index: 10 !important;
-  position: fixed !important;
-  width: 100% !important;
-  border-radius: 0 !important;
 
-  p {
-    padding-top: 1rem;
-    font-size: 18px;
-  }
+.modal-title {
+  height: 1rem;
+  margin: auto;
+}
 
-  .close {
-    padding: 0.6rem 0.6rem;
-  }
-
-  .alert-dismissible {
-    padding-right: 0rem;
-  }
+.flash {
+  position: fixed;
+  margin: 10px auto;
+  width: 60%;
 }
