@@ -45,21 +45,8 @@ export function Login() {
 				history.replace('/administration/profile');
 			})
 			.catch(( { response } ) => {
-				const { data, status } = response;
-				switch (status) {
-					case 400:
-						window.flash(data.msg, 'danger');
-						break;
-					case 404:
-						window.flash(data.msg, 'danger');
-						break;
-					case 403:
-						window.flash(data.msg, 'danger');
-						break;
-					default:
-						window.flash(data.msg, 'danger');
-						break;
-				}
+				const { data } = response;
+				window.flash(data.msg, 'danger');
 			});
 	}
 

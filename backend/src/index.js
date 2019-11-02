@@ -38,7 +38,7 @@ api.use(function (err, req, res, next) {
 			status = 500;
 		}
 		if(!msg){
-			msg = "Unexpected error";
+			msg = "Neočekávaná chyba";
 		}
 		res.status(status).json({status: status , error: true, msg: msg})
 	}

@@ -39,18 +39,8 @@ export function Register() {
                 history.replace('/login');
             })
             .catch(( { response } ) => {
-                const { data, status } = response;
-                switch (status) {
-                    case 400:
-                        window.flash(data.msg, 'danger');
-                        break;
-                    case 500:
-                        window.flash(data.msg, 'warning');
-                        break;
-                    default:
-                        window.flash("Neočekávaná chyba", 'danger');
-                        break;
-                }
+                const { data } = response;
+                window.flash(data.msg, 'danger');
             });
     };
 

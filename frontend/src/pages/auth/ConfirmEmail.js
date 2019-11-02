@@ -23,25 +23,9 @@ function Confirm(url, params) {
                 })
                 .catch(({response}) => {
                     setState({isLoading: false});
-                    const {data, status} = response;
-                    switch (status) {
-                        case 400:
-                            window.flash(data.msg, 'danger');
-                            history.replace('/');
-                            break;
-                        case 404:
-                            window.flash(data.msg, 'danger');
-                            history.replace('/');
-                            break;
-                        case 498:
-                            window.flash(data.msg, 'danger');
-                            history.replace('/');
-                            break;
-                        default:
-                            window.flash("Neočekávaná chyba", 'danger');
-                            history.replace('/');
-                            break;
-                    }
+                    const {data} = response;
+                    window.flash(data.msg, 'danger');
+                    history.replace('/');
                 });
         }
         fetchData().then();

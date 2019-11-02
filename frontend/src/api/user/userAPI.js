@@ -16,19 +16,9 @@ export function useGetUser(id_user) {
                     setState({ isLoading: false, error: false, user_data: user });
                 })
                 .catch(( { response } ) => {
-                    const { data, status } = response;
+                    const { data } = response;
                     setState({ isLoading: false, error: true, user_data: null });
-                    switch (status) {
-                        case 400:
-                            window.flash(data.msg, 'danger');
-                            break;
-                        case 500:
-                            window.flash(data.msg, 'danger');
-                            break;
-                        default:
-                            window.flash("Neočekávaná chyba", 'danger');
-                            break;
-                    }
+                    window.flash(data.msg, 'danger');
                 });
         }
         fetchData().then();
@@ -44,18 +34,8 @@ export function ChangeData(api, id_user, values) {
             window.flash("Uživatelské údaje byly úspěšně změněny", 'success');
         })
         .catch(( { response } ) => {
-            const { data, status } = response;
-            switch (status) {
-                case 400:
-                    window.flash(data.msg, 'danger');
-                    break;
-                case 500:
-                    window.flash(data.msg, 'danger');
-                    break;
-                default:
-                    window.flash("Neočekávaná chyba", "danger");
-                    break;
-            }
+            const { data } = response;
+            window.flash(data.msg, 'danger');
         });
 }
 
@@ -67,17 +47,7 @@ export function ChangePassword(api, id_user, values) {
             window.flash("Heslo bylo úspěšně změněno", 'success');
         })
         .catch(( { response } ) => {
-            const { data, status } = response;
-            switch (status) {
-                case 400:
-                    window.flash(data.msg, 'danger');
-                    break;
-                case 500:
-                    window.flash(data.msg, 'danger');
-                    break;
-                default:
-                    window.flash("Neočekávaná chyba", 'danger');
-                    break;
-            }
+            const { data } = response;
+            window.flash(data.msg, 'danger');
         });
 }

@@ -86,19 +86,9 @@ export function useGetMembers(id_team) {
                     setState({gettingData: false, error: false, team_data: team});
                 })
                 .catch(( { response } ) => {
-                    const {data, status} = response;
+                    const {data} = response;
                     setState({gettingData: false, error: true, team_data: null});
-                    switch (status) {
-                        case 400:
-                            window.flash(data.msg, 'danger');
-                            break;
-                        case 500:
-                            window.flash(data.msg, 'danger');
-                            break;
-                        default:
-                            window.flash("Neočekávaná chyba", 'danger');
-                            break;
-                    }
+                    window.flash(data.msg, 'danger');
                 });
         }
 
@@ -116,17 +106,7 @@ export function useChangeData(api, id_team, values) {
             // return {error: false, message: "Uživatelské údaje byly úspěšně změněny", type: "success"};
         })
         .catch(({response}) => {
-            const {data, status} = response;
-            switch (status) {
-                case 400:
-                    window.flash(data.msg, 'danger');
-                    break;
-                case 500:
-                    window.flash(data.msg, 'danger');
-                    break;
-                default:
-                    window.flash("Neočekávaná chyba", 'danger');
-                    break;
-            }
+            const {data} = response;
+            window.flash(data.msg, 'danger');
         });
 }
