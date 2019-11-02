@@ -14,6 +14,7 @@ import * as Icons from '@fortawesome/free-solid-svg-icons';
 import {useHistory} from "react-router";
 import {useAuth} from "../../utils/auth";
 import {useApi} from "../../utils/api";
+import {mapSportToIcon} from "../../utils/mapper";
 import {GetUser, ChangeData, ChangePassword} from "../../api/user/userAPI";
 import {Formik} from "formik";
 import * as yup from 'yup';
@@ -44,6 +45,8 @@ export function Profile() {
     const handleShow = () => setShow(true);
 
     const [state] = GetUser(user.id_user);
+    const userTeams = [{name: "ahoj", sport: "fotbal" , idSport: 1},{name: "5", sport: "florbal"},{},{}];
+
 
     return (
         <div>
@@ -108,23 +111,36 @@ export function Profile() {
                 )}
                 </Formik>
 
-                <h2 className="mt-4">Týmy</h2>
-                <Row>
-                    <CardTemplate nazev="Tým 1" icon={Icons.faFutbol} sport="fotbal" logo="http://bit.ly/32Z7Hfl"/>
-                    <CardTemplate nazev="Tým 2" icon={Icons.faFutbol} sport="fotbal" logo="http://bit.ly/2PrDmSC"/>
-                    <CardTemplate nazev="Tým 3" icon={Icons.faFutbol} sport="fotbal" logo="http://bit.ly/32Z7Hfl"/>
-                    <CardTemplate nazev="Tým 4" icon={Icons.faHockeyPuck} sport="hokej"
-                                  logo="http://bit.ly/32Z7Hfl"/>
-                    <CardTemplate nazev="Tým 3" icon={Icons.faFutbol} sport="fotbal" logo="http://bit.ly/32Z7Hfl"/>
-                </Row>
 
-                <h2 className="mt-4">Soutěže</h2>
-                <Row>
-                    <CardTemplate nazev="Jarov Liga" pozice="Pozice: 1." icon={Icons.faFutbol} sport="fotbal"
-                                  logo="http://bit.ly/32Z7Hfl" stav="Probíhá"/>
-                    <CardTemplate nazev="Extraliga" pozice="Pozice: 2." icon={Icons.faFutbol} sport="fotbal"
-                                  logo="http://bit.ly/2PrDmSC" stav="Ukončena"/>
-                </Row>
+                    <h2 className="mt-4">Týmy ve kterých hraju</h2>
+                    <Row>
+
+                        {userTeams.map((anObjectMapped, index) => (
+                            <CardTemplate
+                                key={index}
+                                title={`${anObjectMapped.name}`}
+                                sport={`${anObjectMapped.sport}`}
+                                icon={`${mapSportToIcon(anObjectMapped.idSport)}`}
+                            />
+                        ))}
+
+
+
+                        <CardTemplate title="Tým 1" icon={Icons.faFutbol} sport="fotbal" logo="http://bit.ly/32Z7Hfl"/>
+                        <CardTemplate nazev="Tým 2" icon={Icons.faFutbol} sport="fotbal" logo="http://bit.ly/2PrDmSC"/>
+                        <CardTemplate nazev="Tým 3" icon={Icons.faFutbol} sport="fotbal" logo="http://bit.ly/32Z7Hfl"/>
+                        <CardTemplate nazev="Tým 4" icon={Icons.faHockeyPuck} sport="hokej"
+                                      logo="http://bit.ly/32Z7Hfl"/>
+                        <CardTemplate nazev="Tým 3" icon={Icons.faFutbol} sport="fotbal" logo="http://bit.ly/32Z7Hfl"/>
+                    </Row>
+
+                    <h2 className="mt-4">Soutěže ve kterých hraju</h2>
+                    <Row>
+                        <CardTemplate nazev="Jarov Liga" pozice="Pozice: 1." icon={Icons.faFutbol} sport="fotbal"
+                                      logo="http://bit.ly/32Z7Hfl" stav="Probíhá"/>
+                        <CardTemplate nazev="Extraliga" pozice="Pozice: 2." icon={Icons.faFutbol} sport="fotbal"
+                                      logo="http://bit.ly/2PrDmSC" stav="Ukončena"/>
+                    </Row>
 
                 <Modal show={show} onHide={handleClose}>
                     <Formik
