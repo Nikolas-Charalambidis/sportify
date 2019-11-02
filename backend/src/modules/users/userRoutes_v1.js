@@ -69,8 +69,8 @@ router.get('/:id_user', async(req, res, next) => {
  */
 router.patch('/', async(req, res, next) => {
 	try {
-		const { id_user, name, surname, oldPassword, newPassword1, newPassword2 } = req.body;
-		await new UserService(req).changePassword(id_user, name, surname, oldPassword, newPassword1, newPassword2);
+		const { id_user, oldPassword, newPassword1, newPassword2 } = req.body;
+		await new UserService(req).changePassword(id_user, oldPassword, newPassword1, newPassword2);
 		res.status(200).send({ error: false, msg: 'OK', id_user: id_user});
 	} catch (e) {
 		next(e);
@@ -164,7 +164,7 @@ router.get('/', async (req, res, next) => {
  *               type: string
  *     responses:
  *       201:
- *         description: User added
+ *         description: Team added
  *       400:
  *         description: Invalid request
  */
@@ -174,6 +174,72 @@ router.post('/', async(req, res, next) => {
 		const id = await new UserService(req).addNewUser(email, password1, password2, name, surname);
 		res.status(201).header('Location' , `/api/v1/users/${id}`).send({ error: false, msg: 'OK', id_user: id});
 	} catch (e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
+ * /users/{id_user}/teamMembership:
+ *   get:
+ *     tags:
+ *       - Users
+ *     name: Team memberships
+ *     summary: Get all teams the user is member of
+ *     parameters:
+ *       - name: id_user
+ *         in: path
+ *         description: User ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Teams found
+ *       400:
+ *         description: Invalid request
+ *       404:
+ *         description: Teams not found
+ */
+router.get('/:id_user/teamMembership', async(req, res, next) => {
+	try {
+		const { id_user } = req.params;
+		const user = await new UserService(req).userTeamMemberships(id_user);
+		res.status(200).json({ error: false, msg: 'OK', user: user});
+	} catch(e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
+ * /users/{id_user}/competitionMembership:
+ *   get:
+ *     tags:
+ *       - Users
+ *     name: Competition participations
+ *     summary: Get all competitions the user participates in
+ *     parameters:
+ *       - name: id_user
+ *         in: path
+ *         description: User ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Teams found
+ *       400:
+ *         description: Invalid request
+ *       404:
+ *         description: Teams not found
+ */
+router.get('/:id_user/competitionMembership', async(req, res, next) => {
+	try {
+		const { id_user } = req.params;
+		const user = await new UserService(req).userCompetitionMemberships(id_user);
+		res.status(200).json({ error: false, msg: 'OK', user: user});
+	} catch(e) {
 		next(e);
 	}
 });

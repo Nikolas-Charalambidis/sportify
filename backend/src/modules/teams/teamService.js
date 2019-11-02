@@ -24,17 +24,29 @@ export default class TeamService {
 		const team_id = Number(id_team);
 		teamValidation.validateTeamID(team_id);
 		const result = await this.dbConnection.query(
-			'SELECT t.id_team, t.name, s.sport, CONCAT(u.name, " ", u.surname) as leader ' +
-			'FROM teams as t ' +
-			'JOIN sports as s ON t.id_sport=s.id_sport ' +
-			'JOIN users as u ON t.id_leader=u.id_user ' +
-			'WHERE id_team=?'
+			`SELECT t.id_team, t.name, s.sport, CONCAT(u.name, " ", u.surname) as leader
+			FROM teams as t
+			JOIN sports as s ON t.id_sport=s.id_sport
+			JOIN users as u ON t.id_leader=u.id_user
+			WHERE id_team=?`
 			, team_id
 		);
 		if (result.length === 0) {
 			throw {status: 404, msg: 'Team not found'};
 		}
 		return result[0];
+	}
+
+	async findPlayersByTeamId(id_team) {
+		const team_id = Number(id_team);
+		teamValidation.validateTeamID(team_id);
+		const players = await this.dbConnection.query(
+			`SELECT u.id_user, u.email, u.name, u.surname, t.position FROM team_membership AS t
+   			JOIN users u ON t.user = u.id_user
+   			WHERE team = ?;`
+			, team_id
+		);
+		return players;
 	}
 
 	async addNewTeam(id_sport, name, id_leader) {
@@ -49,5 +61,21 @@ export default class TeamService {
 			return result.insertId;
 		}
 		throw {status: 500, msg: 'Unable to create team'};
+	}
+
+	async changeTeam(id_team, name, id_sport) {
+		const team_id = Number(id_team);
+		const sport_id = Number(id_sport);
+		console.log("before");
+		teamValidation.validateChangeTeamData(team_id, name, sport_id);
+		console.log("validation ok");
+		const result = await this.dbConnection.query(
+			`UPDATE teams SET name=?, id_sport=? WHERE id_team=?`,
+			[name, id_sport, id_team]
+		);
+		if(result.affectedRows === 1){
+			return result.insertId;
+		}
+		throw {status: 500, msg: 'Unable to change team'};
 	}
 }
