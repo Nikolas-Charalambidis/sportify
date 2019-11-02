@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import {Alert} from "react-bootstrap";
+import {Alert, Container} from "react-bootstrap";
 import {withRouter} from "react-router";
 import Event from '../utils/event';
-import '../assets/css/index.css';
 
 function FlashBase() {
     let [visibility, setVisibility] = useState(false);
@@ -24,7 +23,9 @@ function FlashBase() {
         <div>
         { visibility &&
             <Alert variant={type} onClose={() => setVisibility(false)} dismissible>
-                <p>{ message }</p>
+                <Container>
+                    <p className="text-center">{message}</p>
+                </Container>
             </Alert>
         }
         </div>

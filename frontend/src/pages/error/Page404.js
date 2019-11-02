@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Link} from '../../atoms';
+import {NavLink as Link} from "react-router-dom";
 import {Placeholder} from '../../templates/Placeholder';
 
 export function Page404() {

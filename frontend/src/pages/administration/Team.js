@@ -32,7 +32,7 @@ export function Team() {
                 <Breadcrumb.Item active>Administrace</Breadcrumb.Item>
                 <Breadcrumb.Item active>Team</Breadcrumb.Item>
             </Breadcrumb>
-            <Heading className="pageHeading mt-4 mb-5">Tymovy profil</Heading>
+            <Heading className="mt-4 mb-5">Tymovy profil</Heading>
             {!state.gettingData &&
             <div>
                 <Formik

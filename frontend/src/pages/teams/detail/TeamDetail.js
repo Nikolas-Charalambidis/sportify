@@ -29,7 +29,7 @@ export function TeamDetail() {
                 <Breadcrumb.Item href="/teams">Týmy</Breadcrumb.Item>
                 <Breadcrumb.Item active>Název týmu</Breadcrumb.Item>
             </Breadcrumb>
-            <Heading className="pageHeading mt-4 mb-5">Tým 8</Heading>
+            <Heading className="mt-4 mb-5">Tým 8</Heading>
 
             {!state.gettingData &&
                 <Row>
