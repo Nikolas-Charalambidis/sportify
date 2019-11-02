@@ -1,7 +1,6 @@
-import React, {useState} from 'react';
-import {Heading, MainSection} from '../../atoms';
-import {TopNavigation} from '../../organisms/TopNavigation';
-import {Row, Col, Form, Button, Breadcrumb, Modal} from "react-bootstrap";
+import React from 'react';
+import {Heading} from '../../atoms';
+import {Row, Col, Form, Button, Breadcrumb} from "react-bootstrap";
 import {Footer} from "../../organisms/Footer";
 import {useApi} from '../../utils/api';
 import {useAuth} from '../../utils/auth';
