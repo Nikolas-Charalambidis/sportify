@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 
-import { Heading, MainSection } from '../atoms/';
-import { TopNavigation } from '../organisms/TopNavigation';
-import { Form, Button } from 'react-bootstrap';
+import {Heading, MainSection} from '../atoms/';
+import {Form, Button} from 'react-bootstrap';
 
 export function ForgotPassword() {
     const [validated, setValidated] = useState(false);
@@ -20,18 +19,17 @@ export function ForgotPassword() {
 
     return (
         <div>
-            <TopNavigation />
-            <MainSection>
-                <Heading>Reset hesla</Heading>
-                <Form validated={validated}>
-                    <Form.Group controlId="formBasicEmail">
-                        <Form.Label>E-mail</Form.Label>
-                        <Form.Control required type="email" name="email" placeholder="E-mail" value={email} onChange={e => setEmail(e.target.value)} />
-                        <Form.Control.Feedback type="invalid">E-mailová adresa je ve špatném tvaru.</Form.Control.Feedback>
-                    </Form.Group>
-                    <Button variant="primary" type="button" onClick={onReset}>Resetovat</Button>
-                </Form>
-            </MainSection>
+            <Heading>Reset hesla</Heading>
+            <Form validated={validated}>
+                <Form.Group controlId="formBasicEmail">
+                    <Form.Label>E-mail</Form.Label>
+                    <Form.Control required type="email" name="email" placeholder="E-mail" value={email}
+                                  onChange={e => setEmail(e.target.value)}/>
+                    <Form.Control.Feedback type="invalid">E-mailová adresa je ve špatném
+                        tvaru.</Form.Control.Feedback>
+                </Form.Group>
+                <Button variant="primary" type="button" onClick={onReset}>Resetovat</Button>
+            </Form>
         </div>
     );
 }

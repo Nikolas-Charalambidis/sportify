@@ -6,7 +6,7 @@ export {Heading} from './Heading';
 export {Label} from './Label';
 export {Link} from './Link';
 export {Loading} from './Loading';
-export {MainSection} from './MainSection';
+export {MainSection} from '../organisms/MainSection';
 export {ScrollToTop} from './ScrollToTop';
 export {TextArea} from './TextArea';
 export {TextInput} from './TextInput';
