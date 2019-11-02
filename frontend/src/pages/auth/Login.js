@@ -55,7 +55,7 @@ export function Login() {
 						window.flash(data.message, 'danger');
 						break;
 					case 403:
-						window.flash(data.message, 'warning');
+						window.flash(data.message, 'danger');
 						break;
 					default:
 						window.flash(data.message, 'danger');
@@ -107,7 +107,7 @@ export function Login() {
             </Row>
 
             <Formik
-                validationSchema={schema}
+                validationSchema={schemaLogin}
                 initialValues={{email: '', password: ''}}
                 onSubmit={values => {
                     login(values);

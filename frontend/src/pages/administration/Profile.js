@@ -161,21 +161,21 @@ export function Profile() {
                                    message="Hesla se musí shodovat" isInvalid={!!errors.newPassword2}/>
                         </Modal.Body>
 
-                            <Modal.Footer>
-                                <Button variant="primary" type="submit">
-                                    Změnit heslo
-                                </Button>
-                                <Button variant="secondary" type="button" onClick={handleClose}>
-                                    Close
-                                </Button>
-                            </Modal.Footer>
-                        </Form>
-                        )}
-                    </Formik>
-                </Modal>
-            </div> : null
-            }
-            <Footer/>
+                                <Modal.Footer>
+                                    <Button variant="primary" type="submit">
+                                        Změnit heslo
+                                    </Button>
+                                    <Button variant="secondary" type="button" onClick={handleClose}>
+                                        Close
+                                    </Button>
+                                </Modal.Footer>
+                            </Form>
+                            )}
+                        </Formik>
+                    </Modal>
+                </div> : null
+                }
+            </MainSection>
         </div>
     );
 }
