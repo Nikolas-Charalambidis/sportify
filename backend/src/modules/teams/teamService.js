@@ -32,7 +32,7 @@ export default class TeamService {
 			, team_id
 		);
 		if (result.length === 0) {
-			throw {status: 404, msg: 'Team not found'};
+			throw {status: 404, msg: 'Tým nebyl nalezen v databázi'};
 		}
 		return result[0];
 	}
@@ -49,33 +49,32 @@ export default class TeamService {
 		return players;
 	}
 
-	async addNewTeam(id_sport, name, id_leader) {
+	async addNewTeam(id_sport, name, type, id_leader) {
 		const sport = Number(id_sport);
 		const leader = Number(id_leader);
-		teamValidation.validateNewTeamData(sport, name, leader);
+		teamValidation.validateNewTeamData(sport, name, type, leader);
 		const result = await this.dbConnection.query(
-			`INSERT INTO teams (id_team, id_sport, name, id_leader) VALUES (NULL, ?, ?, ?)`,
-			[sport, name, leader]
+			`INSERT INTO teams (id_team, id_sport, name, type, id_leader, id_contact_person) VALUES (NULL, ?, ?, ?, ?, ?)`,
+			[sport, name, type, leader, leader]
 		);
 		if(result.affectedRows === 1){
 			return result.insertId;
 		}
-		throw {status: 500, msg: 'Unable to create team'};
+		throw {status: 500, msg: 'Vytvoření nového týmu se nezdařilo'};
 	}
 
-	async changeTeam(id_team, name, id_sport) {
+	async changeTeam(id_team, name, type, id_sport, id_contact_person) {
 		const team_id = Number(id_team);
 		const sport_id = Number(id_sport);
-		console.log("before");
-		teamValidation.validateChangeTeamData(team_id, name, sport_id);
-		console.log("validation ok");
+		const contact_person_id = Number(id_contact_person);
+		teamValidation.validateChangeTeamData(team_id, name, type, sport_id, contact_person_id);
 		const result = await this.dbConnection.query(
-			`UPDATE teams SET name=?, id_sport=? WHERE id_team=?`,
-			[name, id_sport, id_team]
+			`UPDATE teams SET name=?, type=?, id_sport=?, id_contact_person=? WHERE id_team=?`,
+			[name, type, sport_id, contact_person_id, team_id]
 		);
 		if(result.affectedRows === 1){
 			return result.insertId;
 		}
-		throw {status: 500, msg: 'Unable to change team'};
+		throw {status: 500, msg: 'Změna týmových údajů se nezdařila'};
 	}
 }

@@ -3,10 +3,7 @@ import { DB_CONNECTION_KEY } from '../../libs/connection';
 import * as utils from '../../libs/utils';
 import * as authValidation from "../auth/authValidations";
 import UserService from "../users/userService";
-
 import jwt from 'jsonwebtoken';
-import {verifyHash} from "../../libs/utils";
-import {hash} from "../../libs/utils";
 
 dotenv.config();
 dotenv.config({path: '.env'});
@@ -26,18 +23,14 @@ export default class AuthService {
 		);
 		const user = result[0];
 		if (result.length > 1) {
-			console.log('inside count verification');
-			throw {status: 400, msg: 'Returned more than one record'};
+			throw {status: 400, msg: 'Bylo nalezeno více uživatelů'};
 		}
 		if (result.length === 0 || !utils.verifyHash(password, user.password)) {
-			console.log('inside password verification');
-			throw {status: 404, msg: `User not found or the password doesn't match`};
+			throw {status: 404, msg: `Chybný email nebo heslo`};
 		}
-		console.log('before verified');
 		if (!user.verified) {
-			throw {status: 403, msg: `Unverified email`};
+			throw {status: 403, msg: `Email nebyl potvrzen`};
 		}
-		console.log('user received');
 		const token = jwt.sign({ id_user: user.id_user }, env.JWT_SECRET);
 		return { user: {id_user: user.id_user, email: user.email}, token: token};
 	}
@@ -50,7 +43,7 @@ export default class AuthService {
 
 		const result = await this.dbConnection.query('UPDATE users SET verified=true WHERE id_user=?', user_id);
 		if (result.affectedRows === 0) {
-			throw {status: 400, msg: 'Verification failed'};
+			throw {status: 500, msg: 'Verifikace emailu selhala'};
 		}
 		return await new UserService(this.req).findUserById(user_id);
 	}
@@ -66,7 +59,7 @@ export default class AuthService {
 			[utils.hash(password1, 10), user_id]
 		);
 		if (result.affectedRows === 0) {
-			throw {status: 400, msg: 'Password change failed'};
+			throw {status: 500, msg: 'Změna hesla se nezdařila'};
 		}
 	}
 
@@ -76,15 +69,15 @@ export default class AuthService {
 			`INSERT INTO tokens (id_token, id_user, hash, validity, type) VALUES (NULL, ?, ?, ?, 'confirm')`,
 			[id_user, hash, utils.genValidityDate()]);
 		if (result.affectedRows === 0) {
-			throw {status: 500, msg: `Token generating failed`};
+			throw {status: 500, msg: `Generování tokenu pro verifikaci emailu selhalo`};
 		}
 		const link = `${env.APP_BASE_PATH}/confirmEmail/${id_user}/${hash}`;
-		const subject = 'Email confirmation';
-		const text = `Please confirm your email by clicking on this link: \n ${link}`;
+		const subject = 'Verifikace emailu';
+		const text = `Prosím potvrďte svůj email klikem na následující link: \n ${link}`;
 		try {
 			await utils.sendEmail(email, subject, text);
 		} catch (e) {
-			throw {status: 502, msg: 'Unable to send confirmation email'};
+			throw {status: 502, msg: 'Nepodařilo se odeslat email pro verifikaci registrovaného emailu'};
 		}
 	}
 
@@ -94,25 +87,22 @@ export default class AuthService {
 			`SELECT id_user FROM users WHERE email=?`, email
 		);
 		if (user.length === 0) {
-			throw {status: 404, msg: 'User not found'};
+			throw {status: 404, msg: 'Email nebyl nalezen v databázi'};
 		}
 		const hash = utils.genToken(0, 9);
-		console.log('user found');
-		console.log('user', user[0].id_user);
 		const result = await this.dbConnection.query(
 			`INSERT INTO tokens (id_token, id_user, hash, validity, type) VALUES (NULL, ?, ?, ?, 'reset')`,
 			[user[0].id_user, hash, utils.genValidityDate()]);
-		console.log('result', result);
 		if (result.affectedRows === 0) {
-			throw {status: 500, msg: `Token generating failed`};
+			throw {status: 500, msg: `Generování tokenu pro reset hesla selhalo`};
 		}
 		const link = `${env.APP_BASE_PATH}/resetPassword/${user[0].id_user}/${hash}`;
-		const subject = 'Reset password';
-		const text = `You can reset your password by clicking on this link: \n ${link}`;
+		const subject = 'Obnovení hesla';
+		const text = `Své heslo můžete obnovit klikem na následující odkaz: \n ${link}`;
 		try {
 			await utils.sendEmail(email, subject, text);
 		} catch (e) {
-			throw {status: 502, msg: 'Unable to send confirmation email'};
+			throw {status: 502, msg: 'Odeslání emailu s odkazem pro obnovení hesla selhalo'};
 		}
 	}
 
@@ -122,11 +112,11 @@ export default class AuthService {
 			[id_user, hash, type]
 		);
 		if(result.length === 0){
-			throw {status: 404, msg: 'Invalid token'};
+			throw {status: 404, msg: 'Neexistující token'};
 		}
 		const { validity, id_token } = result[0];
 		if(validity < new Date()){
-			throw {status: 498, msg: 'Token expired'};
+			throw {status: 498, msg: 'Tokenu vypršela platnost'};
 		}
 		await this.dbConnection.query(`DELETE FROM tokens WHERE id_token=?`, id_token);
 	}

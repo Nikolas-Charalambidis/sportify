@@ -15,19 +15,18 @@ export function useGetUser(id_user) {
                     const { user } = data;
                     setState({ isLoading: false, error: false, user_data: user });
                 })
-                .catch(error => {
-                    console.log(error);
-                    const { data, status } = error;
+                .catch(( { response } ) => {
+                    const { data, status } = response;
                     setState({ isLoading: false, error: true, user_data: null });
                     switch (status) {
                         case 400:
-                            window.flash(data.message, 'danger');
+                            window.flash(data.msg, 'danger');
                             break;
                         case 500:
-                            window.flash(data.message, 'warning');
+                            window.flash(data.msg, 'danger');
                             break;
                         default:
-                            window.flash("Unexpected error", 'danger');
+                            window.flash("Neočekávaná chyba", 'danger');
                             break;
                     }
                 });
@@ -48,10 +47,10 @@ export function ChangeData(api, id_user, values) {
             const { data, status } = response;
             switch (status) {
                 case 400:
-                    window.flash(data.message, 'danger');
+                    window.flash(data.msg, 'danger');
                     break;
                 case 500:
-                    window.flash(data.message, 'danger');
+                    window.flash(data.msg, 'danger');
                     break;
                 default:
                     window.flash("Neočekávaná chyba", "danger");
@@ -71,10 +70,10 @@ export function ChangePassword(api, id_user, values) {
             const { data, status } = response;
             switch (status) {
                 case 400:
-                    window.flash(data.message, 'danger');
+                    window.flash(data.msg, 'danger');
                     break;
                 case 500:
-                    window.flash(data.message, 'warning');
+                    window.flash(data.msg, 'danger');
                     break;
                 default:
                     window.flash("Neočekávaná chyba", 'danger');

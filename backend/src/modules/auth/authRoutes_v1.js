@@ -29,6 +29,8 @@ const router = Router();
  *         description: User authenticated, JWT returned
  *       400:
  *         description: Invalid request
+ *       403:
+ *         description: Unverified email
  *       404:
  *         description: User not found
  */
@@ -64,11 +66,15 @@ router.post('/login', async (req, res, next) => {
  *               type: string
  *     responses:
  *       200:
- *         description: User authenticated, JWT returned
+ *         description: Reset link sent
  *       400:
  *         description: Invalid request
  *       404:
- *         description: User not found
+ *         description: Email not found
+ *       500:
+ *         description: Token generating failed
+ *       502:
+ *         description: Unable to send email
  */
 router.post('/resetLink', async (req, res, next) => {
 	try {
@@ -107,11 +113,15 @@ router.post('/resetLink', async (req, res, next) => {
  *               type: string
  *     responses:
  *       200:
- *         description: User authenticated, JWT returned
+ *         description: Password was changed
  *       400:
  *         description: Invalid request
  *       404:
- *         description: User not found
+ *         description: Token not found
+ *       498:
+ *         description: Expired token
+ *       500:
+ *         description: Password reset failed
  */
 router.post('/resetPassword', async (req, res, next) => {
 	try {
@@ -152,7 +162,9 @@ router.post('/resetPassword', async (req, res, next) => {
  *       404:
  *         description: Invalid token
  *       498:
- *         description: Token expiredW
+ *         description: Token expired
+ *       500:
+ *         description: Email confirmation failed
  */
 router.post('/confirmEmail', async (req, res, next) => {
 	try {

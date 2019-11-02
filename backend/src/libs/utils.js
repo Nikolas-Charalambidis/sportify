@@ -37,7 +37,6 @@ export async function sendEmail(to, subject, text) {
     text: text,
   };
   await sgMail.send(msg);
-
 }
 
 export const genValidityDate = () => {

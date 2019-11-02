@@ -15,18 +15,18 @@ export function useGetTeams() {
                     const {teams} = data;
                     setState({gettingData: false, error: false, teams_data: teams});
                 })
-                .catch((error) => {
-                    const {data, status} = error;
+                .catch(( { response } ) => {
+                    const {data, status} = response;
                     setState({gettingData: false, error: true, teams_data: null});
                     switch (status) {
                         case 400:
-                            window.flash(data.message, 'danger');
+                            window.flash(data.msg, 'danger');
                             break;
                         case 500:
-                            window.flash(data.message, 'warning');
+                            window.flash(data.msg, 'danger');
                             break;
                         default:
-                            window.flash(data.message, 'danger');
+                            window.flash("Neočekávaná chyba", 'danger');
                             break;
                     }
                 });
@@ -50,18 +50,18 @@ export function useGetTeam(id_team) {
                     const {team} = data;
                     setState({gettingData: false, error: false, team_data: team});
                 })
-                .catch((error) => {
-                    const {data, status} = error;
+                .catch(( { response } ) => {
+                    const {data, status} = response;
                     setState({gettingData: false, error: true, team_data: null});
                     switch (status) {
                         case 400:
-                            window.flash(data.message, 'danger');
+                            window.flash(data.msg, 'danger');
                             break;
                         case 500:
-                            window.flash(data.message, 'warning');
+                            window.flash(data.msg, 'danger');
                             break;
                         default:
-                            window.flash(data.message, 'danger');
+                            window.flash("Neočekávaná chyba", 'danger');
                             break;
                     }
                 });
@@ -85,18 +85,18 @@ export function useGetMembers(id_team) {
                     const {team} = data;
                     setState({gettingData: false, error: false, team_data: team});
                 })
-                .catch((error) => {
-                    const {data, status} = error;
+                .catch(( { response } ) => {
+                    const {data, status} = response;
                     setState({gettingData: false, error: true, team_data: null});
                     switch (status) {
                         case 400:
-                            window.flash(data.message, 'danger');
+                            window.flash(data.msg, 'danger');
                             break;
                         case 500:
-                            window.flash(data.message, 'warning');
+                            window.flash(data.msg, 'danger');
                             break;
                         default:
-                            window.flash(data.message, 'danger');
+                            window.flash("Neočekávaná chyba", 'danger');
                             break;
                     }
                 });
@@ -116,16 +116,16 @@ export function useChangeData(api, id_team, values) {
             // return {error: false, message: "Uživatelské údaje byly úspěšně změněny", type: "success"};
         })
         .catch(({response}) => {
-            const {status} = response;
+            const {data, status} = response;
             switch (status) {
                 case 400:
-                    window.flash("error", 'danger');
-                    return {error: true, message: "Error message", type: "danger"};
+                    window.flash(data.msg, 'danger');
+                    break;
                 case 500:
-                    window.flash("error", 'danger');
-                    return {error: true, message: "Error message", type: "danger"};
+                    window.flash(data.msg, 'danger');
+                    break;
                 default:
-                    window.flash("error", "danger");
+                    window.flash("Neočekávaná chyba", 'danger');
                     break;
             }
         });
