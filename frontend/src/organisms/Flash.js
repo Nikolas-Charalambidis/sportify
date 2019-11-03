@@ -1,32 +1,33 @@
-import React, { useEffect, useState } from 'react';
-import {Alert, Modal} from "react-bootstrap";
+import React, {useEffect, useRef, useState} from 'react';
+import {Alert, Overlay} from "react-bootstrap";
 import {withRouter} from "react-router";
-import Bus from '../utils/Bus';
+import Event from '../utils/event';
 
 function FlashBase() {
     let [visibility, setVisibility] = useState(false);
     let [message, setMessage] = useState('');
     let [type, setType] = useState('');
+    const target = useRef(null);
 
     useEffect(() => {
-        Bus.addListener('flash', ({message, type}) => {
+        Event.addListener('flash', ({message, type, timeout}) => {
             setVisibility(true);
             setMessage(message);
             setType(type);
-            // setTimeout(() => {
-            //     setVisibility(false);
-            // }, 4000);
+            setTimeout(() => {
+                setVisibility(false);
+            }, timeout);
         });
     });
 
     return (
-        <Modal show={visibility} onHide={() => setVisibility(false)}>
-            <Modal.Body>
-                <Alert variant={type} >
+        <div ref={target}>
+            <Overlay target={target.current} show={visibility}  placement="bottom">
+                <Alert className="flash" variant={type} onClose={() => setVisibility(false)} dismissible>
                     <p>{ message }</p>
                 </Alert>
-            </Modal.Body>
-        </Modal>
+            </Overlay>
+        </div>
     );
 }
 

@@ -7,7 +7,7 @@ import { addDbToRequest, DB_CONNECTION_KEY } from './libs/connection';
 import {logErrors, clientErrorHandler, errorHandler } from "./handler"
 
 dotenv.config();
-dotenv.config({path: '.env.local'});
+dotenv.config({path: '.env'});
 
 const {PORT = 3001} = process.env;
 const api = express();
@@ -32,7 +32,16 @@ api.use(router);
 
 // Handling errors and logging
 api.use(function (err, req, res, next) {
-	res.status(err.status || 500).json({status: err.status, error: true, message: err.msg})
+	if(err) {
+		let { status, msg } = err;
+		if(!status){
+			status = 500;
+		}
+		if(!msg){
+			msg = "Unexpected error";
+		}
+		res.status(status).json({status: status , error: true, msg: msg})
+	}
 });
 api.use(logErrors);
 api.use(clientErrorHandler);

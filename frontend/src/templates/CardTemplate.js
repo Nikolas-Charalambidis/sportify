@@ -33,19 +33,21 @@ const headerDate = {
     color: '#969696',
 };
 
-export function CardTemplate({ datum, nazev, podnazev, sport, logo, icon, stav, bodyAsistence, trest, vysledekZapasu }) {
+export function CardTemplate({ date, title, subtitle, sport, logo, icon, state, pointsAssistance, penalty, matchResult}) {
+
+
   return (
     <Col lg={3} className="mt-4">
       <CardDeck>
         <Card>
           <Card.Header>
-            {datum && (
-                <Row><Col style={headerDate}>{datum}</Col></Row>
+            {date && (
+                <Row><Col style={headerDate}>{date}</Col></Row>
                 )}            
             <Row className="align-items-center">                          
               <Col>
-                <Row>{nazev}</Row>
-                <Row>{podnazev}</Row>
+                <Row>{title}</Row>
+                <Row>{subtitle}</Row>
               </Col>
               <Col className="text-right">
                 <OverlayTrigger
@@ -59,28 +61,28 @@ export function CardTemplate({ datum, nazev, podnazev, sport, logo, icon, stav, 
           <Row>
             <Col className="text-center">
                 <Card.Img style={{ height: '150px', width: 'auto' }} src={logo} />
-                {(stav || bodyAsistence || trest || vysledekZapasu) && (
+                {(state || pointsAssistance || penalty || matchResult) && (
                     <Card.Footer>
-                        {stav && (
-                            <label>{stav}</label>
+                        {state && (
+                            <label>{state}</label>
                         )}
 
-                        {bodyAsistence && (
+                        {pointsAssistance && (
                             <div style={footerInfo}>
                                 <label style={footerLeftLabel}>Body/Asistence:</label>
-                                <label style={footerRightLabel}>{bodyAsistence}</label>
+                                <label style={footerRightLabel}>{pointsAssistance}</label>
                             </div>
                         )}
 
-                        {trest && (
+                        {penalty && (
                             <div style={footerInfo}>
                                 <label style={footerLeftLabel}>Trest 2m/5m:</label>
-                                <label style={footerRightLabel}>{trest}</label>
+                                <label style={footerRightLabel}>{penalty}</label>
                             </div>
                         )}
 
-                        {vysledekZapasu && (
-                            <label style={footerScore}>{vysledekZapasu}</label>
+                        {matchResult && (
+                            <label style={footerScore}>{matchResult}</label>
                         )}
                     </Card.Footer>
                 )}                          

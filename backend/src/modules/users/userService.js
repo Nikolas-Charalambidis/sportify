@@ -23,53 +23,46 @@ export default class UserService {
 		userValidation.validateUserID(user_id);
 		const result = await this.dbConnection.query('SELECT * FROM users WHERE id_user=?', user_id);
 		if (result.length === 0) {
-			throw {status: 404, msg: 'User not found'};
+			throw {status: 404, msg: 'Uživatel nebyl nalezen v databázi'};
 		}
 		return result[0];
 	}
 
-	async addNewUser(email, password, name, surname) {
-		userValidation.validateNewUserData(email, password, name, surname);
-		userValidation.validateEmail(email);
+	async addNewUser(email, password1, password2, name, surname) {
+		userValidation.validateNewUserData(email, password1, password2, name, surname);
 		if (await this.isEmailUsed(email)) {
-			throw {status: 400, msg: 'Email already exists'};
+			throw {status: 400, msg: 'Email již existuje'};
 		}
-
-		const hashedPassword = hash(password, 10);
+		const hashedPassword = hash(password1, 10);
 		const result = await this.dbConnection.query(
-			'INSERT INTO users (id_user, email, password, name, surname, verified) VALUES ("", ?, ?, ?, ?, 0)',
+			`INSERT INTO users (id_user, email, password, name, surname, verified) VALUES (NULL, ?, ?, ?, ?, 0)`,
 			[email, hashedPassword, name, surname]
 		);
-		if (result.affectedRows === 1) {
-			const authService = new AuthService(this.req);
-			const hash = await authService.genConfirmToken(result.insertId);
-			await authService.sendConfirmEmail(email, result.insertId, hash);
-			return result.insertId;
+		if (result.affectedRows < 0) {
+			throw {status: 500, msg: 'Vytvoření nového uživatele selhalo'};
 		}
-		throw {status: 500, msg: 'Unable to create user'};
+		await new AuthService(this.req).genConfirmToken(result.insertId, email);
+		return result.insertId;
 	}
 
 	async changePassword(id_user, oldPassword, newPassword1, newPassword2) {
 		const user_id = Number(id_user);
 		userValidation.validateChangePasswordData(user_id, oldPassword, newPassword1, newPassword2);
-		if(newPassword1 !== newPassword2) {
-			throw {status: 400, msg: 'Passwords do not match'};
-		}
 		const user = await this.dbConnection.query(
 			`SELECT password FROM users WHERE id_user=?`, [user_id]
 		);
 		if (user.length === 0) {
-			throw {status: 404, msg: 'User not found'};
+			throw {status: 404, msg: 'Uživatel nebyl nalezen v databázi'};
 		}
 		if(!verifyHash(oldPassword, user[0].password)){
-			throw {status: 400, msg: 'Invalid data'};
+			throw {status: 400, msg: 'Bylo zadáno neplatné stávající heslo'};
 		}
 		const result = await this.dbConnection.query(
 			'UPDATE users SET password=? WHERE id_user=?',
 			[hash(newPassword1, 10), user_id]
 		);
 		if (result.affectedRows === 0) {
-			throw {status: 400, msg: 'Password change failed'};
+			throw {status: 400, msg: 'Změna hesla se nezdařila'};
 		}
 	}
 
@@ -82,7 +75,7 @@ export default class UserService {
 			[name, surname, user_id]
 		);
 		if (result.affectedRows === 0) {
-			throw {status: 400, msg: 'Data change failed'};
+			throw {status: 400, msg: 'Změna uživatelských údajů se nezdařila'};
 		}
 	}
 
@@ -91,10 +84,29 @@ export default class UserService {
 		return result.length > 0;
 	}
 
-	async setUserVerified(id_user) {
-		const result = await this.dbConnection.query('UPDATE users SET verified=true WHERE id_user=?', id_user);
-		if (result.affectedRows === 0) {
-			throw {status: 400, msg: 'Verification failed'};
-		}
+	async userTeamMemberships(id_user) {
+		const user_id = Number(id_user);
+		userValidation.validateUserID(user_id);
+		const teams = await this.dbConnection.query(
+				`SELECT t.name, tm.position, s.sport, s.id_sport FROM team_membership AS tm
+				JOIN teams AS t ON tm.team=t.id_team
+				JOIN sports AS s ON t.id_sport=s.id_sport
+				WHERE tm.user=? AND tm.status='active'`
+			, user_id);
+		return teams;
+	}
+
+	async userCompetitionMemberships(id_user) {
+		const user_id = Number(id_user);
+		userValidation.validateUserID(user_id);
+		const competitions = await this.dbConnection.query(
+				`SELECT t.name, tm.position, s.sport, s.id_sport, c.name, c.start_date, c.end_date, 'is_active' FROM team_membership AS tm
+  				JOIN teams t ON tm.team = t.id_team
+  				JOIN competition_membership cm ON t.id_team = cm.team
+  				JOIN competitions c ON cm.competition = c.id_competition
+  				JOIN sports AS s ON t.id_sport=s.id_sport
+  				WHERE tm.user=6 AND cm.status='active'`
+			, user_id);
+		return competitions;
 	}
 }

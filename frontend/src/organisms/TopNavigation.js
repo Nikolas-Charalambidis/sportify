@@ -1,63 +1,93 @@
 import React from 'react';
+
+import {Navbar, Button} from "react-bootstrap";
+import {NavLink as Link} from "react-router-dom";
 import {withRouter} from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import '../assets/css/index.css';
-import {Navbar, Nav, Button} from "react-bootstrap";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import * as Icons from "@fortawesome/free-solid-svg-icons"
-import { useAuth } from '../utils/auth';
+import {useAuth} from '../utils/auth';
 import {useHistory} from "react-router";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import * as Icons from "@fortawesome/free-solid-svg-icons"
 
-function TopNavigationBase(props) {
-	const { location } = props;
-	const { user, signout } = useAuth();
-	const history = useHistory();
-	return (
-		<Navbar id="navigation" sticky="top" expand="md">
-			<Navbar.Brand href="/">
-			</Navbar.Brand>
-			<Navbar.Toggle aria-controls="basic-navbar-nav" />
-			<FontAwesomeIcon  className="d-inline d-md-none white mr-3 searchButton" icon={Icons.faSearch} size="1x" />
-			<Button className="d-inline d-md-none loginButtonMobile" variant="primary" href="/login"><FontAwesomeIcon icon={Icons.faUser} size="1x" /></Button>
-			<Navbar.Collapse id="basic-navbar-nav">
-				<ul className="m-auto">
-					<Nav activeKey={location.pathname}>
-					<li><Nav.Link href="/teams">Týmy</Nav.Link></li>
-					<li><Nav.Link href="/leagues" >Soutěže</Nav.Link></li>
-					<li><Nav.Link href="/matches">Zápasy</Nav.Link></li>
-					<li><Nav.Link href="/statistics">Statistiky</Nav.Link></li>
-					<li><Nav.Link href="/aboutus">O nás</Nav.Link></li>
-					<li><Nav.Link href="/contact">Kontakt</Nav.Link></li>
-					</Nav>
-				</ul>
+function TopNavigationBase() {
+    const {user, signout} = useAuth();
+    const history = useHistory();
 
-				<div className="signUp d-none d-md-inline-block">
-					<FontAwesomeIcon  className="hidden-lg mr-4 white" icon={Icons.faSearch} size="1x" />
-					{user ? (
-						<>
-							<a href={`/administration/profile`} >
-								{user.email}
-							</a>
-							<button
-								onClick={() => {
-									signout();
-									history.push('/');
-									window.location.reload();
-								}}
-							>
-								Odhlásit se
-							</button>
-						</>
-					) : (
-						<Button className="d-none d-lg-inline-block d-xl-inline-block" variant="primary" href="/login">
-							<FontAwesomeIcon  className="mr-2" icon={Icons.faUser} size="1x" />
-							Přihlásit se
-						</Button>
-					)}
-				</div>
-			</Navbar.Collapse>
-		</Navbar>
-	);
+    return (
+        <Navbar id="navigation" sticky="top" expand="md">
+            <Link to="/">
+                <Navbar.Brand/>
+            </Link>
+            <Navbar.Toggle aria-controls="basic-navbar-nav"/>
+
+            {user ? (
+                <>
+                    <div className="profileNavPanel">
+                        <Link to="/administration/profile">
+                            <Button className="btn d-inline d-md-none  mr-2" variant="primary" type="button">
+                                <FontAwesomeIcon icon={Icons.faUserCircle} size="1x"/>
+                            </Button>
+                        </Link>
+                        <Button className="btn d-inline d-md-none " variant="secondary" type="button"
+                                onClick={() => {
+                                    signout();
+                                    history.push('/login');
+                                }}>
+                            <FontAwesomeIcon icon={Icons.faSignOutAlt} size="1x"/>
+                        </Button>
+                    </div>
+                </>
+            ) : (
+                <>
+                    <div className="profileNavPanel">
+                        <Link className="loginIcon" to="/login">
+                            <Button className="d-inline d-md-none loginButtonMobile" variant="primary">
+                                <FontAwesomeIcon icon={Icons.faSignInAlt} size="1x"/>
+                            </Button>
+                        </Link>
+                    </div>
+                </>
+            )}
+
+            <Navbar.Collapse id="basic-navbar-nav">
+                <ul className="m-auto">
+                    <li><Link className="nav-link" to="/teams" activeClassName="active">Týmy</Link></li>
+                    <li><Link className="nav-link" to="/leagues" activeClassName="active">Soutěže</Link></li>
+                    <li><Link className="nav-link" to="/matches" activeClassName="active">Zápasy</Link></li>
+                    <li><Link className="nav-link" to="/statistics" activeClassName="active">Statistiky</Link></li>
+                    <li><Link className="nav-link" to="/aboutus" activeClassName="active">O nás</Link></li>
+                    <li><Link className="nav-link" to="/contact" activeClassName="active">Kontakt</Link></li>
+                </ul>
+
+                <div className="signUp d-none d-md-inline-block">
+                    {user ? (
+                        <>
+                            <Link to="/administration/profile">
+                                <Button className="btn mr-2" variant="primary" type="button">
+                                    <FontAwesomeIcon icon={Icons.faUserCircle} size="1x"/>
+                                </Button>
+                            </Link>
+                            <Button className="btn" variant="secondary" type="button"
+                                    onClick={() => {
+                                        signout();
+                                        history.push('/login');
+                                    }}>
+                                <FontAwesomeIcon icon={Icons.faSignOutAlt} size="1x"/>
+                            </Button>
+                        </>
+                    ) : (
+                        <>
+                            <Link to="/login">
+                                <Button variant="primary">
+                                    <FontAwesomeIcon className="mr-0 mr-lg-2" icon={Icons.faSignInAlt} size="1x"/>
+                                    <span className="d-none d-lg-inline ">Přihlásit se</span>
+                                </Button>
+                            </Link>
+                        </>
+                    )}
+                </div>
+            </Navbar.Collapse>
+        </Navbar>
+    );
 }
 
 export const TopNavigation = withRouter(TopNavigationBase);

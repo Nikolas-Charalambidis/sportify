@@ -29,6 +29,8 @@ const router = Router();
  *         description: User authenticated, JWT returned
  *       400:
  *         description: Invalid request
+ *       403:
+ *         description: Unverified email
  *       404:
  *         description: User not found
  */
@@ -41,6 +43,94 @@ router.post('/login', async (req, res, next) => {
 		next(e);
 	}
 
+});
+
+/**
+ * @swagger
+ * /auth/resetLink:
+ *   post:
+ *     tags:
+ *       - Users
+ *     name: Login
+ *     summary: Send link for password reset
+ *     consumes: application/json
+ *     produces: application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             email:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Reset link sent
+ *       400:
+ *         description: Invalid request
+ *       404:
+ *         description: Email not found
+ *       500:
+ *         description: Token generating failed
+ *       502:
+ *         description: Unable to send email
+ */
+router.post('/resetLink', async (req, res, next) => {
+	try {
+		const { email } = req.body;
+		await new AuthService(req).genResetToken(email);
+		res.status(201).json({ error: false, msg: 'OK'});
+	} catch(e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
+ * /auth/resetPassword:
+ *   post:
+ *     tags:
+ *       - Users
+ *     name: Login
+ *     summary: Reset user password
+ *     consumes: application/json
+ *     produces: application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             id_user:
+ *               type: integer
+ *             hash:
+ *               type: integer
+ *             password1:
+ *               type: string
+ *             password2:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Password was changed
+ *       400:
+ *         description: Invalid request
+ *       404:
+ *         description: Token not found
+ *       498:
+ *         description: Expired token
+ *       500:
+ *         description: Password reset failed
+ */
+router.post('/resetPassword', async (req, res, next) => {
+	try {
+		const { id_user, hash, password1, password2 } = req.body;
+		await new AuthService(req).resetPassword(id_user, hash, password1, password2);
+		res.status(200).json({ error: false, msg: 'OK'});
+	} catch(e) {
+		next(e);
+	}
 });
 
 /**
@@ -72,7 +162,9 @@ router.post('/login', async (req, res, next) => {
  *       404:
  *         description: Invalid token
  *       498:
- *         description: Token expiredW
+ *         description: Token expired
+ *       500:
+ *         description: Email confirmation failed
  */
 router.post('/confirmEmail', async (req, res, next) => {
 	try {

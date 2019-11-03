@@ -1,4 +1,9 @@
 import bcrypt from 'bcrypt';
+import dotenv from "dotenv";
+
+dotenv.config();
+dotenv.config({path: '.env'});
+const env = process.env;
 
 export const hash = (toHash, rounds) => {
   return bcrypt.hashSync(toHash, rounds);
@@ -14,11 +19,29 @@ export const genRandomIntInRange = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-export const genConfirmToken = (min, max) => {
+export const genToken = (min, max) => {
   return Array
       .apply(0, Array(8))
       .map(() => { return genRandomIntInRange(min, max); })
       .join('')
       .toString();
+};
+
+export async function sendEmail(to, subject, text) {
+  const sgMail = require('@sendgrid/mail');
+  sgMail.setApiKey(env.SENDGRID_API_KEY);
+  const msg = {
+    to: to,
+    from: 'admin@sportify.cz',
+    subject: subject,
+    text: text,
+  };
+  await sgMail.send(msg);
+}
+
+export const genValidityDate = () => {
+  const validity = new Date();
+  validity.setDate(validity.getDate() + 1);
+  return validity;
 };
 
