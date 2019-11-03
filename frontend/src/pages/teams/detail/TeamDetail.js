@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { useParams } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 
 import {Heading} from '../../../atoms';
@@ -21,7 +21,9 @@ const subTitleRightLabel = {
 };
 
 export function TeamDetail() {
-    const [state] = useGetTeam(1);
+    let { id_team } = useParams();
+    const [state] = useGetTeam(id_team);
+    
     return (
         <div>
             <Breadcrumb>
@@ -62,7 +64,7 @@ export function TeamDetail() {
 
             <Tabs fill defaultActiveKey="squad" id="teamTabs">
                 <Tab eventKey="squad" title="Sestava">
-                    <TeamSquad teamId={1}/>
+                    <TeamSquad teamId={1} />
                 </Tab>
                 <Tab eventKey="competition" title="Soutěže">
                 </Tab>

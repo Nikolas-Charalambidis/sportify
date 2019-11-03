@@ -9,7 +9,7 @@ const positionEnum = {
 };
 
 export function TeamSquad({teamId}) {
-    const [data] = [
+    const data = [
         {
             name: "Alice",
             surname: "fwqfqwf",
@@ -209,10 +209,10 @@ export function TeamSquad({teamId}) {
                                             return true;
                                     }
                                 },
-                                Filter: ({filter, onChange}) =>
+                                Filter: ({ filter, onChange }) =>
                                     <select
                                         onChange={event => onChange(event.target.value)}
-                                        style={{width: "100%"}}
+                                        style={{ width: "100%" }}
                                         value={filter ? filter.value : "all"}
                                     >
                                         <option value="all">Vše</option>
