@@ -37,7 +37,7 @@ export function CardTemplate({ date, title, subtitle, sport, logo, icon, state, 
 
 
   return (
-    <Col lg={3} className="mt-4">
+    <Col lg={3} md={4} sm={6} className="mt-4">
       <CardDeck>
         <Card>
           <Card.Header>
