@@ -33,7 +33,7 @@ export function Team() {
                 <Breadcrumb.Item active>Team</Breadcrumb.Item>
             </Breadcrumb>
             <Heading className="mt-4 mb-5">Tymovy profil</Heading>
-            {!state.gettingData &&
+            {!state.isLoading &&
             <div>
                 <Formik
                     validationSchema={schemaChangeData}

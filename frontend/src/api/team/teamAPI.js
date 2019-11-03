@@ -5,19 +5,19 @@ import {config} from '../../config';
 export function useGetTeams() {
     const api = useApi();
     const [state, setState] = useState({
-        gettingData: true
+        isLoading: true
     });
     useEffect(() => {
         async function fetchData() {
             await api
-                .get(`${config.API_BASE_PATH}/api/v1/teams`)
+                .get(`${config.API_BASE_PATH}/teams`)
                 .then(({data}) => {
                     const {teams} = data;
-                    setState({gettingData: false, error: false, teams_data: teams});
+                    setState({isLoading: false, error: false, teams_data: teams});
                 })
                 .catch(( { response } ) => {
                     const {data, status} = response;
-                    setState({gettingData: false, error: true, teams_data: null});
+                    setState({isLoading: false, error: true, teams_data: null});
                     switch (status) {
                         case 400:
                             window.flash(data.msg, 'danger');
@@ -40,19 +40,19 @@ export function useGetTeams() {
 export function useGetTeam(id_team) {
     const api = useApi();
     const [state, setState] = useState({
-        gettingData: true
+        isLoading: true
     });
     useEffect(() => {
         async function fetchData() {
             await api
-                .get(`${config.API_BASE_PATH}/api/v1/teams/${id_team}`)
+                .get(`${config.API_BASE_PATH}/teams/${id_team}`)
                 .then(({data}) => {
                     const {team} = data;
-                    setState({gettingData: false, error: false, team_data: team});
+                    setState({isLoading: false, error: false, team_data: team});
                 })
                 .catch(( { response } ) => {
                     const {data, status} = response;
-                    setState({gettingData: false, error: true, team_data: null});
+                    setState({isLoading: false, error: true, team_data: null});
                     switch (status) {
                         case 400:
                             window.flash(data.msg, 'danger');
@@ -75,19 +75,19 @@ export function useGetTeam(id_team) {
 export function useGetMembers(id_team) {
     const api = useApi();
     const [state, setState] = useState({
-        gettingData: true
+        isLoading: true
     });
     useEffect(() => {
         async function fetchData() {
             await api
-                .get(`${config.API_BASE_PATH}/api/v1/teams/${id_team}/players`)
+                .get(`${config.API_BASE_PATH}/teams/${id_team}/players`)
                 .then(({data}) => {
                     const {team} = data;
-                    setState({gettingData: false, error: false, team_data: team});
+                    setState({isLoading: false, error: false, team_data: team});
                 })
                 .catch(( { response } ) => {
                     const {data} = response;
-                    setState({gettingData: false, error: true, team_data: null});
+                    setState({isLoading: false, error: true, team_data: null});
                     window.flash(data.msg, 'danger');
                 });
         }
@@ -100,7 +100,7 @@ export function useGetMembers(id_team) {
 export function useChangeData(api, id_team, values) {
     const {sport, name} = values;
     api
-        .put(`${config.API_BASE_PATH}/api/v1/teams/`, {id_team: id_team, sport: sport, name: name})
+        .put(`${config.API_BASE_PATH}/teams/`, {id_team: id_team, sport: sport, name: name})
         .then(() => {
             window.flash("Tymove údaje byly úspěšně změněny", 'success');
             // return {error: false, message: "Uživatelské údaje byly úspěšně změněny", type: "success"};

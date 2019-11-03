@@ -40,7 +40,7 @@ api.use(function (err, req, res, next) {
 		if(!msg){
 			msg = "Neočekávaná chyba";
 		}
-		res.status(status).json({status: status , error: true, msg: msg})
+		res.status(status).json({status: status, error: true, msg: msg, link: err.link})
 	}
 });
 api.use(logErrors);

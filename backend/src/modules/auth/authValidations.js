@@ -28,3 +28,9 @@ export const validateResetLinkData = (email) => {
 		throw {status: 400, msg: 'Chybějící data'};
 	}
 };
+
+export const validateResendTokenData = (id_token, type) => {
+	if(!id_token || !type){
+		throw {status: 400, msg: 'Chybějící data'};
+	}
+};

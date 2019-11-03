@@ -31,15 +31,19 @@ export function ResetPassword() {
         const { password1, password2 } = values;
         const { id_user, hash } = params;
         api
-            .post(`${config.API_BASE_PATH}/api/v1/auth/resetPassword`,
+            .post(`${config.API_BASE_PATH}/auth/resetPassword`,
                 {id_user: id_user, hash: hash, password1: password1, password2: password2})
             .then(() => {
                 history.replace('/login');
                 window.flash("Heslo bylo úspěšně změněno", 'success');
             })
             .catch(( { response } ) => {
-                const { data } = response;
-                window.flash(data.msg, 'danger');
+                const { data, status } = response;
+                if(status === 498){
+                    window.flash(data.msg, 'warning', 15000, data.link);
+                } else {
+                    window.flash(data.msg, 'danger');
+                }
             });
     }
     return (

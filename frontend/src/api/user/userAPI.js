@@ -10,7 +10,7 @@ export function useGetUser(id_user) {
     useEffect( () => {
         async function fetchData() {
             api
-                .get(`${config.API_BASE_PATH}/api/v1/users/${id_user}`)
+                .get(`${config.API_BASE_PATH}/users/${id_user}`)
                 .then(({ data }) => {
                     const { user } = data;
                     setState({ isLoading: false, error: false, user_data: user });
@@ -29,7 +29,7 @@ export function useGetUser(id_user) {
 export function ChangeData(api, id_user, values) {
     const {name, surname} = values;
     api
-        .put(`${config.API_BASE_PATH}/api/v1/users/`, {id_user: id_user, name: name, surname: surname})
+        .put(`${config.API_BASE_PATH}/users/`, {id_user: id_user, name: name, surname: surname})
         .then(() => {
             window.flash("Uživatelské údaje byly úspěšně změněny", 'success');
         })
@@ -42,7 +42,7 @@ export function ChangeData(api, id_user, values) {
 export function ChangePassword(api, id_user, values) {
     const {oldPassword, newPassword1, newPassword2} = values;
     api
-        .patch(`${config.API_BASE_PATH}/api/v1/users/`, {id_user: id_user, oldPassword: oldPassword, newPassword1: newPassword1, newPassword2: newPassword2})
+        .patch(`${config.API_BASE_PATH}/users/`, {id_user: id_user, oldPassword: oldPassword, newPassword1: newPassword1, newPassword2: newPassword2})
         .then(() => {
             window.flash("Heslo bylo úspěšně změněno", 'success');
         })

@@ -30,7 +30,7 @@ function AllProviders({children}) {
 }
 
 export function App() {
-	window.flash = (message, type, timeout=4000) => Event.emit('flash', ({message, type, timeout}));
+	window.flash = (message, type, timeout=4000, link=null) => Event.emit('flash', ({message, type, timeout, link}));
 	return (
 		<AllProviders>
 			<Routes/>
