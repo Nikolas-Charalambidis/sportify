@@ -60,7 +60,7 @@ export function useGetUserTeams(id_user) {
     useEffect( () => {
         async function fetchData() {
             api
-                .get(`${config.API_BASE_PATH}/users/${id_user}`)
+                .get(`${config.API_BASE_PATH}/users/${id_user}/teamMembership`)
                 .then(({ data }) => {
                     const { user } = data;
                     setState({ isLoading: false, error: false, user_data: user });

@@ -45,8 +45,8 @@ export function Profile() {
 
     const [state] = useGetUser(user.id_user);
     const [teamState] = useGetUserTeams(user.id_user);
-    console.log(state);
-    console.log(teamState);
+    console.log("state", state);
+    console.log("teamstate", teamState);
 
     //const userTeams = [{name: "ahoj", sport: "fotbal" , idSport: 1},{name: "5", sport: "florbal"},{},{}];
 
@@ -116,23 +116,19 @@ export function Profile() {
                 </Form>
             )}
             </Formik>
-
-
-                <h2 className="mt-4">Týmy ve kterých hraju</h2>
+            <h2 className="mt-4">Týmy ve kterých hraju</h2>
+            {(!teamState.isLoading && !teamState.error  && teamState.user_data === null) && <div>Zatím nejste členem žádného týmu</div>}
+            {(!teamState.isLoading && teamState.error) && <div>Data se nepodařilo načíst</div>}
+            {!teamState.isLoading && !teamState.error ? <div>
                 <Row>
-
                     {teamState.user_data.map((anObjectMapped, index) => (
                         <CardTemplate
                             key={index}
                             title={`${anObjectMapped.name}`}
                             sport={`${anObjectMapped.sport}`}
                             icon={mapSportToIcon(anObjectMapped.idSport)}
-
                         />
                     ))}
-
-
-
                     <CardTemplate title="Tým 1" icon={Icons.faFutbol} sport="fotbal" logo="http://bit.ly/32Z7Hfl"/>
                     <CardTemplate nazev="Tým 2" icon={Icons.faFutbol} sport="fotbal" logo="http://bit.ly/2PrDmSC"/>
                     <CardTemplate nazev="Tým 3" icon={Icons.faFutbol} sport="fotbal" logo="http://bit.ly/32Z7Hfl"/>
@@ -148,7 +144,8 @@ export function Profile() {
                     <CardTemplate nazev="Extraliga" pozice="Pozice: 2." icon={Icons.faFutbol} sport="fotbal"
                                   logo="http://bit.ly/2PrDmSC" stav="Ukončena"/>
                 </Row>
-
+            </div> : null
+            }
             <Modal show={show} onHide={handleClose}>
                 <Formik
                     validationSchema={schemaChangePassword}
