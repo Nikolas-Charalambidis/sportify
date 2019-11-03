@@ -4,6 +4,7 @@ import {ChangePassword} from "../../../../api/user/userAPI";
 import {Field} from "../../../../atoms";
 import React from "react";
 import * as yup from "yup";
+import {Heading} from '../../../../atoms';
 
 export function ChangePasswordModal({ api, id_user, show, handleClose }){
     const schemaChangePassword = yup.object().shape({
@@ -25,12 +26,13 @@ export function ChangePasswordModal({ api, id_user, show, handleClose }){
                 <Form noValidate onSubmit={handleSubmit}>
                     <Modal.Header>
                         <Modal.Title className="modal-title">
-                            Změna hesla
+                            <Heading size="md">Změna hesla</Heading>
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <Field label="Stávající heslo" name="oldPassword" type="password"
-                               message="Vyplňte prosím Vaše stávající heslo" isInvalid={!!errors.oldPassword}/>
+                               message="Vyplňte prosím Vaše stávající heslo"
+                               isInvalid={!!errors.oldPassword}/>
                         <Field label="Nové heslo" name="newPassword1" type="password"
                                message="Heslo musí obsahovat alespoň 6 znaků a alespoň 1 velké písmeno, 1 malé písmeno a 1 číslo."
                                isInvalid={!!errors.newPassword1}/>
