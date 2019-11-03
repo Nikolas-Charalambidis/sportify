@@ -15,7 +15,7 @@ import {useHistory} from "react-router";
 import {useAuth} from "../../utils/auth";
 import {useApi} from "../../utils/api";
 import {mapSportToIcon} from "../../utils/mapper";
-import {ChangeData, ChangePassword, useGetUser} from "../../api/user/userAPI";
+import {ChangeData, ChangePassword, useGetUser, useGetUserTeams} from "../../api/user/userAPI";
 import {Formik} from "formik";
 import * as yup from 'yup';
 import {Field} from "../../atoms/Field";
@@ -44,7 +44,12 @@ export function Profile() {
     const handleShow = () => setShow(true);
 
     const [state] = useGetUser(user.id_user);
-    const userTeams = [{name: "ahoj", sport: "fotbal" , idSport: 1},{name: "5", sport: "florbal"},{},{}];
+    const [teamState] = useGetUserTeams(user.id_user);
+    console.log(state);
+    console.log(teamState);
+
+    //const userTeams = [{name: "ahoj", sport: "fotbal" , idSport: 1},{name: "5", sport: "florbal"},{},{}];
+
 
 
     return (
@@ -116,12 +121,13 @@ export function Profile() {
                 <h2 className="mt-4">Týmy ve kterých hraju</h2>
                 <Row>
 
-                    {userTeams.map((anObjectMapped, index) => (
+                    {teamState.user_data.map((anObjectMapped, index) => (
                         <CardTemplate
                             key={index}
                             title={`${anObjectMapped.name}`}
                             sport={`${anObjectMapped.sport}`}
-                            icon={`${mapSportToIcon(anObjectMapped.idSport)}`}
+                            icon={mapSportToIcon(anObjectMapped.idSport)}
+
                         />
                     ))}
 
