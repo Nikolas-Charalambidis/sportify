@@ -29,7 +29,7 @@ function useResendToken(url, params) {
                 });
         }
         fetchData().then();
-    }, [api, url, history]);
+    }, [api, url, history, id_token, type]);
 
     return [state];
 }
