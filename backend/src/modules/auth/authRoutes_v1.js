@@ -176,4 +176,46 @@ router.post('/confirmEmail', async (req, res, next) => {
 	}
 });
 
+/**
+ * @swagger
+ * /auth/resendToken:
+ *   post:
+ *     tags:
+ *       - Users
+ *     name: Login
+ *     summary: Resend token
+ *     consumes: application/json
+ *     produces: application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             id_user:
+ *               type: integer
+ *             type:
+ *               type: string
+ *     responses:
+ *       201:
+ *         description: Token resent
+ *       400:
+ *         description: Invalid request
+ *       404:
+ *         description: Invalid token
+ *       500:
+ *         description: Token resending failed
+ */
+router.post('/resendToken', async (req, res, next) => {
+	try {
+		const { id_token, type } = req.body;
+		console.log("data", { id_token, type });
+		await new AuthService(req).resendToken(id_token, type);
+		res.status(201).json({ error: false, msg: 'OK'});
+	} catch(e) {
+		next(e);
+	}
+});
+
 export default router;

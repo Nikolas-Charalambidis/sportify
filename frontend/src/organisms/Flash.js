@@ -7,13 +7,15 @@ function FlashBase() {
     let [visibility, setVisibility] = useState(false);
     let [message, setMessage] = useState('');
     let [type, setType] = useState('');
+    let [link, setLink] = useState('');
     const target = useRef(null);
 
     useEffect(() => {
-        Event.addListener('flash', ({message, type, timeout}) => {
+        Event.addListener('flash', ({message, type, timeout, link}) => {
             setVisibility(true);
             setMessage(message);
             setType(type);
+            setLink(link);
             setTimeout(() => {
                 setVisibility(false);
             }, timeout);
@@ -25,6 +27,7 @@ function FlashBase() {
             <Overlay target={target.current} show={visibility}  placement="bottom">
                 <Alert className="flash" variant={type} onClose={() => setVisibility(false)} dismissible>
                     <p>{ message }</p>
+                    {link && <Alert.Link href={link}>ODKAZ</Alert.Link>}
                 </Alert>
             </Overlay>
         </div>

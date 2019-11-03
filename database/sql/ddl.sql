@@ -148,9 +148,9 @@ INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verifie
 INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (29, 'user29@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Karel', 'Čapek', true);
 
 -- CONFIRM TOKENS
-INSERT INTO `tokens` (`id_token`, `id_user`, `hash`, `validity`, `type`) VALUES (1, 11, '39247679', '2019-12-29 00:09:33', 'confirm');
-INSERT INTO `tokens` (`id_token`, `id_user`, `hash`, `validity`, `type`) VALUES (2, 12, '39247678', '2019-12-29 00:09:33', 'confirm');
-INSERT INTO `tokens` (`id_token`, `id_user`, `hash`, `validity`, `type`) VALUES (3, 13, '39247677', '2019-12-29 00:09:33', 'confirm');
+INSERT INTO `tokens` (`id_token`, `id_user`, `hash`, `validity`, `type`) VALUES (1, 11, '39247679', '2020-12-29 00:09:33', 'confirm');
+INSERT INTO `tokens` (`id_token`, `id_user`, `hash`, `validity`, `type`) VALUES (2, 12, '39247678', '2020-12-29 00:09:33', 'confirm');
+INSERT INTO `tokens` (`id_token`, `id_user`, `hash`, `validity`, `type`) VALUES (3, 13, '39247677', '2020-12-29 00:09:33', 'confirm');
 
 -- SPORTS
 INSERT INTO `sports` (`id_sport`, `sport`) VALUES (1, 'hokej');

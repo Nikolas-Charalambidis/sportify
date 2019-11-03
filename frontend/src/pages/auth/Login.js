@@ -38,35 +38,22 @@ export function Login() {
 	function login(values) {
 		const { email, password } = values;
 		api
-			.post(`${config.API_BASE_PATH}/api/v1/auth/login`, {email: email, password: password})
+			.post(`${config.API_BASE_PATH}/auth/login`, {email: email, password: password})
 			.then(({ data }) => {
 				const { token, user } = data;
 				auth.signin( {token, user} );
 				history.replace('/administration/profile');
 			})
 			.catch(( { response } ) => {
-				const { data, status } = response;
-				switch (status) {
-					case 400:
-						window.flash(data.msg, 'danger');
-						break;
-					case 404:
-						window.flash(data.msg, 'danger');
-						break;
-					case 403:
-						window.flash(data.msg, 'danger');
-						break;
-					default:
-						window.flash(data.msg, 'danger');
-						break;
-				}
+				const { data } = response;
+				window.flash(data.msg, 'danger');
 			});
 	}
 
 	function resetPassword(values) {
 		const { email } = values;
 		api
-			.post(`${config.API_BASE_PATH}/api/v1/auth/resetLink`, {email: email})
+			.post(`${config.API_BASE_PATH}/auth/resetLink`, {email: email})
 			.then(() => {
 				setShow(false);
 				window.flash("Link pro reset hesla Vám byl zaslán na email", 'success');

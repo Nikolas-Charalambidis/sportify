@@ -4,8 +4,8 @@ import {useApi} from '../../utils/api';
 import {useHistory} from 'react-router-dom';
 import {config} from "../../config";
 
-function Confirm(url, params) {
-    let {id_user, hash} = params;
+function useResendToken(url, params) {
+    let {id_token, type} = params;
     const history = useHistory();
     const api = useApi();
     const [state, setState] = useState({
@@ -15,34 +15,30 @@ function Confirm(url, params) {
     useEffect( () => {
         async function fetchData() {
             await api
-                .post(url, {id_user: id_user, hash: hash})
+                .post(url, {id_token: id_token, type: type})
                 .then(({ data }) => {
                     setState({ isLoading: false });
-                    window.flash("Váš email byl úspěšně ověřen, nyní se můžete přihlásit", 'success');
-                    history.replace('/login');
+                    window.flash("Nový link Vám byl zaslán na email", 'success');
+                    history.replace('/');
                 })
                 .catch(({response}) => {
                     setState({isLoading: false});
-                    const {data, status} = response;
-                    if(status === 498){
-                        window.flash(data.msg, 'warning', 15000, data.link);
-                    } else {
-                        window.flash(data.msg, 'danger');
-                    }
+                    const {data} = response;
+                    window.flash(data.msg, 'danger');
                     history.replace('/');
                 });
         }
         fetchData().then();
-    }, [api, hash, id_user, url, history]);
+    }, [api, url, history, id_token, type]);
 
     return [state];
 }
 
-export function ConfirmEmail() {
-    const [state] = Confirm(`${config.API_BASE_PATH}/auth/confirmEmail`, useParams());
+export function ResendToken() {
+    const [state] = useResendToken(`${config.API_BASE_PATH}/auth/resendToken`, useParams());
     return (
         <div>
-            {state.isLoading && <div>Confirming email...</div>}
+            {state.isLoading && <div>Resending token...</div>}
         </div>
     );
 }
