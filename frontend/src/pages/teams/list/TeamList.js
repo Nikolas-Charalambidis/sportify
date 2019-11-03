@@ -1,13 +1,21 @@
 import React from 'react';
-
+import { useHistory  } from 'react-router-dom';
 import {Heading} from '../../../atoms';
 import {Breadcrumb} from "react-bootstrap";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
-import {useGetTeams} from "../../../api/team/teamAPI";
+import { useGetTeams } from "../../../api/team/teamAPI";
 
 export function TeamList() {
     const [state] = useGetTeams();
+    let history = useHistory();
+
+    function handleClick(row) {
+        if (row) {
+            history.push("/team/" + row.original.id_team);
+        }
+    }
+
     return (
         <div>
             <Breadcrumb>
@@ -17,6 +25,11 @@ export function TeamList() {
             <Heading>Týmy</Heading>
             <div>
                 <ReactTable
+                    previousText="Předchozí"
+                    nextText="Další"
+                    pageText="Stránka"
+                    ofText="z"
+                    rowsText="řádků"
                     data={state.teams_data}
                     filterable
                     defaultFilterMethod={(filter, row) =>
@@ -29,9 +42,16 @@ export function TeamList() {
                         const bReverse = b.split("").reverse().join("");
                         return aReverse > bReverse ? 1 : -1;
                     }}
-                    noDataText="Nejsou data"
+                    noDataText="Žádná data"
                     defaultPageSize={10}
                     columns={columns}
+                    getTdProps={(state, rowInfo, column, instance) => {
+                        return {
+                            onClick: (e) => {
+                                handleClick(rowInfo);
+                            }
+                        }
+                    }}
                 />
             </div>
         </div>
