@@ -1,5 +1,5 @@
 DROP DATABASE IF EXISTS `sportify`;
-CREATE DATABASE `sportify`;
+CREATE DATABASE `sportify` CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `sportify`;
 
 -- TABLES --------------------------------------------------------------------------------------------------------------
