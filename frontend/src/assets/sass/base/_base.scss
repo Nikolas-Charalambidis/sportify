@@ -32,6 +32,7 @@ a:hover, a:active, a:focus {
 
 button:focus {
   box-shadow: none !important;
+  outline: none !important;
 }
 
 *,
@@ -82,7 +83,7 @@ label {
   font-family: "Proxima", Arial, sans-serif !important;
   text-transform: uppercase;
   padding: 8px 25px !important;
-  font-size:16px !important;
+  font-size: 16px !important;
   letter-spacing: 2px;
   border-radius: 2px !important;
   text-decoration: none !important;
@@ -101,7 +102,7 @@ label {
   font-family: "Proxima", Arial, sans-serif !important;
   text-transform: uppercase;
   padding: 8px 20px !important;
-  font-size:16px !important;
+  font-size: 16px !important;
   letter-spacing: 2px;
   border-radius: 2px !important;
   border-color: #9c9c9c !important;
@@ -125,8 +126,55 @@ label {
   margin: auto;
 }
 
-.flash {
-  position: fixed;
-  margin: 10px auto;
-  width: 60%;
+.alert-labeled {
+  padding: 0;
+
+  .close > * {
+    display: table-cell;
+    vertical-align: middle;
+    padding: 11px;
+  }
+}
+
+.alert {
+  position: fixed !important;
+  z-index: 10;
+  width: 100%;
+  left: 6px !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+
+  .alert-labeled-row {
+    display: table-row;
+    padding: 0;
+
+    .alert-label {
+      vertical-align: middle;
+      width: auto;
+      padding: 10px 15px;
+      height: 100%;
+      font-size: 1.1em;
+    }
+
+    .alert-label-danger {
+      color: #f8d7da;
+      background-color: #ff6a77;
+    }
+
+    .alert-label-warning {
+      color: #fff3cd;
+      background-color: #ffd758;
+    }
+
+    .alert-label-success {
+      color: #d4edda;
+      background-color: #64e283;
+    }
+
+    .alert-labelled-cell {
+      padding: 10px;
+      display: table-cell;
+      vertical-align: middle;
+    }
+  }
 }
