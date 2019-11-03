@@ -11,7 +11,7 @@ import { Contact } from './pages/Contact';
 import { Page404 } from './pages/error/Page404';
 import { Login } from './pages/auth/Login';
 import { Register } from './pages/auth/Register';
-import { Profile } from "./pages/administration/Profile";
+import { Profile } from "./pages/administration/Profile/Profile";
 import { ConfirmEmail } from "./pages/auth/ConfirmEmail";
 import { TeamDetail } from './pages/teams/detail/TeamDetail';
 import { Team } from './pages/administration/Team';
