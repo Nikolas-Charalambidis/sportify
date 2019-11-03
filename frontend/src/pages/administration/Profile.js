@@ -19,6 +19,7 @@ import {ChangeData, ChangePassword, useGetUser} from "../../api/user/userAPI";
 import {Formik} from "formik";
 import * as yup from 'yup';
 import {Field} from "../../atoms/Field";
+import {NavLink as Link} from "react-router-dom";
 
 const schemaChangeData = yup.object().shape({
     name: yup.string().required(),
@@ -46,13 +47,12 @@ export function Profile() {
     const [state] = useGetUser(user.id_user);
     const userTeams = [{name: "ahoj", sport: "fotbal", idSport: 1}, {name: "5", sport: "florbal"}, {}, {}];
 
-
     return (
         <div>
             <Breadcrumb>
-                <Breadcrumb.Item href="/">Domů</Breadcrumb.Item>
-                <Breadcrumb.Item active>Administrace</Breadcrumb.Item>
-                <Breadcrumb.Item active>Profil</Breadcrumb.Item>
+                <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
+                <li className="breadcrumb-item"><Link to="/administration">Administrace</Link></li>
+                <li className="breadcrumb-item"><span className="active">Profil</span></li>
             </Breadcrumb>
             <Heading className="pageHeading mt-4 mb-5">Uživatelský profil</Heading>
             {state.isLoading && <div>Načítám data...</div>}
@@ -90,12 +90,14 @@ export function Profile() {
                                             <Form.Label>Email</Form.Label>
                                             <Form.Control readOnly name="email" defaultValue={state.user_data.email}/>
                                         </Col>
-                                        <Col className="mt-3 mt-lg-0 mt-lg-0" xl={{span: 3, offset: 0}} lg={{span: 3, offset: 0}}>
+                                        <Col className="mt-3 mt-lg-0 mt-lg-0" xl={{span: 3, offset: 0}}
+                                             lg={{span: 3, offset: 0}}>
                                             <Button className="mt4" type="submit" block>
                                                 Uložit
                                             </Button>
                                         </Col>
-                                        <Col className="mt-3 mt-lg-0 mt-lg-0" xl={{span: 3, offset: 0}} lg={{span: 3, offset: 0}}>
+                                        <Col className="mt-3 mt-lg-0 mt-lg-0" xl={{span: 3, offset: 0}}
+                                             lg={{span: 3, offset: 0}}>
                                             <Button variant="secondary" className="mt4" type="button" block
                                                     onClick={handleShow}>
                                                 Změna hesla
@@ -154,7 +156,7 @@ export function Profile() {
                             <Form noValidate onSubmit={handleSubmit}>
                                 <Modal.Header>
                                     <Modal.Title className="modal-title">
-                                        Změna hesla
+                                        <Heading size="md">Změna hesla</Heading>
                                     </Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
