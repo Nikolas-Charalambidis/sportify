@@ -9,7 +9,7 @@ import {
     Breadcrumb,
 } from 'react-bootstrap';
 import * as Icons from '@fortawesome/free-solid-svg-icons';
-import {useGetTeam} from "../../api/team/teamAPI";
+import {useGetTeam} from "../../api/team/teamClient_v1";
 import {Formik} from "formik";
 import * as yup from 'yup';
 import {Field} from "../../atoms/Field";
@@ -32,7 +32,7 @@ export function Team() {
                 <Breadcrumb.Item href="/administration">Administrace</Breadcrumb.Item>
                 <Breadcrumb.Item active>Tým</Breadcrumb.Item>
             </Breadcrumb>
-            <Heading className="mt-4 mb-5">Tymovy profil</Heading>
+            <Heading className="mt-4 mb-5">Týmový profil</Heading>
             {!state.isLoading &&
             <div>
                 <Formik

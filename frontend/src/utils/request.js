@@ -1,7 +1,7 @@
 import {useEffect, useState, useRef} from 'react';
 import {CancelToken} from 'axios';
 
-import {useApi} from './api';
+import {useApi} from '../hooks/useApi';
 import {config} from '../config';
 
 const log = config.API_LOG_REQUEST ? console.info : () => {

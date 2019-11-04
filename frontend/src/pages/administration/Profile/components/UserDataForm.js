@@ -1,5 +1,5 @@
 import {Formik} from "formik";
-import {ChangeData} from "../../../../api/user/userAPI";
+import {ChangeData} from "../../../../api/user/userClient_v1";
 import {Button, Col, Form, Image, Row} from "react-bootstrap";
 import {Field} from "../../../../atoms";
 import React from "react";

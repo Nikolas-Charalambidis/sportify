@@ -13,9 +13,9 @@ import {
 import * as Icons from '@fortawesome/free-solid-svg-icons';
 import {useHistory} from "react-router";
 import {useAuth} from "../../utils/auth";
-import {useApi} from "../../utils/api";
+import {useApi} from "../../hooks/useApi";
 import {mapSportToIcon} from "../../utils/mapper";
-import {ChangeData, ChangePassword, useGetUser} from "../../api/user/userAPI";
+import {ChangeData, ChangePassword, useGetUser} from "../../api/user/userClient_v1";
 import {Formik} from "formik";
 import * as yup from 'yup';
 import {Field} from "../../atoms/Field";
