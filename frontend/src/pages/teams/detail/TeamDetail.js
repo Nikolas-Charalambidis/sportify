@@ -33,7 +33,7 @@ export function TeamDetail() {
             </Breadcrumb>
             <Heading className="mt-4 mb-5">Tým 8</Heading>
 
-            {!state.gettingData &&
+            {!state.isLoading &&
                 <Row>
                     <Col xl={10} lg={12}>
                         <Row>

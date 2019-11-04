@@ -31,7 +31,7 @@ export function ResetPassword() {
         const { password1, password2 } = values;
         const { id_user, hash } = params;
         api
-            .post(`${config.API_BASE_PATH}/api/v1/auth/resetPassword`,
+            .post(`${config.API_BASE_PATH}/auth/resetPassword`,
                 {id_user: id_user, hash: hash, password1: password1, password2: password2})
             .then(() => {
                 history.replace('/login');
@@ -39,19 +39,10 @@ export function ResetPassword() {
             })
             .catch(( { response } ) => {
                 const { data, status } = response;
-                switch (status) {
-                    case 400:
-                        window.flash(data.msg, 'danger');
-                        break;
-                    case 404:
-                        window.flash(data.msg, 'danger');
-                        break;
-                    case 403:
-                        window.flash(data.msg, 'warning');
-                        break;
-                    default:
-                        window.flash("Neočekávaná chyba", 'danger');
-                        break;
+                if(status === 498){
+                    window.flash(data.msg, 'warning', 15000, data.link);
+                } else {
+                    window.flash(data.msg, 'danger');
                 }
             });
     }

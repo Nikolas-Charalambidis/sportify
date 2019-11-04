@@ -4,6 +4,7 @@ import * as utils from '../../libs/utils';
 import * as authValidation from "../auth/authValidations";
 import UserService from "../users/userService";
 import jwt from 'jsonwebtoken';
+import {config} from "../../../../frontend/src/config";
 
 dotenv.config();
 dotenv.config({path: '.env'});
@@ -40,8 +41,9 @@ export default class AuthService {
 		const data_hash = Number(hash);
 		authValidation.validateConfirmEmailData(user_id, data_hash);
 		await this.verifyToken(user_id, data_hash, 'confirm');
-
+		console.log("before verification");
 		const result = await this.dbConnection.query('UPDATE users SET verified=true WHERE id_user=?', user_id);
+		console.log("after verification");
 		if (result.affectedRows === 0) {
 			throw {status: 500, msg: 'Verifikace emailu selhala'};
 		}
@@ -116,8 +118,42 @@ export default class AuthService {
 		}
 		const { validity, id_token } = result[0];
 		if(validity < new Date()){
-			throw {status: 498, msg: 'Tokenu vypršela platnost'};
+			let part = null;
+			if(type === "confirm"){
+				part = 'potvrzení emailu';
+			} else {
+				part = 'obnovení hesla';
+			}
+			const link = `${env.APP_BASE_PATH}/resendToken/${id_token}/${type}`;
+			const message =
+				`Platnost tokenu pro ${part} vypršela. Můžete si nechat zaslat nový link kliknutím na následující `;
+			throw {status: 498, msg: message, link: link};
 		}
 		await this.dbConnection.query(`DELETE FROM tokens WHERE id_token=?`, id_token);
+	}
+
+	async resendToken(id_token, type){
+		const token_id = Number(id_token);
+		authValidation.validateResendTokenData(token_id, type);
+		let result = await this.dbConnection.query(
+			`SELECT users.email as email, users.id_user as id_user FROM tokens 
+			JOIN users ON users.id_user=tokens.id_user WHERE tokens.id_token=?`, token_id
+		);
+		if(result.length === 0){
+			throw {status: 404, msg: 'Nebyl nalezen odpovídající záznam v databázi'};
+		}
+		const { id_user, email } = result[0];
+		result = await this.dbConnection.query(
+			`DELETE FROM tokens WHERE id_token=?`, token_id
+		);
+		if(result.affectedRows === 0){
+			throw {status: 500, msg: 'Token se nepodařilo smazat'};
+		}
+		if(type === "confirm") {
+			this.genConfirmToken(id_user, email);
+		}
+		if(type === "reset") {
+			this.genResetToken(email);
+		}
 	}
 }
