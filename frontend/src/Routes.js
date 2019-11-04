@@ -27,8 +27,9 @@ export function Routes() {
             <Route path="/register" exact component={Register} />
             <Route path="/administration" exact component={AdministrationMenu} />
             <Route path="/administration/profile" exact component={Profile} />
-            <Route path="/administration/team" exact component={Team} />            
-			<Route path="/team/:id_team" exact component={TeamDetail} />
+			<Route path="/administration/teams/:id_team" exact component={Team} />
+            <Route path="/administration/teams" exact component={Team} />
+			<Route path="/teams/:id_team" exact component={TeamDetail} />
             <Route path="/teams" exact component={TeamList} />
 			<Route path="/leagues" exact component={Leagues}/>
 			<Route path="/matches" exact component={Matches}/>
