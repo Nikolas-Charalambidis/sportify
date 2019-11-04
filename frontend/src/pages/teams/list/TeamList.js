@@ -12,7 +12,7 @@ export function TeamList() {
 
     function handleClick(row) {
         if (row) {
-            history.push("/team/" + row.original.id_team);
+            history.push("/teams/" + row.original.id_team);
         }
     }
 

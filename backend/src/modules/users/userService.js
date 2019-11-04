@@ -25,11 +25,13 @@ export default class UserService {
 	}
 
 	async addNewUser(email, password1, password2, name, surname) {
+		console.log("add user service");
 		userValidation.validateNewUserData(email, password1, password2, name, surname);
+		console.log("validated");
 		if (await this.isEmailUsed(email)) {
 			throw {status: 400, msg: 'Email již existuje'};
 		}
-		const hashedPassword = hash(password1, 10);
+		const hashedPassword = utils.hash(password1, 10);
 		const result = await this.dbConnection.query(
 			`INSERT INTO users (id_user, email, password, name, surname, verified) VALUES (NULL, ?, ?, ?, ?, 0)`,
 			[email, hashedPassword, name, surname]
@@ -50,12 +52,12 @@ export default class UserService {
 		if (user.length === 0) {
 			throw {status: 404, msg: 'Uživatel nebyl nalezen v databázi'};
 		}
-		if(!verifyHash(oldPassword, user[0].password)){
+		if(!utils.verifyHash(oldPassword, user[0].password)){
 			throw {status: 400, msg: 'Bylo zadáno neplatné stávající heslo'};
 		}
 		const result = await this.dbConnection.query(
 			'UPDATE users SET password=? WHERE id_user=?',
-			[hash(newPassword1, 10), user_id]
+			[utils.hash(newPassword1, 10), user_id]
 		);
 		if (result.affectedRows === 0) {
 			throw {status: 400, msg: 'Změna hesla se nezdařila'};
@@ -83,19 +85,18 @@ export default class UserService {
 	async userTeamMemberships(id_user) {
 		const user_id = Number(id_user);
 		userValidation.validateUserID(user_id);
-		const teams = await this.dbConnection.query(
+		return this.dbConnection.query(
 				`SELECT t.name, tm.position, s.sport, s.id_sport FROM team_membership AS tm
 				JOIN teams AS t ON tm.team=t.id_team
 				JOIN sports AS s ON t.id_sport=s.id_sport
 				WHERE tm.user=? AND tm.status='active'`
 			, user_id);
-		return teams;
 	}
 
 	async userCompetitionMemberships(id_user) {
 		const user_id = Number(id_user);
 		userValidation.validateUserID(user_id);
-		const competitions = await this.dbConnection.query(
+		return this.dbConnection.query(
 				`SELECT t.name, tm.position, s.sport, s.id_sport, c.name, c.start_date, c.end_date, 'is_active' FROM team_membership AS tm
   				JOIN teams t ON tm.team = t.id_team
   				JOIN competition_membership cm ON t.id_team = cm.team
@@ -103,7 +104,6 @@ export default class UserService {
   				JOIN sports AS s ON t.id_sport=s.id_sport
   				WHERE tm.user=6 AND cm.status='active'`
 			, user_id);
-		return competitions;
 	}
 
 	async uploadAvatar(filepath, params, id_user) {

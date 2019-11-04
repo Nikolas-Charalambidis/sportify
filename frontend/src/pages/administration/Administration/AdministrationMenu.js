@@ -16,7 +16,7 @@ export function AdministrationMenu() {
 
             <div className="card-menu-container">
                 <AdministrationMenuCard title="Správa profilu" text="Správa profilu zahrnuje editaci Vašeho profilu, zobrazení týmu, ve za které hrajete a seznam všech soutěží" click="profile" />
-                <AdministrationMenuCard title="Správa týmů" text="Správa týmů" click="team"/>
+                <AdministrationMenuCard title="Správa týmů" text="Správa týmů" click="teams"/>
             </div>            
         </div>
     );
