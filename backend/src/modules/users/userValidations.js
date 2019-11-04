@@ -41,3 +41,9 @@ export const validateChangeUserData = (id_user, name, surname) => {
 		throw {status: 400, msg: 'Chybné nebo chybějící údaje (id_user, name, surname)'};
 	}
 };
+
+export const validateUploadAvatarData = (id_user, url) => {
+	if(!id_user || !url){
+		throw {status: 400, msg: 'Chybné nebo chybějící údaje (id_user, url)'};
+	}
+};
