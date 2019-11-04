@@ -67,7 +67,7 @@ export function Profile() {
           ) : null}
 
           <h2 className="mt-4">Soutěže ve kterých hraju</h2>
-            {!competitionState.isLoading && !competitionState.error && teamState.user_data.length === 0  && (<div>Zatím nejste členem žádné soutěže</div>)}
+            {!competitionState.isLoading && !competitionState.error && competitionState.user_data.length === 0  && (<div>Zatím nejste členem žádné soutěže</div>)}
             {!competitionState.isLoading && competitionState.error && (<div>Data se nepodařilo načíst</div>)}
             {!competitionState.isLoading && !competitionState.error ? (
         <div>
