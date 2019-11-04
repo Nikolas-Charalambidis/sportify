@@ -56,7 +56,7 @@ export function Profile() {
                 {teamState.user_data.map((anObjectMapped, index) => (
                   <CardTemplate
                     key={index}
-                    title={`${anObjectMapped.name}`}
+                    title={<Link to={`../team/${anObjectMapped.id_sport}`}>{`${anObjectMapped.name}`}</Link>}
                     subtitle={`${anObjectMapped.position}`}
                     sport={`${anObjectMapped.sport}`}
                     icon={mapSportToIcon(anObjectMapped.id_sport)}

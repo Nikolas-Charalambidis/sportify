@@ -37,7 +37,7 @@ export function CardTemplate({ date, title, subtitle, sport, logo, icon, state, 
 
 
   return (
-    <Col lg={3} md={4} sm={6} className="mt-4">
+    <Col lg={4} md={6} sm={12} xs={12} className="mt-4">
       <CardDeck>
         <Card>
           <Card.Header>
@@ -45,11 +45,11 @@ export function CardTemplate({ date, title, subtitle, sport, logo, icon, state, 
                 <Row><Col style={headerDate}>{date}</Col></Row>
                 )}            
             <Row className="align-items-center">                          
-              <Col>
+              <Col lg={8} md={8} sm={8} xs={9}>
                 <Row>{title}</Row>
                 <Row>{subtitle}</Row>
               </Col>
-              <Col className="text-right">
+              <Col      className="text-right">
                 <OverlayTrigger
                   overlay={<Tooltip id="tooltip-disabled">{sport}</Tooltip>}
                 >
