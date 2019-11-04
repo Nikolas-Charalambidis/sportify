@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Heading } from '../../../atoms';
 import { CardTemplate } from '../../../templates/CardTemplate';
 import { Row, Breadcrumb } from 'react-bootstrap';
-import * as Icons from '@fortawesome/free-solid-svg-icons';
 import { useHistory } from 'react-router';
 import { useAuth } from '../../../utils/auth';
 import { useApi } from '../../../utils/api';
