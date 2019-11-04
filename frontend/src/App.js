@@ -15,7 +15,6 @@ function AllProviders({children}) {
 		<AuthProvider>
 			<ApiProvider>
 				<BrowserRouter>
-
 					<ScrollToTop/>
 					<TopNavigation/>
 					<Flash />
