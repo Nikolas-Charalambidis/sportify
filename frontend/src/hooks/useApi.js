@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import axios from 'axios';
 
-import {useAuth} from './auth';
+import {useAuth} from '../utils/auth';
 import {config} from '../config';
 
 const globalApiInstance = axios.create({
@@ -15,7 +15,7 @@ const globalApiInstance = axios.create({
 });
 
 if (config.API_MOCK_RESPONSE) {
-	const {installApiMocks} = require('./api-mock.js');
+	const {installApiMocks} = require('../utils/api-mock.js');
 	installApiMocks(globalApiInstance);
 }
 

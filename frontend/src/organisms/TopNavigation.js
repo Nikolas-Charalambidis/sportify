@@ -61,7 +61,7 @@ function TopNavigationBase() {
                 <div className="signUp d-none d-md-inline-block">
                     {user ? (
                         <>
-                            <Link to="/administration/profile">
+                            <Link to="/administration">
                                 <Button className="btn mr-2" variant="primary" type="button">
                                     <FontAwesomeIcon icon={Icons.faUserCircle} size="1x"/>
                                 </Button>

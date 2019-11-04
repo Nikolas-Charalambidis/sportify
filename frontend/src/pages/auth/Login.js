@@ -4,7 +4,7 @@ import {NavLink as Link} from "react-router-dom";
 import {Row, Col, Form, Button, Breadcrumb, Modal} from "react-bootstrap";
 import {config} from '../../config';
 import {Heading} from '../../atoms';
-import {useApi} from '../../utils/api';
+import {useApi} from '../../hooks/useApi';
 import {useAuth} from '../../utils/auth';
 import {useHistory} from "react-router";
 import {Formik} from "formik";

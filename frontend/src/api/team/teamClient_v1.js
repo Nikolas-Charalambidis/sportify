@@ -1,4 +1,4 @@
-import {useApi} from "../../utils/api";
+import {useApi} from "../../hooks/useApi";
 import {useEffect, useState} from "react";
 import {config} from '../../config';
 

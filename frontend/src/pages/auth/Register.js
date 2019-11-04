@@ -4,7 +4,7 @@ import {Heading} from '../../atoms';
 import {Form, Button, Row, Col, Breadcrumb} from "react-bootstrap";
 import {useHistory} from "react-router";
 import {useAuth} from "../../utils/auth";
-import {useApi} from "../../utils/api";
+import {useApi} from "../../hooks/useApi";
 import {config} from '../../config';
 import * as yup from "yup";
 import {Formik} from "formik";
@@ -31,14 +31,17 @@ export function Register() {
     }
 
     const register = (values) => {
+        console.log("FE register function");
         const {name, surname, email, password1, password2} = values;
         api
             .post(`${config.API_BASE_PATH}/users`, {name: name, surname: surname, email: email, password1: password1, password2: password2})
             .then(() => {
+                console.log("success");
                 window.flash("Byl jste úspěšně registrován. Ověřte prosím svůj email odkazem, který Vám byl zaslán na email uvedený při registraci.", 'success');
                 history.replace('/login');
             })
             .catch(( { response } ) => {
+                console.log("error");
                 const { data } = response;
                 window.flash(data.msg, 'danger');
             });

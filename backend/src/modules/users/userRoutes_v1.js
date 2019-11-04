@@ -1,7 +1,15 @@
 import { Router } from 'express';
 import UserService from "./userService";
+import dotenv from "dotenv";
+const multipart = require("connect-multiparty");
+const multipartMiddleware = multipart();
 
 const router = Router();
+
+dotenv.config();
+dotenv.config({path: '.env'});
+
+const env = process.env;
 
 /**
  * @swagger
@@ -170,9 +178,54 @@ router.get('/', async (req, res, next) => {
  */
 router.post('/', async(req, res, next) => {
 	try {
+		console.log("add user route");
 		const { email, password1, password2, name, surname } = req.body;
+		console.log("data", { email, password1, password2, name, surname });
 		const id = await new UserService(req).addNewUser(email, password1, password2, name, surname);
 		res.status(201).header('Location' , `/api/v1/users/${id}`).send({ error: false, msg: 'OK', id_user: id});
+	} catch (e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
+ * /users:
+ *   post:
+ *     tags:
+ *       - Users
+ *     name: Register
+ *     summary: Add new user
+ *     consumes: application/json
+ *     produces: application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             email:
+ *               type: string
+ *             password1:
+ *               type: string
+ *     responses:
+ *       201:
+ *         description: Team added
+ *       400:
+ *         description: Invalid request
+ */
+
+router.post('/uploadAvatar', multipartMiddleware, async(req, res, next) => {
+	try {
+		const { id_user } = req.body;
+		const params = {
+			folder: 'sportify/users',
+			allowedFormats: ['jpg', 'png'],
+			transformation: [{ width: 171, height: 180, crop: 'limit' }]
+		};
+		new UserService(req).uploadAvatar(req.files.file.path, params, id_user);
+		res.status(201).json({ error: false, msg: 'Nahrání avatara proběhlo úspěšně'});
 	} catch (e) {
 		next(e);
 	}

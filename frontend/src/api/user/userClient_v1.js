@@ -1,4 +1,4 @@
-import {useApi} from "../../utils/api";
+import {useApi} from "../../hooks/useApi";
 import {useEffect, useState} from "react";
 import {config} from '../../config';
 
@@ -15,7 +15,7 @@ export function useGetUser(id_user) {
                     const { user } = data;
                     setState({ isLoading: false, error: false, user_data: user });
                 })
-                .catch(( { response } ) => {
+                .catch(({response})   => {
                     const { data } = response;
                     setState({ isLoading: false, error: true, user_data: null });
                     window.flash(data.msg, 'danger');
@@ -50,4 +50,52 @@ export function ChangePassword(api, id_user, values) {
             const { data } = response;
             window.flash(data.msg, 'danger');
         });
+}
+
+export function useGetUserTeams(id_user) {
+    const api = useApi();
+    const [state, setState] = useState({
+        isLoading: true
+    });
+    useEffect( () => {
+        async function fetchData() {
+            api
+                .get(`${config.API_BASE_PATH}/users/${id_user}/teamMembership`)
+                .then(({ data }) => {
+                    const { user } = data;
+                    setState({ isLoading: false, error: false, user_data: user });
+                })
+                .catch(( { response } ) => {
+                    const { data } = response;
+                    setState({ isLoading: false, error: true, user_data: null });
+                    window.flash(data.msg, 'danger');
+                });
+        }
+        fetchData().then();
+    }, [api, id_user]);
+    return [state];
+}
+
+export function useGetUserCompetition(id_user) {
+    const api = useApi();
+    const [state, setState] = useState({
+        isLoading: true
+    });
+    useEffect( () => {
+        async function fetchData() {
+            api
+                .get(`${config.API_BASE_PATH}/users/${id_user}/competitionMembership`)
+                .then(({ data }) => {
+                    const { user } = data;
+                    setState({ isLoading: false, error: false, user_data: user });
+                })
+                .catch(( { response } ) => {
+                    const { data } = response;
+                    setState({ isLoading: false, error: true, user_data: null });
+                    window.flash(data.msg, 'danger');
+                });
+        }
+        fetchData().then();
+    }, [api, id_user]);
+    return [state];
 }

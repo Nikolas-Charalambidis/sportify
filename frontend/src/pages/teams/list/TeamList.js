@@ -1,10 +1,10 @@
 import React from 'react';
-import { useHistory  } from 'react-router-dom';
-import {Heading} from '../../../atoms';
-import {Breadcrumb} from "react-bootstrap";
+import { useHistory } from 'react-router-dom';
+import { Heading } from '../../../atoms';
+import { Breadcrumb } from "react-bootstrap";
+import { useGetTeams } from "../../../api/team/teamClient_v1";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
-import { useGetTeams } from "../../../api/team/teamAPI";
 
 export function TeamList() {
     const [state] = useGetTeams();
@@ -12,7 +12,7 @@ export function TeamList() {
 
     function handleClick(row) {
         if (row) {
-            history.push("/team/" + row.original.id_team);
+            history.push("/teams/" + row.original.id_team);
         }
     }
 
@@ -45,7 +45,7 @@ export function TeamList() {
                     noDataText="Žádná data"
                     defaultPageSize={10}
                     columns={columns}
-                    getTdProps={(state, rowInfo, column, instance) => {
+                    getTdProps={(state, rowInfo) => {
                         return {
                             onClick: (e) => {
                                 handleClick(rowInfo);
