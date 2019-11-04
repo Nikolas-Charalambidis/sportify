@@ -125,8 +125,9 @@ export function Profile() {
                         <CardTemplate
                             key={index}
                             title={`${anObjectMapped.name}`}
+                            subtitle={`${anObjectMapped.position}`}
                             sport={`${anObjectMapped.sport}`}
-                            icon={mapSportToIcon(anObjectMapped.idSport)}
+                            icon={mapSportToIcon(anObjectMapped.id_sport)}
                         />
                     ))}
                     <CardTemplate title="Tým 1" icon={Icons.faFutbol} sport="fotbal" logo="http://bit.ly/32Z7Hfl"/>
