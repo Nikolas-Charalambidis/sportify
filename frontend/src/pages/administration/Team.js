@@ -29,8 +29,8 @@ export function Team() {
         <div>
             <Breadcrumb>
                 <Breadcrumb.Item href="/">Domů</Breadcrumb.Item>
-                <Breadcrumb.Item active>Administrace</Breadcrumb.Item>
-                <Breadcrumb.Item active>Team</Breadcrumb.Item>
+                <Breadcrumb.Item href="/administration">Administrace</Breadcrumb.Item>
+                <Breadcrumb.Item active>Tým</Breadcrumb.Item>
             </Breadcrumb>
             <Heading className="mt-4 mb-5">Tymovy profil</Heading>
             {!state.isLoading &&
