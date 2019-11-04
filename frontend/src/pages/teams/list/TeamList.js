@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Heading } from '../../../atoms';
 import { Breadcrumb } from "react-bootstrap";
-import { useGetTeams } from "../../../api/team/teamAPI";
+import { useGetTeams } from "../../../api/team/teamClient_v1";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 

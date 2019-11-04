@@ -2,7 +2,7 @@ import React from 'react';
 import {Heading} from '../../atoms';
 import {Row, Col, Form, Button, Breadcrumb} from "react-bootstrap";
 import {Footer} from "../../organisms/Footer";
-import {useApi} from '../../utils/api';
+import {useApi} from '../../hooks/useApi';
 import {useAuth} from '../../utils/auth';
 import {useHistory} from "react-router";
 import {config} from '../../config';

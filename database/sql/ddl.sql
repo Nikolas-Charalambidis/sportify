@@ -9,7 +9,9 @@ CREATE TABLE `users` (
     `password` varchar(255) NOT NULL,
     `name` varchar(255) NOT NULL,
     `surname` varchar(255) NOT NULL,
-    `verified` boolean NOT NULL
+    `verified` boolean NOT NULL,
+    `avatar_url` varchar(512),
+    `avatar_public_id` varchar(255)
 );
 
 CREATE TABLE `tokens` (

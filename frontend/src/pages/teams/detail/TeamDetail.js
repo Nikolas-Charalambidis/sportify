@@ -5,7 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import {Heading} from '../../../atoms';
 import {Breadcrumb, Row, Col, Image, Tabs, Tab} from 'react-bootstrap';
 import {TeamSquad} from "./components/TeamSquad";
-import {useGetTeam} from "../../../api/team/teamAPI";
+import {useGetTeam} from "../../../api/team/teamClient_v1";
 
 const subTitleContainer = {
     width: '100%',
