@@ -1,11 +1,7 @@
-import dotenv from 'dotenv';
 import {DB_CONNECTION_KEY} from '../../libs/connection';
 import * as userValidation from './userValidations';
 import AuthService from "../auth/authService";
-import {hash, verifyHash} from '../../libs/utils';
-
-dotenv.config();
-dotenv.config({path: '.env'});
+import * as utils from '../../libs/utils';
 
 export default class UserService {
 
@@ -108,5 +104,29 @@ export default class UserService {
   				WHERE tm.user=6 AND cm.status='active'`
 			, user_id);
 		return competitions;
+	}
+
+	async uploadAvatar(filepath, params, id_user) {
+		const user_id = Number(id_user);
+		userValidation.validateUserID(user_id);
+
+		let result = await this.dbConnection.query(
+			`SELECT avatar_public_id FROM users WHERE id_user=?`, user_id
+		);
+		if(result.length === 0) {
+			throw {status: 404, msg: 'Uživatel nebyl nalezen v databázi'};
+		}
+		const { avatar_public_id } = result[0];
+		if(avatar_public_id !== null) {
+			await utils.deleteAvatarFromCloudinary(avatar_public_id);
+		}
+		const {url, public_id} = await utils.uploadAvatarToCloudinary(filepath, params);
+		result = await this.dbConnection.query(
+			`UPDATE users SET avatar_url=?, avatar_public_id=? WHERE id_user=?`,
+			[url, public_id, user_id]
+		);
+		if (result.affectedRows === 0) {
+			throw {status: 500, msg: 'Informace o avatarovi se nepodařilo uložit do databáze'};
+		}
 	}
 }

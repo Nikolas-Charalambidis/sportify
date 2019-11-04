@@ -4,7 +4,6 @@ import * as utils from '../../libs/utils';
 import * as authValidation from "../auth/authValidations";
 import UserService from "../users/userService";
 import jwt from 'jsonwebtoken';
-import {config} from "../../../../frontend/src/config";
 
 dotenv.config();
 dotenv.config({path: '.env'});
