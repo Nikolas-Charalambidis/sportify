@@ -49,18 +49,18 @@ export function UserDataForm({api, handleShow, state}) {
 
                             <Row>
                                 <Col xl={{span: 6, offset: 0}} lg={{span: 6, offset: 0}}>
-                                    <Form.Label>Email</Form.Label>
-                                    <Form.Control readOnly name="email" defaultValue={state.user_data.email}/>
+                                    <Field label="Email" name="email" type="email" defaultValue={state.user_data.email}
+                                           disabled/>
                                 </Col>
-                                <Col className="mt-3 mt-lg-0 mt-lg-0" xl={{span: 3, offset: 0}}
+                                <Col className="d-flex align-items-end mb-3 mt-lg-0" xl={{span: 3, offset: 0}}
                                      lg={{span: 3, offset: 0}}>
-                                    <Button className="mt4" type="submit" block>
+                                    <Button type="submit" block>
                                         Uložit
                                     </Button>
                                 </Col>
-                                <Col className="mt-3 mt-lg-0 mt-lg-0" xl={{span: 3, offset: 0}}
+                                <Col className="d-flex align-items-end mb-3 mt-lg-0" xl={{span: 3, offset: 0}}
                                      lg={{span: 3, offset: 0}}>
-                                    <Button variant="secondary" className="mt4" type="button" block
+                                    <Button variant="secondary" type="button" block
                                             onClick={handleShow}>
                                         Změna hesla
                                     </Button>
@@ -78,7 +78,8 @@ export function UserDataForm({api, handleShow, state}) {
                 </Form>
             )}
             </Formik>
-            <UploadAvatar api={api} id_user={state.user_data.id_user} show={showModal} handleClose={closeAvatarModal} type={"users"}/>
+            <UploadAvatar api={api} id_user={state.user_data.id_user} show={showModal} handleClose={closeAvatarModal}
+                          type={"users"}/>
         </div>
-    )
+    );
 }
