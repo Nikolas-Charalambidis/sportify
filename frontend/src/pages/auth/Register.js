@@ -4,7 +4,7 @@ import {Heading} from '../../atoms';
 import {Form, Button, Row, Col, Breadcrumb} from "react-bootstrap";
 import {useHistory} from "react-router";
 import {useAuth} from "../../utils/auth";
-import {useApi} from "../../utils/api";
+import {useApi} from "../../hooks/useApi";
 import {config} from '../../config';
 import * as yup from "yup";
 import {Formik} from "formik";

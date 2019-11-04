@@ -1,6 +1,6 @@
 import {Button, Form, Modal} from "react-bootstrap";
 import {Formik} from "formik";
-import {ChangePassword} from "../../../../api/user/userAPI";
+import {ChangePassword} from "../../../../api/user/userClient_v1";
 import {Field} from "../../../../atoms";
 import React from "react";
 import * as yup from "yup";
