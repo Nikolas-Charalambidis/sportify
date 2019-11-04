@@ -40,9 +40,7 @@ export default class AuthService {
 		const data_hash = Number(hash);
 		authValidation.validateConfirmEmailData(user_id, data_hash);
 		await this.verifyToken(user_id, data_hash, 'confirm');
-		console.log("before verification");
 		const result = await this.dbConnection.query('UPDATE users SET verified=true WHERE id_user=?', user_id);
-		console.log("after verification");
 		if (result.affectedRows === 0) {
 			throw {status: 500, msg: 'Verifikace emailu selhala'};
 		}

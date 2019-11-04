@@ -25,9 +25,7 @@ export default class UserService {
 	}
 
 	async addNewUser(email, password1, password2, name, surname) {
-		console.log("add user service");
 		userValidation.validateNewUserData(email, password1, password2, name, surname);
-		console.log("validated");
 		if (await this.isEmailUsed(email)) {
 			throw {status: 400, msg: 'Email již existuje'};
 		}
