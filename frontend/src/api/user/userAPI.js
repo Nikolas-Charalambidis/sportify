@@ -15,7 +15,7 @@ export function useGetUser(id_user) {
                     const { user } = data;
                     setState({ isLoading: false, error: false, user_data: user });
                 })
-                .catch(( { response } ) => {
+                .catch(({response})   => {
                     const { data } = response;
                     setState({ isLoading: false, error: true, user_data: null });
                     window.flash(data.msg, 'danger');
