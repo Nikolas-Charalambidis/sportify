@@ -48,7 +48,7 @@ export function Profile() {
           <UserDataForm api={api} handleShow={handleShow} state={state} />
 
           <h2 className="mt-4">Týmy ve kterých hraju</h2>
-          {!teamState.isLoading && !teamState.error && teamState.user_data === null && (<div>Zatím nejste členem žádného týmu</div>)}
+          {!teamState.isLoading && !teamState.error && teamState.user_data.length === 0 && (<div>Zatím nejste členem žádného týmu</div>)}
           {!teamState.isLoading && teamState.error && (<div>Data se nepodařilo načíst</div>)}
           {!teamState.isLoading && !teamState.error ? (
             <div>
@@ -67,7 +67,7 @@ export function Profile() {
           ) : null}
 
           <h2 className="mt-4">Soutěže ve kterých hraju</h2>
-            {!competitionState.isLoading && !competitionState.error && teamState.user_data === null && (<div>Zatím nejste členem žádné soutěže</div>)}
+            {!competitionState.isLoading && !competitionState.error && teamState.user_data.length === 0  && (<div>Zatím nejste členem žádné soutěže</div>)}
             {!competitionState.isLoading && competitionState.error && (<div>Data se nepodařilo načíst</div>)}
             {!competitionState.isLoading && !competitionState.error ? (
         <div>
