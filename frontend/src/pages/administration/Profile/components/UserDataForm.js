@@ -5,6 +5,9 @@ import {Field} from "../../../../atoms";
 import React, {useState} from "react";
 import * as yup from "yup";
 import {UploadAvatar} from "../../../../organisms/UploadAvatar";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import * as Icons from "@fortawesome/free-solid-svg-icons"
+import defaultLogoAvatar from "../../../../assets/images/default_avatar.svg";
 
 const schemaChangeData = yup.object().shape({
     name: yup.string().required(),
@@ -31,8 +34,17 @@ export function UserDataForm({api, handleShow, state}) {
                         <Col className="d-lg-none text-center mb-5">
                             {state.user_data.avatar_url
                                 ? <Image roundedCircle onClick={openAvatarModal} src={state.user_data.avatar_url}/>
-                                : <Image roundedCircle onClick={openAvatarModal}
-                                         src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22171%22%20height%3D%22180%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20171%20180%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_16dfe80083d%20text%20%7B%20fill%3A%23999%3Bfont-weight%3Anormal%3Bfont-family%3A-apple-system%2CBlinkMacSystemFont%2C%26quot%3BSegoe%20UI%26quot%3B%2CRoboto%2C%26quot%3BHelvetica%20Neue%26quot%3B%2CArial%2C%26quot%3BNoto%20Sans%26quot%3B%2Csans-serif%2C%26quot%3BApple%20Color%20Emoji%26quot%3B%2C%26quot%3BSegoe%20UI%20Emoji%26quot%3B%2C%26quot%3BSegoe%20UI%20Symbol%26quot%3B%2C%26quot%3BNoto%20Color%20Emoji%26quot%3B%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_16dfe80083d%22%3E%3Crect%20width%3D%22171%22%20height%3D%22180%22%20fill%3D%22%23373940%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2260.875%22%20y%3D%2295.2828125%22%3E171x180%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"/>
+                                : <div className="avatar-upload">
+                                    <div className="avatar-preview">
+                                        <div id="imagePreview">
+                                            <div className="avatar-edit">
+                                                <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg"/>
+                                                <label htmlFor="imageUpload"><FontAwesomeIcon icon={Icons.faCamera}/></label>
+                                            </div>
+                                            <Image roundedCircle src={defaultLogoAvatar}/>
+                                        </div>
+                                    </div>
+                                </div>
                             }
                         </Col>
                         <Col xl={10} lg={10}>
@@ -70,8 +82,17 @@ export function UserDataForm({api, handleShow, state}) {
                         <Col xl={2} lg={2} className="d-none d-lg-block">
                             {state.user_data.avatar_url
                                 ? <Image roundedCircle onClick={openAvatarModal} src={state.user_data.avatar_url}/>
-                                : <Image roundedCircle onClick={openAvatarModal}
-                                         src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22171%22%20height%3D%22180%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20171%20180%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_16dfe80083d%20text%20%7B%20fill%3A%23999%3Bfont-weight%3Anormal%3Bfont-family%3A-apple-system%2CBlinkMacSystemFont%2C%26quot%3BSegoe%20UI%26quot%3B%2CRoboto%2C%26quot%3BHelvetica%20Neue%26quot%3B%2CArial%2C%26quot%3BNoto%20Sans%26quot%3B%2Csans-serif%2C%26quot%3BApple%20Color%20Emoji%26quot%3B%2C%26quot%3BSegoe%20UI%20Emoji%26quot%3B%2C%26quot%3BSegoe%20UI%20Symbol%26quot%3B%2C%26quot%3BNoto%20Color%20Emoji%26quot%3B%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_16dfe80083d%22%3E%3Crect%20width%3D%22171%22%20height%3D%22180%22%20fill%3D%22%23373940%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2260.875%22%20y%3D%2295.2828125%22%3E171x180%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"/>
+                                : <div className="avatar-upload">
+                                    <div className="avatar-edit">
+                                        <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg"/>
+                                        <label htmlFor="imageUpload"><FontAwesomeIcon icon={Icons.faCamera}/></label>
+                                    </div>
+                                    <div className="avatar-preview">
+                                        <div id="imagePreview">
+                                            <Image roundedCircle src={defaultLogoAvatar}/>
+                                        </div>
+                                    </div>
+                                </div>
                             }
                         </Col>
                     </Row>
