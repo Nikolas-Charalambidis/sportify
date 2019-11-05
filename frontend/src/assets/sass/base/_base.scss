@@ -180,7 +180,7 @@ label {
   }
 }
 
-.modal-content{
+.modal-content {
   background-color: #F5F5F5 !important;
 }
 
@@ -189,5 +189,16 @@ label {
 
   h3 {
     font-family: "Futura PT", Arial, serif;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .alert {
+    width: 90%;
+    transform: translate3d(10px, 67px, 0px);
+
+    .alert-labelled-cell {
+      padding-right: 50px;
+    }
   }
 }
