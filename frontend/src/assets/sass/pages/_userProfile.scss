@@ -1,0 +1,97 @@
+
+
+.defaultImageAvatar {
+  border-radius: 50%;
+  font-family: "Futura PT", Arial, sans-serif !important;
+  font-weight: bold;
+  background: #FEDF00;
+  letter-spacing: 2px;
+  color: black;
+  border: 1px solid #bd9b00;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.avatar-upload {
+  svg {
+    position: absolute;
+    left: 8px;
+    top: 7px;
+  }
+  .avatar-edit {
+    position: absolute;
+    bottom: 0;
+    z-index: 1;
+    left: 30px;
+
+    input {
+      display: none;
+
+      + label {
+        display: inline-block;
+        width: 34px;
+        height: 34px;
+        margin-bottom: 0;
+        border-radius: 100%;
+        background: #FFFFFF;
+        border: 1px solid transparent;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
+        cursor: pointer;
+        font-weight: normal;
+        transition: all .2s ease-in-out;
+
+        &:hover {
+          background: #f1f1f1;
+          border-color: #d6d6d6;
+        }
+
+        &:after {
+          color: #757575;
+          position: absolute;
+          top: 10px;
+          left: 0;
+          right: 0;
+          text-align: center;
+          margin: auto;
+        }
+      }
+    }
+  }
+
+  .avatar-preview {
+    width: 198px;
+    height: 197px;
+    position: relative;
+    border-radius: 100%;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.3);
+
+    > div {
+      width: 100%;
+      height: 100%;
+      border-radius: 100%;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+  }
+}
+
+.modal-title {
+}
+
+@media only screen and (min-width: 988px) and (max-width: 1090px) {
+  .avatar-upload .avatar-preview {
+    width: 150px;
+    height: 150px;
+    top: 25px;
+    position: relative;
+    border-radius: 100%;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.3);
+  }
+}
+
+@media only screen and (max-width: 988px) {
+  .avatar-upload .avatar-preview {
+    margin: 0 auto;
+  }
+}
