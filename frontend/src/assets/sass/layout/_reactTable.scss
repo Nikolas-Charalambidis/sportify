@@ -1,0 +1,59 @@
+.ReactTable {
+  font-family: "Proxima", Arial, serif;
+  font-size: 17px;
+
+  .rt-table .rt-thead:first-child{
+    display: none;
+  }
+
+  .rt-td {
+    text-align: center;
+  }
+
+  .rt-thead .rt-th.-sort-asc, .ReactTable .rt-thead .rt-td.-sort-asc {
+    box-shadow: inset 0 3px 0 0 rgba(232,204,2,1) !important;
+  }
+
+  .rt-thead .rt-th.-sort-desc, .ReactTable .rt-thead .rt-td.-sort-desc {
+    box-shadow: inset 0 -3px 0 0 rgba(0,0,0,1) !important;
+  }
+
+  .rt-th select {
+    height: 100%;
+    box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.3);
+    text-align: center;
+    text-align-last: center;
+  }
+
+  .rt-tr-group .-even {
+    background: white;
+  }
+
+  .rt-tr:hover .action {
+    transform: scale(1.3);
+  }
+
+  .rt-tr:hover .rt-td {
+    background: #FEDF00;
+    cursor: pointer;
+  }
+
+  .-pageSizeOptions {
+    display: none;
+  }
+
+  .-pagination .-btn:not(:disabled) {
+    border-radius: 0;
+    color: black;
+    background: white !important;
+    border: 1px solid black;
+  }
+
+  .-pagination .-btn:not(:disabled):hover {
+    border-radius: 0;
+    color: white !important;
+    background: black !important;
+    border: 1px solid black;
+  }
+}
+
