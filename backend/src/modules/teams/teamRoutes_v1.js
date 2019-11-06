@@ -63,7 +63,10 @@ router.post('/avatar', multipartMiddleware, async(req, res, next) => {
 		const params = {
 			folder: 'sportify/teams',
 			allowedFormats: ['jpg', 'jpeg', 'png'],
-			transformation: [{ width: 171, height: 180, crop: 'limit' }]
+			transformation: [
+				{width: 400, height: 400, gravity: "face", radius: "max", crop: "crop"},
+				{width: 200, height: 200,crop: "scale"}
+			]
 		};
 		const url = await new TeamService(req).uploadAvatar(req.files.file.path, params, id_team);
 		res.status(201).json({ error: false, msg: 'Nahrání avatara proběhlo úspěšně', url: url});
