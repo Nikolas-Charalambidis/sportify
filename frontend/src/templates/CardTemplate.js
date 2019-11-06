@@ -1,14 +1,25 @@
 import { Card, CardDeck, Col, OverlayTrigger, Row,  Tooltip } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
+import {useHistory} from "react-router";
 
-export function CardTemplate({title, subtitle, pictureHeader, tooltipPictureHeader, mainPicture, textHeader}) {
+
+//temporary CSS
+const cardStyle = { cursor: "pointer" };
+
+export function CardTemplate({title, subtitle, pictureHeader, tooltipPictureHeader, mainPicture, textHeader, redirect}) {
+    let history = useHistory();
+
+    function onRedirect() {
+        history.push(redirect);
+    }
 
 
   return (
     <Col lg={4} md={6} sm={12} xs={12} className="mt-4">
+
       <CardDeck>
-        <Card>
+        <Card style={cardStyle} onClick={onRedirect}>
           <Card.Header>
             <Row className="align-items-center">
               <Col lg={8} md={8} sm={8} xs={9}>
@@ -36,6 +47,7 @@ export function CardTemplate({title, subtitle, pictureHeader, tooltipPictureHead
           </Row>
         </Card>
       </CardDeck>
+
     </Col>
   );
 }

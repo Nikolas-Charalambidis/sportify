@@ -57,7 +57,8 @@ export function Profile() {
                 {teamState.user_data.map((anObjectMapped, index) => (
                   <CardTemplate
                     key={index}
-                    title={<Link to={`../teams/${anObjectMapped.id_team}`}>{`${anObjectMapped.name}`}</Link>}
+                    redirect={`../teams/${anObjectMapped.id_team}`}
+                    title={`${anObjectMapped.name}`}
                     subtitle={`${anObjectMapped.position}`}
                     tooltipPictureHeader={`${anObjectMapped.sport}`}
                     pictureHeader={mapSportToIcon(anObjectMapped.id_sport)}
@@ -77,11 +78,12 @@ export function Profile() {
               {competitionState.user_data.map((anObjectMapped, index) => (
                   <CardTemplate
                       key={index}
-                      title={<Link to={`../leagues/${anObjectMapped.id_competition}`}>{`${anObjectMapped.competition_name}`}</Link>}
+                      redirect={`../leagues/${anObjectMapped.id_competition}`}
+                      title={`${anObjectMapped.competition_name}`}
                       subtitle={`Umístění: ${anObjectMapped.team_position}`}
                       tooltipPictureHeader={`${anObjectMapped.sport}`}
                       pictureHeader={mapSportToIcon(anObjectMapped.id_sport)}
-                      textHeader={anObjectMapped.is_active === 1 ? ("Probíhající") : ("Ukončená")}
+                      textHeader={anObjectMapped.is_active === 1 ? ("Probíhá") : ("Ukončená")}
                       mainPicture={anObjectMapped.avatar_url === null ? (`${anObjectMapped.avatar_url}`) : (defaultTeamAvatar)}
                   />
               ))}

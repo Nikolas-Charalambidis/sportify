@@ -89,9 +89,9 @@ export function Team() {
                 </Formik>
                 <h2 className="mt-4">Soutěže</h2>
                 <Row>
-                    <CardTemplate title="Jarov Liga" subtitle="Pozice: 1." pictureHeader={Icons.faFutbol} sport="fotbal"
+                    <CardTemplate title="Jarov Liga" subtitle="Pozice: 1." pictureHeader={Icons.faFutbol} tooltipPictureHeader="fotbal"
                                   mainPicture="http://bit.ly/32Z7Hfl" textHeader="Probíhá"/>
-                    <CardTemplate title="Extraliga" subtitle="Pozice: 2." pictureHeader={Icons.faFutbol} sport="fotbal"
+                    <CardTemplate title="Extraliga" subtitle="Pozice: 2." pictureHeader={Icons.faFutbol} tooltipPictureHeader=" fotbal"
                                   mainPicture="http://bit.ly/2PrDmSC" textHeader="Ukončena"/>
                 </Row>
             </div>
