@@ -28,7 +28,9 @@ CREATE TABLE `teams` (
     `name` varchar(255) UNIQUE NOT NULL,
     `id_leader` int NOT NULL,
     `type` ENUM ('profi', 'amatéři') NOT NULL,
-    `id_contact_person` int NOT NULL
+    `id_contact_person` int NOT NULL,
+    `avatar_url` varchar(512),
+    `avatar_public_id` varchar(255)
 );
 
 CREATE TABLE `competitions` (

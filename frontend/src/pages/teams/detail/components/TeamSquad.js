@@ -173,6 +173,7 @@ export function TeamSquad({teamId}) {
                 pageText="Stránka"
                 ofText="z"
                 rowsText="řádků"
+                noDataText="Nenalezená žádná data"
                 rows
                 data={data}
                 filterable
@@ -209,10 +210,10 @@ export function TeamSquad({teamId}) {
                                             return true;
                                     }
                                 },
-                                Filter: ({ filter, onChange }) =>
+                                Filter: ({filter, onChange}) =>
                                     <select
                                         onChange={event => onChange(event.target.value)}
-                                        style={{ width: "100%" }}
+                                        style={{width: "100%"}}
                                         value={filter ? filter.value : "all"}
                                     >
                                         <option value="all">Vše</option>
