@@ -57,11 +57,11 @@ export function Profile() {
                 {teamState.user_data.map((anObjectMapped, index) => (
                   <CardTemplate
                     key={index}
-                    title={<Link to={`../teams/${anObjectMapped.id_sport}`}>{`${anObjectMapped.name}`}</Link>}
+                    title={<Link to={`../teams/${anObjectMapped.id_team}`}>{`${anObjectMapped.name}`}</Link>}
                     subtitle={`${anObjectMapped.position}`}
-                    sport={`${anObjectMapped.sport}`}
-                    icon={mapSportToIcon(anObjectMapped.id_sport)}
-                    logo={anObjectMapped.avatar_url === undefined && (defaultTeamAvatar)}
+                    tooltipPictureHeader={`${anObjectMapped.sport}`}
+                    pictureHeader={mapSportToIcon(anObjectMapped.id_sport)}
+                    mainPicture={anObjectMapped.avatar_url === null ? (`${anObjectMapped.avatar_url}`) : (defaultTeamAvatar)}
                   />
                 ))}
               </Row>
@@ -79,10 +79,10 @@ export function Profile() {
                       key={index}
                       title={<Link to={`../leagues/${anObjectMapped.id_competition}`}>{`${anObjectMapped.competition_name}`}</Link>}
                       subtitle={`Umístění: ${anObjectMapped.team_position}`}
-                      sport={`${anObjectMapped.sport}`}
-                      icon={mapSportToIcon(anObjectMapped.id_sport)}
-                      state={anObjectMapped.is_active === 1 ? ("Probíhající") : ("Ukončená")}
-                      logo={anObjectMapped.avatar_url === null ? (anObjectMapped.avatar_url) : (defaultTeamAvatar)}
+                      tooltipPictureHeader={`${anObjectMapped.sport}`}
+                      pictureHeader={mapSportToIcon(anObjectMapped.id_sport)}
+                      textHeader={anObjectMapped.is_active === 1 ? ("Probíhající") : ("Ukončená")}
+                      mainPicture={anObjectMapped.avatar_url === null ? (`${anObjectMapped.avatar_url}`) : (defaultTeamAvatar)}
                   />
               ))}
           </Row>
