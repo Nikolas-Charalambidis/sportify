@@ -91,6 +91,24 @@ CREATE TABLE `matchup` (
     `host` boolean NOT NULL,
     `profi` boolean NOT NULL
 );
+
+CREATE TABLE `team_statistics` (
+    `id_team_statistics` int PRIMARY KEY AUTO_INCREMENT,
+    `id_user` int NOT NULL,
+    `id_team` int NOT NULL,
+    `id_competition` int,               -- null competition is a free time matches category
+    `field_matches` int NOT NULL,       -- matches count as a field player, starts at 0
+    `field_goals` int NOT NULL,         -- goals scored as a field player, starts at 0
+    `field_assists` int NOT NULL,       -- assists as a field player, starts at 0
+ -- `points`                               points as a field player, starts at 0.. calculated as SUM of goals + assists, no need to persist
+ -- `average_points                        average of `points`
+    `field_suspensions` int NOT NULL,         -- sum of all suspensions as a field player, starts at 0
+    `goalkeeper_goals` int NOT NULL,    -- goals received as a goalkeeper
+    `goalkeeper_minutes` int NOT NULL,  -- minutes played as a goalkeeper, starts at 0
+    `goalkeeper_shoots` int NOT NULL    -- count of all shoots shot to a player as a goalkeeper, starts at 0
+ -- `rate`                              -- rate is calculated
+);
+
 -- KEYS ----------------------------------------------------------------------------------------------------------------
 ALTER TABLE `teams` ADD FOREIGN KEY (`id_sport`) REFERENCES `sports` (`id_sport`);
 ALTER TABLE `teams` ADD FOREIGN KEY (`id_leader`) REFERENCES `users` (`id_user`);
@@ -118,6 +136,10 @@ ALTER TABLE `events` ADD FOREIGN KEY (`user`) REFERENCES `users` (`id_user`);
 ALTER TABLE `matchup` ADD FOREIGN KEY (`match`) REFERENCES `matches` (`id_match`);
 ALTER TABLE `matchup` ADD FOREIGN KEY (`team`) REFERENCES `teams` (`id_team`);
 ALTER TABLE `matchup` ADD FOREIGN KEY (`user`) REFERENCES `users` (`id_user`);
+
+ALTER TABLE `team_statistics` ADD FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`);
+ALTER TABLE `team_statistics` ADD FOREIGN KEY (`id_team`) REFERENCES `teams` (`id_team`);
+ALTER TABLE `team_statistics` ADD FOREIGN KEY (`id_competition`) REFERENCES `competitions` (`id_competition`);
 
 -- Data ----------------------------------------------------------------------------------------------------------------
 -- Password is hashed using bcrypt "Heslo123", 10 rounds
@@ -203,15 +225,33 @@ INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `
 INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (26, 5, 29, 'active', 'attacker');
 
 -- CONPETITIONS
-INSERT INTO `competitions` (`id_competition`, `name`, `leader`, `id_sport`, `start_date`, `end_date`) VALUES (1, 'Hokejová liga', 1, 1, '2019-09-01 23:59:59', '2020-04-01 23:59:59');
+INSERT INTO `competitions` (`id_competition`, `name`, `leader`, `id_sport`, `start_date`, `end_date`) VALUES (1, 'Hokejová liga 19-20', 1, 1, '2019-09-01 23:59:59', '2020-04-01 23:59:59');
 INSERT INTO `competitions` (`id_competition`, `name`, `leader`, `id_sport`, `start_date`, `end_date`) VALUES (2, 'Florbalová liga', 1, 2, '2017-06-20 23:59:59', '2018-11-20 23:59:59');
 INSERT INTO `competitions` (`id_competition`, `name`, `leader`, `id_sport`, `start_date`, `end_date`) VALUES (3, 'Hokejbalová liga', 1, 3, '2019-09-01 23:59:59', '2020-04-01 23:59:59');
+INSERT INTO `competitions` (`id_competition`, `name`, `leader`, `id_sport`, `start_date`, `end_date`) VALUES (4, 'Hokejová liga 18-19', 1, 3, '2018-09-01 23:59:59', '2019-04-01 23:59:59');
+
 
 -- CONPETITION MEMBERSHIP
 INSERT INTO `competition_membership` (`id_competition_membership`, `competition`, `team`, `status`) VALUES (1, 1, 1, 'active');
 INSERT INTO `competition_membership` (`id_competition_membership`, `competition`, `team`, `status`) VALUES (2, 1, 2, 'active');
 INSERT INTO `competition_membership` (`id_competition_membership`, `competition`, `team`, `status`) VALUES (3, 3, 4, 'active');
 INSERT INTO `competition_membership` (`id_competition_membership`, `competition`, `team`, `status`) VALUES (4, 3, 5, 'active');
+INSERT INTO `competition_membership` (`id_competition_membership`, `competition`, `team`, `status`) VALUES (5, 4, 1, 'active');
+INSERT INTO `competition_membership` (`id_competition_membership`, `competition`, `team`, `status`) VALUES (6, 4, 2, 'active');
+
+-- MOCKED, START OF A SUBJECT OF A FUTURE CHANGE AND/OR REGENERATION, THE MODEL ITSELF IS CONSIDERED FINAL
+-- MATCHES ARE NECESSARY FOR THESE DATA CONSISTENCY, YET THEY ARE NOT NEEDED FOR THE DEVELOPMENT OF THE STATISTICS DISPLAY
+INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_goals`, `goalkeeper_minutes`, `goalkeeper_shoots` )
+    VALUES (1, 1, 1, 1, 0, 0, 0, 0, 2, 60, 71);
+INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_goals`, `goalkeeper_minutes`, `goalkeeper_shoots` )
+    VALUES (2, 2, 1, 1, 1, 0, 2, 2, 0, 0, 0);
+INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_goals`, `goalkeeper_minutes`, `goalkeeper_shoots` )
+    VALUES (3, 3, 1, 1, 1, 1, 0, 0, 0, 0, 0);
+INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_goals`, `goalkeeper_minutes`, `goalkeeper_shoots` )
+    VALUES (4, 4, 1, 1, 1, 1, 3, 0, 0, 0, 0);
+INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_goals`, `goalkeeper_minutes`, `goalkeeper_shoots` )
+    VALUES (5, 5, 1, 1, 1, 2, 0, 2, 0, 0, 0);
+-- END, START OF A SUBJECT OF A FUTURE CHANGE OR REGENERATION
 
 -- INSERT INTO `matches` (`id_match`, `competition`, `host`, `guest`, `date`) VALUES ();
 
