@@ -20,11 +20,12 @@ export function useGetAvatar(type, id) {
         console.log('event', event);
         formData.append('file', event.currentTarget.files[0]);
         formData.append('id_user', id);
+        window.flash("Nahrávám avatara na server", 'warning', 10000, null);
         api
             .post(`${config.API_BASE_PATH}/${type}/avatar`, formData)
             .then(({data}) => {
                 window.flash(data.msg, 'success');
-                setTimeout(() => {window.location.reload();}, 2000);
+                setTimeout(() => {window.location.reload();}, 1000);
             })
             .catch(({response})  => {
                 const {data} = response;
@@ -77,7 +78,11 @@ export function Avatar({type, id}) {
                     <input onChange={uploadAvatar} id="imageUpload" name="file" type="file" accept=".png, .jpg, .jpeg"/>
                     <label htmlFor="imageUpload"><FontAwesomeIcon icon={Icons.faCamera}/></label>
                 </div>
-                <Image roundedCircle src={imageState.url}/>
+                <div className="avatar-preview">
+                    <div id="imagePreview">
+                        <Image roundedCircle src={imageState.url}/>
+                    </div>
+                </div>
             </div>
             }
         </div>
