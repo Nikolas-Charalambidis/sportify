@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Heading } from '../../../atoms';
 import { CardTemplate } from '../../../templates/CardTemplate';
-import { Row, Breadcrumb } from 'react-bootstrap';
+import {Row, Breadcrumb} from 'react-bootstrap';
 import { useHistory } from 'react-router';
 import { useAuth } from '../../../utils/auth';
 import { useApi } from '../../../hooks/useApi';
@@ -10,6 +10,7 @@ import { useGetUser, useGetUserTeams, useGetUserCompetition } from '../../../api
 import { NavLink as Link } from 'react-router-dom';
 import { ChangePasswordModal } from './components/ChangePasswordModal';
 import { UserDataForm } from './components/UserDataForm';
+import defaultTeamAvatar from "../../../assets/images/default_team_avatar.jpg";
 
 export function Profile() {
   const history = useHistory();
@@ -60,6 +61,7 @@ export function Profile() {
                     subtitle={`${anObjectMapped.position}`}
                     sport={`${anObjectMapped.sport}`}
                     icon={mapSportToIcon(anObjectMapped.id_sport)}
+                    logo={anObjectMapped.avatar_url === undefined && (defaultTeamAvatar)}
                   />
                 ))}
               </Row>
@@ -75,11 +77,12 @@ export function Profile() {
               {competitionState.user_data.map((anObjectMapped, index) => (
                   <CardTemplate
                       key={index}
-                      title={`${anObjectMapped.name}`}
-                      subtitle={`${anObjectMapped.position}`}
+                      title={<Link to={`../leagues/${anObjectMapped.id_competition}`}>{`${anObjectMapped.competition_name}`}</Link>}
+                      subtitle={`Umístění: ${anObjectMapped.team_position}`}
                       sport={`${anObjectMapped.sport}`}
                       icon={mapSportToIcon(anObjectMapped.id_sport)}
-                      state={`${anObjectMapped.is_active}`}
+                      state={anObjectMapped.is_active === 1 ? ("Probíhající") : ("Ukončená")}
+                      logo={anObjectMapped.avatar_url === null ? (anObjectMapped.avatar_url) : (defaultTeamAvatar)}
                   />
               ))}
           </Row>
