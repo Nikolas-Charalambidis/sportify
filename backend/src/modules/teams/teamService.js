@@ -91,6 +91,7 @@ export default class TeamService {
 				s.sport, 
 				c.id_competition, 
 				c.name as 'competition_name', 
+				c.avatar_url,
 				c.start_date, 
 				c.end_date, 
 				(c.start_date < DATE(NOW()) AND c.end_date > DATE(NOW())) as 'is_active' 
