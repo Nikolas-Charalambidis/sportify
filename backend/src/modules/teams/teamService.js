@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import {DB_CONNECTION_KEY} from '../../libs/connection';
 import * as teamValidation from './teamValidations';
 import * as userValidation from "../users/userValidations";
+import * as utils from "../../libs/utils";
 
 dotenv.config();
 dotenv.config({path: '.env'});
@@ -99,5 +100,43 @@ export default class TeamService {
 			JOIN sports AS s ON t.id_sport=s.id_sport
 			where cm.team = ? AND cm.status='active';`
 			, team_id);
+	}
+
+	async uploadAvatar(filepath, params, id_team) {
+		const team_id = Number(id_team);
+		teamValidation.validateTeamID(team_id);
+
+		let result = await this.dbConnection.query(
+			`SELECT avatar_public_id FROM users WHERE id_team=?`, team_id
+		);
+		if(result.length === 0) {
+			throw {status: 404, msg: 'Team nebyl nalezen v databázi'};
+		}
+		const { avatar_public_id } = result[0];
+		if(avatar_public_id !== null) {
+			await utils.deleteAvatarFromCloudinary(avatar_public_id);
+		}
+		const {url, public_id} = await utils.uploadAvatarToCloudinary(filepath, params);
+		result = await this.dbConnection.query(
+			`UPDATE teams SET avatar_url=?, avatar_public_id=? WHERE id_team=?`,
+			[url, public_id, team_id]
+		);
+		if (result.affectedRows === 0) {
+			throw {status: 500, msg: 'Informace o avatarovi se nepodařilo uložit do databáze'};
+		}
+		return url;
+	}
+	async getAvatar(id_team) {
+		const team_id = Number(id_team);
+		teamValidation.validateTeamID(team_id);
+
+		const result = await this.dbConnection.query(
+			`SELECT avatar_url FROM teams WHERE id_team=?`, team_id
+		);
+		if(result.length === 0) {
+			throw {status: 404, msg: 'Team nebyl nalezen v databázi'};
+		}
+		const { avatar_url } = result[0];
+		return avatar_url;
 	}
 }
