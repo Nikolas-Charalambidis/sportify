@@ -149,6 +149,7 @@ export default class UserService {
 		}
 		return url;
 	}
+
 	async getAvatar(id_user) {
 		const user_id = Number(id_user);
 		userValidation.validateUserID(user_id);

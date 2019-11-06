@@ -127,6 +127,7 @@ export default class TeamService {
 		}
 		return url;
 	}
+
 	async getAvatar(id_team) {
 		const team_id = Number(id_team);
 		teamValidation.validateTeamID(team_id);
@@ -139,5 +140,57 @@ export default class TeamService {
 		}
 		const { avatar_url } = result[0];
 		return avatar_url;
+	}
+
+	async teamStatistics(id_team) {
+		const team_id = Number(id_team);
+		teamValidation.validateTeamID(team_id);
+
+		// individual statistics in the team
+		const invidividual = await this.dbConnection.query(`SELECT
+					ts.id_user,
+					CONCAT(u.name, ' ', u.surname) AS 'name_surname',
+					tm.position,
+					ts.id_team,
+					ts.id_competition,
+					ts.field_matches,
+					ts.field_goals,
+					ts.field_assists,
+					(ts.field_goals + ts.field_assists) AS 'field_points',
+					((ts.field_goals + ts.field_assists)/ts.field_matches) AS 'field_average_points',
+					ts.field_suspensions,
+					ts.goalkeeper_goals,
+					ts.goalkeeper_minutes,
+					ts.goalkeeper_shoots,
+					(1 - ts.goalkeeper_goals/ts.goalkeeper_shoots) AS 'goalkeeper_success_rate'
+				FROM team_statistics as ts	
+				JOIN users AS u ON ts.id_user = u.id_user
+				JOIN team_membership tm on u.id_user = tm.user
+				WHERE id_team=?`
+			, team_id);
+
+		// overall aggregate statistics in the team of all the competitions (except null ones which are of free time)
+		const competitions_aggregate = await this.dbConnection.query(`SELECT
+					ts.id_user,
+					CONCAT(u.name, ' ', u.surname) AS 'name_surname',
+					MAX(tm.position) AS 'position',
+					SUM(ts.field_matches) AS 'matches',
+					SUM(ts.field_goals) AS 'goals',
+					SUM(ts.field_assists) AS 'assists',
+					(SUM(ts.field_goals) + SUM(ts.field_assists)) AS 'field_points',
+					((SUM(ts.field_goals) + SUM(ts.field_assists))/SUM(ts.field_matches)) AS 'field_average_points',
+					SUM(ts.field_suspensions) AS 'suspensions',
+					SUM(ts.goalkeeper_goals) AS 'goalkeeper_goals',
+					SUM(ts.goalkeeper_minutes) AS 'goalkeeper_minutes',
+					SUM(ts.goalkeeper_shoots) AS 'goalkeeper_shoots',
+					(1 - SUM(ts.goalkeeper_goals)/SUM(ts.goalkeeper_shoots)) AS 'goalkeeper_success_rate'
+						FROM team_statistics as ts
+						JOIN users AS u ON ts.id_user = u.id_user
+						JOIN team_membership tm on u.id_user = tm.user
+						WHERE id_team=? AND id_competition IS NOT null
+						GROUP BY ts.id_user`
+			, team_id);
+
+		return {individual: invidividual, competitions_aggregate: competitions_aggregate};
 	}
 }
