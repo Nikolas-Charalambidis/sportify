@@ -8,7 +8,7 @@ const router = Router();
  * /auth/login:
  *   post:
  *     tags:
- *       - Users
+ *       - Auth
  *     name: Login
  *     summary: Verify user email and password
  *     consumes: application/json
@@ -50,7 +50,7 @@ router.post('/login', async (req, res, next) => {
  * /auth/resetLink:
  *   post:
  *     tags:
- *       - Users
+ *       - Auth
  *     name: Login
  *     summary: Send link for password reset
  *     consumes: application/json
@@ -91,7 +91,7 @@ router.post('/resetLink', async (req, res, next) => {
  * /auth/resetPassword:
  *   post:
  *     tags:
- *       - Users
+ *       - Auth
  *     name: Login
  *     summary: Reset user password
  *     consumes: application/json
@@ -138,7 +138,7 @@ router.post('/resetPassword', async (req, res, next) => {
  * /auth/confirmEmail:
  *   post:
  *     tags:
- *       - Users
+ *       - Auth
  *     name: Login
  *     summary: Verify user's email
  *     consumes: application/json
@@ -181,7 +181,7 @@ router.post('/confirmEmail', async (req, res, next) => {
  * /auth/resendToken:
  *   post:
  *     tags:
- *       - Users
+ *       - Auth
  *     name: Login
  *     summary: Resend token
  *     consumes: application/json

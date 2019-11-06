@@ -190,12 +190,12 @@ router.post('/', async(req, res, next) => {
 
 /**
  * @swagger
- * /users:
+ * /users/avatar:
  *   post:
  *     tags:
  *       - Users
- *     name: Register
- *     summary: Add new user
+ *     name: Avatar
+ *     summary: Upload an avatar
  *     consumes: application/json
  *     produces: application/json
  *     parameters:
@@ -209,14 +209,19 @@ router.post('/', async(req, res, next) => {
  *               type: string
  *             password1:
  *               type: string
+ *             password2:
+ *               type: string
+ *             name:
+ *               type: string
+ *             surname:
+ *               type: string
  *     responses:
  *       201:
- *         description: Team added
+ *         description: Avatar uploaded
  *       400:
  *         description: Invalid request
  */
-
-router.post('/uploadAvatar', multipartMiddleware, async(req, res, next) => {
+router.post('/avatar', multipartMiddleware, async(req, res, next) => {
 	try {
 		const { id_user } = req.body;
 		const params = {
