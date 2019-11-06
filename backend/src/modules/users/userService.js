@@ -25,9 +25,7 @@ export default class UserService {
 	}
 
 	async addNewUser(email, password1, password2, name, surname) {
-		console.log("add user service");
 		userValidation.validateNewUserData(email, password1, password2, name, surname);
-		console.log("validated");
 		if (await this.isEmailUsed(email)) {
 			throw {status: 400, msg: 'Email již existuje'};
 		}
@@ -82,6 +80,18 @@ export default class UserService {
 		return result.length > 0;
 	}
 
+	async userTeam(id_user) {
+		const user_id = Number(id_user);
+		userValidation.validateUserID(user_id);
+		return this.dbConnection.query(`SELECT * FROM teams WHERE id_leader = ?;`, user_id);
+	}
+
+	async userCompetition(id_user) {
+		const user_id = Number(id_user);
+		userValidation.validateUserID(user_id);
+		return this.dbConnection.query(`SELECT * FROM competitions WHERE leader = ?;`, user_id);
+	}
+
 	async userTeamMemberships(id_user) {
 		const user_id = Number(id_user);
 		userValidation.validateUserID(user_id);
@@ -96,13 +106,21 @@ export default class UserService {
 	async userCompetitionMemberships(id_user) {
 		const user_id = Number(id_user);
 		userValidation.validateUserID(user_id);
-		return this.dbConnection.query(
-				`SELECT t.name, tm.position, s.sport, s.id_sport, c.name, c.start_date, c.end_date, 'is_active' FROM team_membership AS tm
-  				JOIN teams t ON tm.team = t.id_team
-  				JOIN competition_membership cm ON t.id_team = cm.team
-  				JOIN competitions c ON cm.competition = c.id_competition
+		return this.dbConnection.query(`SELECT 
+					t.id_team, 
+					t.name as 'team_name', 
+					2 as 'team_position', 
+					s.id_sport, 
+					s.sport, 
+					c.id_competition, 
+					c.name as 'competition_name',
+					(c.start_date < DATE(NOW()) AND c.end_date > DATE(NOW())) as 'is_active' 
+				FROM team_membership AS tm
+  				JOIN teams AS t ON tm.team = t.id_team
+  				JOIN competition_membership AS cm ON t.id_team = cm.team
+  				JOIN competitions AS c ON cm.competition = c.id_competition
   				JOIN sports AS s ON t.id_sport=s.id_sport
-  				WHERE tm.user=6 AND cm.status='active'`
+  				WHERE tm.user=? AND cm.status='active'`
 			, user_id);
 	}
 

@@ -178,9 +178,7 @@ router.get('/', async (req, res, next) => {
  */
 router.post('/', async(req, res, next) => {
 	try {
-		console.log("add user route");
 		const { email, password1, password2, name, surname } = req.body;
-		console.log("data", { email, password1, password2, name, surname });
 		const id = await new UserService(req).addNewUser(email, password1, password2, name, surname);
 		res.status(201).header('Location' , `/api/v1/users/${id}`).send({ error: false, msg: 'OK', id_user: id});
 	} catch (e) {
@@ -190,12 +188,12 @@ router.post('/', async(req, res, next) => {
 
 /**
  * @swagger
- * /users:
+ * /users/avatar:
  *   post:
  *     tags:
  *       - Users
- *     name: Register
- *     summary: Add new user
+ *     name: Avatar
+ *     summary: Upload an avatar
  *     consumes: application/json
  *     produces: application/json
  *     parameters:
@@ -209,14 +207,19 @@ router.post('/', async(req, res, next) => {
  *               type: string
  *             password1:
  *               type: string
+ *             password2:
+ *               type: string
+ *             name:
+ *               type: string
+ *             surname:
+ *               type: string
  *     responses:
  *       201:
- *         description: Team added
+ *         description: Avatar uploaded
  *       400:
  *         description: Invalid request
  */
-
-router.post('/uploadAvatar', multipartMiddleware, async(req, res, next) => {
+router.post('/avatar', multipartMiddleware, async(req, res, next) => {
 	try {
 		const { id_user } = req.body;
 		const params = {
@@ -227,6 +230,72 @@ router.post('/uploadAvatar', multipartMiddleware, async(req, res, next) => {
 		new UserService(req).uploadAvatar(req.files.file.path, params, id_user);
 		res.status(201).json({ error: false, msg: 'Nahrání avatara proběhlo úspěšně'});
 	} catch (e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
+ * /users/{id_user}/team:
+ *   get:
+ *     tags:
+ *       - Users
+ *     name: Team ownerships
+ *     summary: Get all teams the user is owner of
+ *     parameters:
+ *       - name: id_user
+ *         in: path
+ *         description: User ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Teams found
+ *       400:
+ *         description: Invalid request
+ *       404:
+ *         description: Teams not found
+ */
+router.get('/:id_user/team', async(req, res, next) => {
+	try {
+		const { id_user } = req.params;
+		const user = await new UserService(req).userTeam(id_user);
+		res.status(200).json({ error: false, msg: 'OK', user: user});
+	} catch(e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
+ * /users/{id_user}/competition:
+ *   get:
+ *     tags:
+ *       - Users
+ *     name: Team ownerships
+ *     summary: Get all competition the user is owner of
+ *     parameters:
+ *       - name: id_user
+ *         in: path
+ *         description: User ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Competitions found
+ *       400:
+ *         description: Invalid request
+ *       404:
+ *         description: Teams not found
+ */
+router.get('/:id_user/competition', async(req, res, next) => {
+	try {
+		const { id_user } = req.params;
+		const user = await new UserService(req).userCompetition(id_user);
+		res.status(200).json({ error: false, msg: 'OK', user: user});
+	} catch(e) {
 		next(e);
 	}
 });
@@ -281,7 +350,7 @@ router.get('/:id_user/teamMembership', async(req, res, next) => {
  *           type: integer
  *     responses:
  *       200:
- *         description: Teams found
+ *         description: Competitions found
  *       400:
  *         description: Invalid request
  *       404:

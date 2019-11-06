@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import dotenv from "dotenv";
-import cloudinary from "../config";
+import cloudinary from "./cloudinary_config";
 
 dotenv.config();
 dotenv.config({path: '.env'});

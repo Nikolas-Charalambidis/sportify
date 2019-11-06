@@ -31,12 +31,10 @@ export function Register() {
     }
 
     const register = (values) => {
-        console.log("FE register function");
         const {name, surname, email, password1, password2} = values;
         api
             .post(`${config.API_BASE_PATH}/users`, {name: name, surname: surname, email: email, password1: password1, password2: password2})
             .then(() => {
-                console.log("success");
                 window.flash("Byl jste úspěšně registrován. Ověřte prosím svůj email odkazem, který Vám byl zaslán na email uvedený při registraci.", 'success');
                 history.replace('/login');
             })
