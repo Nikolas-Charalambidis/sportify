@@ -35,7 +35,6 @@ export function UploadAvatar({api, id_user, show, handleClose, type}) {
                     window.flash(data.msg, 'success');
                 })
                 .catch(({response})  => {
-                    console.log("fail");
                     const {data} = response;
                     window.flash(data.msg, 'danger');
                 });

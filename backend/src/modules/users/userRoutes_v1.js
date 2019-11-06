@@ -178,9 +178,7 @@ router.get('/', async (req, res, next) => {
  */
 router.post('/', async(req, res, next) => {
 	try {
-		console.log("add user route");
 		const { email, password1, password2, name, surname } = req.body;
-		console.log("data", { email, password1, password2, name, surname });
 		const id = await new UserService(req).addNewUser(email, password1, password2, name, surname);
 		res.status(201).header('Location' , `/api/v1/users/${id}`).send({ error: false, msg: 'OK', id_user: id});
 	} catch (e) {

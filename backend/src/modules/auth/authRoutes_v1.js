@@ -210,7 +210,6 @@ router.post('/confirmEmail', async (req, res, next) => {
 router.post('/resendToken', async (req, res, next) => {
 	try {
 		const { id_token, type } = req.body;
-		console.log("data", { id_token, type });
 		await new AuthService(req).resendToken(id_token, type);
 		res.status(201).json({ error: false, msg: 'OK'});
 	} catch(e) {
