@@ -146,5 +146,19 @@ export default class UserService {
 		if (result.affectedRows === 0) {
 			throw {status: 500, msg: 'Informace o avatarovi se nepodařilo uložit do databáze'};
 		}
+		return url;
+	}
+	async getAvatar(id_user) {
+		const user_id = Number(id_user);
+		userValidation.validateUserID(user_id);
+
+		const result = await this.dbConnection.query(
+			`SELECT avatar_url FROM users WHERE id_user=?`, user_id
+		);
+		if(result.length === 0) {
+			throw {status: 404, msg: 'Uživatel nebyl nalezen v databázi'};
+		}
+		const { avatar_url } = result[0];
+		return avatar_url;
 	}
 }

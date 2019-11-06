@@ -39,7 +39,9 @@ CREATE TABLE `competitions` (
     `leader` int NOT NULL,
     `id_sport` int NOT NULL,
     `start_date` datetime NOT NULL,
-    `end_date` datetime NOT NULL
+    `end_date` datetime NOT NULL,
+    `avatar_url` varchar(512),
+    `avatar_public_id` varchar(255)
 );
 
 CREATE TABLE `competition_membership` (
