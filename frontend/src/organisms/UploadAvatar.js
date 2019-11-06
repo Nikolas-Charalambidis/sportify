@@ -29,7 +29,7 @@ export function UploadAvatar({api, id_user, show, handleClose, type}) {
             data.append('file', state.selectedFile);
             data.append('id_user', id_user);
             api
-                .post(`${config.API_BASE_PATH}/${type}/uploadAvatar`, data)
+                .post(`${config.API_BASE_PATH}/${type}/avatar`, data)
                 .then(({data}) => {
                     setTimeout(() => {window.location.reload();}, 2000);
                     window.flash(data.msg, 'success');
