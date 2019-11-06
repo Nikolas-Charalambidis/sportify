@@ -82,6 +82,18 @@ export default class UserService {
 		return result.length > 0;
 	}
 
+	async userTeam(id_user) {
+		const user_id = Number(id_user);
+		userValidation.validateUserID(user_id);
+		return this.dbConnection.query(`SELECT * FROM teams WHERE id_leader = ?;`, user_id);
+	}
+
+	async userCompetition(id_user) {
+		const user_id = Number(id_user);
+		userValidation.validateUserID(user_id);
+		return this.dbConnection.query(`SELECT * FROM competitions WHERE leader = ?;`, user_id);
+	}
+
 	async userTeamMemberships(id_user) {
 		const user_id = Number(id_user);
 		userValidation.validateUserID(user_id);
