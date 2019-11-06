@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import {DB_CONNECTION_KEY} from '../../libs/connection';
 import * as teamValidation from './teamValidations';
+import * as userValidation from "../users/userValidations";
 
 dotenv.config();
 dotenv.config({path: '.env'});
@@ -24,7 +25,7 @@ export default class TeamService {
 		const team_id = Number(id_team);
 		teamValidation.validateTeamID(team_id);
 		const result = await this.dbConnection.query(
-			`SELECT t.id_team, t.name, s.sport, t.id_sport, t.type, CONCAT(u.name, " ", u.surname) as leader, t.avatar_url as avatar
+			`SELECT t.id_team, t.name, s.id_sport, s.sport, t.id_sport, t.type, t.id_leader, CONCAT(u.name, " ", u.surname) as leader, t.avatar_url as avatar
 			FROM teams as t
 			JOIN sports as s ON t.id_sport=s.id_sport
 			JOIN users as u ON t.id_leader=u.id_user
@@ -76,5 +77,27 @@ export default class TeamService {
 			return result.insertId;
 		}
 		throw {status: 500, msg: 'Změna týmových údajů se nezdařila'};
+	}
+
+	async teamCompetitionMemberships(id_team) {
+		const team_id = Number(id_team);
+		teamValidation.validateTeamID(team_id);
+		return this.dbConnection.query(`SELECT 
+				t.id_team, 
+				t.name as 'team_name', 
+				2 as 'team_position', 
+				s.id_sport, 
+				s.sport, 
+				c.id_competition, 
+				c.name as 'competition_name', 
+				c.start_date, 
+				c.end_date, 
+				(c.start_date < DATE(NOW()) AND c.end_date > DATE(NOW())) as 'is_active' 
+			FROM competition_membership AS cm
+			JOIN teams t ON cm.team = t.id_team
+			JOIN competitions AS c ON cm.competition = c.id_competition
+			JOIN sports AS s ON t.id_sport=s.id_sport
+			where cm.team = ? AND cm.status='active';`
+			, team_id);
 	}
 }
