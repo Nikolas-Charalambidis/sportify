@@ -59,7 +59,7 @@ export function Profile() {
                     key={index}
                     redirect={`../teams/${anObjectMapped.id_team}`}
                     title={`${anObjectMapped.name}`}
-                    subtitle={`${anObjectMapped.position}`}
+                    subtitle={`Pozice: ${anObjectMapped.position}`}
                     tooltipPictureHeader={`${anObjectMapped.sport}`}
                     pictureHeader={mapSportToIcon(anObjectMapped.id_sport)}
                     mainPicture={anObjectMapped.avatar_url === null ? (`${anObjectMapped.avatar_url}`) : (defaultTeamAvatar)}
