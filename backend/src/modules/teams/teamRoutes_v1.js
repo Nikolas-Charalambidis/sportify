@@ -166,6 +166,39 @@ router.get('/:id_team/players', async (req, res, next) => {
 });
 
 /**
+ * @swagger
+ * /teams/{id_team}/competitionMembership:
+ *   get:
+ *     tags:
+ *       - Teams
+ *     name: Competition participations
+ *     summary: Get all competitions the team participates in
+ *     parameters:
+ *       - name: id_team
+ *         in: path
+ *         description: Team ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Competitions found
+ *       400:
+ *         description: Invalid request
+ *       404:
+ *         description: Teams not found
+ */
+router.get('/:id_team/competitionMembership', async(req, res, next) => {
+	try {
+		const { id_team } = req.params;
+		const user = await new TeamService(req).teamCompetitionMemberships(id_team);
+		res.status(200).json({ error: false, msg: 'OK', user: user});
+	} catch(e) {
+		next(e);
+	}
+});
+
+/**
  * User object Swagger definition
  *
  * @swagger

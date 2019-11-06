@@ -352,7 +352,7 @@ router.get('/:id_user/teamMembership', async(req, res, next) => {
  *           type: integer
  *     responses:
  *       200:
- *         description: Teams found
+ *         description: Competitions found
  *       400:
  *         description: Invalid request
  *       404:
