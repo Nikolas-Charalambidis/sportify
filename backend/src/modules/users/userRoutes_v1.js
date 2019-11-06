@@ -219,6 +219,7 @@ router.post('/', async(req, res, next) => {
  *       400:
  *         description: Invalid request
  */
+
 router.post('/avatar', multipartMiddleware, async(req, res, next) => {
 	try {
 		const { id_user } = req.body;
@@ -227,8 +228,17 @@ router.post('/avatar', multipartMiddleware, async(req, res, next) => {
 			allowedFormats: ['jpg', 'png'],
 			transformation: [{ width: 171, height: 180, crop: 'limit' }]
 		};
-		new UserService(req).uploadAvatar(req.files.file.path, params, id_user);
-		res.status(201).json({ error: false, msg: 'Nahrání avatara proběhlo úspěšně'});
+		const url = await new UserService(req).uploadAvatar(req.files.file.path, params, id_user);
+		res.status(201).json({ error: false, msg: 'Nahrání avatara proběhlo úspěšně', url: url});
+	} catch (e) {
+		next(e);
+	}
+});
+router.get('/avatar/:id_user', multipartMiddleware, async(req, res, next) => {
+	try {
+		const { id_user } = req.params;
+		const url = await new UserService(req).getAvatar(id_user);
+		res.status(200).json({ error: false, msg: 'OKaaa', url: url});
 	} catch (e) {
 		next(e);
 	}
