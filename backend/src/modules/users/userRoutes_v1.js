@@ -1,9 +1,13 @@
 import { Router } from 'express';
 import UserService from "./userService";
+import dotenv from "dotenv";
 const multipart = require("connect-multiparty");
 const multipartMiddleware = multipart();
 
 const router = Router();
+dotenv.config();
+dotenv.config({path: '.env'});
+const env = process.env;
 
 /**
  * @swagger
@@ -202,10 +206,10 @@ router.post('/avatar', multipartMiddleware, async(req, res, next) => {
 	try {
 		const { id_user } = req.body;
 		const params = {
-			folder: 'sportify/users',
+			folder: `sportify/${env.CLOUDINARY_FOLDER}/users`,
 			allowedFormats: ['jpg', 'jpeg', 'png'],
 			transformation: [
-				{width: 400, height: 400, gravity: "face", radius: "max", crop: "crop"},
+				{width: 400, height: 400, gravity: "face", crop: "crop"},
 				{width: 200, height: 200,crop: "scale"}
 			]
 		};
