@@ -2,13 +2,31 @@ import React from 'react';
 import ReactTable from "react-table";
 import {useParams} from "react-router-dom";
 import {useGetTeamStatistics} from "../../../../api/team/teamClient_v1";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {mapSportToIcon} from "../../../../utils/mapper";
-import {Heading} from "../../../../atoms";
+import { Heading } from "../../../../atoms";
+
+function getPlayers(state) {
+    if (!state.isLoading) {        
+        return state.team.competitions_aggregate.filter(p => p.position !== "goalkeeper");
+    }
+};
+
+function getGoalkeepers(state) {
+    if (!state.isLoading) {
+        return state.team.competitions_aggregate.filter(p => p.position === "goalkeeper");
+    }
+};
+
+function getRank(playerData) {
+    return (Number(playerData.index) + 1).toString();
+}
 
 export function TeamStatistics() {
-    let {id_team} = useParams();
+    let { id_team } = useParams();
     const [state] = useGetTeamStatistics(id_team);
+    const players = getPlayers(state);
+    const goalkeepers = getGoalkeepers(state);
+    console.log(players);
+    console.log(goalkeepers);
 
     return (
         <div>
@@ -24,8 +42,11 @@ export function TeamStatistics() {
                     rowsText="řádků"
                     noDataText="Nenalezená žádná data"
                     rows
-                    data={state.team_data}
-                    columns={[{columns}]}
+                    data={players.sort(function (a, b) {
+                        return parseFloat(b.field_points) - parseFloat(a.field_points);
+                    })}
+                    filterable
+                    columns={[{ columns }]}
                     defaultPageSize={10}
                     className="-striped -highlight"
                 />
@@ -36,16 +57,38 @@ export function TeamStatistics() {
 
 const columns = [
     {
-        Header: "Sport",
-        accessor: "id_sport",
-        Cell: row => <FontAwesomeIcon icon={mapSportToIcon(row.value)} size="2x"/>,
-    },
-    {
-        Header: "Název soutěže",
-        accessor: "competition_name",
-    },
-    {
         Header: "Umístění",
-        accessor: "team_position",
+        accessor: "rank",
+        Cell: (playerData) => getRank(playerData),
+    },
+    {
+        Header: "Jméno a příjmení",
+        accessor: "name_surname",
+        filterMethod: (filter, row) =>
+            row[filter.id].toLowerCase().match(filter.value.toLowerCase())
+    },
+    {
+        Header: "Počet zápasů",
+        accessor: "matches",
+    },
+    {
+        Header: "Góly",
+        accessor: "goals",
+    },
+    {
+        Header: "Asistence",
+        accessor: "assists",
+    },
+    {
+        Header: "KB",
+        accessor: "field_points",
+    },
+    {
+        Header: "Pr.KB",
+        accessor: "field_average_points",
+    },
+    {
+        Header: "Trestné minuty",
+        accessor: "suspensions",
     }
 ];
