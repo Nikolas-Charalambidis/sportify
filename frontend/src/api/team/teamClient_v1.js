@@ -122,10 +122,10 @@ export function useGetCompetitions(id_team) {
     return [state];
 }
 
-export function ChangeTeamData(api, id_team, values, id_sport, id_contact_person) {
+export function ChangeTeamData(api, id_team, values) {
     const {name, type} = values;
     api
-        .put(`${config.API_BASE_PATH}/teams/`, {id_team: id_team, sport: sport, name: name})
+        .put(`${config.API_BASE_PATH}/teams/`, {id_team: id_team, type: type ,name: name})
         .then(() => {
             window.flash("Tymove údaje byly úspěšně změněny", 'success');
             // return {error: false, message: "Uživatelské údaje byly úspěšně změněny", type: "success"};

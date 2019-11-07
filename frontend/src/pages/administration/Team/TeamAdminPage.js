@@ -18,15 +18,12 @@ const schemaChangeData = yup.object().shape({
 });
 
 export function TeamAdminPage() {
-    const [setShow] = useState(false);
-    const handleShow = () => setShow(true);
     let {id_team} = useParams();
     const [state] = useGetTeam(id_team);
     const [membersState] = useGetMembers(id_team);
     const api = useApi();
-    const [showModal, setShowModal] = useState(false);
+    const [setShowModal] = useState(false);
     const openAvatarModal = () => setShowModal(true);
-    const closeAvatarModal = () => setShowModal(false);
 
 
     return (
@@ -53,9 +50,9 @@ export function TeamAdminPage() {
                         initialValues={{type: state.team_data.type, sport: state.team_data.sport, leader: state.team_data.leader}}
                         validationSchema={schemaChangeData}
                         onSubmit={values => {
-                            ChangeTeamData(api, state.team_data.id_team, values, 0, 0);
+                            ChangeTeamData(api, state.team_data.id_team, values);
                         }}
-                    >{({handleSubmit, errors}) => (
+                    >{({handleSubmit}) => (
                         <Form noValidate onSubmit={handleSubmit}>
                             <Heading className="pageHeading mt-4 mb-5">{state.team_data.name}</Heading>
                             <Row>
