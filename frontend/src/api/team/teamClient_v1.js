@@ -82,8 +82,8 @@ export function useGetMembers(id_team) {
             await api
                 .get(`${config.API_BASE_PATH}/teams/${id_team}/players`)
                 .then(({data}) => {
-                    const {team} = data;
-                    setState({isLoading: false, error: false, team_data: team});
+                    const {players} = data;
+                    setState({isLoading: false, error: false, team_data: players});
                 })
                 .catch(( { response } ) => {
                     const {data} = response;
@@ -97,16 +97,41 @@ export function useGetMembers(id_team) {
     return [state];
 }
 
-export function useChangeData(api, id_team, values) {
-    const {sport, name} = values;
+export function useGetCompetitions(id_team) {
+    const api = useApi();
+    const [state, setState] = useState({
+        isLoading: true
+    });
+    useEffect(() => {
+        async function fetchData() {
+            await api
+                .get(`${config.API_BASE_PATH}/teams/${id_team}/competitionMembership`)
+                .then(({data}) => {
+                    const {comps} = data;
+                    setState({isLoading: false, error: false, team_data: comps});
+                })
+                .catch(( { response } ) => {
+                    const {data} = response;
+                    setState({isLoading: false, error: true, team_data: null});
+                    window.flash(data.msg, 'danger');
+                });
+        }
+
+        fetchData().then();
+    }, [api, id_team]);
+    return [state];
+}
+
+export function ChangeTeamData(api, id_team, values, id_sport, id_contact_person) {
+    const {name, type} = values;
     api
-        .put(`${config.API_BASE_PATH}/teams/`, {id_team: id_team, sport: sport, name: name})
+        .put(`${config.API_BASE_PATH}/teams/`, {id_team: id_team, name: name, id_sport: id_sport, type: type, id_contact_person: id_contact_person})
         .then(() => {
-            window.flash("Tymove údaje byly úspěšně změněny", 'success');
-            // return {error: false, message: "Uživatelské údaje byly úspěšně změněny", type: "success"};
+            window.flash("Uživatelské údaje byly úspěšně změněny", 'success');
         })
-        .catch(({response}) => {
-            const {data} = response;
+        .catch(( { response } ) => {
+            const { data } = response;
             window.flash(data.msg, 'danger');
         });
 }
+

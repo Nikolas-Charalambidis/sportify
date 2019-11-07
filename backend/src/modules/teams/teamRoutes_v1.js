@@ -14,17 +14,17 @@ const router = Router();
  *     parameters:
  *       - name: id_team
  *         in: path
- *         description: Team ID
+ *         description: TeamAdminPage ID
  *         required: true
  *         schema:
  *           type: integer
  *     responses:
  *       200:
- *         description: Team found
+ *         description: TeamAdminPage found
  *       400:
  *         description: Invalid request
  *       404:
- *         description: Team not found
+ *         description: TeamAdminPage not found
  */
 
 router.get('/:id_team', async (req, res, next) => {
@@ -66,7 +66,7 @@ router.get('/:id_team', async (req, res, next) => {
  *               type: integer
  *     responses:
  *       200:
- *         description: Team data has been changed
+ *         description: TeamAdminPage data has been changed
  *       400:
  *         description: Invalid request
  *       500:
@@ -114,10 +114,10 @@ router.get('/', async (req, res, next) => {
  *         name: body
  *         required: true
  *         schema:
- *           $ref: "#/definitions/Team"
+ *           $ref: "#/definitions/TeamAdminPage"
  *     responses:
  *       201:
- *         description: Team added
+ *         description: TeamAdminPage added
  *       400:
  *         description: Invalid request
  */
@@ -142,7 +142,7 @@ router.post('/', async (req, res, next) => {
  *     parameters:
  *       - name: id_team
  *         in: path
- *         description: Team ID
+ *         description: TeamAdminPage ID
  *         required: true
  *         schema:
  *           type: integer
@@ -176,7 +176,7 @@ router.get('/:id_team/players', async (req, res, next) => {
  *     parameters:
  *       - name: id_team
  *         in: path
- *         description: Team ID
+ *         description: TeamAdminPage ID
  *         required: true
  *         schema:
  *           type: integer
@@ -203,7 +203,7 @@ router.get('/:id_team/competitionMembership', async(req, res, next) => {
  *
  * @swagger
  * definitions:
- *   Team:
+ *   TeamAdminPage:
  *     properties:
  *       id_team:
  *         type: integer
