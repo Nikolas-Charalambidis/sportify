@@ -259,8 +259,8 @@ router.get('/:id_team/players', async (req, res, next) => {
 router.get('/:id_team/competitionMembership', async(req, res, next) => {
 	try {
 		const { id_team } = req.params;
-		const user = await new TeamService(req).teamCompetitionMemberships(id_team);
-		res.status(200).json({ error: false, msg: 'OK', user: user});
+		const team = await new TeamService(req).teamCompetitionMemberships(id_team);
+		res.status(200).json({ error: false, msg: 'OK', team: team});
 	} catch(e) {
 		next(e);
 	}
@@ -292,8 +292,8 @@ router.get('/:id_team/competitionMembership', async(req, res, next) => {
 router.get('/:id_team/statistics', async(req, res, next) => {
 	try {
 		const { id_team } = req.params;
-		const user = await new TeamService(req).teamStatistics(id_team);
-		res.status(200).json({ error: false, msg: 'OK', user: user});
+		const team = await new TeamService(req).teamStatistics(id_team);
+		res.status(200).json({ error: false, msg: 'OK', team_data: team});
 	} catch(e) {
 		next(e);
 	}
