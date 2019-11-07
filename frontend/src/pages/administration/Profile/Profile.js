@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Heading } from '../../../atoms';
 import { CardTemplate } from '../../../templates/CardTemplate';
-import { Row, Breadcrumb } from 'react-bootstrap';
+import {Row, Breadcrumb} from 'react-bootstrap';
 import { useHistory } from 'react-router';
 import { useAuth } from '../../../utils/auth';
 import { useApi } from '../../../hooks/useApi';
@@ -10,6 +10,7 @@ import { useGetUser, useGetUserTeams, useGetUserCompetition } from '../../../api
 import { NavLink as Link } from 'react-router-dom';
 import { ChangePasswordModal } from './components/ChangePasswordModal';
 import { UserDataForm } from './components/UserDataForm';
+import defaultTeamAvatar from "../../../assets/images/default_team_avatar.jpg";
 
 export function Profile() {
   const history = useHistory();
@@ -56,10 +57,12 @@ export function Profile() {
                 {teamState.user_data.map((anObjectMapped, index) => (
                   <CardTemplate
                     key={index}
-                    title={<Link to={`../teams/${anObjectMapped.id_sport}`}>{`${anObjectMapped.name}`}</Link>}
-                    subtitle={`${anObjectMapped.position}`}
-                    sport={`${anObjectMapped.sport}`}
-                    icon={mapSportToIcon(anObjectMapped.id_sport)}
+                    redirect={`../teams/${anObjectMapped.id_team}`}
+                    title={`${anObjectMapped.name}`}
+                    subtitle={`Pozice: ${anObjectMapped.position}`}
+                    tooltipPictureHeader={`${anObjectMapped.sport}`}
+                    pictureHeader={mapSportToIcon(anObjectMapped.id_sport)}
+                    mainPicture={anObjectMapped.avatar_url ? (`${anObjectMapped.avatar_url}`) : (defaultTeamAvatar)}
                   />
                 ))}
               </Row>
@@ -75,11 +78,13 @@ export function Profile() {
               {competitionState.user_data.map((anObjectMapped, index) => (
                   <CardTemplate
                       key={index}
-                      title={`${anObjectMapped.name}`}
-                      subtitle={`${anObjectMapped.position}`}
-                      sport={`${anObjectMapped.sport}`}
-                      icon={mapSportToIcon(anObjectMapped.id_sport)}
-                      state={`${anObjectMapped.is_active}`}
+                      redirect={`../leagues/${anObjectMapped.id_competition}`}
+                      title={`${anObjectMapped.competition_name}`}
+                      subtitle={`Umístění: ${anObjectMapped.team_position}`}
+                      tooltipPictureHeader={`${anObjectMapped.sport}`}
+                      pictureHeader={mapSportToIcon(anObjectMapped.id_sport)}
+                      textHeader={anObjectMapped.is_active === 1 ? ("Probíhá") : ("Ukončená")}
+                      mainPicture={anObjectMapped.avatar_url ? (`${anObjectMapped.avatar_url}`) : (defaultTeamAvatar)}
                   />
               ))}
           </Row>

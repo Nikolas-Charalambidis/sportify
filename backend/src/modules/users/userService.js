@@ -96,7 +96,7 @@ export default class UserService {
 		const user_id = Number(id_user);
 		userValidation.validateUserID(user_id);
 		return this.dbConnection.query(
-				`SELECT t.id_team, t.name, tm.position, s.id_sport, s.sport FROM team_membership AS tm
+				`SELECT t.id_team, t.name, t.avatar_url, tm.position, s.id_sport, s.sport FROM team_membership AS tm
 				JOIN teams AS t ON tm.team=t.id_team
 				JOIN sports AS s ON t.id_sport=s.id_sport
 				WHERE tm.user=? AND tm.status='active'`
@@ -113,7 +113,8 @@ export default class UserService {
 					s.id_sport, 
 					s.sport, 
 					c.id_competition, 
-					c.name as 'competition_name',
+					c.name as 'competition_name', 
+					c.avatar_url,
 					(c.start_date < DATE(NOW()) AND c.end_date > DATE(NOW())) as 'is_active' 
 				FROM team_membership AS tm
   				JOIN teams AS t ON tm.team = t.id_team
@@ -146,5 +147,20 @@ export default class UserService {
 		if (result.affectedRows === 0) {
 			throw {status: 500, msg: 'Informace o avatarovi se nepodařilo uložit do databáze'};
 		}
+		return url;
+	}
+
+	async getAvatar(id_user) {
+		const user_id = Number(id_user);
+		userValidation.validateUserID(user_id);
+
+		const result = await this.dbConnection.query(
+			`SELECT avatar_url FROM users WHERE id_user=?`, user_id
+		);
+		if(result.length === 0) {
+			throw {status: 404, msg: 'Uživatel nebyl nalezen v databázi'};
+		}
+		const { avatar_url } = result[0];
+		return avatar_url;
 	}
 }

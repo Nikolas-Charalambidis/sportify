@@ -5,10 +5,8 @@ const multipart = require("connect-multiparty");
 const multipartMiddleware = multipart();
 
 const router = Router();
-
 dotenv.config();
 dotenv.config({path: '.env'});
-
 const env = process.env;
 
 /**
@@ -189,46 +187,67 @@ router.post('/', async(req, res, next) => {
 /**
  * @swagger
  * /users/avatar:
- *   post:
+ *   get:
  *     tags:
  *       - Users
- *     name: Avatar
- *     summary: Upload an avatar
- *     consumes: application/json
- *     produces: application/json
- *     parameters:
- *       - in: body
- *         name: body
- *         required: true
- *         schema:
- *           type: object
- *           properties:
- *             email:
- *               type: string
- *             password1:
- *               type: string
- *             password2:
- *               type: string
- *             name:
- *               type: string
- *             surname:
- *               type: string
+ *     name: Login
+ *     summary: Upload user avatar
  *     responses:
  *       201:
  *         description: Avatar uploaded
  *       400:
  *         description: Invalid request
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Upload failed
  */
 router.post('/avatar', multipartMiddleware, async(req, res, next) => {
 	try {
 		const { id_user } = req.body;
 		const params = {
-			folder: 'sportify/users',
-			allowedFormats: ['jpg', 'png'],
-			transformation: [{ width: 171, height: 180, crop: 'limit' }]
+			folder: `sportify/${env.CLOUDINARY_FOLDER}/users`,
+			allowedFormats: ['jpg', 'jpeg', 'png'],
+			transformation: [
+				{width: 400, height: 400, gravity: "face", crop: "crop"},
+				{width: 200, height: 200,crop: "scale"}
+			]
 		};
-		new UserService(req).uploadAvatar(req.files.file.path, params, id_user);
-		res.status(201).json({ error: false, msg: 'Nahrání avatara proběhlo úspěšně'});
+		const url = await new UserService(req).uploadAvatar(req.files.file.path, params, id_user);
+		res.status(201).json({ error: false, msg: 'Nahrání avatara proběhlo úspěšně', url: url});
+	} catch (e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
+ * /users/avatar/{id_team}:
+ *   get:
+ *     tags:
+ *       - Users
+ *     name: Login
+ *     summary: Get avatar url by user id
+ *     parameters:
+ *       - name: id_user
+ *         in: path
+ *         description: User ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: URL returned
+ *       400:
+ *         description: Invalid request
+ *       404:
+ *         description: User not found
+ */
+router.get('/avatar/:id_user', multipartMiddleware, async(req, res, next) => {
+	try {
+		const { id_user } = req.params;
+		const url = await new UserService(req).getAvatar(id_user);
+		res.status(200).json({ error: false, msg: 'OK', url: url});
 	} catch (e) {
 		next(e);
 	}

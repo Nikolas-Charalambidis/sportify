@@ -66,9 +66,19 @@ export function useGetUserTeams(id_user) {
                     setState({ isLoading: false, error: false, user_data: user });
                 })
                 .catch(( { response } ) => {
-                    const { data } = response;
+                    const { data, status} = response;
                     setState({ isLoading: false, error: true, user_data: null });
-                    window.flash(data.msg, 'danger');
+                    switch (status) {
+                        case 400:
+                            window.flash(data.msg, 'danger');
+                            break;
+                        case 500:
+                            window.flash(data.msg, 'danger');
+                            break;
+                        default:
+                            window.flash("Neočekávaná chyba", 'danger');
+                            break;
+                    }
                 });
         }
         fetchData().then();
@@ -114,9 +124,19 @@ export function useGetUserCompetition(id_user) {
                     setState({ isLoading: false, error: false, user_data: user });
                 })
                 .catch(( { response } ) => {
-                    const { data } = response;
+                    const { data, status} = response;
                     setState({ isLoading: false, error: true, user_data: null });
-                    window.flash(data.msg, 'danger');
+                    switch (status) {
+                        case 400:
+                            window.flash(data.msg, 'danger');
+                            break;
+                        case 500:
+                            window.flash(data.msg, 'danger');
+                            break;
+                        default:
+                            window.flash("Neočekávaná chyba", 'danger');
+                            break;
+                    }
                 });
         }
         fetchData().then();

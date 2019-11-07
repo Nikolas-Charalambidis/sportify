@@ -1,13 +1,12 @@
 import {Formik} from "formik";
 import {ChangeData} from "../../../../api/user/userClient_v1";
-import {Button, Col, Form, Image, Row} from "react-bootstrap";
+import {Button, Col, Form, Row} from "react-bootstrap";
 import {Field} from "../../../../atoms";
-import React, {useState} from "react";
+import React from "react";
 import * as yup from "yup";
-import {UploadAvatar} from "../../../../organisms/UploadAvatar";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import * as Icons from "@fortawesome/free-solid-svg-icons"
+import {Avatar} from "../../../../organisms/Avatar";
 import defaultLogoAvatar from "../../../../assets/images/default_avatar.svg";
+import {useState} from "react";
 
 const schemaChangeData = yup.object().shape({
     name: yup.string().required(),
@@ -15,10 +14,8 @@ const schemaChangeData = yup.object().shape({
 });
 
 export function UserDataForm({api, handleShow, state}) {
-    const [showModal, setShowModal] = useState(false);
-    const openAvatarModal = () => setShowModal(true);
-    const closeAvatarModal = () => setShowModal(false);
-
+    let new_url =  state.user_data.avatar_url === null ? defaultLogoAvatar : state.user_data.avatar_url;
+    const [imageState, setImageState] = useState(new_url);
     return (
         <div>
             <Formik
@@ -32,20 +29,7 @@ export function UserDataForm({api, handleShow, state}) {
                 <Form noValidate onSubmit={handleSubmit}>
                     <Row>
                         <Col className="d-lg-none text-center mb-5">
-                            {state.user_data.avatar_url
-                                ? <Image roundedCircle onClick={openAvatarModal} src={state.user_data.avatar_url}/>
-                                : <div className="avatar-upload">
-                                    <div className="avatar-preview">
-                                        <div id="imagePreview">
-                                            <div className="avatar-edit">
-                                                <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg"/>
-                                                <label htmlFor="imageUpload"><FontAwesomeIcon icon={Icons.faCamera}/></label>
-                                            </div>
-                                            <Image roundedCircle src={defaultLogoAvatar}/>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
+                            <Avatar api={api} setImageState={setImageState} imageState={imageState} type={"users"} id={state.user_data.id_user}/>
                         </Col>
                         <Col xl={10} lg={10}>
                             <Row>
@@ -80,27 +64,12 @@ export function UserDataForm({api, handleShow, state}) {
                             </Row>
                         </Col>
                         <Col xl={2} lg={2} className="d-none d-lg-block">
-                            {state.user_data.avatar_url
-                                ? <Image roundedCircle onClick={openAvatarModal} src={state.user_data.avatar_url}/>
-                                : <div className="avatar-upload">
-                                    <div className="avatar-edit">
-                                        <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg"/>
-                                        <label htmlFor="imageUpload"><FontAwesomeIcon icon={Icons.faCamera}/></label>
-                                    </div>
-                                    <div className="avatar-preview">
-                                        <div id="imagePreview">
-                                            <Image roundedCircle src={defaultLogoAvatar}/>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
+                            <Avatar api={api} setImageState={setImageState} imageState={imageState} type={"users"} id={state.user_data.id_user}/>
                         </Col>
                     </Row>
                 </Form>
             )}
             </Formik>
-            <UploadAvatar api={api} id_user={state.user_data.id_user} show={showModal} handleClose={closeAvatarModal}
-                          type={"users"}/>
         </div>
     );
 }
