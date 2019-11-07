@@ -62,7 +62,7 @@ export function Profile() {
                     subtitle={`Pozice: ${anObjectMapped.position}`}
                     tooltipPictureHeader={`${anObjectMapped.sport}`}
                     pictureHeader={mapSportToIcon(anObjectMapped.id_sport)}
-                    mainPicture={anObjectMapped.avatar_url === null ? (`${anObjectMapped.avatar_url}`) : (defaultTeamAvatar)}
+                    mainPicture={anObjectMapped.avatar_url ? (`${anObjectMapped.avatar_url}`) : (defaultTeamAvatar)}
                   />
                 ))}
               </Row>
@@ -84,7 +84,7 @@ export function Profile() {
                       tooltipPictureHeader={`${anObjectMapped.sport}`}
                       pictureHeader={mapSportToIcon(anObjectMapped.id_sport)}
                       textHeader={anObjectMapped.is_active === 1 ? ("Probíhá") : ("Ukončená")}
-                      mainPicture={anObjectMapped.avatar_url === null ? (`${anObjectMapped.avatar_url}`) : (defaultTeamAvatar)}
+                      mainPicture={anObjectMapped.avatar_url ? (`${anObjectMapped.avatar_url}`) : (defaultTeamAvatar)}
                   />
               ))}
           </Row>
