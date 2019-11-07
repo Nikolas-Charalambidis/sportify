@@ -9,7 +9,7 @@ import {
     Breadcrumb,
 } from 'react-bootstrap';
 import * as Icons from '@fortawesome/free-solid-svg-icons';
-import {useGetTeam} from "../../api/team/teamAPI";
+import {useGetTeam} from "../../api/team/teamClient_v1";
 import {Formik} from "formik";
 import * as yup from 'yup';
 import {Field} from "../../atoms/Field";
@@ -32,7 +32,7 @@ export function Team() {
                 <Breadcrumb.Item href="/administration">Administrace</Breadcrumb.Item>
                 <Breadcrumb.Item active>Tým</Breadcrumb.Item>
             </Breadcrumb>
-            <Heading className="mt-4 mb-5">Tymovy profil</Heading>
+            <Heading className="mt-4 mb-5">Týmový profil</Heading>
             {!state.isLoading &&
             <div>
                 <Formik
@@ -89,10 +89,10 @@ export function Team() {
                 </Formik>
                 <h2 className="mt-4">Soutěže</h2>
                 <Row>
-                    <CardTemplate nazev="Jarov Liga" pozice="Pozice: 1." icon={Icons.faFutbol} sport="fotbal"
-                                  logo="http://bit.ly/32Z7Hfl" stav="Probíhá"/>
-                    <CardTemplate nazev="Extraliga" pozice="Pozice: 2." icon={Icons.faFutbol} sport="fotbal"
-                                  logo="http://bit.ly/2PrDmSC" stav="Ukončena"/>
+                    <CardTemplate title="Jarov Liga" subtitle="Pozice: 1." pictureHeader={Icons.faFutbol} tooltipPictureHeader="fotbal"
+                                  mainPicture="http://bit.ly/32Z7Hfl" textHeader="Probíhá"/>
+                    <CardTemplate title="Extraliga" subtitle="Pozice: 2." pictureHeader={Icons.faFutbol} tooltipPictureHeader=" fotbal"
+                                  mainPicture="http://bit.ly/2PrDmSC" textHeader="Ukončena"/>
                 </Row>
             </div>
             }

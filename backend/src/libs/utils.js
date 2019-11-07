@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import dotenv from "dotenv";
+import cloudinary from "./cloudinary_config";
 
 dotenv.config();
 dotenv.config({path: '.env'});
@@ -45,3 +46,19 @@ export const genValidityDate = () => {
   return validity;
 };
 
+export async function uploadAvatarToCloudinary(filepath, params) {
+  return await cloudinary.uploader
+      .upload(filepath, params)
+      .then(result =>  result)
+      .catch(() => {
+        throw {status: 500, msg: 'Nahrání avatara na server se nezdařilo'};
+      });
+}
+
+export async function deleteAvatarFromCloudinary(public_id) {
+  await cloudinary.uploader
+      .destroy(public_id)
+      .catch(() => {
+        throw {status: 500, msg: 'Smazání původního avatara se nezdařilo'};
+      });
+}

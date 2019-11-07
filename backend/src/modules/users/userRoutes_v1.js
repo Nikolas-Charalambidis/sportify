@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import UserService from "./userService";
+const multipart = require("connect-multiparty");
+const multipartMiddleware = multipart();
 
 const router = Router();
 
@@ -180,6 +182,141 @@ router.post('/', async(req, res, next) => {
 
 /**
  * @swagger
+ * /users/avatar:
+ *   get:
+ *     tags:
+ *       - Users
+ *     name: Login
+ *     summary: Upload user avatar
+ *     responses:
+ *       201:
+ *         description: Avatar uploaded
+ *       400:
+ *         description: Invalid request
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Upload failed
+ */
+router.post('/avatar', multipartMiddleware, async(req, res, next) => {
+	try {
+		const { id_user } = req.body;
+		const params = {
+			folder: 'sportify/users',
+			allowedFormats: ['jpg', 'jpeg', 'png'],
+			transformation: [
+				{width: 400, height: 400, gravity: "face", radius: "max", crop: "crop"},
+				{width: 200, height: 200,crop: "scale"}
+			]
+		};
+		const url = await new UserService(req).uploadAvatar(req.files.file.path, params, id_user);
+		res.status(201).json({ error: false, msg: 'Nahrání avatara proběhlo úspěšně', url: url});
+	} catch (e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
+ * /users/avatar/{id_team}:
+ *   get:
+ *     tags:
+ *       - Users
+ *     name: Login
+ *     summary: Get avatar url by user id
+ *     parameters:
+ *       - name: id_user
+ *         in: path
+ *         description: User ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: URL returned
+ *       400:
+ *         description: Invalid request
+ *       404:
+ *         description: User not found
+ */
+router.get('/avatar/:id_user', multipartMiddleware, async(req, res, next) => {
+	try {
+		const { id_user } = req.params;
+		const url = await new UserService(req).getAvatar(id_user);
+		res.status(200).json({ error: false, msg: 'OK', url: url});
+	} catch (e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
+ * /users/{id_user}/team:
+ *   get:
+ *     tags:
+ *       - Users
+ *     name: Team ownerships
+ *     summary: Get all teams the user is owner of
+ *     parameters:
+ *       - name: id_user
+ *         in: path
+ *         description: User ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Teams found
+ *       400:
+ *         description: Invalid request
+ *       404:
+ *         description: Teams not found
+ */
+router.get('/:id_user/team', async(req, res, next) => {
+	try {
+		const { id_user } = req.params;
+		const user = await new UserService(req).userTeam(id_user);
+		res.status(200).json({ error: false, msg: 'OK', user: user});
+	} catch(e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
+ * /users/{id_user}/competition:
+ *   get:
+ *     tags:
+ *       - Users
+ *     name: Team ownerships
+ *     summary: Get all competition the user is owner of
+ *     parameters:
+ *       - name: id_user
+ *         in: path
+ *         description: User ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Competitions found
+ *       400:
+ *         description: Invalid request
+ *       404:
+ *         description: Teams not found
+ */
+router.get('/:id_user/competition', async(req, res, next) => {
+	try {
+		const { id_user } = req.params;
+		const user = await new UserService(req).userCompetition(id_user);
+		res.status(200).json({ error: false, msg: 'OK', user: user});
+	} catch(e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
  * /users/{id_user}/teamMembership:
  *   get:
  *     tags:
@@ -228,7 +365,7 @@ router.get('/:id_user/teamMembership', async(req, res, next) => {
  *           type: integer
  *     responses:
  *       200:
- *         description: Teams found
+ *         description: Competitions found
  *       400:
  *         description: Invalid request
  *       404:
