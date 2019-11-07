@@ -7,8 +7,10 @@ import {Breadcrumb, Row, Col, Image, Tabs, Tab} from 'react-bootstrap';
 import {TeamSquad} from "./components/TeamSquad";
 import {useGetTeam} from "../../../api/team/teamClient_v1";
 import defaultTeamAvatar from '../../../assets/images/default_team_avatar.jpg';
-import { mapSportToIcon } from '../../../utils/mapper';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {mapSportToIcon} from '../../../utils/mapper';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {TeamCompetitions} from "./components/TeamCompetitions";
+import {TeamStatistics} from "./components/TeamStatistics";
 
 export function TeamDetail() {
     let {id_team} = useParams();
@@ -17,7 +19,8 @@ export function TeamDetail() {
     return (
         <div>
             {state.isLoading && <div>Načítám data...</div>}
-            {(!state.isLoading && state.error) && <div>Data se nepodařilo načíst</div>}
+            {!state.isLoading && state.error &&
+            <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
             {!state.isLoading &&
             <div>
                 <Breadcrumb>
@@ -54,7 +57,9 @@ export function TeamDetail() {
                             </Col>
                             <Col md={4} sm={4} xs={6}>
                                 <p>Sport</p>
-                                <Heading size="xs"><FontAwesomeIcon icon={mapSportToIcon(state.team_data.id_sport)} className="mr-2" size="1x" /> {state.team_data.sport}</Heading>
+                                <Heading size="xs"><FontAwesomeIcon icon={mapSportToIcon(state.team_data.id_sport)}
+                                                                    className="mr-2" size="1x"/> {state.team_data.sport}
+                                </Heading>
                             </Col>
                         </Row>
                     </Col>
@@ -62,11 +67,13 @@ export function TeamDetail() {
 
                 <Tabs className="mb-3" fill defaultActiveKey="squad" id="teamTabs">
                     <Tab eventKey="squad" title="Sestava">
-                        <TeamSquad teamId={1}/>
+                        <TeamSquad/>
                     </Tab>
                     <Tab eventKey="competition" title="Soutěže">
+                        <TeamCompetitions/>
                     </Tab>
                     <Tab eventKey="statistics" title="Statistiky">
+                        <TeamStatistics/>
                     </Tab>
                 </Tabs>
             </div>

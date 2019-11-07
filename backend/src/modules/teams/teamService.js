@@ -98,7 +98,7 @@ export default class TeamService {
 			FROM competition_membership AS cm
 			JOIN teams t ON cm.team = t.id_team
 			JOIN competitions AS c ON cm.competition = c.id_competition
-			JOIN sports AS s ON t.id_sport=s.id_sport
+			JOIN sports AS s ON c.id_sport=s.id_sport
 			where cm.team = ? AND cm.status='active';`
 			, team_id);
 	}
