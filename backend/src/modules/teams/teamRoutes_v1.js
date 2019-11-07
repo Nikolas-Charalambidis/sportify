@@ -1,8 +1,12 @@
 import { Router } from 'express';
 import TeamService from './teamService';
+import dotenv from "dotenv";
 const multipart = require("connect-multiparty");
 const multipartMiddleware = multipart();
 
+dotenv.config();
+dotenv.config({path: '.env'});
+const env = process.env;
 const router = Router();
 
 /**
@@ -61,10 +65,10 @@ router.post('/avatar', multipartMiddleware, async(req, res, next) => {
 	try {
 		const { id_team } = req.body;
 		const params = {
-			folder: 'sportify/teams',
+			folder: `sportify/${env.CLOUDINARY_FOLDER}/teams`,
 			allowedFormats: ['jpg', 'jpeg', 'png'],
 			transformation: [
-				{width: 400, height: 400, gravity: "face", radius: "max", crop: "crop"},
+				{width: 400, height: 400, gravity: "face", crop: "crop"},
 				{width: 200, height: 200,crop: "scale"}
 			]
 		};
