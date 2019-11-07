@@ -65,7 +65,7 @@ export function TeamDetail() {
                     </Col>
                 </Row>
 
-                <Tabs className="mb-3" fill defaultActiveKey="squad" id="teamTabs">
+                <Tabs className="mb-3" fill defaultActiveKey="statistics" id="teamTabs">
                     <Tab eventKey="squad" title="Sestava">
                         <TeamSquad/>
                     </Tab>
