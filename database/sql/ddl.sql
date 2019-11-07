@@ -184,9 +184,9 @@ INSERT INTO `tokens` (`id_token`, `id_user`, `hash`, `validity`, `type`) VALUES 
 INSERT INTO `tokens` (`id_token`, `id_user`, `hash`, `validity`, `type`) VALUES (3, 13, '39247677', '2020-12-29 00:09:33', 'confirm');
 
 -- SPORTS
-INSERT INTO `sports` (`id_sport`, `sport`) VALUES (1, 'hokej');
-INSERT INTO `sports` (`id_sport`, `sport`) VALUES (2, 'florbal');
-INSERT INTO `sports` (`id_sport`, `sport`) VALUES (3, 'hokejbal');
+INSERT INTO `sports` (`id_sport`, `sport`) VALUES (1, 'Hokej');
+INSERT INTO `sports` (`id_sport`, `sport`) VALUES (2, 'Florbal');
+INSERT INTO `sports` (`id_sport`, `sport`) VALUES (3, 'Hokejbal');
 
 -- TEAMS
 INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `type`, `id_contact_person`) VALUES (1, 1, 'Hokejisti pro srandu a žízeň', 1, 'amatéři', 1);
