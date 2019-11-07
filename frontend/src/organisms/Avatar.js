@@ -27,17 +27,16 @@ export function useGetAvatar(type, id) {
                 window.flash(data.msg, 'success');
                 setTimeout(() => {window.location.reload();}, 1000);
             })
-            .catch(({response})  => {
+            .catch(({response}) => {
                 const {data} = response;
                 window.flash(data.msg, 'danger');
             });
     };
 
 
-
-    useEffect( () => {
+    useEffect(() => {
         const fetchData = () => {
-            setImageState( {
+            setImageState({
                 isLoading: true,
                 url: null,
                 error: false,
@@ -45,15 +44,15 @@ export function useGetAvatar(type, id) {
             api
                 .get(`${config.API_BASE_PATH}/${type}/avatar/${id}`)
                 .then(({data}) => {
-                    let url =  data.url === null ? defaultLogoAvatar : data.url;
-                    setImageState( {
+                    let url = data.url === null ? defaultLogoAvatar : data.url;
+                    setImageState({
                         isLoading: false,
                         url: url,
                         error: false,
                     });
                 })
-                .catch(()  => {
-                    setImageState( {
+                .catch(() => {
+                    setImageState({
                         isLoading: false,
                         url: undefined,
                         error: true
