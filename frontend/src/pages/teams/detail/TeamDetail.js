@@ -6,7 +6,7 @@ import {Heading} from '../../../atoms';
 import {Breadcrumb, Row, Col, Image, Tabs, Tab} from 'react-bootstrap';
 import {TeamSquad} from "./components/TeamSquad";
 import {useGetTeam} from "../../../api/team/teamClient_v1";
-import defaultTeamAvatar from '../../../assets/images/default_team_avatar.jpg';
+import defaultTeamAvatar from '../../../assets/images/default_team_avatar.svg';
 import {mapSportToIcon} from '../../../utils/mapper';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {TeamCompetitions} from "./components/TeamCompetitions";
@@ -17,7 +17,6 @@ import loadingGif from "../../../assets/images/loading.gif";
 export function TeamDetail() {
     let {id_team} = useParams();
     const [state] = useGetTeam(id_team);
-    console.log(state)
 
     return (
         <div>

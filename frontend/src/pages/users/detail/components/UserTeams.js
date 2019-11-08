@@ -5,7 +5,7 @@ import {Row, Image} from 'react-bootstrap';
 import {useParams} from "react-router-dom";
 import {mapSportToIcon} from '../../../../utils/mapper';
 import {useGetUserTeams} from '../../../../api/user/userClient_v1';
-import defaultTeamAvatar from "../../../../assets/images/default_team_avatar.jpg";
+import defaultTeamAvatar from "../../../../assets/images/default_team_avatar.svg";
 import loadingGif from "../../../../assets/images/loading.gif";
 import {getPositionEnumName} from "../../../../utils/enum-helper";
 

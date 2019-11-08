@@ -25,7 +25,7 @@ export function Avatar({api, imageState, setImageState, type, id}) {
 
     return (
         <div>
-            <div className="avatar-upload">
+            <div className="avatar-upload avatarProfile">
                 <div className="avatar-edit">
                     <input onChange={uploadAvatar} id="imageUpload" name="file" type="file" accept=".png, .jpg, .jpeg"/>
                     <label htmlFor="imageUpload"><FontAwesomeIcon icon={Icons.faCamera}/></label>

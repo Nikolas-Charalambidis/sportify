@@ -10,7 +10,7 @@ import {useGetUser, useGetUserTeams, useGetUserCompetition} from '../../../api/u
 import {NavLink as Link} from 'react-router-dom';
 import {ChangePasswordModal} from './components/ChangePasswordModal';
 import {UserDataForm} from './components/UserDataForm';
-import defaultTeamAvatar from "../../../assets/images/default_team_avatar.jpg";
+import defaultTeamAvatar from "../../../assets/images/default_team_avatar.svg";
 import defaultCompetitionAvatar from "../../../assets/images/default_competition_avatar.jpg";
 import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../assets/images/loading.gif";
