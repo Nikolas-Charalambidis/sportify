@@ -15,7 +15,6 @@ import {TeamStatistics} from "./components/TeamStatistics";
 export function TeamDetail() {
     let {id_team} = useParams();
     const [state] = useGetTeam(id_team);
-    console.log(state)
 
     return (
         <div>
@@ -69,7 +68,7 @@ export function TeamDetail() {
                     </Col>
                 </Row>
 
-                <Tabs className="mb-3" fill defaultActiveKey="statistics" id="teamTabs">
+                <Tabs className="mb-3" fill defaultActiveKey="squad" id="teamTabs">
                     <Tab eventKey="squad" title="Sestava">
                         <TeamSquad/>
                     </Tab>
