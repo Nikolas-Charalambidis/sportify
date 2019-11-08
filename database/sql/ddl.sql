@@ -27,10 +27,14 @@ CREATE TABLE `teams` (
     `id_sport` int NOT NULL,
     `name` varchar(255) UNIQUE NOT NULL,
     `id_leader` int NOT NULL,
-    `type` ENUM ('profi', 'amatéři') NOT NULL,
+    `id_type` int NOT NULL,
     `id_contact_person` int NOT NULL,
     `avatar_url` varchar(512),
     `avatar_public_id` varchar(255)
+);
+CREATE TABLE `team_types` (
+     `id_type` int PRIMARY KEY AUTO_INCREMENT,
+     `type` varchar(255) NOT NULL
 );
 
 CREATE TABLE `competitions` (
@@ -116,6 +120,7 @@ CREATE TABLE `team_statistics` (
 ALTER TABLE `teams` ADD FOREIGN KEY (`id_sport`) REFERENCES `sports` (`id_sport`);
 ALTER TABLE `teams` ADD FOREIGN KEY (`id_leader`) REFERENCES `users` (`id_user`);
 ALTER TABLE `teams` ADD FOREIGN KEY (`id_contact_person`) REFERENCES `users` (`id_user`);
+ALTER TABLE `teams` ADD FOREIGN KEY (`id_type`) REFERENCES `team_types` (`id_type`);
 
 ALTER TABLE `tokens` ADD FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`);
 
@@ -184,16 +189,20 @@ INSERT INTO `tokens` (`id_token`, `id_user`, `hash`, `validity`, `type`) VALUES 
 INSERT INTO `tokens` (`id_token`, `id_user`, `hash`, `validity`, `type`) VALUES (3, 13, '39247677', '2020-12-29 00:09:33', 'confirm');
 
 -- SPORTS
-INSERT INTO `sports` (`id_sport`, `sport`) VALUES (1, 'hokej');
-INSERT INTO `sports` (`id_sport`, `sport`) VALUES (2, 'florbal');
-INSERT INTO `sports` (`id_sport`, `sport`) VALUES (3, 'hokejbal');
+INSERT INTO `sports` (`id_sport`, `sport`) VALUES (1, 'Hokej');
+INSERT INTO `sports` (`id_sport`, `sport`) VALUES (2, 'Florbal');
+INSERT INTO `sports` (`id_sport`, `sport`) VALUES (3, 'Hokejbal');
+
+-- TEAM TYPES
+INSERT INTO `team_types` (`id_type`, `type`) VALUES (1, 'profi');
+INSERT INTO `team_types` (`id_type`, `type`) VALUES (2, 'amatéři');
 
 -- TEAMS
-INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `type`, `id_contact_person`) VALUES (1, 1, 'Hokejisti pro srandu a žízeň', 1, 'amatéři', 1);
-INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `type`, `id_contact_person`) VALUES (2, 1, 'The Rural Jurors', 6, 'profi', 6);
-INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `type`, `id_contact_person`) VALUES (3, 1, 'Game of Throws', 14, 'amatéři', 14);
-INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `type`, `id_contact_person`) VALUES (4, 3, 'Not Last Place', 19, 'amatéři', 19);
-INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `type`, `id_contact_person`) VALUES (5, 3, 'The Salty Pretzels', 24, 'profi', 24);
+INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`) VALUES (1, 1, 'Hokejisti pro srandu a žízeň', 1, 2, 1);
+INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`) VALUES (2, 1, 'The Rural Jurors', 6, 1, 6);
+INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`) VALUES (3, 1, 'Game of Throws', 14, 2, 14);
+INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`) VALUES (4, 3, 'Not Last Place', 19, 2, 19);
+INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`) VALUES (5, 3, 'The Salty Pretzels', 24, 1, 24);
 
 -- TEAM-MEMBERSHIP
 INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (1, 1, 1, 'active', 'goalkeeper');

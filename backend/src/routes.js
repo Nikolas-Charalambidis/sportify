@@ -4,6 +4,7 @@ import teamRoutes_v1 from './modules/teams/teamRoutes_v1';
 import userRoutes_v1 from './modules/users/userRoutes_v1';
 import sportRoutes_v1 from './modules/sports/sportRoutes_v1';
 import authRoutes_v1 from './modules/auth/authRoutes_v1';
+import othersRoutes_v1 from './modules/others/othersRoutes_v1';
 
 import swagger from "./swagger/swagger";
 
@@ -20,6 +21,9 @@ console.log("[initialized] teamsRoutes_v1     /api/v1/teams");
 
 router.use('/api/v1/sports', sportRoutes_v1);
 console.log("[initialized] sportRoutes_v1     /api/v1/sports");
+
+router.use('/api/v1/others', othersRoutes_v1);
+console.log("[initialized] othersRoutes_v1     /api/v1/others");
 
 console.log("");
 swagger(router, "v1");

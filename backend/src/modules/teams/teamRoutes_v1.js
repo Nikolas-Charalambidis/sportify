@@ -63,7 +63,7 @@ router.get('/:id_team', async (req, res, next) => {
  */
 router.post('/avatar', multipartMiddleware, async(req, res, next) => {
 	try {
-		const { id_team } = req.body;
+		const { id } = req.body;
 		const params = {
 			folder: `sportify/${env.CLOUDINARY_FOLDER}/teams`,
 			allowedFormats: ['jpg', 'jpeg', 'png'],
@@ -72,7 +72,7 @@ router.post('/avatar', multipartMiddleware, async(req, res, next) => {
 				{width: 200, height: 200,crop: "scale"}
 			]
 		};
-		const url = await new TeamService(req).uploadAvatar(req.files.file.path, params, id_team);
+		const url = await new TeamService(req).uploadAvatar(req.files.file.path, params, id);
 		res.status(201).json({ error: false, msg: 'Nahrání avatara proběhlo úspěšně', url: url});
 	} catch (e) {
 		next(e);
@@ -135,9 +135,11 @@ router.get('/avatar/:id_team', multipartMiddleware, async(req, res, next) => {
  *               type: string
  *             id_sport:
  *               type: integer
- *             type:
- *               type: string
+ *             id_type:
+ *               type: integer
  *             id_contact_person:
+ *               type: integer
+ *             id_leader:
  *               type: integer
  *     responses:
  *       200:
@@ -149,9 +151,9 @@ router.get('/avatar/:id_team', multipartMiddleware, async(req, res, next) => {
  */
 router.put('/', async(req, res, next) => {
 	try {
-		const { id_team, name, type, id_sport, id_contact_person} = req.body;
-		await new TeamService(req).changeTeam(id_team, name, type, id_sport, id_contact_person);
-		res.status(200).send({ error: false, msg: 'OK', id_team: id_team});
+		const { id_team, name, id_type, id_sport, id_contact_person, id_leader} = req.body;
+		await new TeamService(req).changeTeam(id_team, name, id_type, id_sport, id_contact_person, id_leader);
+		res.status(200).send({ error: false, msg: 'Týmové údaje byly změněny', id_team: id_team});
 	} catch (e) {
 		next(e);
 	}
@@ -198,8 +200,8 @@ router.get('/', async (req, res, next) => {
  */
 router.post('/', async (req, res, next) => {
 	try {
-		const { id_sport, name, type, id_leader } = req.body;
-		const id = await new TeamService(req).addNewTeam(id_sport, name, type, id_leader);
+		const { id_sport, name, id_type, id_leader } = req.body;
+		const id = await new TeamService(req).addNewTeam(id_sport, name, id_type, id_leader);
 		res.status(201).header('Location' , `/api/v1/teams/${id}`).send({ error: false, msg: 'OK', id_team: id});
 	} catch(e) {
 		next(e);

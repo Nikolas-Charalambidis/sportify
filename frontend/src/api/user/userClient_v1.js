@@ -97,11 +97,11 @@ export function useGetUserOwnedTeams(id_user) {
                 .get(`${config.API_BASE_PATH}/users/${id_user}/team`)
                 .then(({ data }) => {
                     const { user } = data;
-                    setState({ isLoading: false, error: false, user_data: user });
+                    setState({ isLoading: false, error: false, teams: user });
                 })
                 .catch(( { response } ) => {
                     const { data } = response;
-                    setState({ isLoading: false, error: true, user_data: null });
+                    setState({ isLoading: false, error: true, teams: null });
                     window.flash(data.msg, 'danger');
                 });
         }

@@ -1,7 +1,6 @@
 import dotenv from 'dotenv';
 import {DB_CONNECTION_KEY} from '../../libs/connection';
 import * as teamValidation from './teamValidations';
-import * as userValidation from "../users/userValidations";
 import * as utils from "../../libs/utils";
 
 dotenv.config();
@@ -26,10 +25,14 @@ export default class TeamService {
 		const team_id = Number(id_team);
 		teamValidation.validateTeamID(team_id);
 		const result = await this.dbConnection.query(
-			`SELECT t.id_team, t.name, s.id_sport, s.sport, t.id_sport, t.type, t.id_leader, CONCAT(u.name, " ", u.surname) as leader, t.avatar_url as avatar
+			`SELECT t.id_team, t.name, s.id_sport, s.sport, t.id_sport, type.id_type, type.type, t.id_leader, t.id_contact_person, t.avatar_url,
+			 CONCAT(leader.name, " ", leader.surname) as leader,
+			 CONCAT(contact.name, " ", contact.surname) as contact_person
 			FROM teams as t
 			JOIN sports as s ON t.id_sport=s.id_sport
-			JOIN users as u ON t.id_leader=u.id_user
+			JOIN users as leader ON t.id_leader=leader.id_user
+			JOIN users as contact ON t.id_contact_person=contact.id_user
+			JOIN team_types as type ON t.id_type=type.id_type
 			WHERE id_team=?`
 			, team_id
 		);
@@ -43,7 +46,7 @@ export default class TeamService {
 		const team_id = Number(id_team);
 		teamValidation.validateTeamID(team_id);
 		const players = await this.dbConnection.query(
-			`SELECT u.id_user, u.email, u.name, u.surname, t.position FROM team_membership AS t
+			`SELECT u.id_user, u.email, CONCAT(u.name, ' ', u.surname) AS 'name', t.position FROM team_membership AS t
    			JOIN users u ON t.user = u.id_user
    			WHERE team = ?;`
 			, team_id
@@ -51,12 +54,13 @@ export default class TeamService {
 		return players;
 	}
 
-	async addNewTeam(id_sport, name, type, id_leader) {
+	async addNewTeam(id_sport, name, id_type, id_leader) {
 		const sport = Number(id_sport);
 		const leader = Number(id_leader);
+		const type = Number(id_type);
 		teamValidation.validateNewTeamData(sport, name, type, leader);
 		const result = await this.dbConnection.query(
-			`INSERT INTO teams (id_team, id_sport, name, type, id_leader, id_contact_person) VALUES (NULL, ?, ?, ?, ?, ?)`,
+			`INSERT INTO teams (id_team, id_sport, name, id_type, id_leader, id_contact_person) VALUES (NULL, ?, ?, ?, ?, ?)`,
 			[sport, name, type, leader, leader]
 		);
 		if(result.affectedRows === 1){
@@ -65,14 +69,16 @@ export default class TeamService {
 		throw {status: 500, msg: 'Vytvoření nového týmu se nezdařilo'};
 	}
 
-	async changeTeam(id_team, name, type, id_sport, id_contact_person) {
-		const team_id = Number(id_team);
-		const sport_id = Number(id_sport);
-		const contact_person_id = Number(id_contact_person);
-		teamValidation.validateChangeTeamData(team_id, name, type, sport_id, contact_person_id);
+	async changeTeam(id_team, name, id_type, id_sport, id_contact_person, id_leader) {
+		const team = Number(id_team);
+		const sport = Number(id_sport);
+		const contact_person = Number(id_contact_person);
+		const leader = Number(id_leader);
+		const type = Number(id_type);
+		teamValidation.validateChangeTeamData(team, name, type, sport, contact_person, leader);
 		const result = await this.dbConnection.query(
-			`UPDATE teams SET name=?, type=?, id_sport=?, id_contact_person=? WHERE id_team=?`,
-			[name, type, sport_id, contact_person_id, team_id]
+			`UPDATE teams SET name=?, id_type=?, id_sport=?, id_contact_person=?, id_leader=? WHERE id_team=?`,
+			[name, type, sport, contact_person, leader, team]
 		);
 		if(result.affectedRows === 1){
 			return result.insertId;
@@ -106,9 +112,8 @@ export default class TeamService {
 	async uploadAvatar(filepath, params, id_team) {
 		const team_id = Number(id_team);
 		teamValidation.validateTeamID(team_id);
-
 		let result = await this.dbConnection.query(
-			`SELECT avatar_public_id FROM users WHERE id_team=?`, team_id
+			`SELECT avatar_public_id FROM teams WHERE id_team=?`, team_id
 		);
 		if(result.length === 0) {
 			throw {status: 404, msg: 'Team nebyl nalezen v databázi'};
@@ -165,7 +170,7 @@ export default class TeamService {
 					ts.goalkeeper_zeros,
 					(ts.goalkeeper_zeros / ts.goalkeeper_matches) AS 'goalkeeper_average_zeros',
 					ts.goalkeeper_shoots,
-					(1 - ts.goalkeeper_goals/ts.goalkeeper_shoots) AS 'goalkeeper_success_rate'
+					CONCAT(100*(1 - ts.goalkeeper_goals/ts.goalkeeper_shoots), ' %') AS 'goalkeeper_success_rate'
 				FROM team_statistics as ts	
 				JOIN users AS u ON ts.id_user = u.id_user
 				JOIN team_membership tm on u.id_user = tm.user
@@ -189,7 +194,7 @@ export default class TeamService {
 					SUM(ts.goalkeeper_zeros) AS 'goalkeeper_zeros',
 					(SUM(ts.goalkeeper_zeros)/SUM(ts.goalkeeper_matches)) AS 'goalkeeper_average_zeros',
 					SUM(ts.goalkeeper_shoots) AS 'goalkeeper_shoots',
-					(1 - SUM(ts.goalkeeper_goals)/SUM(ts.goalkeeper_shoots)) AS 'goalkeeper_success_rate'
+					CONCAT(100*(1 - SUM(ts.goalkeeper_goals)/SUM(ts.goalkeeper_shoots)), ' %') AS 'goalkeeper_success_rate'
 						FROM team_statistics as ts
 						JOIN users AS u ON ts.id_user = u.id_user
 						JOIN team_membership tm on u.id_user = tm.user
