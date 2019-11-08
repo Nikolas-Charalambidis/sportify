@@ -62,7 +62,7 @@ export function TeamDetail() {
                                 <p>Typ týmu</p>
                                 <Heading size="xs">{state.team_data.type}</Heading>
                             </Col>
-                            <Col md={4} sm={4} xs={6}>
+                            <Col className="mt-sm-0 mt-3" md={4} sm={4} xs={6}>
                                 <p>Sport</p>
                                 <Heading size="xs">
                                     <FontAwesomeIcon className="mr-2" icon={mapSportToIcon(state.team_data.id_sport)}
