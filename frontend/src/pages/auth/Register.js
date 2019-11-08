@@ -68,7 +68,7 @@ export function Register() {
             >{({handleSubmit, errors}) => (
                 <Form noValidate onSubmit={handleSubmit}>
                     <Row>
-                        <Col xl={{span: 4, offset: 2}} lg={{span: 4, offset: 2}} md={{span: 6, offset: 0}}>
+                        <Col xl={{span: 4, offset: 4}} lg={{span: 4, offset: 4}} md={{span: 6, offset: 3}}>
                             <Field label="E-mail" name="email" type="email"
                                    message="Vyplňte Vaši e-mailovou adresu." isInvalid={!!errors.email}/>
                         </Col>

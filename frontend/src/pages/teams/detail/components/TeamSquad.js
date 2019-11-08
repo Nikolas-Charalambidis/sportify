@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactTable from "react-table";
 import "react-table/react-table.css";
 import {useHistory} from 'react-router-dom';
 import {useGetMembers} from "../../../../api/team/teamClient_v1";

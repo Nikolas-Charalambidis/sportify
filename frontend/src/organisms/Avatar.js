@@ -8,7 +8,6 @@ export function Avatar({api, imageState, setImageState, type, id}) {
 
     const uploadAvatar = event => {
         let formData = new FormData();
-        console.log('event', event);
         formData.append('file', event.currentTarget.files[0]);
         formData.append('id_user', id);
         window.flash("Nahrávám avatara na server", 'info', 10000, null);
@@ -18,7 +17,7 @@ export function Avatar({api, imageState, setImageState, type, id}) {
                 setImageState(data.url);
                 window.flash(data.msg, 'success');
             })
-            .catch(({response})  => {
+            .catch(({response}) => {
                 const {data} = response;
                 window.flash(data.msg, 'danger');
             });

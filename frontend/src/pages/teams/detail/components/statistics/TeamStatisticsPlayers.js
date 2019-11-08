@@ -3,24 +3,24 @@ import {useParams} from "react-router-dom";
 import {useGetTeamStatistics} from "../../../../../api/team/teamClient_v1";
 import {Heading} from "../../../../../atoms";
 import {Table} from "../../../../../organisms/Table";
-import loadingGif from "../../../../../assets/images/loading.gif";
 import Image from "react-bootstrap/esm/Image";
-import * as Icons from "@fortawesome/free-solid-svg-icons"
+import loadingGif from "../../../../../assets/images/loading.gif";
 import {OverlayTriggerTable} from "../../../../../atoms/OverlayTriggerTable";
+import * as Icons from "@fortawesome/free-solid-svg-icons";
 
-function getGoalkeepers(state, filterBy) {
+function getPlayers(state, filterBy) {
     let competitionId = null;
 
     if (!state.isLoading) {
         if (filterBy === 'league') {
-            return state.team.competitions_aggregate.filter(p => p.position === "goalkeeper");
+            return state.team.competitions_aggregate.filter(p => p.position !== "goalkeeper");
         }
 
         if (filterBy !== 'training') {
             competitionId = parseInt(filterBy);
         }
 
-        return state.team.individual.filter(p => p.position === "goalkeeper" && p.id_competition === competitionId);
+        return state.team.individual.filter(p => p.position !== "goalkeeper" && p.id_competition === competitionId);
     }
 }
 
@@ -28,16 +28,16 @@ function getRank(playerData) {
     return (Number(playerData.index) + 1).toString();
 }
 
-export function TeamStatisticsGoalkeepers({filterBy}) {
+export function TeamStatisticsPlayers({filterBy}) {
     let {id_team} = useParams();
     const [state] = useGetTeamStatistics(id_team);
 
-    const goalkeepers = getGoalkeepers(state, filterBy);
+    const players = getPlayers(state, filterBy);
     const columns = [
         {
             Header: "#",
-            accessor: "rank",
             width: 50,
+            accessor: "rank",
             Cell: (playerData) => getRank(playerData),
         },
         {
@@ -48,27 +48,27 @@ export function TeamStatisticsGoalkeepers({filterBy}) {
         },
         {
             Header: "Počet zápasů",
-            accessor: "goalkeeper_matches",
+            accessor: filterBy === "league" ? "matches" : "field_matches",
         },
         {
-            Header: <OverlayTriggerTable header="Minut" placement="bottom" icon={Icons.faInfo} message="Počet odehraných minut" />,
-            accessor: "goalkeeper_minutes",
+            Header: "Góly",
+            accessor: filterBy === "league" ? "goals" : "field_goals",
         },
         {
-            Header: <OverlayTriggerTable header="Góly" placement="bottom" icon={Icons.faInfo} message="Poče obdržených gólů" />,
-            accessor: "goalkeeper_goals",
+            Header: "Asistence",
+            accessor: filterBy === "league" ? "assists" : "field_assists",
         },
         {
-            Header: <OverlayTriggerTable header="Nuly" placement="bottom" icon={Icons.faInfo} message="Počet vychytaných nul na zápas" />,
-            accessor: "goalkeeper_zeros",
+            Header: <OverlayTriggerTable header="KB" placement="bottom" icon={Icons.faInfo} message="Součet gólů a asistencí" />,
+            accessor: "field_points",
         },
         {
-            Header: <OverlayTriggerTable header="Střely" placement="bottom" icon={Icons.faInfo} message="Počet vychytaných střel" />,
-            accessor: "goalkeeper_shoots",
+            Header: <OverlayTriggerTable header="Pr. KB" placement="bottom" icon={Icons.faInfo} message="Průměr Kanadského bodu na zápas" />,
+            accessor: "field_average_points",
         },
         {
-            Header: <OverlayTriggerTable header="Úspěšnost" placement="bottom" icon={Icons.faInfo} message="% úspěšnost brankáře" />,
-            accessor: "goalkeeper_success_rate",
+            Header: "Trestné minuty",
+            accessor: filterBy === "league" ? "suspensions" : "field_suspensions",
         }
     ];
 
@@ -78,7 +78,7 @@ export function TeamStatisticsGoalkeepers({filterBy}) {
             {!state.isLoading && state.error &&
             <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
             {!state.isLoading && !state.error && (
-                <Table className="defaultCursor" data={goalkeepers} columns={columns}/>
+                <Table className="defaultCursor" data={players} columns={columns}/>
             )}
         </div>
     );
