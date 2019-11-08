@@ -123,15 +123,15 @@ export function useGetCompetitions(id_team) {
 }
 
 export function ChangeTeamData(api, id_team, values) {
-    const {name, type} = values;
+    const { name, type, id_contact_person, id_sport } = values;
     api
-        .put(`${config.API_BASE_PATH}/teams/`, {id_team: id_team, type: type ,name: name})
+        .put(`${config.API_BASE_PATH}/teams/`, { id_team: id_team, type: type, name: name, id_contact_person: id_contact_person, id_sport: id_sport })
         .then(() => {
             window.flash("Tymove údaje byly úspěšně změněny", 'success');
             // return {error: false, message: "Uživatelské údaje byly úspěšně změněny", type: "success"};
         })
         .catch(({response}) => {
-            const {data} = response;
+            const { data } = response;
             window.flash(data.msg, 'danger');
         });
 }
