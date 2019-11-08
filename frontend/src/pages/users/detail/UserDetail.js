@@ -37,7 +37,7 @@ export function UserDetail() {
                         <div className="avatar-preview">
                             <div id="imagePreview">
                                 {user.avatar_public_id
-                                    ? <Image roundedCircle src={user.avatar_public_id} fluid/>
+                                    ? <Image roundedCircle src={user.avatar_url} fluid/>
                                     : <Image roundedCircle src={defaultAvatar} fluid/>
                                 }
                             </div>

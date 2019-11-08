@@ -5,7 +5,7 @@ import {Row, Image} from 'react-bootstrap';
 import {useParams} from "react-router-dom";
 import {mapSportToIcon} from '../../../../utils/mapper';
 import {useGetUserCompetition} from '../../../../api/user/userClient_v1';
-import defaultTeamAvatar from "../../../../assets/images/default_team_avatar.jpg";
+import defaultCompetitionAvatar from "../../../../assets/images/default_competition_avatar.jpg";
 import loadingGif from "../../../../assets/images/loading.gif";
 
 export function UserCompetitions() {
@@ -35,7 +35,7 @@ export function UserCompetitions() {
                                 tooltipPictureHeader={`${anObjectMapped.sport}`}
                                 pictureHeader={mapSportToIcon(anObjectMapped.id_sport)}
                                 textHeader={anObjectMapped.is_active === 1 ? ("Probíhá") : ("Ukončená")}
-                                mainPicture={anObjectMapped.avatar_url ? (`${anObjectMapped.avatar_url}`) : (defaultTeamAvatar)}
+                                mainPicture={anObjectMapped.avatar_url ? (`${anObjectMapped.avatar_url}`) : (defaultCompetitionAvatar)}
                             />
                         ))}
                     </Row>
