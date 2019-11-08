@@ -202,3 +202,17 @@ export function useGetTeamStatistics(id_team) {
     }, [api, id_team]);
     return [state];
 }
+
+export function CreateTeam(api, id_user, values, teamSport, teamType) {
+    const {teamName} = values;
+    api
+        .post(`${config.API_BASE_PATH}/teams`, {id_leader: id_user, name: teamName, id_sport: parseInt(teamSport), type: teamType})
+        .then(( { data } ) => {
+            // const { id_team } = data;
+            window.flash("Tým byl úspěšně vytvořen", 'success');
+        })
+        .catch(( { response } ) => {
+            const { data } = response;
+            window.flash(data.msg, 'danger');
+        });
+}

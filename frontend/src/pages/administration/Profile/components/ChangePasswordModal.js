@@ -45,7 +45,7 @@ export function ChangePasswordModal({ api, id_user, show, handleClose }){
                             Změnit heslo
                         </Button>
                         <Button variant="secondary" type="button" onClick={handleClose}>
-                            Close
+                            Zavřít
                         </Button>
                     </Modal.Footer>
                 </Form>
