@@ -5,6 +5,8 @@ import {Heading} from "../../../../../atoms";
 import {Table} from "../../../../../organisms/Table";
 import loadingGif from "../../../../../assets/images/loading.gif";
 import Image from "react-bootstrap/esm/Image";
+import * as Icons from "@fortawesome/free-solid-svg-icons"
+import {OverlayTriggerTable} from "../../../../../atoms/OverlayTriggerTable";
 
 function getGoalkeepers(state, filterBy) {
     let competitionId = null;
@@ -48,23 +50,23 @@ export function TeamStatisticsGoalkeepers({filterBy}) {
             accessor: "goalkeeper_matches",
         },
         {
-            Header: "Minut",
+            Header: <OverlayTriggerTable header="Minut" placement="bottom" icon={Icons.faInfo} message="Počet odehraných minut" />,
             accessor: "goalkeeper_minutes",
         },
         {
-            Header: "Góly",
+            Header: <OverlayTriggerTable header="Góly" placement="bottom" icon={Icons.faInfo} message="Poče obdržených gólů" />,
             accessor: "goalkeeper_goals",
         },
         {
-            Header: "Nuly",
-            accessor: "field_points",
+            Header: <OverlayTriggerTable header="Nuly" placement="bottom" icon={Icons.faInfo} message="Počet vychytaných nul na zápas" />,
+            accessor: "goalkeeper_zeros",
         },
         {
-            Header: "Střely",
+            Header: <OverlayTriggerTable header="Střely" placement="bottom" icon={Icons.faInfo} message="Počet vychytaných střel" />,
             accessor: "goalkeeper_shoots",
         },
         {
-            Header: "%",
+            Header: <OverlayTriggerTable header="Úspěšnost" placement="bottom" icon={Icons.faInfo} message="% úspěšnost brankáře" />,
             accessor: "goalkeeper_success_rate",
         }
     ];
@@ -80,5 +82,4 @@ export function TeamStatisticsGoalkeepers({filterBy}) {
         </div>
     );
 }
-
 

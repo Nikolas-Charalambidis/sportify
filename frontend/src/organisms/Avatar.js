@@ -18,7 +18,7 @@ export function Avatar({api, imageState, setImageState, type, id}) {
                 setImageState(data.url);
                 window.flash(data.msg, 'success');
             })
-            .catch(({response})  => {
+            .catch(({response}) => {
                 const {data} = response;
                 window.flash(data.msg, 'danger');
             });

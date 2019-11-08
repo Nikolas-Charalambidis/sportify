@@ -5,6 +5,8 @@ import {Heading} from "../../../../../atoms";
 import {Table} from "../../../../../organisms/Table";
 import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../../../assets/images/loading.gif";
+import {OverlayTriggerTable} from "../../../../../atoms/OverlayTriggerTable";
+import * as Icons from "@fortawesome/free-solid-svg-icons";
 
 function getPlayers(state, filterBy) {
     let competitionId = null;
@@ -56,11 +58,11 @@ export function TeamStatisticsPlayers({filterBy}) {
             accessor: filterBy === "league" ? "assists" : "field_assists",
         },
         {
-            Header: "KB",
+            Header: <OverlayTriggerTable header="KB" placement="bottom" icon={Icons.faInfo} message="Součet gólů a asistencí" />,
             accessor: "field_points",
         },
         {
-            Header: "Pr.KB",
+            Header: <OverlayTriggerTable header="Pr. KB" placement="bottom" icon={Icons.faInfo} message="Průměr Kanadského bodu na zápas" />,
             accessor: "field_average_points",
         },
         {
