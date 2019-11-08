@@ -7,6 +7,6 @@ export function getPositionEnumName(position) {
         case "attacker":
             return "Útočník";
         default:
-            return "Neznámá hodnota";
+            return "?";
     }
-};
+}

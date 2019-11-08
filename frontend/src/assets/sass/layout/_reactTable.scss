@@ -55,12 +55,17 @@
     background: black !important;
     border: 1px solid black;
   }
+
+  .rt-noData {
+    background: #5a5a5a !important;
+    color: #ffffff !important;
+  }
 }
 
 .tableTooltip {
-  background-color: rgba(0, 0, 0, 1) !important;
-  padding: 2px 10px;
-  color: white;
-  margin-top: 15px;
-  border-radius: 3px;
+  top: 10px !important;
+}
+
+.defaultCursor .rt-tr:hover .rt-td {
+  cursor: auto;
 }

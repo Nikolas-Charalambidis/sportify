@@ -7,13 +7,13 @@ export function mapSportToIcon(id_sport) {
             ico = Icons.faHockeyPuck;
             break;
         case 2:
-            ico = Icons.faBowlingBall;
+            ico = Icons.faRunning;
             break;
         case 3:
-            ico = Icons.faCheck;
+            ico = Icons.faBasketballBall;
             break;
         default:
-            ico = Icons.faFutbol;
+            ico = Icons.faHockeyPuck;
             break;
     }
     return (ico);
