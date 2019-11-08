@@ -1,7 +1,6 @@
 import {useApi} from "../../hooks/useApi";
 import {useEffect, useState} from "react";
 import {config} from '../../config';
-import {useHistory} from "react-router";
 
 export function useGetTeams() {
     const api = useApi();
@@ -209,7 +208,7 @@ export function CreateTeam(api, id_user, values, teamSport, teamType) {
     api
         .post(`${config.API_BASE_PATH}/teams`, {id_leader: id_user, name: teamName, id_sport: parseInt(teamSport), type: teamType})
         .then(( { data } ) => {
-            const { id_team } = data;
+            // const { id_team } = data;
             window.flash("Tým byl úspěšně vytvořen", 'success');
         })
         .catch(( { response } ) => {
