@@ -20,7 +20,7 @@ function getGoalkeepers(state, filterBy) {
             competitionId = parseInt(filterBy);
         }
 
-        return state.team.individual.filter(p => p.position === "goalkeeper" && p.id_competition === competitionId);
+        return state.team.individual.filter(p => p.position === "goalkeeper" && p.id_competition === competitionId)
     }
 }
 
