@@ -18,18 +18,13 @@ const positionEnum = {
 export function TeamSquad() {
     let {id_team} = useParams();
     const [state] = useGetMembers(id_team);
+    console.log("players", state);
 
     let history = useHistory();
     const columns = [
         {
             Header: "Jméno",
             accessor: "name",
-            filterMethod: (filter, row) =>
-                row[filter.id].toLowerCase().startsWith(filter.value.toLowerCase())
-        },
-        {
-            Header: "Příjmení",
-            accessor: "surname",
             filterMethod: (filter, row) =>
                 row[filter.id].toLowerCase().startsWith(filter.value.toLowerCase())
         },
@@ -75,7 +70,7 @@ export function TeamSquad() {
             {!state.isLoading && state.error &&
             <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
             {!state.isLoading && !state.error && (
-                <Table columns={columns} data={state.team_data} getTdProps={(state, rowInfo) => {
+                <Table columns={columns} data={state.players} getTdProps={(state, rowInfo) => {
                     return {
                         onClick: () => {
                             handleClick(rowInfo);
