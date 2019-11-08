@@ -83,7 +83,10 @@ export default class UserService {
 	async userTeam(id_user) {
 		const user_id = Number(id_user);
 		userValidation.validateUserID(user_id);
-		return this.dbConnection.query(`SELECT * FROM teams WHERE id_leader = ?;`, user_id);
+		return this.dbConnection.query(`
+				SELECT * FROM teams as t 
+				JOIN sports as s ON t.id_sport=s.id_sport  WHERE id_leader = ?;`,
+			user_id);
 	}
 
 	async userCompetition(id_user) {
