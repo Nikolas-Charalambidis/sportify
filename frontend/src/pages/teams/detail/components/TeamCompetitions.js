@@ -1,14 +1,45 @@
 import React from 'react';
-import ReactTable from "react-table";
 import {useParams} from "react-router-dom";
 import {useGetTeamCompetition} from "../../../../api/team/teamClient_v1";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {mapSportToIcon} from "../../../../utils/mapper";
 import {Heading} from "../../../../atoms";
+import {Table} from "../../../../organisms/Table";
+import moment from "moment";
 
 export function TeamCompetitions() {
     let {id_team} = useParams();
+
     const [state] = useGetTeamCompetition(id_team);
+    const columns = [
+        {
+            Header: "Název soutěže",
+            accessor: "competition_name",
+        },
+        {
+            Header: "Umístění",
+            accessor: "team_position",
+            filterable: false,
+        },
+        {
+            id: "startDate",
+            Header: "Začátek",
+            accessor: d => {
+                return moment(d.start_date)
+                    .local()
+                    .format("DD. MM. YYYY HH:mm")
+            },
+            filterable: false,
+        },
+        {
+            id: "endDate",
+            Header: "Konec",
+            accessor: d => {
+                return moment(d.end_date)
+                    .local()
+                    .format("DD. MM. YYYY HH:mm")
+            },
+            filterable: false,
+        }
+    ];
 
     return (
         <div>
@@ -16,36 +47,9 @@ export function TeamCompetitions() {
             {!state.isLoading && state.error &&
             <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
             {!state.isLoading && !state.error && (
-                <ReactTable
-                    previousText="Předchozí"
-                    nextText="Další"
-                    pageText="Stránka"
-                    ofText="z"
-                    rowsText="řádků"
-                    noDataText="Nenalezená žádná data"
-                    rows
-                    data={state.team_data}
-                    columns={[{columns}]}
-                    defaultPageSize={10}
-                    className="-striped -highlight"
-                />
+                <Table columns={columns} data={state.team_data}/>
             )}
         </div>
     );
 }
 
-const columns = [
-    {
-        Header: "Sport",
-        accessor: "id_sport",
-        Cell: row => <FontAwesomeIcon icon={mapSportToIcon(row.value)} size="2x"/>,
-    },
-    {
-        Header: "Název soutěže",
-        accessor: "competition_name",
-    },
-    {
-        Header: "Umístění",
-        accessor: "team_position",
-    }
-];

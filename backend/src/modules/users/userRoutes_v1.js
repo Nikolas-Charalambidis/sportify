@@ -1,9 +1,13 @@
 import { Router } from 'express';
 import UserService from "./userService";
+import dotenv from "dotenv";
 const multipart = require("connect-multiparty");
 const multipartMiddleware = multipart();
 
 const router = Router();
+dotenv.config();
+dotenv.config({path: '.env'});
+const env = process.env;
 
 /**
  * @swagger
@@ -166,7 +170,7 @@ router.get('/', async (req, res, next) => {
  *               type: string
  *     responses:
  *       201:
- *         description: Team added
+ *         description: TeamAdminPage added
  *       400:
  *         description: Invalid request
  */
@@ -202,10 +206,10 @@ router.post('/avatar', multipartMiddleware, async(req, res, next) => {
 	try {
 		const { id_user } = req.body;
 		const params = {
-			folder: 'sportify/users',
+			folder: `sportify/${env.CLOUDINARY_FOLDER}/users`,
 			allowedFormats: ['jpg', 'jpeg', 'png'],
 			transformation: [
-				{width: 400, height: 400, gravity: "face", radius: "max", crop: "crop"},
+				{width: 400, height: 400, gravity: "face", crop: "crop"},
 				{width: 200, height: 200,crop: "scale"}
 			]
 		};
@@ -255,7 +259,7 @@ router.get('/avatar/:id_user', multipartMiddleware, async(req, res, next) => {
  *   get:
  *     tags:
  *       - Users
- *     name: Team ownerships
+ *     name: TeamAdminPage ownerships
  *     summary: Get all teams the user is owner of
  *     parameters:
  *       - name: id_user
@@ -288,7 +292,7 @@ router.get('/:id_user/team', async(req, res, next) => {
  *   get:
  *     tags:
  *       - Users
- *     name: Team ownerships
+ *     name: TeamAdminPage ownerships
  *     summary: Get all competition the user is owner of
  *     parameters:
  *       - name: id_user
@@ -321,7 +325,7 @@ router.get('/:id_user/competition', async(req, res, next) => {
  *   get:
  *     tags:
  *       - Users
- *     name: Team memberships
+ *     name: TeamAdminPage memberships
  *     summary: Get all teams the user is member of
  *     parameters:
  *       - name: id_user
@@ -382,7 +386,7 @@ router.get('/:id_user/competitionMembership', async(req, res, next) => {
 });
 
 /**
- * Team object Swagger definition
+ * TeamAdminPage object Swagger definition
  *
  * @swagger
  * definitions:

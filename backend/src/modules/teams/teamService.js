@@ -159,8 +159,11 @@ export default class TeamService {
 					(ts.field_goals + ts.field_assists) AS 'field_points',
 					((ts.field_goals + ts.field_assists)/ts.field_matches) AS 'field_average_points',
 					ts.field_suspensions,
-					ts.goalkeeper_goals,
+					ts.goalkeeper_matches,
 					ts.goalkeeper_minutes,
+					ts.goalkeeper_goals,
+					ts.goalkeeper_zeros,
+					(ts.goalkeeper_zeros / ts.goalkeeper_matches) AS 'goalkeeper_average_zeros',
 					ts.goalkeeper_shoots,
 					(1 - ts.goalkeeper_goals/ts.goalkeeper_shoots) AS 'goalkeeper_success_rate'
 				FROM team_statistics as ts	
@@ -180,8 +183,11 @@ export default class TeamService {
 					(SUM(ts.field_goals) + SUM(ts.field_assists)) AS 'field_points',
 					((SUM(ts.field_goals) + SUM(ts.field_assists))/SUM(ts.field_matches)) AS 'field_average_points',
 					SUM(ts.field_suspensions) AS 'suspensions',
-					SUM(ts.goalkeeper_goals) AS 'goalkeeper_goals',
+					SUM(ts.goalkeeper_matches) AS 'goalkeeper_matches',
 					SUM(ts.goalkeeper_minutes) AS 'goalkeeper_minutes',
+					SUM(ts.goalkeeper_goals) AS 'goalkeeper_goals',
+					SUM(ts.goalkeeper_zeros) AS 'goalkeeper_zeros',
+					(SUM(ts.goalkeeper_zeros)/SUM(ts.goalkeeper_matches)) AS 'goalkeeper_average_zeros',
 					SUM(ts.goalkeeper_shoots) AS 'goalkeeper_shoots',
 					(1 - SUM(ts.goalkeeper_goals)/SUM(ts.goalkeeper_shoots)) AS 'goalkeeper_success_rate'
 						FROM team_statistics as ts

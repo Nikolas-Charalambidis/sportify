@@ -5,6 +5,8 @@ import {Field} from "../../../../atoms";
 import React from "react";
 import * as yup from "yup";
 import {Avatar} from "../../../../organisms/Avatar";
+import defaultLogoAvatar from "../../../../assets/images/default_avatar.svg";
+import {useState} from "react";
 
 const schemaChangeData = yup.object().shape({
     name: yup.string().required(),
@@ -12,6 +14,8 @@ const schemaChangeData = yup.object().shape({
 });
 
 export function UserDataForm({api, handleShow, state}) {
+    let new_url = state.user_data.avatar_url === null ? defaultLogoAvatar : state.user_data.avatar_url;
+    const [imageState, setImageState] = useState(new_url);
     return (
         <div>
             <Formik
@@ -25,7 +29,8 @@ export function UserDataForm({api, handleShow, state}) {
                 <Form noValidate onSubmit={handleSubmit}>
                     <Row>
                         <Col className="d-lg-none text-center mb-5">
-                            <Avatar api={api} type={"users"} id={state.user_data.id_user}/>
+                            <Avatar api={api} setImageState={setImageState} imageState={imageState} type={"users"}
+                                    id={state.user_data.id_user}/>
                         </Col>
                         <Col xl={10} lg={10}>
                             <Row>
@@ -60,7 +65,8 @@ export function UserDataForm({api, handleShow, state}) {
                             </Row>
                         </Col>
                         <Col xl={2} lg={2} className="d-none d-lg-block">
-                            <Avatar type={"users"} id={state.user_data.id_user}/>
+                            <Avatar api={api} setImageState={setImageState} imageState={imageState} type={"users"}
+                                    id={state.user_data.id_user}/>
                         </Col>
                     </Row>
                 </Form>
