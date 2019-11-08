@@ -4,7 +4,7 @@ import {Field, Heading} from "../../../../atoms";
 import React from "react";
 import * as yup from "yup";
 import {Avatar} from "../../../../organisms/Avatar";
-import defaultTeamAvatar from "../../../../assets/images/default_team_avatar.jpg";
+import defaultTeamAvatar from "../../../../assets/images/default_team_avatar.svg";
 import {useState} from "react";
 import {ChangeTeamData} from "../../../../api/team/teamClient_v1";
 import {Select} from "../../../../atoms/Select";
@@ -51,41 +51,38 @@ export function TeamDataForm({api, team_data, membersState}) {
                                     <Field label="Nazev" name="name" type="text" message="Vyplňte týmove jméno."
                                            isInvalid={!!errors.name}/>
                                 </Col>
+                                <Col sm={{span: 6, offset: 0}}>
+                                    <Select label="Sport" name="id_sport" mapping={{key: "id_sport", value: "sport"}}
+                                            defaultID={team_data.id_sport} options={sportsState.sports}/>
+                                </Col>
                             </Row>
                             <Row>
                                 <Col sm={{span: 4, offset: 0}}>
                                     <Select label="Typ týmu" name="id_type" mapping={{key: "id_type", value: "type"}}
                                             defaultID={team_data.id_type} options={typesState.types}/>
                                 </Col>
-                            </Row>
-                            <Row>
                                 <Col sm={{span: 4, offset: 0}}>
                                     <Select label="Vedoucí týmu" name="id_leader" mapping={{key: "id_user", value: "name"}}
                                             defaultID={team_data.id_leader} options={membersState.players}/>
                                 </Col>
-                            </Row>
-                            <Row>
                                 <Col sm={{span: 4, offset: 0}}>
                                     <Select label="Kontaktní osoba" name="id_contact_person" mapping={{key: "id_user", value: "name"}}
                                             defaultID={team_data.id_contact_person} options={membersState.players}/>
                                 </Col>
                             </Row>
-                            <Row>
-                                <Col sm={{span: 4, offset: 0}}>
-                                    <Select label="Sport" name="id_sport" mapping={{key: "id_sport", value: "sport"}}
-                                            defaultID={team_data.id_sport} options={sportsState.sports}/>
-                                </Col>
-                                <Col className="d-flex align-items-end mb-3 mt-lg-0" xl={{span: 3, offset: 0}}
-                                     lg={{span: 3, offset: 0}}>
-                                    <Button type="submit" block>
-                                        Uložit
-                                    </Button>
-                                </Col>
-                            </Row>
                         </Col>
+
                         <Col xl={2} lg={2} className="d-none d-lg-block">
                             <Avatar api={api} setImageState={setImageState} imageState={imageState} type={"teams"}
                                     id={team_data.id_team}/>
+                        </Col>
+                    </Row>
+
+                    <Row>
+                        <Col className="mb-3 mt-lg-0" lg={{span: 3, offset: 0}}>
+                            <Button type="submit" block>
+                                Uložit
+                            </Button>
                         </Col>
                     </Row>
                 </Form>

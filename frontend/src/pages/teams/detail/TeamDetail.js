@@ -6,7 +6,7 @@ import {Heading} from '../../../atoms';
 import {Breadcrumb, Row, Col, Image, Tabs, Tab} from 'react-bootstrap';
 import {TeamSquad} from "./components/TeamSquad";
 import {useGetTeam} from "../../../api/team/teamClient_v1";
-import defaultTeamAvatar from '../../../assets/images/default_team_avatar.jpg';
+import defaultTeamAvatar from '../../../assets/images/default_team_avatar.svg';
 import {mapSportToIcon} from '../../../utils/mapper';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {TeamCompetitions} from "./components/TeamCompetitions";
@@ -49,24 +49,32 @@ export function TeamDetail() {
 
                     <Col className="mx-auto" lg={8} md={12}>
                         <Row className="teamDetailDesc">
-                            <Col md={4} sm={4} xs={6}>
-                                <p>Vedoucí týmu</p>
+                            <Col sm={3} xs={6}>
+                                <p>Vedoucí <FontAwesomeIcon className="ml-2" icon={Icons.faEye}/></p>
                                 <Link className="text-decoration-none" to={'/user/' + state.team_data.id_leader}>
                                     <Heading size="xs">
                                         {state.team_data.leader}
-                                        <FontAwesomeIcon className="ml-2" icon={Icons.faEye}/>
                                     </Heading>
                                 </Link>
                             </Col>
-                            <Col md={4} sm={4} xs={6}>
+                            <Col sm={3} xs={6}>
+                                <p>Kontakt <FontAwesomeIcon className="ml-2" icon={Icons.faEye}/></p>
+                                <Link className="text-decoration-none" to={'/user/' + state.team_data.id_contact_person}>
+                                    <Heading size="xs">
+                                        {state.team_data.contact_person}
+
+                                    </Heading>
+                                </Link>
+                            </Col>
+                            <Col sm={3} xs={6} className="mt-sm-0 mt-3">
                                 <p>Typ týmu</p>
                                 <Heading size="xs">{state.team_data.type}</Heading>
                             </Col>
-                            <Col className="mt-sm-0 mt-3" md={4} sm={4} xs={6}>
-                                <p>Sport</p>
+                            <Col className="mt-sm-0 mt-3" sm={3} xs={6}>
+                                <p>Sport  <FontAwesomeIcon className="ml-2" icon={mapSportToIcon(state.team_data.id_sport)}
+                                                           size="1x"/></p>
                                 <Heading size="xs">
-                                    <FontAwesomeIcon className="mr-2" icon={mapSportToIcon(state.team_data.id_sport)}
-                                                     size="1x"/>
+
                                     {state.team_data.sport}
                                 </Heading>
                             </Col>

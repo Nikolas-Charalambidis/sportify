@@ -18,7 +18,6 @@ const positionEnum = {
 export function TeamSquad() {
     let {id_team} = useParams();
     const [state] = useGetMembers(id_team);
-    console.log("players", state);
 
     let history = useHistory();
     const columns = [
