@@ -11,6 +11,7 @@ import {useGetMembers} from "../../../api/team/teamClient_v1";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as Icons from "@fortawesome/free-solid-svg-icons";
 import defaultLogoAvatar from "../../../assets/images/default_avatar.svg";
+import '../../../assets/sass/pages/_teamAdmin.scss';
 
 const schemaChangeData = yup.object().shape({
     name: yup.string().required(),
@@ -24,7 +25,6 @@ export function TeamAdminPage() {
     const api = useApi();
     const [setShowModal] = useState(false);
     const openAvatarModal = () => setShowModal(true);
-
 
     return (
         <div>
@@ -106,21 +106,21 @@ export function TeamAdminPage() {
                                         </Col>
                                     </Row>
                                 </Col>
-                                <Col xl={2} lg={2} className="d-none d-lg-block">
-                                    {state.team_data.avatar_url
-                                        ? <Image roundedCircle onClick={openAvatarModal} src={state.team_data.avatar_url}/>
-                                        : <div className="avatar-upload">
-                                            <div className="avatar-edit">
-                                                <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg"/>
-                                                <label htmlFor="imageUpload"><FontAwesomeIcon icon={Icons.faCamera}/></label>
-                                            </div>
-                                            <div className="avatar-preview">
-                                                <div id="imagePreview">
-                                                    <Image roundedCircle src={defaultLogoAvatar}/>
+                                    <Col xl={2} lg={2} className="avatar-container">
+                                        {state.team_data.avatar_url
+                                            ? <Image roundedCircle onClick={openAvatarModal} src={state.team_data.avatar_url} />
+                                            : <div className="avatar-upload">
+                                                <div className="avatar-edit">
+                                                    <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" />
+                                                    <label htmlFor="imageUpload"><FontAwesomeIcon icon={Icons.faCamera} /></label>
+                                                </div>
+                                                <div className="avatar-preview">
+                                                    <div id="imagePreview">
+                                                        <Image roundedCircle src={defaultLogoAvatar} />
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    }
+                                        }                                   
                                 </Col>
                             </Row>
                         </Form>
