@@ -1,10 +1,12 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
-import { Heading } from '../../../atoms';
-import { Breadcrumb } from "react-bootstrap";
-import { useGetTeams } from "../../../api/team/teamClient_v1";
-import ReactTable from "react-table";
+import {NavLink as Link, useHistory} from 'react-router-dom';
+import {Heading} from '../../../atoms';
+import {Breadcrumb} from "react-bootstrap";
+import {useGetTeams} from "../../../api/team/teamClient_v1";
 import "react-table/react-table.css";
+import Image from "react-bootstrap/esm/Image";
+import loadingGif from "../../../assets/images/loading.gif";
+import {Table} from "../../../organisms/Table";
 
 export function TeamList() {
     const [state] = useGetTeams();
@@ -16,61 +18,47 @@ export function TeamList() {
         }
     }
 
+    const columns = [
+        {
+            Header: "Název týmu",
+            accessor: "name",
+            filterMethod: (filter, row) =>
+                row[filter.id].toLowerCase().startsWith(filter.value.toLowerCase())
+        },
+        {
+            Header: "Sport",
+            accessor: "sport",
+            filterMethod: (filter, row) =>
+                row[filter.id].toLowerCase().startsWith(filter.value.toLowerCase())
+        },
+        {
+            Header: "Vedoucí",
+            accessor: "leader",
+            filterMethod: (filter, row) =>
+                row[filter.id].toLowerCase().startsWith(filter.value.toLowerCase())
+        }
+    ];
+
     return (
         <div>
             <Breadcrumb>
-                <Breadcrumb.Item href="/">Domů</Breadcrumb.Item>
-                <Breadcrumb.Item active>Týmy</Breadcrumb.Item>
+                <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
+                <li className="breadcrumb-item"><span className="active">Týmy</span></li>
             </Breadcrumb>
-            <Heading>Týmy</Heading>
-            <div>
-                <ReactTable
-                    previousText="Předchozí"
-                    nextText="Další"
-                    pageText="Stránka"
-                    ofText="z"
-                    rowsText="řádků"
-                    data={state.teams_data}
-                    filterable
-                    defaultFilterMethod={(filter, row) =>
-                        row[filter.id].startsWith(filter.value)}
-                    defaultSortMethod={(a, b) => {
-                        if (a === b) {
-                            return 0;
+            <Heading>Přehled týmů</Heading>
+            {state.isLoading && <div className="text-center"><Image src={loadingGif}/></div>}
+            {!state.isLoading && state.error &&
+            <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
+            {!state.isLoading && !state.error && (
+                <Table columns={columns} data={state.teams_data} getTdProps={(state, rowInfo) => {
+                    return {
+                        onClick: () => {
+                            handleClick(rowInfo);
                         }
-                        const aReverse = a.split("").reverse().join("");
-                        const bReverse = b.split("").reverse().join("");
-                        return aReverse > bReverse ? 1 : -1;
-                    }}
-                    noDataText="Žádná data"
-                    defaultPageSize={10}
-                    columns={columns}
-                    getTdProps={(state, rowInfo) => {
-                        return {
-                            onClick: (e) => {
-                                handleClick(rowInfo);
-                            }
-                        }
-                    }}
-                />
-            </div>
+                    }
+                }}/>
+            )}
         </div>
 
     );
 }
-
-const columns = [
-    {
-        Header: 'Nazev tymu',
-        accessor: 'name',
-    },
-    {
-        Header: 'Sport',
-        accessor: 'sport',
-    },
-    {
-        Header: 'Leader',
-        accessor: 'leader',
-    },
-];
-

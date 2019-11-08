@@ -1,7 +1,7 @@
 import React from "react";
 import ReactTable from "react-table";
 
-export function Table({data, columns}) {
+export function Table({data, columns, ...props}) {
     return (
         <div>
             <ReactTable
@@ -16,7 +16,9 @@ export function Table({data, columns}) {
                 filterable
                 columns={[{columns}]}
                 defaultPageSize={10}
+                minRows={0}
                 className="-striped -highlight"
+                {...props}
             />
         </div>
     )

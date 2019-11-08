@@ -1,12 +1,12 @@
 export function getPositionEnumName(position) {
     switch (position) {
         case "goalkeeper":
-            return "Brankář";
+            return "brankář";
         case "defender":
-            return "Obránce";
+            return "obránce";
         case "attacker":
-            return "Útočník";
+            return "útočník";
         default:
-            return "Neznámá hodnota";
+            return "neznámá hodnota";
     }
 };

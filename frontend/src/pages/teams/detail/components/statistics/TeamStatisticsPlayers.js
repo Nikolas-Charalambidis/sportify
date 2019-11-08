@@ -35,7 +35,8 @@ export function TeamStatisticsPlayers({filterBy}) {
     const players = getPlayers(state, filterBy);
     const columns = [
         {
-            Header: "Pořadí",
+            Header: "#",
+            width: 50,
             accessor: "rank",
             Cell: (playerData) => getRank(playerData),
         },
@@ -77,7 +78,7 @@ export function TeamStatisticsPlayers({filterBy}) {
             {!state.isLoading && state.error &&
             <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
             {!state.isLoading && !state.error && (
-                <Table data={players} columns={columns}/>
+                <Table className="defaultCursor" data={players} columns={columns}/>
             )}
         </div>
     );
