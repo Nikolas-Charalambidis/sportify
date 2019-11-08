@@ -1,8 +1,7 @@
 import {Card, CardDeck, Col, OverlayTrigger, Row, Tooltip} from 'react-bootstrap';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import React from 'react';
-import {useHistory} from "react-router";
-
+import { useHistory } from "react-router";
 
 //temporary CSS
 const cardStyle = {cursor: "pointer"};

@@ -19,6 +19,7 @@ import { TeamsAdminList} from "./pages/administration/Team/TeamsAdminList";
 import {ResetPassword} from "./pages/auth/ResetPassword";
 import {ResendToken} from "./pages/auth/ResendToken";
 import { AdministrationMenu } from './pages/administration/Administration/AdministrationMenu';
+import { User } from './pages/User';
 
 export function Routes() {
 	return (
@@ -32,6 +33,7 @@ export function Routes() {
             <Route path="/administration/teams" exact component={TeamsAdminList} />
 			<Route path="/teams/:id_team" exact component={TeamDetail} />
             <Route path="/teams" exact component={TeamList} />
+            <Route path="/user/:id_user" exact component={User} />
 			<Route path="/leagues" exact component={Leagues}/>
 			<Route path="/matches" exact component={Matches}/>
 			<Route path="/statistics" exact component={Statistics} />
