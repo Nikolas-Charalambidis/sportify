@@ -12,6 +12,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {TeamCompetitions} from "./components/TeamCompetitions";
 import {TeamStatistics} from "./components/TeamStatistics";
 import * as Icons from "@fortawesome/free-solid-svg-icons"
+import loadingGif from "../../../assets/images/loading.gif";
 
 export function TeamDetail() {
     let {id_team} = useParams();
@@ -19,7 +20,8 @@ export function TeamDetail() {
 
     return (
         <div>
-            {state.isLoading && <div>Načítám data...</div>}
+
+            {state.isLoading && <div className="text-center"><Image src={loadingGif}/></div>}
             {!state.isLoading && state.error &&
             <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
             {!state.isLoading &&

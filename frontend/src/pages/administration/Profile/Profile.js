@@ -11,6 +11,8 @@ import {NavLink as Link} from 'react-router-dom';
 import {ChangePasswordModal} from './components/ChangePasswordModal';
 import {UserDataForm} from './components/UserDataForm';
 import defaultTeamAvatar from "../../../assets/images/default_team_avatar.jpg";
+import Image from "react-bootstrap/esm/Image";
+import loadingGif from "../../../assets/images/loading.gif";
 
 export function Profile() {
     const history = useHistory();
@@ -42,8 +44,10 @@ export function Profile() {
                 </li>
             </Breadcrumb>
             <Heading className="pageHeading mt-4 mb-5">Uživatelský profil</Heading>
-            {state.isLoading && <div>Načítám data...</div>}
-            {!state.isLoading && state.error && <div>Data se nepodařilo načíst</div>}
+
+            {state.isLoading && <div className="text-center"><Image src={loadingGif}/></div>}
+            {!state.isLoading && state.error &&
+            <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
             {!state.isLoading && !state.error && (
                 <div>
                     <UserDataForm api={api} handleShow={handleShow} state={state}/>
