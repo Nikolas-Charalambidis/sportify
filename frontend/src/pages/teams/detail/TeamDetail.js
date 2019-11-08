@@ -11,6 +11,8 @@ import {mapSportToIcon} from '../../../utils/mapper';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {TeamCompetitions} from "./components/TeamCompetitions";
 import {TeamStatistics} from "./components/TeamStatistics";
+import * as Icons from "@fortawesome/free-solid-svg-icons"
+import loadingGif from "../../../assets/images/loading.gif";
 
 export function TeamDetail() {
     let {id_team} = useParams();
@@ -18,7 +20,8 @@ export function TeamDetail() {
 
     return (
         <div>
-            {state.isLoading && <div>Načítám data...</div>}
+
+            {state.isLoading && <div className="text-center"><Image src={loadingGif}/></div>}
             {!state.isLoading && state.error &&
             <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
             {!state.isLoading &&
@@ -30,35 +33,41 @@ export function TeamDetail() {
                 </Breadcrumb>
                 <Heading className="mt-4 mb-5">{state.team_data.name}</Heading>
 
-                <Row className="mb-5">
+                <Row className="mb-5 align-items-center h-100">
                     <Col lg={3} md={12} className="mb-4 mb-lg-0">
                         <div className="avatar-upload">
                             <div className="avatar-preview">
                                 <div id="imagePreview">
                                     {state.team_data.avatar
-                                        ? <Image roundedCircle src={defaultTeamAvatar} fluid/>
-                                        : <Image roundedCircle src={state.team_data.avatar} fluid/>
+                                        ? <Image roundedCircle src={state.team_data.avatar} fluid/>
+                                        : <Image roundedCircle src={defaultTeamAvatar} fluid/>
                                     }
                                 </div>
                             </div>
                         </div>
                     </Col>
 
-
-                    <Col lg={8} md={12}>
+                    <Col className="mx-auto" lg={8} md={12}>
                         <Row className="teamDetailDesc">
                             <Col md={4} sm={4} xs={6}>
                                 <p>Vedoucí týmu</p>
-                                <Heading size="xs">{state.team_data.leader}</Heading>
+                                <Link className="text-decoration-none" to={'/user/' + state.team_data.id_leader}>
+                                    <Heading size="xs">
+                                        {state.team_data.leader}
+                                        <FontAwesomeIcon className="ml-2" icon={Icons.faEye}/>
+                                    </Heading>
+                                </Link>
                             </Col>
                             <Col md={4} sm={4} xs={6}>
                                 <p>Typ týmu</p>
                                 <Heading size="xs">{state.team_data.type}</Heading>
                             </Col>
-                            <Col md={4} sm={4} xs={6}>
+                            <Col className="mt-sm-0 mt-3" md={4} sm={4} xs={6}>
                                 <p>Sport</p>
-                                <Heading size="xs"><FontAwesomeIcon icon={mapSportToIcon(state.team_data.id_sport)}
-                                                                    className="mr-2" size="1x"/> {state.team_data.sport}
+                                <Heading size="xs">
+                                    <FontAwesomeIcon className="mr-2" icon={mapSportToIcon(state.team_data.id_sport)}
+                                                     size="1x"/>
+                                    {state.team_data.sport}
                                 </Heading>
                             </Col>
                         </Row>
