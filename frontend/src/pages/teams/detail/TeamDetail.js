@@ -3,7 +3,7 @@ import {NavLink as Link, useParams} from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 
 import {Heading} from '../../../atoms';
-import {Breadcrumb, Row, Col, Image, Tabs, Tab, OverlayTrigger, Tooltip} from 'react-bootstrap';
+import {Breadcrumb, Row, Col, Image, Tabs, Tab} from 'react-bootstrap';
 import {TeamSquad} from "./components/TeamSquad";
 import {useGetTeam} from "../../../api/team/teamClient_v1";
 import defaultTeamAvatar from '../../../assets/images/default_team_avatar.jpg';
@@ -11,6 +11,7 @@ import {mapSportToIcon} from '../../../utils/mapper';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {TeamCompetitions} from "./components/TeamCompetitions";
 import {TeamStatistics} from "./components/TeamStatistics";
+import * as Icons from "@fortawesome/free-solid-svg-icons"
 
 export function TeamDetail() {
     let {id_team} = useParams();
@@ -44,12 +45,16 @@ export function TeamDetail() {
                         </div>
                     </Col>
 
-
                     <Col className="mx-auto" lg={8} md={12}>
                         <Row className="teamDetailDesc">
                             <Col md={4} sm={4} xs={6}>
                                 <p>Vedoucí týmu</p>
-                                <Heading size="xs">{state.team_data.leader}</Heading>
+                                <Link className="text-decoration-none" to={'/user/' + state.team_data.id_leader}>
+                                    <Heading size="xs">
+                                        {state.team_data.leader}
+                                        <FontAwesomeIcon className="ml-2" icon={Icons.faEye}/>
+                                    </Heading>
+                                </Link>
                             </Col>
                             <Col md={4} sm={4} xs={6}>
                                 <p>Typ týmu</p>
@@ -58,10 +63,9 @@ export function TeamDetail() {
                             <Col md={4} sm={4} xs={6}>
                                 <p>Sport</p>
                                 <Heading size="xs">
-                                    <OverlayTrigger
-                                        overlay={<Tooltip id="tooltip-disabled">{state.team_data.sport}</Tooltip>}>
-                                        <FontAwesomeIcon icon={mapSportToIcon(state.team_data.id_sport)} size="2x"/>
-                                    </OverlayTrigger>
+                                    <FontAwesomeIcon className="mr-2" icon={mapSportToIcon(state.team_data.id_sport)}
+                                                     size="1x"/>
+                                    {state.team_data.sport}
                                 </Heading>
                             </Col>
                         </Row>

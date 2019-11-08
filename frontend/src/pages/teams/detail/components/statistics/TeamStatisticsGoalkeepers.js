@@ -35,8 +35,9 @@ export function TeamStatisticsGoalkeepers({filterBy}) {
     const goalkeepers = getGoalkeepers(state, filterBy);
     const columns = [
         {
-            Header: "Pořadí",
+            Header: "#",
             accessor: "rank",
+            width: 50,
             Cell: (playerData) => getRank(playerData),
         },
         {
@@ -77,7 +78,7 @@ export function TeamStatisticsGoalkeepers({filterBy}) {
             {!state.isLoading && state.error &&
             <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
             {!state.isLoading && !state.error && (
-                <Table data={goalkeepers} columns={columns}/>
+                <Table className="defaultCursor" data={goalkeepers} columns={columns}/>
             )}
         </div>
     );
