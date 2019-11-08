@@ -7,6 +7,7 @@ import {Heading} from "../../../../atoms";
 import {Table} from "../../../../organisms/Table";
 import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../../assets/images/loading.gif";
+import {getPositionEnumName} from "../../../../utils/enum-helper";
 
 const positionEnum = {
     ATTACKER: 'attacker',
@@ -35,6 +36,7 @@ export function TeamSquad() {
         {
             Header: "Pozice",
             accessor: "position",
+            Cell: ({row}) => (<span>{getPositionEnumName(row.position)}</span>),
             filterMethod: (filter, row) => {
                 switch (filter.value) {
                     case positionEnum.ATTACKER:
@@ -53,10 +55,10 @@ export function TeamSquad() {
                     style={{width: "100%"}}
                     value={filter ? filter.value : "all"}
                 >
-                    <option value="all">Vše</option>
-                    <option value="attacker">Útočník</option>
-                    <option value="defender">Obránce</option>
-                    <option value="goalkeeper">Brankář</option>
+                    <option value="all">vše</option>
+                    <option value="attacker">útočník</option>
+                    <option value="defender">obránce</option>
+                    <option value="goalkeeper">brankář</option>
                 </select>
         }
     ];
