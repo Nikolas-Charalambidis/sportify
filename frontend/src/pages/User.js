@@ -1,13 +1,14 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Heading} from '../atoms';
 import {CardTemplate} from '../templates/CardTemplate';
-import {Breadcrumb, Row, Col, Image, Tabs, Tab, OverlayTrigger, Tooltip} from 'react-bootstrap';
-import {useHistory} from 'react-router';
+import {Breadcrumb, Row, Col, Image } from 'react-bootstrap';
 import { useParams } from "react-router-dom";
 import {mapSportToIcon} from '../utils/mapper';
 import {useGetUser, useGetUserTeams, useGetUserCompetition} from '../api/user/userClient_v1';
-import {NavLink as Link} from 'react-router-dom';
+import { NavLink as Link } from 'react-router-dom';
 import defaultTeamAvatar from "../assets/images/default_team_avatar.jpg";
+import defaultAvatar from "../assets/images/default_avatar.svg";
+import { getPositionEnumName } from "../utils/enum-helper";
 
 function getUser(state) {
     if (state) {
@@ -16,21 +17,13 @@ function getUser(state) {
 }
 
 export function User() {
-    const history = useHistory();    
-
-    const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
 
     let { id_user } = useParams();
-
+    
     const [state] = useGetUser(id_user);
     const user = getUser(state);
     const [teamState] = useGetUserTeams(id_user);
-    const [competitionState] = useGetUserCompetition(id_user);
-    
-
-    console.log(user);
+    const [competitionState] = useGetUserCompetition(id_user);    
 
     return (
         <div>
@@ -52,7 +45,7 @@ export function User() {
                                 <div id="imagePreview">
                                 {user.avatar_public_id
                                     ? <Image roundedCircle src={user.avatar_public_id} fluid />
-                                    : <Image roundedCircle src={defaultTeamAvatar} fluid />
+                                    : <Image roundedCircle src={defaultAvatar} fluid />
                                 }
                                 </div>
                             </div>
@@ -60,11 +53,12 @@ export function User() {
                     </Col>
 
 
+
                     <Col className="mx-auto" lg={8} md={12}>
                         <Row className="teamDetailDesc">
                             <Col md={4} sm={4} xs={6}>
                                 <p>E-mail</p>
-                                <Heading size="xs">{user.email}</Heading>
+                                <Heading size="xs"><a href={"mailto:"+user.email}>{user.email}</a></Heading>
                             </Col>
                             <Col md={4} sm={4} xs={6}>
                                 <p>Jméno</p>
@@ -97,7 +91,7 @@ export function User() {
                                         key={index}
                                         redirect={`../teams/${anObjectMapped.id_team}`}
                                         title={`${anObjectMapped.name}`}
-                                        subtitle={`Pozice: ${anObjectMapped.position}`}
+                                        subtitle={`Pozice: ${getPositionEnumName(anObjectMapped.position)}`}
                                         tooltipPictureHeader={`${anObjectMapped.sport}`}
                                         pictureHeader={mapSportToIcon(anObjectMapped.id_sport)}
                                         mainPicture={anObjectMapped.avatar_url ? (`${anObjectMapped.avatar_url}`) : (defaultTeamAvatar)}
