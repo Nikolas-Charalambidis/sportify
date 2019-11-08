@@ -26,7 +26,7 @@ export default class TeamService {
 		const team_id = Number(id_team);
 		teamValidation.validateTeamID(team_id);
 		const result = await this.dbConnection.query(
-			`SELECT t.id_team, t.name, s.id_sport, s.sport, t.id_sport, t.type, t.id_leader, CONCAT(u.name, " ", u.surname) as leader, t.avatar_url as avatar
+			`SELECT t.id_team, t.name, s.id_sport, s.sport, t.id_sport, t.type, t.id_leader, t.id_contact_person, CONCAT(u.name, " ", u.surname) as leader, t.avatar_url as avatar
 			FROM teams as t
 			JOIN sports as s ON t.id_sport=s.id_sport
 			JOIN users as u ON t.id_leader=u.id_user
@@ -165,7 +165,7 @@ export default class TeamService {
 					ts.goalkeeper_zeros,
 					(ts.goalkeeper_zeros / ts.goalkeeper_matches) AS 'goalkeeper_average_zeros',
 					ts.goalkeeper_shoots,
-					(1 - ts.goalkeeper_goals/ts.goalkeeper_shoots) AS 'goalkeeper_success_rate'
+					CONCAT(100*(1 - ts.goalkeeper_goals/ts.goalkeeper_shoots), ' %') AS 'goalkeeper_success_rate'
 				FROM team_statistics as ts	
 				JOIN users AS u ON ts.id_user = u.id_user
 				JOIN team_membership tm on u.id_user = tm.user
@@ -189,7 +189,7 @@ export default class TeamService {
 					SUM(ts.goalkeeper_zeros) AS 'goalkeeper_zeros',
 					(SUM(ts.goalkeeper_zeros)/SUM(ts.goalkeeper_matches)) AS 'goalkeeper_average_zeros',
 					SUM(ts.goalkeeper_shoots) AS 'goalkeeper_shoots',
-					(1 - SUM(ts.goalkeeper_goals)/SUM(ts.goalkeeper_shoots)) AS 'goalkeeper_success_rate'
+					CONCAT(100*(1 - SUM(ts.goalkeeper_goals)/SUM(ts.goalkeeper_shoots)), ' %') AS 'goalkeeper_success_rate'
 						FROM team_statistics as ts
 						JOIN users AS u ON ts.id_user = u.id_user
 						JOIN team_membership tm on u.id_user = tm.user
