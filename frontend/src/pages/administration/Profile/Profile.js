@@ -14,6 +14,7 @@ import defaultTeamAvatar from "../../../assets/images/default_team_avatar.jpg";
 import defaultCompetitionAvatar from "../../../assets/images/default_competition_avatar.jpg";
 import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../assets/images/loading.gif";
+import {getPositionEnumName} from "../../../utils/enum-helper";
 
 export function Profile() {
     const history = useHistory();
@@ -69,7 +70,7 @@ export function Profile() {
                                         key={index}
                                         redirect={`../teams/${anObjectMapped.id_team}`}
                                         title={`${anObjectMapped.name}`}
-                                        subtitle={`Pozice: ${anObjectMapped.position}`}
+                                        subtitle={`Pozice: ${getPositionEnumName(anObjectMapped.position)}`}
                                         tooltipPictureHeader={`${anObjectMapped.sport}`}
                                         pictureHeader={mapSportToIcon(anObjectMapped.id_sport)}
                                         mainPicture={anObjectMapped.avatar_url ? (`${anObjectMapped.avatar_url}`) : (defaultTeamAvatar)}
