@@ -86,6 +86,30 @@ export function useGetUserTeams(id_user) {
     return [state];
 }
 
+export function useGetUserOwnedTeams(id_user) {
+    const api = useApi();
+    const [state, setState] = useState({
+        isLoading: true
+    });
+    useEffect( () => {
+        async function fetchData() {
+            api
+                .get(`${config.API_BASE_PATH}/users/${id_user}/team`)
+                .then(({ data }) => {
+                    const { user } = data;
+                    setState({ isLoading: false, error: false, user_data: user });
+                })
+                .catch(( { response } ) => {
+                    const { data } = response;
+                    setState({ isLoading: false, error: true, user_data: null });
+                    window.flash(data.msg, 'danger');
+                });
+        }
+        fetchData().then();
+    }, [api, id_user]);
+    return [state];
+}
+
 export function useGetUserCompetition(id_user) {
     const api = useApi();
     const [state, setState] = useState({
