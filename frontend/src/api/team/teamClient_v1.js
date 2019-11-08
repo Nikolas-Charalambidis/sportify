@@ -83,11 +83,11 @@ export function useGetMembers(id_team) {
                 .get(`${config.API_BASE_PATH}/teams/${id_team}/players`)
                 .then(({data}) => {
                     const {players} = data;
-                    setState({isLoading: false, error: false, team_data: players});
+                    setState({isLoading: false, error: false, players: players});
                 })
                 .catch(( { response } ) => {
                     const {data} = response;
-                    setState({isLoading: false, error: true, team_data: null});
+                    setState({isLoading: false, error: true, players: null});
                     window.flash(data.msg, 'danger');
                 });
         }
@@ -123,12 +123,11 @@ export function useGetCompetitions(id_team) {
 }
 
 export function ChangeTeamData(api, id_team, values) {
-    const {name, type} = values;
+    const {id_type, id_sport, id_leader, id_contact_person, name} = values;
     api
-        .put(`${config.API_BASE_PATH}/teams/`, {id_team: id_team, type: type ,name: name})
+        .put(`${config.API_BASE_PATH}/teams/`, {id_team: id_team, id_type: id_type, id_leader: id_leader, id_sport: id_sport, id_contact_person: id_contact_person, name: name})
         .then(() => {
             window.flash("Tymove údaje byly úspěšně změněny", 'success');
-            // return {error: false, message: "Uživatelské údaje byly úspěšně změněny", type: "success"};
         })
         .catch(({response}) => {
             const {data} = response;
