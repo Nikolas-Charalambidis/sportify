@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import {NavLink as Link, useHistory} from 'react-router-dom';
 import { Heading } from '../../../atoms';
 import { Breadcrumb } from "react-bootstrap";
 import ReactTable from "react-table";
@@ -15,17 +15,23 @@ export function TeamsAdminList() {
     function handleClick(row) {
         if (row) {
             history.push("teams/" + row.original.id_team);
-}
+        }
     }
 
     return (
         <div>
             <Breadcrumb>
-                <Breadcrumb.Item href="/">Domů</Breadcrumb.Item>
-                <Breadcrumb.Item href="/administration">Administrace</Breadcrumb.Item>
-                <Breadcrumb.Item active>Moje týmy</Breadcrumb.Item>
+                <li className="breadcrumb-item">
+                    <Link to="/">Domů</Link>
+                </li>
+                <li className="breadcrumb-item">
+                    <Link to="/administration">Administrace</Link>
+                </li>
+                <li className="breadcrumb-item">
+                    <span className="active">Moje týmy</span>
+                </li>
             </Breadcrumb>
-            <Heading>Moje tymy</Heading>
+            <Heading>Moje týmy</Heading>
             <div>
                 <ReactTable
                     previousText="Předchozí"
@@ -33,7 +39,7 @@ export function TeamsAdminList() {
                     pageText="Stránka"
                     ofText="z"
                     rowsText="řádků"
-                    data={state.user_data}
+                    data={state.teams}
                     filterable
                     defaultFilterMethod={(filter, row) =>
                         row[filter.id].startsWith(filter.value)}
@@ -58,7 +64,6 @@ export function TeamsAdminList() {
                 />
             </div>
         </div>
-
     );
 }
 
