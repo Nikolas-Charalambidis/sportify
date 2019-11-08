@@ -1,17 +1,24 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {NavLink as Link, useHistory} from 'react-router-dom';
 import {Heading} from '../../../atoms';
-import {Breadcrumb} from "react-bootstrap";
+import {Breadcrumb, Button} from "react-bootstrap";
 import "react-table/react-table.css";
 import {useGetUserOwnedTeams} from "../../../api/user/userClient_v1";
 import {useAuth} from "../../../utils/auth";
 import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../assets/images/loading.gif";
 import {Table} from "../../../organisms/Table";
+import {CreateTeamModal} from "./components/CreateTeamModal";
+import {useApi} from "../../../hooks/useApi";
 
 export function TeamsAdminList() {
     const {user} = useAuth();
     const [state] = useGetUserOwnedTeams(user.id_user);
+    const api = useApi();
+
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     let history = useHistory();
     const columns = [
@@ -28,6 +35,10 @@ export function TeamsAdminList() {
         {
             Header: 'Sport',
             accessor: 'sport',
+        },
+        {
+            Header: 'Typ',
+            accessor: 'type',
         },
     ];
 
@@ -50,6 +61,12 @@ export function TeamsAdminList() {
             </Breadcrumb>
 
             <Heading>Moje týmy</Heading>
+            <div className="text-right">
+                <Button variant="primary mb-3 pull-right" onClick={handleShow}>
+                    <span>Vytvořit tým</span>
+                </Button>
+            </div>
+
             {state.isLoading && <div className="text-center"><Image src={loadingGif}/></div>}
             {!state.isLoading && state.error &&
             <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
@@ -63,6 +80,9 @@ export function TeamsAdminList() {
                            }
                        }}/>
             )}
+
+
+            <CreateTeamModal show={show} id_user={user.id_user} api={api} handleClose={handleClose}/>
         </div>
     );
 }

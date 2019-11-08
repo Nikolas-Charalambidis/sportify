@@ -32,7 +32,6 @@ export function Profile() {
     const [teamState] = useGetUserTeams(user.id_user);
     const [competitionState] = useGetUserCompetition(user.id_user);
 
-    console.log(teamState)
     return (
         <div>
             <Breadcrumb>
