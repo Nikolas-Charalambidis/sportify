@@ -204,7 +204,7 @@ router.post('/', async(req, res, next) => {
  */
 router.post('/avatar', multipartMiddleware, async(req, res, next) => {
 	try {
-		const { id_user } = req.body;
+		const { id } = req.body;
 		const params = {
 			folder: `sportify/${env.CLOUDINARY_FOLDER}/users`,
 			allowedFormats: ['jpg', 'jpeg', 'png'],
@@ -213,7 +213,7 @@ router.post('/avatar', multipartMiddleware, async(req, res, next) => {
 				{width: 200, height: 200,crop: "scale"}
 			]
 		};
-		const url = await new UserService(req).uploadAvatar(req.files.file.path, params, id_user);
+		const url = await new UserService(req).uploadAvatar(req.files.file.path, params, id);
 		res.status(201).json({ error: false, msg: 'Nahrání avatara proběhlo úspěšně', url: url});
 	} catch (e) {
 		next(e);
@@ -279,8 +279,8 @@ router.get('/avatar/:id_user', multipartMiddleware, async(req, res, next) => {
 router.get('/:id_user/team', async(req, res, next) => {
 	try {
 		const { id_user } = req.params;
-		const user = await new UserService(req).userTeam(id_user);
-		res.status(200).json({ error: false, msg: 'OK', user: user});
+		const teams = await new UserService(req).userTeam(id_user);
+		res.status(200).json({ error: false, msg: 'OK', user: teams});
 	} catch(e) {
 		next(e);
 	}

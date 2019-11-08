@@ -39,7 +39,6 @@ export function Register() {
                 history.replace('/login');
             })
             .catch(( { response } ) => {
-                console.log("error");
                 const { data } = response;
                 window.flash(data.msg, 'danger');
             });
