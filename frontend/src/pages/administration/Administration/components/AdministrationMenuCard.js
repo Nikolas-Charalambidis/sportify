@@ -1,14 +1,13 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
-import './AdministrationMenuCard.scss'
 
 export function AdministrationMenuCard({ title, text, click }) {
     let history = useHistory();
 
     function onRedirect() {
         history.push("/administration/" + click);
-    };
+    }
 
     return (
         <div onClick={onRedirect}>
