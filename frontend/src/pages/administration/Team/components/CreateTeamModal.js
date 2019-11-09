@@ -8,6 +8,7 @@ import {CreateTeam} from "../../../../api/team/teamClient_v1";
 import {Select} from "../../../../atoms/Select";
 import {useGetSports, useGetTeamTypes} from "../../../../api/others/othersClient_v1";
 import {useHistory} from "react-router";
+import * as Icons from "@fortawesome/free-solid-svg-icons";
 
 const positionEnum = [
     {
@@ -23,6 +24,14 @@ const positionEnum = [
         position: "goalkeeper"
     }
 ];
+
+const tooltipTeamType = {
+    icon: Icons.faInfo,
+    size: "1x",
+    text:
+        `Ligové týmy hrají jakoukoliv vyšší či nižší soutěž.\n\n
+        Volnočasové týmy jsou hráči, kteří se sházejí na tréninkové zápasy u kterých chtějí měřit statistiky, ale do žádné soutěže se hlásit nechtějí.`
+};
 
 export function CreateTeamModal({api, id_user, show, handleClose}) {
     let history = useHistory();
@@ -58,15 +67,16 @@ export function CreateTeamModal({api, id_user, show, handleClose}) {
                         </Modal.Header>
 
                         <Modal.Body>
+
                             <Field label="Název týmu" name="name" type="text"
                                    message="Vyplňte prosím název týmu"
                                    isInvalid={!!errors.name}/>
 
+                            <Select label="Typ týmu" customTooltip={tooltipTeamType} name="id_type" mapping={{key: "id_type", value: "type"}}
+                                    defaultID={sportsState.sports[0].id_sport} options={typesState.types}/>
+
                             <Select label="Sport" name="id_sport" mapping={{key: "id_sport", value: "sport"}}
                                     defaultID={sportsState.sports[0].id_sport} options={sportsState.sports}/>
-
-                            <Select label="Typ týmu" name="id_type" mapping={{key: "id_type", value: "type"}}
-                                    defaultID={sportsState.sports[0].id_sport} options={typesState.types}/>
 
                             <Select label="Role v týmu" name="position" mapping={{key: "id_position", value: "position"}}
                                     defaultID={"attacker"} options={positionEnum}/>
