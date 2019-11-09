@@ -1,7 +1,7 @@
 import React from 'react';
 import {useField} from 'formik';
-
 import {Form} from "react-bootstrap";
+import {CustomTooltip} from "./CustomTooltip";
 
 const renderOptions = (options, mapping, defaultID) => {
     const {key, value} = mapping;
@@ -14,11 +14,12 @@ const renderOptions = (options, mapping, defaultID) => {
     });
 };
 
-export function Select({label, message, options, defaultID, mapping, ...props}) {
+export function Select({label, message, options, defaultID, mapping, customTooltip, ...props}) {
     const [field] = useField(props);
     return (
         <Form.Group>
-            <Form.Label>{label}</Form.Label>
+            <Form.Label>{label}&nbsp;&nbsp;</Form.Label>
+            {customTooltip && CustomTooltip(customTooltip)}
             <Form.Control {...field} {...props} as='select'>
                 {renderOptions(options, mapping, defaultID)}
             </Form.Control>

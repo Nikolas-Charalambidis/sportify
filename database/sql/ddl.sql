@@ -30,7 +30,8 @@ CREATE TABLE `teams` (
     `id_type` int NOT NULL,
     `id_contact_person` int NOT NULL,
     `avatar_url` varchar(512),
-    `avatar_public_id` varchar(255)
+    `avatar_public_id` varchar(255),
+    `active` boolean not null
 );
 CREATE TABLE `team_types` (
      `id_type` int PRIMARY KEY AUTO_INCREMENT,
@@ -198,11 +199,11 @@ INSERT INTO `team_types` (`id_type`, `type`) VALUES (1, 'Ligový');
 INSERT INTO `team_types` (`id_type`, `type`) VALUES (2, 'Volnočasový');
 
 -- TEAMS
-INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`) VALUES (1, 1, 'Hokejisti pro srandu a žízeň', 1, 2, 1);
-INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`) VALUES (2, 1, 'The Rural Jurors', 6, 1, 6);
-INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`) VALUES (3, 1, 'Game of Throws', 14, 2, 14);
-INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`) VALUES (4, 3, 'Not Last Place', 19, 2, 19);
-INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`) VALUES (5, 3, 'The Salty Pretzels', 24, 1, 24);
+INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`, `active`) VALUES (1, 1, 'Hokejisti pro srandu a žízeň', 1, 2, 1, true);
+INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`, `active`) VALUES (2, 1, 'The Rural Jurors', 6, 1, 6, true);
+INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`, `active`) VALUES (3, 1, 'Game of Throws', 14, 2, 14, true);
+INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`, `active`) VALUES (4, 3, 'Not Last Place', 19, 2, 19, true);
+INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`, `active`) VALUES (5, 3, 'The Salty Pretzels', 24, 1, 24, true);
 
 -- TEAM-MEMBERSHIP
 INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (1, 1, 1, 'active', 'goalkeeper');
