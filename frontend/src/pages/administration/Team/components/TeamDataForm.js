@@ -20,6 +20,7 @@ export function TeamDataForm({api, team_data, membersState}) {
     const [sportsState] = useGetSports();
     const [typesState] = useGetTeamTypes();
 
+
     return (
         <div>
             {(sportsState.isLoading || typesState.isLoading) && <div>Načítám data...</div>}

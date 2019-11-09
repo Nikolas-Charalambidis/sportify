@@ -15,10 +15,11 @@ export function TeamsAdminList() {
     const {user} = useAuth();
     const [state] = useGetUserOwnedTeams(user.id_user);
     const api = useApi();
-
+    console.log("id_user", user);
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    console.log('state', state);
 
     let history = useHistory();
     const columns = [
@@ -71,7 +72,7 @@ export function TeamsAdminList() {
             {!state.isLoading && state.error &&
             <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
             {!state.isLoading && !state.error && (
-                <Table columns={columns} data={state.user_data} filterable={false} showPagination={false}
+                <Table columns={columns} data={state.teams} filterable={false} showPagination={false}
                        getTdProps={(state, rowInfo) => {
                            return {
                                onClick: () => {
@@ -80,7 +81,6 @@ export function TeamsAdminList() {
                            }
                        }}/>
             )}
-
 
             <CreateTeamModal show={show} id_user={user.id_user} api={api} handleClose={handleClose}/>
         </div>

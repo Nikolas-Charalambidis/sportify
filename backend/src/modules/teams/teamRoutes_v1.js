@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import TeamService from './teamService';
 import dotenv from "dotenv";
+import TeamMembershipService from "../teamMembership/teamMembershipService";
 const multipart = require("connect-multiparty");
 const multipartMiddleware = multipart();
 
@@ -200,9 +201,16 @@ router.get('/', async (req, res, next) => {
  */
 router.post('/', async (req, res, next) => {
 	try {
-		const { id_sport, name, id_type, id_leader } = req.body;
+		const { id_sport, name, id_type, id_leader, position } = req.body;
 		const id = await new TeamService(req).addNewTeam(id_sport, name, id_type, id_leader);
-		res.status(201).header('Location' , `/api/v1/teams/${id}`).send({ error: false, msg: 'OK', id_team: id});
+		let msg = "Tým byl úspěšně vytvořen";
+		try {
+			await new TeamMembershipService(req).addNewMember(id, id_leader, position, 'active');
+		} catch(e) {
+			msg = "Tým byl vytvořen, ale přidání nového člena do týmu se nezdařilo. Kontaktujte prosím podporu."
+		}
+		console.log("id", id);
+		res.status(201).header('Location' , `/api/v1/teams/${id}`).json({ error: false, msg: msg, id_team: id});
 	} catch(e) {
 		next(e);
 	}

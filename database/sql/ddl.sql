@@ -194,8 +194,8 @@ INSERT INTO `sports` (`id_sport`, `sport`) VALUES (2, 'Florbal');
 INSERT INTO `sports` (`id_sport`, `sport`) VALUES (3, 'Hokejbal');
 
 -- TEAM TYPES
-INSERT INTO `team_types` (`id_type`, `type`) VALUES (1, 'Profesionální');
-INSERT INTO `team_types` (`id_type`, `type`) VALUES (2, 'Amatérský');
+INSERT INTO `team_types` (`id_type`, `type`) VALUES (1, 'Ligový');
+INSERT INTO `team_types` (`id_type`, `type`) VALUES (2, 'Volnočasový');
 
 -- TEAMS
 INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`) VALUES (1, 1, 'Hokejisti pro srandu a žízeň', 1, 2, 1);
