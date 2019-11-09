@@ -10,6 +10,7 @@ export function TeamAdminPage() {
     let {id_team} = useParams();
     const [state] = useGetTeam(id_team);
     const [membersState] = useGetMembers(id_team);
+    console.log("members", membersState);
     const api = useApi();
 
     return (
