@@ -135,6 +135,25 @@ export function ChangeTeamData(api, id_team, values) {
         });
 }
 
+export function ChangeSetActive(api, id_team, active) {
+    const path = `${config.API_BASE_PATH}/teams/${id_team}`;
+    const promise = active === 0 ?
+        api.patch(path)
+            .then(({data}) => {
+                window.flash("Tým byl úspěšně aktivován", 'success');
+            })
+    :
+        api.delete(path)
+            .then(({data}) => {
+                window.flash("Tým byl úspěšně deaktivován", 'success');
+            });
+
+    promise.catch(({response}) => {
+            const {data} = response;
+            window.flash(data.msg, 'danger');
+        });
+}
+
 export function useGetTeamCompetition(id_team) {
     const api = useApi();
     const [state, setState] = useState({
