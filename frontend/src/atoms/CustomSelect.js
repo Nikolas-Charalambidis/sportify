@@ -14,7 +14,7 @@ const renderOptions = (options, mapping, defaultID) => {
     });
 };
 
-export function Select({label, message, options, defaultID, mapping, customTooltip, ...props}) {
+export function CustomSelect({label, message, options, defaultID, mapping, customTooltip, ...props}) {
     const [field] = useField(props);
     return (
         <Form.Group>

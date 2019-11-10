@@ -5,7 +5,7 @@ import React from "react";
 import {Heading} from '../../../../atoms';
 import * as yup from "yup";
 import {CreateTeam} from "../../../../api/team/teamClient_v1";
-import {Select} from "../../../../atoms/Select";
+import {CustomSelect} from "../../../../atoms/CustomSelect";
 import {useGetSports, useGetTeamTypes} from "../../../../api/others/othersClient_v1";
 import {useHistory} from "react-router";
 import * as Icons from "@fortawesome/free-solid-svg-icons";
@@ -72,13 +72,13 @@ export function CreateTeamModal({api, id_user, show, handleClose}) {
                                    message="Vyplňte prosím název týmu"
                                    isInvalid={!!errors.name}/>
 
-                            <Select label="Typ týmu" customTooltip={tooltipTeamType} name="id_type" mapping={{key: "id_type", value: "type"}}
+                            <CustomSelect label="Typ týmu" customTooltip={tooltipTeamType} name="id_type" mapping={{key: "id_type", value: "type"}}
                                     defaultID={sportsState.sports[0].id_sport} options={typesState.types}/>
 
-                            <Select label="Sport" name="id_sport" mapping={{key: "id_sport", value: "sport"}}
+                            <CustomSelect label="Sport" name="id_sport" mapping={{key: "id_sport", value: "sport"}}
                                     defaultID={sportsState.sports[0].id_sport} options={sportsState.sports}/>
 
-                            <Select label="Role v týmu" name="position" mapping={{key: "id_position", value: "position"}}
+                            <CustomSelect label="Role v týmu" name="position" mapping={{key: "id_position", value: "position"}}
                                     defaultID={"attacker"} options={positionEnum}/>
                         </Modal.Body>
 
