@@ -317,6 +317,73 @@ router.get('/:id_team/statistics', async(req, res, next) => {
 });
 
 /**
+ * @swagger
+ * /teams/{id_team}:
+ *   patch:
+ *     tags:
+ *       - Teams
+ *     name: Sets the team as Active
+ *     summary: Sets the team as Active
+ *     parameters:
+ *       - name: id_team
+ *         in: path
+ *         description: Team ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Team set as Active
+ *       400:
+ *         description: Invalid request
+ *       404:
+ *         description: Team not found
+ */
+router.patch('/:id_team', async(req, res, next) => {
+	try {
+		const { id_team } = req.params;
+		const team = await new TeamService(req).setActive(id_team, true);
+		res.status(200).json({ error: false, msg: 'OK', team_data: team});
+	} catch(e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
+ * /teams/{id_team}:
+ *   delete:
+ *     tags:
+ *       - Teams
+ *     name: Sets the team as Inactive
+ *     summary: Sets the team as Inactive
+ *     parameters:
+ *       - name: id_team
+ *         in: path
+ *         description: Team ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Team set as Inactive
+ *       400:
+ *         description: Invalid request
+ *       404:
+ *         description: Team not found
+ */
+router.delete('/:id_team', async(req, res, next) => {
+	try {
+		const { id_team } = req.params;
+		const team = await new TeamService(req).setActive(id_team, false);
+		res.status(200).json({ error: false, msg: 'OK', team_data: team});
+	} catch(e) {
+		next(e);
+	}
+});
+
+
+/**
  * User object Swagger definition
  *
  * @swagger

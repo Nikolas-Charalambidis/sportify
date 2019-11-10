@@ -147,6 +147,22 @@ export default class TeamService {
 		return avatar_url;
 	}
 
+	async setActive(id_team, active) {
+		const team_id = Number(id_team);
+		teamValidation.validateTeamID(team_id);
+		teamValidation.validateSetActive(active);
+		const setActive = active ? 1 : 0;
+
+		const result = await this.dbConnection.query(
+			`UPDATE teams SET active=? WHERE id_team=?`,
+			[setActive, team_id]
+		);
+		if(result.affectedRows === 1) {
+			return result.insertId;
+		}
+		throw {status: 500, msg: 'De/aktivace týmu se nezdařila'};
+	}
+
 	async teamStatistics(id_team) {
 		const team_id = Number(id_team);
 		teamValidation.validateTeamID(team_id);
