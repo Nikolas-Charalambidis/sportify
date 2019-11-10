@@ -25,7 +25,7 @@ export default class TeamService {
 		const team_id = Number(id_team);
 		teamValidation.validateTeamID(team_id);
 		const result = await this.dbConnection.query(
-			`SELECT t.id_team, t.name, s.id_sport, s.sport, t.id_sport, type.id_type, type.type, t.id_leader, t.id_contact_person, t.avatar_url,
+			`SELECT t.id_team, t.name, s.id_sport, s.sport, t.id_sport, type.id_type, type.type, t.id_leader, t.id_contact_person, t.avatar_url, t.active,
 			 CONCAT(leader.name, " ", leader.surname) as leader,
 			 CONCAT(contact.name, " ", contact.surname) as contact_person
 			FROM teams as t

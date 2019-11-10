@@ -6,7 +6,7 @@ import * as yup from "yup";
 import {Avatar} from "../../../../organisms/Avatar";
 import defaultTeamAvatar from "../../../../assets/images/default_team_avatar.svg";
 import {useState} from "react";
-import {ChangeTeamData} from "../../../../api/team/teamClient_v1";
+import {ChangeTeamData, ChangeSetActive} from "../../../../api/team/teamClient_v1";
 import {Select} from "../../../../atoms/Select";
 import {useGetSports, useGetTeamTypes} from "../../../../api/others/othersClient_v1";
 
@@ -20,6 +20,8 @@ export function TeamDataForm({api, team_data, membersState}) {
     const [sportsState] = useGetSports();
     const [typesState] = useGetTeamTypes();
 
+    let new_activation_button_state = team_data.active === 0 ? "Aktivovat" : "Deaktivovat";
+    const [activationButtonState, setActivationButtonState] = useState(new_activation_button_state);
 
     return (
         <div>
@@ -32,7 +34,8 @@ export function TeamDataForm({api, team_data, membersState}) {
                     id_type: team_data.id_type,
                     id_sport: team_data.id_sport,
                     id_leader: team_data.id_leader,
-                    id_contact_person: team_data.id_contact_person
+                    id_contact_person: team_data.id_contact_person,
+                    active: team_data.active
                 }}
                 validationSchema={schemaChangeData}
                 onSubmit={values => {
@@ -79,13 +82,21 @@ export function TeamDataForm({api, team_data, membersState}) {
                         </Col>
                     </Row>
 
-                    <Row>
-                        <Col className="mb-3 mt-lg-0" lg={{span: 3, offset: 0}}>
-                            <Button type="submit" block>
-                                Uložit
-                            </Button>
-                        </Col>
-                    </Row>
+					<Row>
+						<Col className="mb-4 mt-lg-0" lg={{span: 5, offset: 0}}>
+							<Button type="submit" block>
+								Uložit
+							</Button>
+						</Col>
+						<Col className="mb-4 mt-lg-0" lg={{span: 5, offset: 0}}>
+							<Button type="button" variant="secondary" block onClick={() => {
+                                ChangeSetActive(api, team_data.id_team, team_data.active);
+                                setActivationButtonState(team_data.active === 0 ? "Aktivovat" : "Deaktivovat");
+                            }}>
+								{activationButtonState}
+							</Button>
+						</Col>
+					</Row>
                 </Form>
             )}
             </Formik>
