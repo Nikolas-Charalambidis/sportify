@@ -68,7 +68,7 @@ export function Profile() {
                                 {teamState.user_data.map((anObjectMapped, index) => (
                                     <CardTemplate
                                         key={index}
-                                        redirect={`../teams/${anObjectMapped.id_team}`}
+                                        redirect={`../administration/teams/${anObjectMapped.id_team}`}
                                         title={`${anObjectMapped.name}`}
                                         subtitle={`Pozice: ${getPositionEnumName(anObjectMapped.position)}`}
                                         tooltipPictureHeader={`${anObjectMapped.sport}`}
