@@ -22,6 +22,8 @@ export function TeamDataForm({api, team_data, membersState}) {
 
     let new_activation_button_state = team_data.active === 0 ? "Aktivovat" : "Deaktivovat";
     const [activationButtonState, setActivationButtonState] = useState(new_activation_button_state);
+    const [status, setStatus] = useState(team_data.active !== 0);
+    const [heading, setHeading] = useState(team_data.name);
 
     return (
         <div>
@@ -35,15 +37,15 @@ export function TeamDataForm({api, team_data, membersState}) {
                     id_sport: team_data.id_sport,
                     id_leader: team_data.id_leader,
                     id_contact_person: team_data.id_contact_person,
-                    active: team_data.active
+                    active: status
                 }}
                 validationSchema={schemaChangeData}
                 onSubmit={values => {
-                    ChangeTeamData(api, team_data.id_team, values);
+                    ChangeTeamData(api, team_data.id_team, values, setHeading);
                 }}
             >{({handleSubmit, errors}) => (
                 <Form noValidate onSubmit={handleSubmit}>
-                    <Heading className="pageHeading mt-4 mb-5">{team_data.name}</Heading>
+                    <Heading className="pageHeading mt-4 mb-5">{heading}</Heading>
                     <Row>
                         <Col className="d-lg-none text-center mb-5">
                             <Avatar api={api} setImageState={setImageState} imageState={imageState} type={"teams"}
@@ -90,8 +92,7 @@ export function TeamDataForm({api, team_data, membersState}) {
 						</Col>
 						<Col className="mb-4 mt-lg-0" lg={{span: 5, offset: 0}}>
 							<Button type="button" variant="secondary" block onClick={() => {
-                                ChangeSetActive(api, team_data.id_team, team_data.active);
-                                setActivationButtonState(team_data.active === 0 ? "Aktivovat" : "Deaktivovat");
+                                ChangeSetActive(api, team_data.id_team, status, setStatus, setActivationButtonState);
                             }}>
 								{activationButtonState}
 							</Button>
