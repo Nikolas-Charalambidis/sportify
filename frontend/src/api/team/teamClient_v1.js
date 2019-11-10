@@ -122,12 +122,13 @@ export function useGetCompetitions(id_team) {
     return [state];
 }
 
-export function ChangeTeamData(api, id_team, values) {
+export function ChangeTeamData(api, id_team, values, setHeading) {
     const {id_type, id_sport, id_leader, id_contact_person, name} = values;
     api
         .put(`${config.API_BASE_PATH}/teams/`, {id_team: id_team, id_type: id_type, id_leader: id_leader, id_sport: id_sport, id_contact_person: id_contact_person, name: name})
         .then(() => {
             window.flash("Tymove údaje byly úspěšně změněny", 'success');
+            setHeading(name);
         })
         .catch(({response}) => {
             const {data} = response;
@@ -135,17 +136,21 @@ export function ChangeTeamData(api, id_team, values) {
         });
 }
 
-export function ChangeSetActive(api, id_team, active) {
+export function ChangeSetActive(api, id_team, active, setStatus, setActivationButtonState) {
     const path = `${config.API_BASE_PATH}/teams/${id_team}`;
-    const promise = active === 0 ?
+    const promise = active === false ?
         api.patch(path)
             .then(({data}) => {
                 window.flash("Tým byl úspěšně aktivován", 'success');
+                setStatus(true);
+                setActivationButtonState("Deaktivovat")
             })
     :
         api.delete(path)
             .then(({data}) => {
                 window.flash("Tým byl úspěšně deaktivován", 'success');
+                setStatus(false);
+                setActivationButtonState("Aktivovat")
             });
 
     promise.catch(({response}) => {
