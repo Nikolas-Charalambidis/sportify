@@ -1,11 +1,7 @@
-import dotenv from 'dotenv';
 import {DB_CONNECTION_KEY} from '../../libs/connection';
 import * as userValidation from './userValidations';
 import AuthService from "../auth/authService";
-import {hash, verifyHash} from '../../libs/utils';
-
-dotenv.config();
-dotenv.config({path: '.env'});
+import * as utils from '../../libs/utils';
 
 export default class UserService {
 
@@ -23,7 +19,7 @@ export default class UserService {
 		userValidation.validateUserID(user_id);
 		const result = await this.dbConnection.query('SELECT * FROM users WHERE id_user=?', user_id);
 		if (result.length === 0) {
-			throw {status: 404, msg: 'User not found'};
+			throw {status: 404, msg: 'Uživatel nebyl nalezen v databázi'};
 		}
 		return result[0];
 	}
@@ -31,42 +27,38 @@ export default class UserService {
 	async addNewUser(email, password1, password2, name, surname) {
 		userValidation.validateNewUserData(email, password1, password2, name, surname);
 		if (await this.isEmailUsed(email)) {
-			throw {status: 400, msg: 'Email already exists'};
+			throw {status: 400, msg: 'Email již existuje'};
 		}
-		const hashedPassword = hash(password1, 10);
+		const hashedPassword = utils.hash(password1, 10);
 		const result = await this.dbConnection.query(
-			'INSERT INTO users (id_user, email, password, name, surname, verified) VALUES ("", ?, ?, ?, ?, 0)',
+			`INSERT INTO users (id_user, email, password, name, surname, verified) VALUES (NULL, ?, ?, ?, ?, 0)`,
 			[email, hashedPassword, name, surname]
 		);
-		if (result.affectedRows === 1) {
-			const authService = new AuthService(this.req);
-			const hash = await authService.genConfirmToken(result.insertId);
-			await authService.sendConfirmEmail(email, result.insertId, hash);
-			return result.insertId;
+		if (result.affectedRows === 0) {
+			throw {status: 500, msg: 'Vytvoření nového uživatele selhalo'};
 		}
-		throw {status: 500, msg: 'Unable to create user'};
+		await new AuthService(this.req).genConfirmToken(result.insertId, email);
+		return result.insertId;
 	}
 
 	async changePassword(id_user, oldPassword, newPassword1, newPassword2) {
 		const user_id = Number(id_user);
 		userValidation.validateChangePasswordData(user_id, oldPassword, newPassword1, newPassword2);
-
 		const user = await this.dbConnection.query(
 			`SELECT password FROM users WHERE id_user=?`, [user_id]
 		);
 		if (user.length === 0) {
-			throw {status: 404, msg: 'User not found'};
+			throw {status: 404, msg: 'Uživatel nebyl nalezen v databázi'};
 		}
-		if(!verifyHash(oldPassword, user[0].password)){
-			throw {status: 400, msg: 'Invalid data'};
+		if(!utils.verifyHash(oldPassword, user[0].password)){
+			throw {status: 400, msg: 'Bylo zadáno neplatné stávající heslo'};
 		}
-
 		const result = await this.dbConnection.query(
 			'UPDATE users SET password=? WHERE id_user=?',
-			[hash(newPassword1, 10), user_id]
+			[utils.hash(newPassword1, 10), user_id]
 		);
 		if (result.affectedRows === 0) {
-			throw {status: 400, msg: 'Password change failed'};
+			throw {status: 400, msg: 'Změna hesla se nezdařila'};
 		}
 	}
 
@@ -79,7 +71,7 @@ export default class UserService {
 			[name, surname, user_id]
 		);
 		if (result.affectedRows === 0) {
-			throw {status: 400, msg: 'Data change failed'};
+			throw {status: 400, msg: 'Změna uživatelských údajů se nezdařila'};
 		}
 	}
 
@@ -88,10 +80,92 @@ export default class UserService {
 		return result.length > 0;
 	}
 
-	async setUserVerified(id_user) {
-		const result = await this.dbConnection.query('UPDATE users SET verified=true WHERE id_user=?', id_user);
-		if (result.affectedRows === 0) {
-			throw {status: 400, msg: 'Verification failed'};
+	async userTeam(id_user) {
+		const user_id = Number(id_user);
+		userValidation.validateUserID(user_id);
+		return this.dbConnection.query(
+		    `SELECT t.id_team, t.name, s.sport, type.type FROM teams as t 
+		    JOIN sports AS s ON t.id_sport=s.id_sport
+		    JOIN team_types AS type ON t.id_type=type.id_type
+		    WHERE t.id_leader = ?;`
+            , user_id);
+	}
+
+	async userCompetition(id_user) {
+		const user_id = Number(id_user);
+		userValidation.validateUserID(user_id);
+		return this.dbConnection.query(`SELECT * FROM competitions WHERE leader = ?;`, user_id);
+	}
+
+	async userTeamMemberships(id_user) {
+		const user_id = Number(id_user);
+		userValidation.validateUserID(user_id);
+		return this.dbConnection.query(
+				`SELECT t.id_team, t.name, t.avatar_url, tm.position, s.id_sport, s.sport FROM team_membership AS tm
+				JOIN teams AS t ON tm.team=t.id_team
+				JOIN sports AS s ON t.id_sport=s.id_sport
+				WHERE tm.user=? AND tm.status='active'`
+			, user_id);
+	}
+
+	async userCompetitionMemberships(id_user) {
+		const user_id = Number(id_user);
+		userValidation.validateUserID(user_id);
+		return this.dbConnection.query(`SELECT 
+					t.id_team, 
+					t.name as 'team_name', 
+					2 as 'team_position', 
+					s.id_sport, 
+					s.sport, 
+					c.id_competition, 
+					c.name as 'competition_name', 
+					c.avatar_url,
+					(c.start_date < DATE(NOW()) AND c.end_date > DATE(NOW())) as 'is_active' 
+				FROM team_membership AS tm
+  				JOIN teams AS t ON tm.team = t.id_team
+  				JOIN competition_membership AS cm ON t.id_team = cm.team
+  				JOIN competitions AS c ON cm.competition = c.id_competition
+  				JOIN sports AS s ON t.id_sport=s.id_sport
+  				WHERE tm.user=? AND cm.status='active'`
+			, user_id);
+	}
+
+	async uploadAvatar(filepath, params, id_user) {
+		const user_id = Number(id_user);
+		userValidation.validateUserID(user_id);
+
+		let result = await this.dbConnection.query(
+			`SELECT avatar_public_id FROM users WHERE id_user=?`, user_id
+		);
+		if(result.length === 0) {
+			throw {status: 404, msg: 'Uživatel nebyl nalezen v databázi'};
 		}
+		const { avatar_public_id } = result[0];
+		if(avatar_public_id !== null) {
+			await utils.deleteAvatarFromCloudinary(avatar_public_id);
+		}
+		const {url, public_id} = await utils.uploadAvatarToCloudinary(filepath, params);
+		result = await this.dbConnection.query(
+			`UPDATE users SET avatar_url=?, avatar_public_id=? WHERE id_user=?`,
+			[url, public_id, user_id]
+		);
+		if (result.affectedRows === 0) {
+			throw {status: 500, msg: 'Informace o avatarovi se nepodařilo uložit do databáze'};
+		}
+		return url;
+	}
+
+	async getAvatar(id_user) {
+		const user_id = Number(id_user);
+		userValidation.validateUserID(user_id);
+
+		const result = await this.dbConnection.query(
+			`SELECT avatar_url FROM users WHERE id_user=?`, user_id
+		);
+		if(result.length === 0) {
+			throw {status: 404, msg: 'Uživatel nebyl nalezen v databázi'};
+		}
+		const { avatar_url } = result[0];
+		return avatar_url;
 	}
 }

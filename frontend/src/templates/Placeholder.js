@@ -1,20 +1,16 @@
-import React from 'react';
+import React from 'react'
 
-import {Heading, MainSection} from '../atoms/';
-import {TopNavigation} from '../organisms/TopNavigation';
+import {Heading} from '../atoms/'
 
 export function Placeholder({title, children}) {
-	return (
-		<>
-			<TopNavigation/>
-			<MainSection>
-				<Heading>{title}</Heading>
-				{typeof children === 'undefined' ? (
-					<p>This page is empty for now...</p>
-				) : (
-					children
-				)}
-			</MainSection>
-		</>
-	);
+    return (
+        <div>
+            <Heading>{title}</Heading>
+            {typeof children === 'undefined' ? (
+                <p>This page is empty for now...</p>
+            ) : (
+                children
+            )}
+        </div>
+    )
 }

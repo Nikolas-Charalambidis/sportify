@@ -32,7 +32,19 @@ api.use(router);
 
 // Handling errors and logging
 api.use(function (err, req, res, next) {
-	res.status(err.status || 500).json({status: err.status, error: true, message: err.msg})
+	if(err) {
+		let { status, msg, link } = err;
+		if(!status){
+			status = 500;
+		}
+		if(!msg){
+			msg = "Neočekávaná chyba";
+		}
+		if(!link){
+			link = null;
+		}
+		res.status(status).json({status: status, error: true, msg: msg, link: link})
+	}
 });
 api.use(logErrors);
 api.use(clientErrorHandler);

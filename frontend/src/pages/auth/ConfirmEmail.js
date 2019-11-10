@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { useApi } from '../../utils/api';
-import { useHistory } from 'react-router-dom';
+import React, {useState, useEffect} from 'react';
+import {useParams} from 'react-router-dom';
+import {useApi} from '../../hooks/useApi';
+import {useHistory} from 'react-router-dom';
 import {config} from "../../config";
 
-function Confirm(url, params){
-    let { id_user, hash } = params;
+function Confirm(url, params) {
+    let {id_user, hash} = params;
     const history = useHistory();
     const api = useApi();
     const [state, setState] = useState({
-        isConfirming: true
+        isLoading: true
     });
 
     useEffect( () => {
@@ -17,33 +17,19 @@ function Confirm(url, params){
             await api
                 .post(url, {id_user: id_user, hash: hash})
                 .then(({ data }) => {
-                    setState({ isConfirming: false });
-                    // const { user } = data;
-                    // Do something - for example login user
-                    window.flash("Váš email byl úspěšně ověřen", 'success');
-                    history.replace('/');
+                    setState({ isLoading: false });
+                    window.flash("Váš email byl úspěšně ověřen, nyní se můžete přihlásit", 'success');
+                    history.replace('/login');
                 })
-                .catch(( { response } ) => {
-                    setState( { isLoading: false });
-                    const { data, status } = response;
-                    switch (status) {
-                        case 400:
-                            window.flash(data.message, 'danger');
-                            history.replace('/');
-                            break;
-                        case 404:
-                            window.flash(data.message, 'danger');
-                            history.replace('/');
-                            break;
-                        case 498:
-                            window.flash(data.message, 'danger');
-                            history.replace('/');
-                            break;
-                        default:
-                            window.flash(data.message, 'danger');
-                            history.replace('/');
-                            break;
+                .catch(({response}) => {
+                    setState({isLoading: false});
+                    const {data, status} = response;
+                    if(status === 498){
+                        window.flash(data.msg, 'warning', 15000, data.link);
+                    } else {
+                        window.flash(data.msg, 'danger');
                     }
+                    history.replace('/');
                 });
         }
         fetchData().then();
@@ -53,10 +39,10 @@ function Confirm(url, params){
 }
 
 export function ConfirmEmail() {
-    const [state] = Confirm(`http://${config.API_BASE_PATH}/api/v1/auth/confirmEmail`, useParams());
+    const [state] = Confirm(`${config.API_BASE_PATH}/auth/confirmEmail`, useParams());
     return (
         <div>
-            { state.isConfirming && <div>Confirming email...</div> }
+            {state.isLoading && <div>Confirming email...</div>}
         </div>
     );
 }

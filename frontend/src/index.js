@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import 'tachyons';
+import './assets/sass/main.scss';
+import 'bootstrap/scss/bootstrap.scss';
 
-import './assets/css/index.css';
 import { App } from './App';
 
 ReactDOM.render(<App />, document.getElementById('root'));
