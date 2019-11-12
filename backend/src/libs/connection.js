@@ -15,6 +15,7 @@ const pool = mariadb.createPool({
   password: DB_PASSWORD,
   database: DB_NAME,
   connectionLimit: 5,
+  resetAfterUse: false
 });
 
 const getConnection = async () => {
