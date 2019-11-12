@@ -18,12 +18,18 @@ api.use(bodyParser.json());
 api.use(cors());
 api.use(addDbToRequest);
 
+// Middleware
+api.use(function(req, res, next) {
+	res.setHeader("Content-Type", "application/json; charset=utf-8");
+	next();
+});
+
 // Healthcheck
 api.get('/health', async (req, res, next) => {
 	const dbConnection = req[DB_CONNECTION_KEY];
 	const testQueryResult = await dbConnection.query('SELECT 1 as val');
 	if (testQueryResult) {
-		res.json({api: 'up', database: 'up'});
+		res.json({api: 'up', database: 'up', characters: 'ěščřžýáíéůúďťň'});
 	}
 });
 
