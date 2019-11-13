@@ -101,10 +101,12 @@ export default class UserService {
 		const user_id = Number(id_user);
 		userValidation.validateUserID(user_id);
 		return this.dbConnection.query(
-				`SELECT t.id_team, t.name, t.avatar_url, tm.position, s.id_sport, s.sport FROM team_membership AS tm
-				JOIN teams AS t ON tm.team=t.id_team
+				`SELECT t.id_team, t.name, t.avatar_url, p.position, s.id_sport, s.sport 
+				FROM team_membership AS tm
+				JOIN teams AS t ON tm.id_team=t.id_team
 				JOIN sports AS s ON t.id_sport=s.id_sport
-				WHERE tm.user=? AND tm.status='active'`
+				JOIN positions AS p ON p.id_position=tm.id_position
+				WHERE tm.id_user=? AND tm.status='active'`
 			, user_id);
 	}
 
@@ -122,11 +124,11 @@ export default class UserService {
 					c.avatar_url,
 					(c.start_date < DATE(NOW()) AND c.end_date > DATE(NOW())) as 'is_active' 
 				FROM team_membership AS tm
-  				JOIN teams AS t ON tm.team = t.id_team
-  				JOIN competition_membership AS cm ON t.id_team = cm.team
-  				JOIN competitions AS c ON cm.competition = c.id_competition
+  				JOIN teams AS t ON tm.id_team = t.id_team
+  				JOIN competition_membership AS cm ON t.id_team = cm.id_team
+  				JOIN competitions AS c ON cm.id_competition = c.id_competition
   				JOIN sports AS s ON t.id_sport=s.id_sport
-  				WHERE tm.user=? AND cm.status='active'`
+  				WHERE tm.id_user=? AND cm.status='active'`
 			, user_id);
 	}
 

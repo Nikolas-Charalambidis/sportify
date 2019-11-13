@@ -7,7 +7,7 @@ import {Avatar} from "../../../../organisms/Avatar";
 import defaultTeamAvatar from "../../../../assets/images/default_team_avatar.svg";
 import {useState} from "react";
 import {ChangeTeamData, ChangeSetActive} from "../../../../api/team/teamClient_v1";
-import {Select} from "../../../../atoms/Select";
+import {CustomSelect} from "../../../../atoms/Select";
 import {useGetSports, useGetTeamTypes} from "../../../../api/others/othersClient_v1";
 
 const schemaChangeData = yup.object().shape({
@@ -19,6 +19,8 @@ export function TeamDataForm({api, team_data, membersState}) {
     const [imageState, setImageState] = useState(new_url);
     const [sportsState] = useGetSports();
     const [typesState] = useGetTeamTypes();
+
+    console.log("team_data", team_data);
 
     let new_activation_button_state = team_data.active === 0 ? "Aktivovat" : "Deaktivovat";
     const [activationButtonState, setActivationButtonState] = useState(new_activation_button_state);
@@ -43,7 +45,7 @@ export function TeamDataForm({api, team_data, membersState}) {
                 onSubmit={values => {
                     ChangeTeamData(api, team_data.id_team, values, setHeading);
                 }}
-            >{({handleSubmit, errors}) => (
+            >{({handleSubmit, setFieldValue, errors}) => (
                 <Form noValidate onSubmit={handleSubmit}>
                     <Heading className="pageHeading mt-4 mb-5">{heading}</Heading>
                     <Row>
@@ -54,26 +56,50 @@ export function TeamDataForm({api, team_data, membersState}) {
                         <Col xl={10} lg={10}>
                             <Row>
                                 <Col sm={{span: 6, offset: 0}}>
-                                    <Field label="Nazev" name="name" type="text" message="Vyplňte týmove jméno."
+                                    <Field label="Název týmu" name="name" type="text" message="Vyplňte týmove jméno."
                                            isInvalid={!!errors.name}/>
                                 </Col>
                                 <Col sm={{span: 6, offset: 0}}>
-                                    <Select label="Sport" name="id_sport" mapping={{key: "id_sport", value: "sport"}}
-                                            defaultID={team_data.id_sport} options={sportsState.sports}/>
+                                    <CustomSelect label="Sport" name="id_sport"
+                                                  options={sportsState.sports}
+                                                  getOptionLabel={option => `${option.sport}` }
+                                                  getOptionValue={option => `${option.id_sport}`}
+                                                  placeholder={team_data.sport}
+                                                  onChange={option => setFieldValue("id_sport", `${option.id_sport}`)}
+                                                  isSearchable={true}
+                                    />
                                 </Col>
                             </Row>
                             <Row>
                                 <Col sm={{span: 4, offset: 0}}>
-                                    <Select label="Typ týmu" name="id_type" mapping={{key: "id_type", value: "type"}}
-                                            defaultID={team_data.id_type} options={typesState.types}/>
+                                    <CustomSelect label="Typ týmu" name="id_type"
+                                                  options={typesState.types}
+                                                  getOptionLabel={option => `${option.type}` }
+                                                  getOptionValue={option => `${option.id_type}`}
+                                                  placeholder={team_data.type}
+                                                  onChange={option => setFieldValue("id_type", `${option.id_type}`)}
+                                                  isSearchable={true}
+                                    />
                                 </Col>
                                 <Col sm={{span: 4, offset: 0}}>
-                                    <Select label="Vedoucí týmu" name="id_leader" mapping={{key: "id_user", value: "name"}}
-                                            defaultID={team_data.id_leader} options={membersState.players}/>
+                                    <CustomSelect label="Vedoucí týmu" name="id_leader"
+                                          options={membersState.players}
+                                          getOptionLabel={option => `${option.name}` }
+                                          getOptionValue={option => `${option.id_user}`}
+                                          placeholder={team_data.leader}
+                                          onChange={option => setFieldValue("id_leader", `${option.id_user}`)}
+                                          isSearchable={true}
+                                    />
                                 </Col>
                                 <Col sm={{span: 4, offset: 0}}>
-                                    <Select label="Kontaktní osoba" name="id_contact_person" mapping={{key: "id_user", value: "name"}}
-                                            defaultID={team_data.id_contact_person} options={membersState.players}/>
+                                    <CustomSelect label="Kontaktní osoba" name="id_contact_person"
+                                          options={membersState.players}
+                                          getOptionLabel={option => `${option.name}` }
+                                          getOptionValue={option => `${option.id_user}`}
+                                          placeholder={team_data.contact_person}
+                                          onChange={option => setFieldValue("id_contact_person", `${option.id_user}`)}
+                                          isSearchable={true}
+                                    />
                                 </Col>
                             </Row>
                         </Col>

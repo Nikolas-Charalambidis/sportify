@@ -22,6 +22,24 @@ router.get('/teamTypes', async (req, res, next) => {
 });
 
 /**
+ * @swagger
+ * /others/positions:
+ *   get:
+ *     tags:
+ *       - Positions
+ *     name: Login
+ *     summary: Get all team positions
+ *     responses:
+ *       200:
+ *         description: All team positions returned
+ */
+router.get('/positions', async (req, res, next) => {
+	const dbConnection = req[DB_CONNECTION_KEY];
+	const positions = await dbConnection.query(`SELECT * FROM positions`);
+	await res.status(200).json({ error: false, msg: 'OK', positions: positions});
+});
+
+/**
  * Sport object Swagger definition
  *
  * @swagger
