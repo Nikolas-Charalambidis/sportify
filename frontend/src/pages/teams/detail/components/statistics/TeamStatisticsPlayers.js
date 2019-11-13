@@ -13,14 +13,14 @@ function getPlayers(state, filterBy) {
 
     if (!state.isLoading) {
         if (filterBy === 'league') {
-            return state.team.competitions_aggregate.filter(p => p.position !== "goalkeeper");
+            return state.team.competitions_aggregate.filter(p => !p.is_goalkeeper);
         }
 
         if (filterBy !== 'training') {
             competitionId = parseInt(filterBy);
         }
 
-        return state.team.individual.filter(p => p.position !== "goalkeeper" && p.id_competition === competitionId);
+        return state.team.individual.filter(p => !p.is_goalkeeper && p.id_competition === competitionId);
     }
 }
 
@@ -31,6 +31,7 @@ function getRank(playerData) {
 export function TeamStatisticsPlayers({filterBy}) {
     let {id_team} = useParams();
     const [state] = useGetTeamStatistics(id_team);
+    console.log("state from statistics", state);
 
     const players = getPlayers(state, filterBy);
     const columns = [
@@ -75,11 +76,11 @@ export function TeamStatisticsPlayers({filterBy}) {
     return (
         <div>
             {state.isLoading && <div className="text-center"><Image src={loadingGif}/></div>}
-            {!state.isLoading && state.error &&
+            {(!state.isLoading && state.error) &&
             <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
-            {!state.isLoading && !state.error && (
+            {(!state.isLoading && !state.error) &&
                 <Table className="defaultCursor" data={players} columns={columns}/>
-            )}
+            }
         </div>
     );
 }

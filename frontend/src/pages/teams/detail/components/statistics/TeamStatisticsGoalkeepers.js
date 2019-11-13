@@ -13,14 +13,14 @@ function getGoalkeepers(state, filterBy) {
 
     if (!state.isLoading) {
         if (filterBy === 'league') {
-            return state.team.competitions_aggregate.filter(p => p.position === "goalkeeper");
+            return state.team.competitions_aggregate.filter(p => p.is_goalkeeper);
         }
 
         if (filterBy !== 'training') {
             competitionId = parseInt(filterBy);
         }
 
-        return state.team.individual.filter(p => p.position === "goalkeeper" && p.id_competition === competitionId)
+        return state.team.individual.filter(p => p.is_goalkeeper && p.id_competition === competitionId)
     }
 }
 
