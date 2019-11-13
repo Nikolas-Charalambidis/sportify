@@ -14,9 +14,13 @@ function TopNavigationBase() {
     const history = useHistory();
 
     const [isOpen, setIsOpen] = useState(false);
-    const toggle = () => setIsOpen(!isOpen);
+    const toggle = () => (window.innerWidth <= 765) ? setIsOpen(!isOpen) : setIsOpen(true);
+    const test = window.innerWidth;
+    console.log(test);
 
     return (
+
+
         <Navbar id="navigation" sticky="top" expand="md">
             <Link to="/">
                 <Navbar.Brand/>
