@@ -203,7 +203,7 @@ export default class TeamService {
 					ts.id_user,
 					CONCAT(u.name, ' ', u.surname) AS 'name_surname',
 					MAX(p.position) AS 'position',
-					p.is_goalkeeper AS 'is_goalkeeper',
+					MAX(p.is_goalkeeper) AS 'is_goalkeeper',
 					SUM(ts.field_matches) AS 'matches',
 					SUM(ts.field_goals) AS 'goals',
 					SUM(ts.field_assists) AS 'assists',
