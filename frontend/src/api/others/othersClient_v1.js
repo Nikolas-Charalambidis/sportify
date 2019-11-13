@@ -10,7 +10,7 @@ export function useGetSports() {
     useEffect(() => {
         async function fetchData() {
             await api
-                .get(`${config.API_BASE_PATH}/sports`)
+                .get(`${config.API_BASE_PATH}/others/sports`)
                 .then(({data}) => {
                     const {sports} = data;
                     setState({isLoading: false, error: false, sports: sports});
@@ -40,6 +40,29 @@ export function useGetTeamTypes() {
                 })
                 .catch(() => {
                     setState({isLoading: false, error: true, types: null});
+                });
+        }
+
+        fetchData().then();
+    }, [api]);
+    return [state];
+}
+
+export function useGetTeamPositions() {
+    const api = useApi();
+    const [state, setState] = useState({
+        isLoading: true
+    });
+    useEffect(() => {
+        async function fetchData() {
+            await api
+                .get(`${config.API_BASE_PATH}/others/positions`)
+                .then(({data}) => {
+                    const {positions} = data;
+                    setState({isLoading: false, error: false, positions: positions});
+                })
+                .catch(() => {
+                    setState({isLoading: false, error: true, positions: null});
                 });
         }
 

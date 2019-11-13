@@ -201,15 +201,15 @@ router.get('/', async (req, res, next) => {
  */
 router.post('/', async (req, res, next) => {
 	try {
-		const { id_sport, name, id_type, id_leader, position } = req.body;
+		const { id_sport, name, id_type, id_leader, id_position } = req.body;
+		console.log("received data", { id_sport, name, id_type, id_leader, id_position });
 		const id = await new TeamService(req).addNewTeam(id_sport, name, id_type, id_leader);
 		let msg = "Tým byl úspěšně vytvořen";
 		try {
-			await new TeamMembershipService(req).addNewMember(id, id_leader, position, 'active');
+			await new TeamMembershipService(req).addNewMember(id, id_leader, id_position, 'active');
 		} catch(e) {
 			msg = "Tým byl vytvořen, ale přidání nového člena do týmu se nezdařilo. Kontaktujte prosím podporu."
 		}
-		console.log("id", id);
 		res.status(201).header('Location' , `/api/v1/teams/${id}`).json({ error: false, msg: msg, id_team: id});
 	} catch(e) {
 		next(e);

@@ -48,7 +48,14 @@ export function useGetTeam(id_team) {
                 .get(`${config.API_BASE_PATH}/teams/${id_team}`)
                 .then(({data}) => {
                     const {team} = data;
+                    // if(id_user){
+                    //     let authorized = id_user === team.id_leader;
+                    //     setState({isLoading: false, error: false, team_data: team, authorized: authorized});
+                    // } else {
+                    //     setState({isLoading: false, error: false, team_data: team});
+                    // }
                     setState({isLoading: false, error: false, team_data: team});
+
                 })
                 .catch(( { response } ) => {
                     const {data, status} = response;
@@ -228,9 +235,9 @@ export function useGetTeamStatistics(id_team) {
 }
 
 export function CreateTeam(history, api, id_user, values) {
-    const {name, id_sport, id_type, position} = values;
+    const {name, id_sport, id_type, id_position} = values;
     api
-        .post(`${config.API_BASE_PATH}/teams`, {id_leader: id_user, name: name, id_sport: id_sport, id_type: id_type, position: position})
+        .post(`${config.API_BASE_PATH}/teams`, {id_leader: id_user, name: name, id_sport: id_sport, id_type: id_type, id_position: id_position})
         .then(( { data } ) => {
             const { id_team } = data;
             window.flash(data.msg, 'success');

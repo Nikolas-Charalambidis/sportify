@@ -22,9 +22,9 @@ export function TeamDetail() {
         <div>
 
             {state.isLoading && <div className="text-center"><Image src={loadingGif}/></div>}
-            {!state.isLoading && state.error &&
+            {(!state.isLoading && state.error) &&
             <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
-            {!state.isLoading &&
+            {(!state.isLoading && !state.error) &&
             <div>
                 <Breadcrumb>
                     <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
