@@ -10,7 +10,7 @@ export function useGetSports() {
     useEffect(() => {
         async function fetchData() {
             await api
-                .get(`${config.API_BASE_PATH}/sports`)
+                .get(`${config.API_BASE_PATH}/others/sports`)
                 .then(({data}) => {
                     const {sports} = data;
                     setState({isLoading: false, error: false, sports: sports});
