@@ -15,8 +15,6 @@ function TopNavigationBase() {
 
     const [isOpen, setIsOpen] = useState(false);
     const toggle = () => (window.innerWidth <= 765) ? setIsOpen(!isOpen) : setIsOpen(true);
-    const test = window.innerWidth;
-    console.log(test);
 
     return (
 
