@@ -26,8 +26,13 @@ export function TeamSquad() {
             Header: "Pozice",
             accessor: "position",
             Cell: ({row}) => (<span>{row.position}</span>),
-            filterMethod: (filter, row) =>
-                row[filter.id].toLowerCase().startsWith(filter.value.toLowerCase()),
+            filterMethod: (filter, row) => {
+                if (filter.value === 'all') {
+                    return true;
+                } else {
+                    return row[filter.id] === filter.value;
+                }
+            },
 
             Filter: ({filter, onChange}) =>
                 <select
@@ -37,7 +42,7 @@ export function TeamSquad() {
                 >
                     <option value="all">Vše</option>
                     {positionsState.positions.map((anObjectMapped, index) => (
-                        <option value={anObjectMapped.position}>{anObjectMapped.position}</option>
+                        <option key={index} value={anObjectMapped.position}>{anObjectMapped.position}</option>
                     ))}
                 </select>
         }
@@ -51,21 +56,22 @@ export function TeamSquad() {
 
     return (
         <div>
-            {(state.isLoading || positionsState.isLoading) && <div className="text-center"><Image src={loadingGif}/></div>}
+            {(state.isLoading || positionsState.isLoading) &&
+            <div className="text-center"><Image src={loadingGif}/></div>}
             {(
                 (!state.isLoading && state.error) ||
-                (!positionsState.isLoading && positionsState.error))  &&
+                (!positionsState.isLoading && positionsState.error)) &&
             <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
             {(
                 (!state.isLoading && !state.error) &&
                 (!positionsState.isLoading && !positionsState.error)) &&
-                <Table columns={columns} data={state.players} getTdProps={(state, rowInfo) => {
-                    return {
-                        onClick: () => {
-                            handleClick(rowInfo);
-                        }
+            <Table columns={columns} data={state.players} getTdProps={(state, rowInfo) => {
+                return {
+                    onClick: () => {
+                        handleClick(rowInfo);
                     }
-                }}/>
+                }
+            }}/>
             }
         </div>
     );

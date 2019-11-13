@@ -14,9 +14,10 @@ export default class TeamService {
 
 	async allTeams() {
 		return this.dbConnection.query(
-			`SELECT t.id_team, t.name, s.sport, CONCAT(u.name, ' ', u.surname) as leader
+			`SELECT t.id_team, t.name, s.sport, tt.type, CONCAT(u.name, ' ', u.surname) as leader
 				FROM teams as t 
 				JOIN sports as s ON t.id_sport=s.id_sport 
+				JOIN team_types as tt ON tt.id_type=t.id_type 
 				JOIN users as u ON t.id_leader=u.id_user`
 		);
 	}
