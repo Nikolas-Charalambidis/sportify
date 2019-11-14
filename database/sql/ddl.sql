@@ -88,7 +88,7 @@ CREATE TABLE `events` (
     `id_match` int NOT NULL,
     `id_team` int NOT NULL,
     `id_user` int,
-    `type` ENUM ('shot', 'goal', 'assistance1', 'assistance2', 'suspension_2', 'suspension_2_2','suspension_5', 'suspension_pp', 'suspension_pp_end'),
+    `type` ENUM ('shot', 'goal', 'assistance1', 'assistance2', 'suspension_2', 'suspension_2_2','suspension_5', 'suspension_pp', 'suspension_pp_end', 'suspension_penalty'),
     `minute` int,
     `value` tinyint NOT NULL
 );
