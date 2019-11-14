@@ -50,7 +50,7 @@ export function TeamSquad() {
 
     function handleClick(row) {
         if (row) {
-            history.push("/user/" + row.original.id_user);
+            history.push("/users/" + row.original.id_user);
         }
     }
 
