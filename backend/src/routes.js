@@ -6,7 +6,6 @@ import authRoutes_v1 from './modules/auth/authRoutes_v1';
 import othersRoutes_v1 from './modules/others/othersRoutes_v1';
 import teamMembershipRoutes_v1 from './modules/teamMembership/teamMembershipRoutes_v1';
 import matchRoutes_v1 from './modules/matches/matchRoutes_v1';
-
 import swagger from "./swagger/swagger";
 
 const router = Router();
