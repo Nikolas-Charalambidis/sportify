@@ -144,11 +144,11 @@ ALTER TABLE `team_membership` ADD FOREIGN KEY (`id_team`) REFERENCES `teams` (`i
 ALTER TABLE `team_membership` ADD FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`);
 ALTER TABLE `team_membership` ADD FOREIGN KEY (`id_position`) REFERENCES `positions` (`id_position`);
 
-ALTER TABLE `events` ADD FOREIGN KEY (`id_match`) REFERENCES `matches` (`id_match`);
+ALTER TABLE `events` ADD FOREIGN KEY (`id_match`) REFERENCES `matches` (`id_match`) ON DELETE CASCADE;
 ALTER TABLE `events` ADD FOREIGN KEY (`id_team`) REFERENCES `teams` (`id_team`);
 ALTER TABLE `events` ADD FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`);
 
-ALTER TABLE `matchup` ADD FOREIGN KEY (`id_match`) REFERENCES `matches` (`id_match`);
+ALTER TABLE `matchup` ADD FOREIGN KEY (`id_match`) REFERENCES `matches` (`id_match`) ON DELETE CASCADE;
 ALTER TABLE `matchup` ADD FOREIGN KEY (`id_team`) REFERENCES `teams` (`id_team`);
 ALTER TABLE `matchup` ADD FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`);
 
@@ -331,6 +331,6 @@ INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_c
 
 -- INSERT INTO `matches` (`id_match`, `competition`, `host`, `guest`, `date`) VALUES ();
 
--- INSERT INTO `matchup` (`id_matchup`, `match`, `goalkeeper`, `team`, `user`, `host`, `profi`) VALUES ();
+-- INSERT INTO `matchup` (`id_matchup`, `id_match`, `goalkeeper`, `id_team`, `id_user`, `host`) VALUES ();
 
--- INSERT INTO `events` (`id_event`, `match`, `team`, `user`, `type`, `minute`, `value`) VALUES ();
+-- INSERT INTO `events` (`id_event`, `id_match`, `id_team`, `id_user`, `type`, `minute`, `value`) VALUES ();
