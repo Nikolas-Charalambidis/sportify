@@ -1,7 +1,27 @@
 import { Router } from 'express';
 import MatchService from "./matchService";
+import TeamService from "../teams/teamService";
 
 const router = Router();
+
+/**
+ * @swagger
+ * /matches:
+ *   get:
+ *     tags:
+ *       - Matches
+ *     name: Match
+ *     summary: Get all matches
+ *     responses:
+ *       200:
+ *         description: Matches found
+ *       404:
+ *         description: Matches not found
+ */
+router.get('/', async (req, res, next) => {
+	const matches = await new MatchService(req).allMatches();
+	await res.status(200).json({ error: false, msg: 'OK', matches: matches});
+});
 
 /**
  * @swagger

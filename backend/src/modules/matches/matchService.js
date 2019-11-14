@@ -8,6 +8,10 @@ export default class MatchService {
 		this.dbConnection = req[DB_CONNECTION_KEY];
 	}
 
+	async allMatches() {
+		return this.dbConnection.query(`SELECT * FROM matches`);
+	}
+
 	async findMatchById(id_match) {
 		const match_id = Number(id_match);
 		matchValidations.validateMatchId(match_id);
