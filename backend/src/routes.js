@@ -29,7 +29,4 @@ console.log("[initialized] teamMembershipRoutes_v1     /api/v1/teamMembership");
 router.use('/api/v1/matches', matchRoutes_v1);
 console.log("[initialized] matchRoutes_v1              /api/v1/matches");
 
-console.log("");
-swagger(router, "v1");
-
 export default router;
