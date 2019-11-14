@@ -8,8 +8,8 @@ const router = Router();
  * /others/teamTypes:
  *   get:
  *     tags:
- *       - TeamTypes
- *     name: Login
+ *       - Others
+ *     name: Team types
  *     summary: Get all team types
  *     responses:
  *       200:
@@ -26,8 +26,8 @@ router.get('/teamTypes', async (req, res, next) => {
  * /others/positions:
  *   get:
  *     tags:
- *       - Positions
- *     name: Login
+ *       - Others
+ *     name: Positions
  *     summary: Get all team positions
  *     responses:
  *       200:
@@ -44,8 +44,8 @@ router.get('/positions', async (req, res, next) => {
  * /others/sports:
  *   get:
  *     tags:
- *       - Sports
- *     name: Login
+ *       - Others
+ *     name: Sports
  *     summary: Get all sports
  *     responses:
  *       200:
