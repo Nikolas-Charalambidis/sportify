@@ -343,7 +343,7 @@ INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value,
 INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
     VALUES (15, 3, 2, 13, 'suspension_5', 52, null, false);
 INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (16, 3, 2, null, 'shot', null, 32, true);
+    VALUES (16, 3, 1, null, 'shot', null, 32, true);
 INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
     VALUES (17, 3, 2, null, 'shot', null, 66, false);
 
