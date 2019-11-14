@@ -90,7 +90,8 @@ CREATE TABLE `events` (
     `id_user` int,
     `type` ENUM ('shot', 'goal', 'assistance1', 'assistance2', 'suspension_2', 'suspension_2_2','suspension_5', 'suspension_pp', 'suspension_pp_end', 'suspension_penalty'),
     `minute` int,
-    `value` tinyint NOT NULL
+    `value` tinyint,
+    `host` boolean NOT NULL
 );
 
 CREATE TABLE `matchup` (
@@ -287,9 +288,68 @@ INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES
 INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES (4, 1, 2, 3, '2018-11-11 16:00:00');
 INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES (5, 1, 3, 1, '2018-11-12 16:00:00');
 
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (1, 1, true, 1, 1, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (2, 1, false, 1, 2, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (3, 1, false, 1, 3, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (4, 1, false, 1, 4, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (5, 1, false, 1, 5, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (6, 1, true, 1, 6, false);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (7, 1, false, 1, 7, false);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (8, 1, false, 1, 8, false);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (9, 1, false, 1, 9, false);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (10, 1, false, 1, 10, false);
+
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (11, 3, true, 1, 1, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (12, 3, false, 1, 2, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (13, 3, false, 1, 3, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (14, 3, false, 1, 4, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (15, 3, false, 1, 5, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (16, 3, true, 2, 11, false);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (17, 3, false, 2, 12, false);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (18, 3, false, 2, 13, false);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (19, 3, false, 2, 14, false);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (20, 3, false, 2, 15, false);
+
+-- EVENTS
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (1, 1, 1, 5, 'goal', 40, null, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (2, 1, 1, 4, 'assistance1', 40, null, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (3, 1, 1, 2, 'goal', 48, null, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (4, 1, 1, 2, 'suspension_2', 51, null, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (5, 1, 1, 10, 'goal', 52, null, false);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (6, 1, 1, null, 'shot', null, 45, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (7, 1, 1, null, 'shot', null, 49, false);
+
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (8, 3, 1, 4, 'goal', 32, null, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (9, 3, 1, 5, 'assistance1', 32, null, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (10, 3, 1, 2, 'assistance2', 32, null, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (11, 3, 2, 13, 'goal', 36, null, false);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (12, 3, 2, 13, 'goal', 41, null, false);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (13, 3, 2, 14, 'assistance1', 41, null, false);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (14, 3, 2, 15, 'assistance2', 41, null, false);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (15, 3, 2, 13, 'suspension_5', 52, null, false);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (16, 3, 2, null, 'shot', null, 32, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (17, 3, 2, null, 'shot', null, 66, false);
 
 -- ---- MOCKED, START OF A SUBJECT OF A FUTURE CHANGE AND/OR REGENERATION, THE MODEL ITSELF IS CONSIDERED FINAL
 -- ---- MATCHES ARE NECESSARY FOR THESE DATA CONSISTENCY, YET THEY ARE NOT NEEDED FOR THE DEVELOPMENT OF THE STATISTICS DISPLAY
+-- ---- THE MOCKED DATA NEITHER MATCH THE MOCKED MATCHES, MATCHUPS NOR EVENTS
 
 -- COMPETITION ID = 1
 INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )

@@ -389,7 +389,7 @@ router.delete('/:id_team', async(req, res, next) => {
  *     tags:
  *       - Teams
  *     name: Matches
- *     summary: Get all matches by teamID
+ *     summary: Get all matches by team ID
  *     consumes: application/json
  *     produces: application/json
  *     parameters:
