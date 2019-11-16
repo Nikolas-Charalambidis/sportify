@@ -33,7 +33,6 @@ export function TeamAdminPage() {
     const api = useApi();
 
     const [matchesState] = useGetTeamMatches(id_team);
-    console.log("date", matchesState.team_data);
 
     function handleClick(row) {
         if (row) {
@@ -48,20 +47,57 @@ export function TeamAdminPage() {
             accessor: "date",
             Cell: props => moment(props.value).format('L'),
             filterMethod: (filter, row) =>
-                row[filter.id].toLowerCase().startsWith(filter.value.toLowerCase())
+                row[filter.id].toLowerCase().startsWith(filter.value.toLowerCase()),
+
+
+
 
         },
         {
             Header: "Domací",
             accessor: "host_name",
-            filterMethod: (filter, row) =>
-                row[filter.id].toLowerCase().startsWith(filter.value.toLowerCase())
+            filterMethod: (filter, row) => {
+                if (filter.value === 'all') {
+                    return true;
+                } else {
+                    return row[filter.id] === filter.value;
+                }
+            },
+
+            Filter: ({filter, onChange}) =>
+                <select
+                    onChange={event => onChange(event.target.value)}
+                    style={{width: "100%"}}
+                    value={filter ? filter.value : "all"}
+                >
+                    <option value="all">Vše</option>
+                    {matchesState.team_data.map((anObjectMapped, index) => (
+                        <option key={index} value={anObjectMapped.host_name}>{anObjectMapped.host_name}</option>
+                    ))}
+                </select>
         },
         {
             Header: "Hosté",
             accessor: "guest_name",
-            filterMethod: (filter, row) =>
-                row[filter.id].toLowerCase().startsWith(filter.value.toLowerCase())
+            filterMethod: (filter, row) => {
+                if (filter.value === 'all') {
+                    return true;
+                } else {
+                    return row[filter.id] === filter.value;
+                }
+            },
+
+            Filter: ({filter, onChange}) =>
+                <select
+                    onChange={event => onChange(event.target.value)}
+                    style={{width: "100%"}}
+                    value={filter ? filter.value : "all"}
+                >
+                    <option value="all">Vše</option>
+                    {matchesState.team_data.map((anObjectMapped, index) => (
+                        <option key={index} value={anObjectMapped.guest_name}>{anObjectMapped.guest_name}</option>
+                    ))}
+                </select>
         },
         {
             Header: "Skóre",
@@ -82,14 +118,34 @@ export function TeamAdminPage() {
                     value={filter ? filter.value : "all"}
                 >
                     <option value="all">Vše</option>
-
+                    {matchesState.team_data.map((anObjectMapped, index) => (
+                        <option key={index} value={anObjectMapped.host_name}>{anObjectMapped.host_name}</option>
+                    ))}
                 </select>
         },
         {
             Header: "Soutěž",
             accessor: "competition_name",
-            filterMethod: (filter, row) =>
-                row[filter.id].toLowerCase().startsWith(filter.value.toLowerCase())
+            filterMethod: (filter, row) => {
+                if (filter.value === 'all') {
+                    return true;
+                } else {
+                    return row[filter.id] === filter.value;
+                }
+            },
+
+            Filter: ({filter, onChange}) =>
+                <select
+                    onChange={event => onChange(event.target.value)}
+                    style={{width: "100%"}}
+                    value={filter ? filter.value : "all"}
+                >
+                    <option value="all">Vše</option>
+                    {matchesState.team_data.map((anObjectMapped, index) => (
+                        <option key={index} value={anObjectMapped.competition_name}>{anObjectMapped.competition_name}</option>
+                    ))
+                    }
+                </select>
         },
     ];
 
