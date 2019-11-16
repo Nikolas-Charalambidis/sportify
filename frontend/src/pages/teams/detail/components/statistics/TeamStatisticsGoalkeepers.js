@@ -13,14 +13,14 @@ function getGoalkeepers(state, filterBy) {
 
     if (!state.isLoading) {
         if (filterBy === 'league') {
-            return state.team.competitions_aggregate.filter(p => p.position === "goalkeeper");
+            return state.team.competitions_aggregate.filter(p => p.is_goalkeeper);
         }
 
         if (filterBy !== 'training') {
             competitionId = parseInt(filterBy);
         }
 
-        return state.team.individual.filter(p => p.position === "goalkeeper" && p.id_competition === competitionId)
+        return state.team.individual.filter(p => p.is_goalkeeper && p.id_competition === competitionId)
     }
 }
 
@@ -33,11 +33,15 @@ export function TeamStatisticsGoalkeepers({filterBy}) {
     const [state] = useGetTeamStatistics(id_team);
 
     const goalkeepers = getGoalkeepers(state, filterBy);
+    if (goalkeepers) {
+        goalkeepers.sort((a, b) => b.goalkeeper_success_rate - a.goalkeeper_success_rate);
+    }
+
     const columns = [
         {
-            Header: "#",
+            Header: "Pořadí",
             accessor: "rank",
-            width: 50,
+            filterable: false,
             Cell: (playerData) => getRank(playerData),
         },
         {
@@ -48,27 +52,33 @@ export function TeamStatisticsGoalkeepers({filterBy}) {
         },
         {
             Header: "Počet zápasů",
+            filterable: false,
             accessor: "goalkeeper_matches",
         },
         {
             Header: <OverlayTriggerTable header="Minut" placement="bottom" icon={Icons.faInfo} message="Počet odehraných minut" />,
             accessor: "goalkeeper_minutes",
+            filterable: false,
         },
         {
             Header: <OverlayTriggerTable header="Góly" placement="bottom" icon={Icons.faInfo} message="Poče obdržených gólů" />,
             accessor: "goalkeeper_goals",
+            filterable: false,
         },
         {
             Header: <OverlayTriggerTable header="Nuly" placement="bottom" icon={Icons.faInfo} message="Počet vychytaných nul na zápas" />,
             accessor: "goalkeeper_zeros",
+            filterable: false,
         },
         {
             Header: <OverlayTriggerTable header="Střely" placement="bottom" icon={Icons.faInfo} message="Počet vychytaných střel" />,
             accessor: "goalkeeper_shoots",
+            filterable: false,
         },
         {
             Header: <OverlayTriggerTable header="Úspěšnost" placement="bottom" icon={Icons.faInfo} message="% úspěšnost brankáře" />,
             accessor: "goalkeeper_success_rate",
+            filterable: false,
         }
     ];
 

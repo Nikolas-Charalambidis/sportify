@@ -1,29 +1,16 @@
 import React from 'react';
-import {useField} from 'formik';
-
 import {Form} from "react-bootstrap";
+import {CustomTooltip} from "./CustomTooltip";
+import Select from 'react-select';
 
-const renderOptions = (options, mapping, defaultID) => {
-    const {key, value} = mapping;
-    return options.map((item, index) => {
-        if(item[key] === defaultID){
-            return <option key={index} value={item[key]} >{item[value]}</option>;
-        } else {
-            return <option key={index} value={item[key]} selected>{item[value]}</option>;
-        }
-    });
-};
-
-export function Select({label, message, options, defaultID, mapping, ...props}) {
-    const [field] = useField(props);
+export function CustomSelect({label, customTooltip, ...props}) {
     return (
         <Form.Group>
-            <Form.Label>{label}</Form.Label>
-            <Form.Control {...field} {...props} as='select'>
-                {renderOptions(options, mapping, defaultID)}
-            </Form.Control>
+            <Form.Label>{label}&nbsp;&nbsp;</Form.Label>
+            {customTooltip && CustomTooltip(customTooltip)}
+            <Select {...props} />
             <Form.Control.Feedback type="invalid">
-                {message}
+                {"Chyba"}
             </Form.Control.Feedback>
         </Form.Group>
     );

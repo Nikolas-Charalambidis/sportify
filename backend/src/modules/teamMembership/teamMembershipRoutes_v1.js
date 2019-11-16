@@ -5,32 +5,36 @@ const router = Router();
 
 /**
  * @swagger
- * /sports:
+ * /teamMembership:
  *   get:
  *     tags:
- *       - Sports
+ *       - TeamMembership
  *     name: Login
  *     summary: Get all sports
  *     responses:
  *       200:
  *         description: All sports returned
  */
-router.get('/', async (req, res, next) => {
-	const dbConnection = req[DB_CONNECTION_KEY];
-	const sports = await dbConnection.query(`SELECT * FROM sports`);
-	await res.status(200).json({ error: false, msg: 'OK', sports: sports});
+router.post('/', async (req, res, next) => {
+
 });
 
 /**
- * Sport object Swagger definition
+ * TeamMembership object Swagger definition
  *
  * @swagger
- * definitions:
+ * TeamMembership:
  *   Sport:
  *     properties:
- *       id_sport:
+ *       id_team_membership:
  *         type: integer
- *       sport:
+ *       team:
+ *         type: integer
+ *       user:
+ *         type: integer
+ *       status:
+ *         type: string
+ *       position:
  *         type: string
  */
 

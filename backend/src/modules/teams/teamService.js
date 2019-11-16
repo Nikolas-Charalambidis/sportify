@@ -14,9 +14,10 @@ export default class TeamService {
 
 	async allTeams() {
 		return this.dbConnection.query(
-			`SELECT t.id_team, t.name, s.sport, CONCAT(u.name, ' ', u.surname) as leader
+			`SELECT t.id_team, t.name, s.sport, tt.type, CONCAT(u.name, ' ', u.surname) as leader
 				FROM teams as t 
 				JOIN sports as s ON t.id_sport=s.id_sport 
+				JOIN team_types as tt ON tt.id_type=t.id_type 
 				JOIN users as u ON t.id_leader=u.id_user`
 		);
 	}
@@ -25,7 +26,7 @@ export default class TeamService {
 		const team_id = Number(id_team);
 		teamValidation.validateTeamID(team_id);
 		const result = await this.dbConnection.query(
-			`SELECT t.id_team, t.name, s.id_sport, s.sport, t.id_sport, type.id_type, type.type, t.id_leader, t.id_contact_person, t.avatar_url,
+			`SELECT t.id_team, t.name, s.id_sport, s.sport, t.id_sport, type.id_type, type.type, t.id_leader, t.id_contact_person, t.avatar_url, t.active,
 			 CONCAT(leader.name, " ", leader.surname) as leader,
 			 CONCAT(contact.name, " ", contact.surname) as contact_person
 			FROM teams as t
@@ -46,9 +47,11 @@ export default class TeamService {
 		const team_id = Number(id_team);
 		teamValidation.validateTeamID(team_id);
 		const players = await this.dbConnection.query(
-			`SELECT u.id_user, u.email, CONCAT(u.name, ' ', u.surname) AS 'name', t.position FROM team_membership AS t
-   			JOIN users u ON t.user = u.id_user
-   			WHERE team = ?;`
+			`SELECT u.id_user, u.email, CONCAT(u.name, ' ', u.surname) AS 'name', t.id_position, p.position
+			FROM team_membership AS t
+   			JOIN users AS u ON t.id_user = u.id_user
+   			JOIN positions AS p ON t.id_position = p.id_position
+   			WHERE id_team = ?;`
 			, team_id
 		);
 		return players;
@@ -60,7 +63,7 @@ export default class TeamService {
 		const type = Number(id_type);
 		teamValidation.validateNewTeamData(sport, name, type, leader);
 		const result = await this.dbConnection.query(
-			`INSERT INTO teams (id_team, id_sport, name, id_type, id_leader, id_contact_person) VALUES (NULL, ?, ?, ?, ?, ?)`,
+			`INSERT INTO teams (id_team, id_sport, name, id_type, id_leader, id_contact_person, active) VALUES (NULL, ?, ?, ?, ?, ?, true)`,
 			[sport, name, type, leader, leader]
 		);
 		if(result.affectedRows === 1){
@@ -102,10 +105,10 @@ export default class TeamService {
 				c.end_date, 
 				(c.start_date < DATE(NOW()) AND c.end_date > DATE(NOW())) as 'is_active' 
 			FROM competition_membership AS cm
-			JOIN teams t ON cm.team = t.id_team
-			JOIN competitions AS c ON cm.competition = c.id_competition
+			JOIN teams AS t ON cm.id_team = t.id_team
+			JOIN competitions AS c ON cm.id_competition = c.id_competition
 			JOIN sports AS s ON c.id_sport=s.id_sport
-			where cm.team = ? AND cm.status='active';`
+			where cm.id_team = ? AND cm.status='active';`
 			, team_id);
 	}
 
@@ -147,6 +150,22 @@ export default class TeamService {
 		return avatar_url;
 	}
 
+	async setActive(id_team, active) {
+		const team_id = Number(id_team);
+		teamValidation.validateTeamID(team_id);
+		teamValidation.validateSetActive(active);
+		const setActive = active ? 1 : 0;
+
+		const result = await this.dbConnection.query(
+			`UPDATE teams SET active=? WHERE id_team=?`,
+			[setActive, team_id]
+		);
+		if(result.affectedRows === 1) {
+			return result.insertId;
+		}
+		throw {status: 500, msg: 'De/aktivace týmu se nezdařila'};
+	}
+
 	async teamStatistics(id_team) {
 		const team_id = Number(id_team);
 		teamValidation.validateTeamID(team_id);
@@ -155,7 +174,9 @@ export default class TeamService {
 		const invidividual = await this.dbConnection.query(`SELECT
 					ts.id_user,
 					CONCAT(u.name, ' ', u.surname) AS 'name_surname',
-					tm.position,
+					tm.id_position,
+					p.position,
+					p.is_goalkeeper AS 'is_goalkeeper',
 					ts.id_team,
 					ts.id_competition,
 					ts.field_matches,
@@ -173,15 +194,17 @@ export default class TeamService {
 					CONCAT(100*(1 - ts.goalkeeper_goals/ts.goalkeeper_shoots), ' %') AS 'goalkeeper_success_rate'
 				FROM team_statistics as ts	
 				JOIN users AS u ON ts.id_user = u.id_user
-				JOIN team_membership tm on u.id_user = tm.user
-				WHERE id_team=?`
+				JOIN team_membership AS tm on u.id_user = tm.id_user
+				JOIN positions AS p on tm.id_position = p.id_position
+				WHERE ts.id_team=?`
 			, team_id);
 
 		// overall aggregate statistics in the team of all the competitions (except null ones which are of free time)
 		const competitions_aggregate = await this.dbConnection.query(`SELECT
 					ts.id_user,
 					CONCAT(u.name, ' ', u.surname) AS 'name_surname',
-					MAX(tm.position) AS 'position',
+					MAX(p.position) AS 'position',
+					MAX(p.is_goalkeeper) AS 'is_goalkeeper',
 					SUM(ts.field_matches) AS 'matches',
 					SUM(ts.field_goals) AS 'goals',
 					SUM(ts.field_assists) AS 'assists',
@@ -197,11 +220,29 @@ export default class TeamService {
 					CONCAT(100*(1 - SUM(ts.goalkeeper_goals)/SUM(ts.goalkeeper_shoots)), ' %') AS 'goalkeeper_success_rate'
 						FROM team_statistics as ts
 						JOIN users AS u ON ts.id_user = u.id_user
-						JOIN team_membership tm on u.id_user = tm.user
-						WHERE id_team=? AND id_competition IS NOT null
+						JOIN team_membership tm on u.id_user = tm.id_user
+						JOIN positions AS p on tm.id_position = p.id_position
+						WHERE ts.id_team=? AND id_competition IS NOT null
 						GROUP BY ts.id_user`
 			, team_id);
-
+		console.log("data", {individual: invidividual, competitions_aggregate: competitions_aggregate});
 		return {individual: invidividual, competitions_aggregate: competitions_aggregate};
+	}
+
+	async getMatchesByTeam(id_team){
+		const team_id = Number(id_team);
+		teamValidation.validateTeamID(team_id);
+		return this.dbConnection.query(
+			`SELECT 
+				m.id_match, m.date,
+				host.name AS host_name, guest.name AS guest_name,
+				c.name AS competition_name
+			 FROM matches as m
+			 JOIN competitions as c ON m.id_competition=c.id_competition 
+			 JOIN teams as host ON m.id_host=host.id_team 
+			 JOIN teams as guest ON m.id_guest=guest.id_team
+			 WHERE m.id_host=? OR m.id_guest=?`,
+			[team_id, team_id]
+		);
 	}
 }

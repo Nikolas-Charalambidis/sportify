@@ -13,14 +13,14 @@ function getPlayers(state, filterBy) {
 
     if (!state.isLoading) {
         if (filterBy === 'league') {
-            return state.team.competitions_aggregate.filter(p => p.position !== "goalkeeper");
+            return state.team.competitions_aggregate.filter(p => !p.is_goalkeeper);
         }
 
         if (filterBy !== 'training') {
             competitionId = parseInt(filterBy);
         }
 
-        return state.team.individual.filter(p => p.position !== "goalkeeper" && p.id_competition === competitionId);
+        return state.team.individual.filter(p => !p.is_goalkeeper && p.id_competition === competitionId);
     }
 }
 
@@ -31,14 +31,19 @@ function getRank(playerData) {
 export function TeamStatisticsPlayers({filterBy}) {
     let {id_team} = useParams();
     const [state] = useGetTeamStatistics(id_team);
+    console.log("state from statistics", state);
 
     const players = getPlayers(state, filterBy);
+    if (players) {
+        players.sort((a, b) => b.field_points - a.field_points);
+    }
+
     const columns = [
         {
-            Header: "#",
-            width: 50,
+            Header: "Pořadí",
             accessor: "rank",
             Cell: (playerData) => getRank(playerData),
+            filterable: false,
         },
         {
             Header: "Jméno a příjmení",
@@ -49,37 +54,43 @@ export function TeamStatisticsPlayers({filterBy}) {
         {
             Header: "Počet zápasů",
             accessor: filterBy === "league" ? "matches" : "field_matches",
+            filterable: false,
         },
         {
             Header: "Góly",
             accessor: filterBy === "league" ? "goals" : "field_goals",
+            filterable: false,
         },
         {
             Header: "Asistence",
             accessor: filterBy === "league" ? "assists" : "field_assists",
+            filterable: false,
         },
         {
             Header: <OverlayTriggerTable header="KB" placement="bottom" icon={Icons.faInfo} message="Součet gólů a asistencí" />,
-            accessor: "field_points",
+            filterable: false,
+            accessor: "field_points"
         },
         {
             Header: <OverlayTriggerTable header="Pr. KB" placement="bottom" icon={Icons.faInfo} message="Průměr Kanadského bodu na zápas" />,
             accessor: "field_average_points",
+            filterable: false,
         },
         {
             Header: "Trestné minuty",
             accessor: filterBy === "league" ? "suspensions" : "field_suspensions",
+            filterable: false,
         }
     ];
 
     return (
         <div>
             {state.isLoading && <div className="text-center"><Image src={loadingGif}/></div>}
-            {!state.isLoading && state.error &&
+            {(!state.isLoading && state.error) &&
             <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
-            {!state.isLoading && !state.error && (
+            {(!state.isLoading && !state.error) &&
                 <Table className="defaultCursor" data={players} columns={columns}/>
-            )}
+            }
         </div>
     );
 }

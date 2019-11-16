@@ -33,7 +33,7 @@ export function Routes() {
             <Route path="/administration/teams" exact component={TeamsAdminList} />
 			<Route path="/teams/:id_team" exact component={TeamDetail} />
             <Route path="/teams" exact component={TeamList} />
-            <Route path="/user/:id_user" exact component={UserDetail} />
+            <Route path="/users/:id_user" exact component={UserDetail} />
 			<Route path="/leagues" exact component={Leagues}/>
 			<Route path="/matches" exact component={Matches}/>
 			<Route path="/statistics" exact component={Statistics} />

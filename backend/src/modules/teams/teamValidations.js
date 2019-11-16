@@ -15,3 +15,9 @@ export const validateChangeTeamData = (id_team, name, id_type, id_sport, id_cont
 		throw {status: 400, msg: 'Chybějící data'};
 	}
 };
+
+export const validateSetActive = (active) => {
+	if (typeof active !== "boolean"){
+		throw {status: 400, msg: 'Chybějící data'};
+	}
+};

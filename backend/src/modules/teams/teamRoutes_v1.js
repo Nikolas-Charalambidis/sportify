@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import TeamService from './teamService';
 import dotenv from "dotenv";
+import TeamMembershipService from "../teamMembership/teamMembershipService";
 const multipart = require("connect-multiparty");
 const multipartMiddleware = multipart();
 
@@ -200,9 +201,16 @@ router.get('/', async (req, res, next) => {
  */
 router.post('/', async (req, res, next) => {
 	try {
-		const { id_sport, name, id_type, id_leader } = req.body;
+		const { id_sport, name, id_type, id_leader, id_position } = req.body;
+		console.log("received data", { id_sport, name, id_type, id_leader, id_position });
 		const id = await new TeamService(req).addNewTeam(id_sport, name, id_type, id_leader);
-		res.status(201).header('Location' , `/api/v1/teams/${id}`).send({ error: false, msg: 'OK', id_team: id});
+		let msg = "Tým byl úspěšně vytvořen";
+		try {
+			await new TeamMembershipService(req).addNewMember(id, id_leader, id_position, 'active');
+		} catch(e) {
+			msg = "Tým byl vytvořen, ale přidání nového člena do týmu se nezdařilo. Kontaktujte prosím podporu."
+		}
+		res.status(201).header('Location' , `/api/v1/teams/${id}`).json({ error: false, msg: msg, id_team: id});
 	} catch(e) {
 		next(e);
 	}
@@ -307,6 +315,106 @@ router.get('/:id_team/statistics', async(req, res, next) => {
 		next(e);
 	}
 });
+
+/**
+ * @swagger
+ * /teams/{id_team}:
+ *   patch:
+ *     tags:
+ *       - Teams
+ *     name: Sets the team as Active
+ *     summary: Sets the team as Active
+ *     parameters:
+ *       - name: id_team
+ *         in: path
+ *         description: Team ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Team set as Active
+ *       400:
+ *         description: Invalid request
+ *       404:
+ *         description: Team not found
+ */
+router.patch('/:id_team', async(req, res, next) => {
+	try {
+		const { id_team } = req.params;
+		const team = await new TeamService(req).setActive(id_team, true);
+		res.status(200).json({ error: false, msg: 'OK', team_data: team});
+	} catch(e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
+ * /teams/{id_team}:
+ *   delete:
+ *     tags:
+ *       - Teams
+ *     name: Sets the team as Inactive
+ *     summary: Sets the team as Inactive
+ *     parameters:
+ *       - name: id_team
+ *         in: path
+ *         description: Team ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Team set as Inactive
+ *       400:
+ *         description: Invalid request
+ *       404:
+ *         description: Team not found
+ */
+router.delete('/:id_team', async(req, res, next) => {
+	try {
+		const { id_team } = req.params;
+		const team = await new TeamService(req).setActive(id_team, false);
+		res.status(200).json({ error: false, msg: 'OK', team_data: team});
+	} catch(e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
+ * /teams/{id_team}/matches:
+ *   get:
+ *     tags:
+ *       - Teams
+ *     name: Matches
+ *     summary: Get all matches by team ID
+ *     consumes: application/json
+ *     produces: application/json
+ *     parameters:
+ *       - in: path
+ *         name: id_team
+ *         description: Team ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: All matches of team returned
+ *       400:
+ *         description: Invalid request
+ */
+router.get('/:id_team/matches', async (req, res, next) => {
+	try {
+		const { id_team } = req.params;
+		const matches = await new TeamService(req).getMatchesByTeam(id_team);
+		res.status(200).json({ error: false, msg: 'OK', matches: matches});
+	} catch(e) {
+		next(e);
+	}
+});
+
 
 /**
  * User object Swagger definition

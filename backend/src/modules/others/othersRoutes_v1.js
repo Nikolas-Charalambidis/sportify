@@ -8,8 +8,8 @@ const router = Router();
  * /others/teamTypes:
  *   get:
  *     tags:
- *       - TeamTypes
- *     name: Login
+ *       - Others
+ *     name: Team types
  *     summary: Get all team types
  *     responses:
  *       200:
@@ -22,16 +22,39 @@ router.get('/teamTypes', async (req, res, next) => {
 });
 
 /**
- * Sport object Swagger definition
- *
  * @swagger
- * definitions:
- *   TeamTypes:
- *     properties:
- *       id_type:
- *         type: integer
- *       type:
- *         type: string
+ * /others/positions:
+ *   get:
+ *     tags:
+ *       - Others
+ *     name: Positions
+ *     summary: Get all team positions
+ *     responses:
+ *       200:
+ *         description: All team positions returned
  */
+router.get('/positions', async (req, res, next) => {
+	const dbConnection = req[DB_CONNECTION_KEY];
+	const positions = await dbConnection.query(`SELECT * FROM positions`);
+	await res.status(200).json({ error: false, msg: 'OK', positions: positions});
+});
+
+/**
+ * @swagger
+ * /others/sports:
+ *   get:
+ *     tags:
+ *       - Others
+ *     name: Sports
+ *     summary: Get all sports
+ *     responses:
+ *       200:
+ *         description: All sports returned
+ */
+router.get('/sports', async (req, res, next) => {
+	const dbConnection = req[DB_CONNECTION_KEY];
+	const sports = await dbConnection.query(`SELECT * FROM sports`);
+	await res.status(200).json({ error: false, msg: 'OK', sports: sports});
+});
 
 export default router;

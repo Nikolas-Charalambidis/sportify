@@ -30,7 +30,8 @@ CREATE TABLE `teams` (
     `id_type` int NOT NULL,
     `id_contact_person` int NOT NULL,
     `avatar_url` varchar(512),
-    `avatar_public_id` varchar(255)
+    `avatar_public_id` varchar(255),
+    `active` boolean not null
 );
 CREATE TABLE `team_types` (
      `id_type` int PRIMARY KEY AUTO_INCREMENT,
@@ -40,7 +41,7 @@ CREATE TABLE `team_types` (
 CREATE TABLE `competitions` (
     `id_competition` int PRIMARY KEY AUTO_INCREMENT,
     `name` varchar(255) UNIQUE NOT NULL,
-    `leader` int NOT NULL,
+    `id_leader` int NOT NULL,
     `id_sport` int NOT NULL,
     `start_date` datetime NOT NULL,
     `end_date` datetime NOT NULL,
@@ -50,25 +51,31 @@ CREATE TABLE `competitions` (
 
 CREATE TABLE `competition_membership` (
     `id_competition_membership` int PRIMARY KEY AUTO_INCREMENT,
-    `competition` int NOT NULL,
-    `team` int NOT NULL,
+    `id_competition` int NOT NULL,
+    `id_team` int NOT NULL,
     `status` ENUM ('pending', 'declined', 'active', 'inactive')
 );
 
 CREATE TABLE `matches` (
     `id_match` int PRIMARY KEY AUTO_INCREMENT,
-    `competition` int,
-    `host` int NOT NULL,
-    `guest` int NOT NULL,
+    `id_competition` int,
+    `id_host` int NOT NULL,
+    `id_guest` int NOT NULL,
     `date` datetime NOT NULL
 );
 
 CREATE TABLE `team_membership` (
     `id_team_membership` int PRIMARY KEY AUTO_INCREMENT,
-    `team` int NOT NULL,
-    `user` int NOT NULL,
+    `id_team` int NOT NULL,
+    `id_user` int NOT NULL,
     `status` ENUM ('pending', 'declined', 'active', 'inactive') NOT NULL,
-    `position` ENUM ('goalkeeper', 'defender', 'attacker')
+    `id_position` int NOT NULL
+);
+
+CREATE TABLE `positions` (
+   `id_position` int PRIMARY KEY AUTO_INCREMENT,
+   `position` varchar(255) NOT NULL,
+   `is_goalkeeper` boolean NOT NULL
 );
 
 CREATE TABLE `sports` (
@@ -78,22 +85,22 @@ CREATE TABLE `sports` (
 
 CREATE TABLE `events` (
     `id_event` int PRIMARY KEY AUTO_INCREMENT,
-    `match` int NOT NULL,
-    `team` int NOT NULL,
-    `user` int,
-    `type` ENUM ('shot', 'goal', 'assistance1', 'assistance2', 'suspension'),
+    `id_match` int NOT NULL,
+    `id_team` int NOT NULL,
+    `id_user` int,
+    `type` ENUM ('shot', 'goal', 'assistance1', 'assistance2', 'suspension_2', 'suspension_2_2','suspension_5', 'suspension_pp', 'suspension_pp_end', 'suspension_penalty'),
     `minute` int,
-    `value` tinyint NOT NULL
+    `value` tinyint,
+    `host` boolean NOT NULL
 );
 
 CREATE TABLE `matchup` (
     `id_matchup` int PRIMARY KEY AUTO_INCREMENT,
-    `match` int NOT NULL,
+    `id_match` int NOT NULL,
     `goalkeeper` boolean NOT NULL,
-    `team` int NOT NULL,
-    `user` int NOT NULL,
-    `host` boolean NOT NULL,
-    `profi` boolean NOT NULL
+    `id_team` int NOT NULL,
+    `id_user` int NOT NULL,
+    `host` boolean NOT NULL
 );
 
 CREATE TABLE `team_statistics` (
@@ -124,35 +131,35 @@ ALTER TABLE `teams` ADD FOREIGN KEY (`id_type`) REFERENCES `team_types` (`id_typ
 
 ALTER TABLE `tokens` ADD FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`);
 
-ALTER TABLE `competitions` ADD FOREIGN KEY (`leader`) REFERENCES `users` (`id_user`);
+ALTER TABLE `competitions` ADD FOREIGN KEY (`id_leader`) REFERENCES `users` (`id_user`);
 ALTER TABLE `competitions` ADD FOREIGN KEY (`id_sport`) REFERENCES `sports` (`id_sport`);
 
-ALTER TABLE `competition_membership` ADD FOREIGN KEY (`competition`) REFERENCES `competitions` (`id_competition`);
-ALTER TABLE `competition_membership` ADD FOREIGN KEY (`team`) REFERENCES `teams` (`id_team`);
+ALTER TABLE `competition_membership` ADD FOREIGN KEY (`id_competition`) REFERENCES `competitions` (`id_competition`);
+ALTER TABLE `competition_membership` ADD FOREIGN KEY (`id_team`) REFERENCES `teams` (`id_team`);
 
-ALTER TABLE `matches` ADD FOREIGN KEY (`competition`) REFERENCES `competitions` (`id_competition`);
-ALTER TABLE `matches` ADD FOREIGN KEY (`host`) REFERENCES `teams` (`id_team`);
-ALTER TABLE `matches` ADD FOREIGN KEY (`guest`) REFERENCES `teams` (`id_team`);
+ALTER TABLE `matches` ADD FOREIGN KEY (`id_competition`) REFERENCES `competitions` (`id_competition`);
+ALTER TABLE `matches` ADD FOREIGN KEY (`id_host`) REFERENCES `teams` (`id_team`);
+ALTER TABLE `matches` ADD FOREIGN KEY (`id_guest`) REFERENCES `teams` (`id_team`);
 
-ALTER TABLE `team_membership` ADD FOREIGN KEY (`team`) REFERENCES `teams` (`id_team`);
-ALTER TABLE `team_membership` ADD FOREIGN KEY (`user`) REFERENCES `users` (`id_user`);
+ALTER TABLE `team_membership` ADD FOREIGN KEY (`id_team`) REFERENCES `teams` (`id_team`);
+ALTER TABLE `team_membership` ADD FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`);
+ALTER TABLE `team_membership` ADD FOREIGN KEY (`id_position`) REFERENCES `positions` (`id_position`);
 
-ALTER TABLE `events` ADD FOREIGN KEY (`match`) REFERENCES `matches` (`id_match`);
-ALTER TABLE `events` ADD FOREIGN KEY (`team`) REFERENCES `teams` (`id_team`);
-ALTER TABLE `events` ADD FOREIGN KEY (`user`) REFERENCES `users` (`id_user`);
+ALTER TABLE `events` ADD FOREIGN KEY (`id_match`) REFERENCES `matches` (`id_match`) ON DELETE CASCADE;
+ALTER TABLE `events` ADD FOREIGN KEY (`id_team`) REFERENCES `teams` (`id_team`);
+ALTER TABLE `events` ADD FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`);
 
-ALTER TABLE `matchup` ADD FOREIGN KEY (`match`) REFERENCES `matches` (`id_match`);
-ALTER TABLE `matchup` ADD FOREIGN KEY (`team`) REFERENCES `teams` (`id_team`);
-ALTER TABLE `matchup` ADD FOREIGN KEY (`user`) REFERENCES `users` (`id_user`);
+ALTER TABLE `matchup` ADD FOREIGN KEY (`id_match`) REFERENCES `matches` (`id_match`) ON DELETE CASCADE;
+ALTER TABLE `matchup` ADD FOREIGN KEY (`id_team`) REFERENCES `teams` (`id_team`);
+ALTER TABLE `matchup` ADD FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`);
 
 ALTER TABLE `team_statistics` ADD FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`);
 ALTER TABLE `team_statistics` ADD FOREIGN KEY (`id_team`) REFERENCES `teams` (`id_team`);
 ALTER TABLE `team_statistics` ADD FOREIGN KEY (`id_competition`) REFERENCES `competitions` (`id_competition`);
 
 -- Data ----------------------------------------------------------------------------------------------------------------
--- Password is hashed using bcrypt "Heslo123", 10 rounds
-
 -- USERS
+-- Password is hashed using bcrypt "Heslo123", 10 rounds
 INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (1,  'user1@test.cz',       '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Karel', 'Dvořák', true);
 INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (2,  'user2@test.cz',       '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Evžen', 'Vomáčka', true);
 INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (3,  'user3@test.cz',       '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Michal', 'Nový', true);
@@ -163,9 +170,9 @@ INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verifie
 INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (8,  'user8@test.cz',       '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Jan', 'Dlouhý', true);
 INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (9,  'user9@test.cz',       '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Jakub', 'Kukla', true);
 INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (10, 'user10@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Ondřej', 'Sokol', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (11, 'unverified1@test.cz', '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'unverified1_name', 'unverified1_surname', false);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (12, 'unverified2@test.cz', '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'unverified2_name', 'unverified2_surname', false);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (13, 'unverified3@test.cz', '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'unverified3_name', 'unverified3_surname', false);
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (11, 'user11@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Václav', 'Kulhánek', false);
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (12, 'user12@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Vladimír', 'Perušič', false);
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (13, 'user13@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Vilém', 'Stehlík', false);
 INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (14, 'user14@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Jan', 'Pekař', true);
 INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (15, 'user15@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Lukáš', 'Patočka', true);
 INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (16, 'user16@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Jirka', 'Král', true);
@@ -181,12 +188,21 @@ INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verifie
 INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (26, 'user26@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Jan', 'Hoffman', true);
 INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (27, 'user27@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'David', 'Kolečko', true);
 INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (28, 'user28@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Matěj', 'Čajkovský', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (29, 'user29@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Karel', 'Čapek', true);
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (29, 'user29@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Tomáš', 'Vošahlík', true);
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (30, 'user30@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Vincent', 'Nejezchleba', true);
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (31, 'user31@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'José', 'Narraro', true);
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (32, 'user32@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Karel', 'Vyskočil', true);
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (33, 'user33@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Marek', 'Dohnal', true);
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (34, 'user34@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Michael', 'Kohl', true);
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (35, 'user35@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Petr', 'Vazal', true);
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (36, 'user36@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Pavel', 'Snížek', true);
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (37, 'user37@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Lojza', 'Ptáček', true);
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (38, 'user38@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Ignác', 'Rychlý', true);
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (39, 'user39@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Fratnišek', 'Svoboda', true);
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (40, 'unverified@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Not', 'Verified', false);
 
 -- CONFIRM TOKENS
-INSERT INTO `tokens` (`id_token`, `id_user`, `hash`, `validity`, `type`) VALUES (1, 11, '39247679', '2020-12-29 00:09:33', 'confirm');
-INSERT INTO `tokens` (`id_token`, `id_user`, `hash`, `validity`, `type`) VALUES (2, 12, '39247678', '2020-12-29 00:09:33', 'confirm');
-INSERT INTO `tokens` (`id_token`, `id_user`, `hash`, `validity`, `type`) VALUES (3, 13, '39247677', '2020-12-29 00:09:33', 'confirm');
+INSERT INTO `tokens` (`id_token`, `id_user`, `hash`, `validity`, `type`) VALUES (1, 40, '39247679', '2020-12-29 00:09:33', 'confirm');
 
 -- SPORTS
 INSERT INTO `sports` (`id_sport`, `sport`) VALUES (1, 'Hokej');
@@ -194,65 +210,146 @@ INSERT INTO `sports` (`id_sport`, `sport`) VALUES (2, 'Florbal');
 INSERT INTO `sports` (`id_sport`, `sport`) VALUES (3, 'Hokejbal');
 
 -- TEAM TYPES
-INSERT INTO `team_types` (`id_type`, `type`) VALUES (1, 'Profesionální');
-INSERT INTO `team_types` (`id_type`, `type`) VALUES (2, 'Amatérský');
+INSERT INTO `team_types` (`id_type`, `type`) VALUES (1, 'Ligový');
+INSERT INTO `team_types` (`id_type`, `type`) VALUES (2, 'Volnočasový');
 
 -- TEAMS
-INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`) VALUES (1, 1, 'Hokejisti pro srandu a žízeň', 1, 2, 1);
-INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`) VALUES (2, 1, 'The Rural Jurors', 6, 1, 6);
-INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`) VALUES (3, 1, 'Game of Throws', 14, 2, 14);
-INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`) VALUES (4, 3, 'Not Last Place', 19, 2, 19);
-INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`) VALUES (5, 3, 'The Salty Pretzels', 24, 1, 24);
+INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`, `active`) VALUES (1, 1, 'Hokejisti pro srandu a žízeň', 1, 1, 1, true);
+INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`, `active`) VALUES (2, 1, 'The Rural Jurors', 6, 1, 6, true);
+INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`, `active`) VALUES (3, 1, 'Game of Throws', 14, 2, 14, true);
+INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`, `active`) VALUES (4, 3, 'Not Last Place', 19, 2, 19, true);
+INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`, `active`) VALUES (5, 3, 'The Salty Pretzels', 24, 1, 24, true);
+
+-- TEAM POSITIONS
+INSERT INTO `positions` (`id_position`, `position`, `is_goalkeeper`) VALUES (1, 'Brankář', true);
+INSERT INTO `positions` (`id_position`, `position`, `is_goalkeeper`) VALUES (2, 'Obránce', false);
+INSERT INTO `positions` (`id_position`, `position`, `is_goalkeeper`) VALUES (3, 'Útočník', false);
 
 -- TEAM-MEMBERSHIP
-INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (1, 1, 1, 'active', 'goalkeeper');
-INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (2, 1, 2, 'active', 'defender');
-INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (3, 1, 3, 'active', 'defender');
-INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (4, 1, 4, 'active', 'attacker');
-INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (5, 1, 5, 'active', 'attacker');
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (1, 1, 1, 'active', 1);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (2, 1, 2, 'active', 2);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (3, 1, 3, 'active', 2);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (4, 1, 4, 'active', 3);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (5, 1, 5, 'active', 3);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (6, 1, 6, 'active', 1);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (7, 1, 7, 'active', 2);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (8, 1, 8, 'active', 2);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (9, 1, 9, 'active', 3);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (10, 1, 10, 'active', 3);
 
-INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (6, 2, 6, 'active', 'goalkeeper');
-INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (7, 2, 7, 'active', 'defender');
-INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (8, 2, 8, 'active', 'defender');
-INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (9, 2, 9, 'active', 'attacker');
-INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (10, 2, 10, 'active', 'attacker');
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (11, 2, 11, 'active', 1);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (12, 2, 12, 'active', 2);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (13, 2, 13, 'active', 2);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (14, 2, 14, 'active', 3);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (15, 2, 15, 'active', 3);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (16, 2, 16, 'active', 1);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (17, 2, 17, 'active', 2);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (18, 2, 18, 'active', 2);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (19, 2, 19, 'active', 3);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (20, 2, 20, 'active', 3);
 
-INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (11, 3, 14, 'active', 'goalkeeper');
-INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (12, 3, 15, 'active', 'defender');
-INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (13, 3, 16, 'active', 'defender');
-INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (14, 3, 17, 'active', 'attacker');
-INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (15, 3, 18, 'active', 'attacker');
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (21, 3, 21, 'active', 1);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (22, 3, 22, 'active', 2);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (23, 3, 23, 'active', 2);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (24, 3, 24, 'active', 3);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (25, 3, 25, 'active', 3);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (26, 3, 26, 'active', 1);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (27, 3, 27, 'active', 2);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (28, 3, 28, 'active', 2);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (29, 3, 29, 'active', 3);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (30, 3, 30, 'active', 3);
 
-INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (16, 4, 19, 'active', 'defender');
-INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (17, 4, 20, 'active', 'defender');
-INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (18, 4, 21, 'active', 'defender');
-INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (19, 4, 22, 'active', 'attacker');
-INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (20, 4, 23, 'active', 'attacker');
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (31, 4, 31, 'active', 1);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (32, 4, 32, 'active', 2);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (33, 4, 33, 'active', 3);
 
-INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (21, 5, 24, 'active', 'goalkeeper');
-INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (22, 5, 25, 'active', 'defender');
-INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (23, 5, 26, 'active', 'defender');
-INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (24, 5, 27, 'active', 'defender');
-INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (25, 5, 28, 'active', 'attacker');
-INSERT INTO `team_membership` (`id_team_membership`, `team`, `user`, `status`, `position`) VALUES (26, 5, 29, 'active', 'attacker');
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (34, 5, 34, 'active', 1);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (35, 5, 35, 'active', 2);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (36, 5, 36, 'active', 3);
 
 -- CONPETITIONS
-INSERT INTO `competitions` (`id_competition`, `name`, `leader`, `id_sport`, `start_date`, `end_date`) VALUES (1, 'Hokejová liga 19-20', 1, 1, '2019-09-01 23:59:59', '2020-04-01 23:59:59');
-INSERT INTO `competitions` (`id_competition`, `name`, `leader`, `id_sport`, `start_date`, `end_date`) VALUES (2, 'Florbalová liga', 1, 2, '2017-06-20 23:59:59', '2018-11-20 23:59:59');
-INSERT INTO `competitions` (`id_competition`, `name`, `leader`, `id_sport`, `start_date`, `end_date`) VALUES (3, 'Hokejbalová liga', 1, 3, '2019-09-01 23:59:59', '2020-04-01 23:59:59');
-INSERT INTO `competitions` (`id_competition`, `name`, `leader`, `id_sport`, `start_date`, `end_date`) VALUES (4, 'Hokejová liga 18-19', 1, 1, '2018-09-01 23:59:59', '2019-04-01 23:59:59');
-
+INSERT INTO `competitions` (`id_competition`, `name`, `id_leader`, `id_sport`, `start_date`, `end_date`) VALUES (1, 'Hokejová liga 19-20', 1, 1, '2019-09-01 23:59:59', '2020-04-01 23:59:59');
+INSERT INTO `competitions` (`id_competition`, `name`, `id_leader`, `id_sport`, `start_date`, `end_date`) VALUES (2, 'Florbalová liga', 1, 2, '2017-06-20 23:59:59', '2018-11-20 23:59:59');
+INSERT INTO `competitions` (`id_competition`, `name`, `id_leader`, `id_sport`, `start_date`, `end_date`) VALUES (3, 'Hokejbalová liga', 1, 3, '2019-09-01 23:59:59', '2020-04-01 23:59:59');
+INSERT INTO `competitions` (`id_competition`, `name`, `id_leader`, `id_sport`, `start_date`, `end_date`) VALUES (4, 'Hokejová liga 18-19', 1, 1, '2018-09-01 23:59:59', '2019-04-01 23:59:59');
 
 -- CONPETITION MEMBERSHIP
-INSERT INTO `competition_membership` (`id_competition_membership`, `competition`, `team`, `status`) VALUES (1, 1, 1, 'active');
-INSERT INTO `competition_membership` (`id_competition_membership`, `competition`, `team`, `status`) VALUES (2, 1, 2, 'active');
-INSERT INTO `competition_membership` (`id_competition_membership`, `competition`, `team`, `status`) VALUES (3, 3, 4, 'active');
-INSERT INTO `competition_membership` (`id_competition_membership`, `competition`, `team`, `status`) VALUES (4, 3, 5, 'active');
-INSERT INTO `competition_membership` (`id_competition_membership`, `competition`, `team`, `status`) VALUES (5, 4, 1, 'active');
-INSERT INTO `competition_membership` (`id_competition_membership`, `competition`, `team`, `status`) VALUES (6, 4, 2, 'active');
+INSERT INTO `competition_membership` (`id_competition_membership`, `id_competition`, `id_team`, `status`) VALUES (1, 1, 1, 'active');
+INSERT INTO `competition_membership` (`id_competition_membership`, `id_competition`, `id_team`, `status`) VALUES (2, 1, 2, 'active');
+INSERT INTO `competition_membership` (`id_competition_membership`, `id_competition`, `id_team`, `status`) VALUES (3, 1, 3, 'active');
+INSERT INTO `competition_membership` (`id_competition_membership`, `id_competition`, `id_team`, `status`) VALUES (4, 3, 4, 'active');
+INSERT INTO `competition_membership` (`id_competition_membership`, `id_competition`, `id_team`, `status`) VALUES (5, 4, 1, 'active');
+INSERT INTO `competition_membership` (`id_competition_membership`, `id_competition`, `id_team`, `status`) VALUES (6, 4, 2, 'active');
+
+-- MATCHES
+INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES (1, null, 1, 1, '2018-11-04 16:00:00');
+INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES (2, null, 1, 1, '2018-11-05 16:00:00');
+INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES (3, 1, 1, 2, '2018-11-10 16:00:00');
+INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES (4, 1, 2, 3, '2018-11-11 16:00:00');
+INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES (5, 1, 3, 1, '2018-11-12 16:00:00');
+
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (1, 1, true, 1, 1, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (2, 1, false, 1, 2, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (3, 1, false, 1, 3, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (4, 1, false, 1, 4, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (5, 1, false, 1, 5, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (6, 1, true, 1, 6, false);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (7, 1, false, 1, 7, false);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (8, 1, false, 1, 8, false);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (9, 1, false, 1, 9, false);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (10, 1, false, 1, 10, false);
+
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (11, 3, true, 1, 1, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (12, 3, false, 1, 2, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (13, 3, false, 1, 3, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (14, 3, false, 1, 4, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (15, 3, false, 1, 5, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (16, 3, true, 2, 11, false);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (17, 3, false, 2, 12, false);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (18, 3, false, 2, 13, false);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (19, 3, false, 2, 14, false);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (20, 3, false, 2, 15, false);
+
+-- EVENTS
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (1, 1, 1, 5, 'goal', 40, null, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (2, 1, 1, 4, 'assistance1', 40, null, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (3, 1, 1, 2, 'goal', 48, null, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (4, 1, 1, 2, 'suspension_2', 51, null, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (5, 1, 1, 10, 'goal', 52, null, false);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (6, 1, 1, null, 'shot', null, 45, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (7, 1, 1, null, 'shot', null, 49, false);
+
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (8, 3, 1, 4, 'goal', 32, null, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (9, 3, 1, 5, 'assistance1', 32, null, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (10, 3, 1, 2, 'assistance2', 32, null, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (11, 3, 2, 13, 'goal', 36, null, false);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (12, 3, 2, 13, 'goal', 41, null, false);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (13, 3, 2, 14, 'assistance1', 41, null, false);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (14, 3, 2, 15, 'assistance2', 41, null, false);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (15, 3, 2, 13, 'suspension_5', 52, null, false);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (16, 3, 1, null, 'shot', null, 32, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
+    VALUES (17, 3, 2, null, 'shot', null, 66, false);
 
 -- ---- MOCKED, START OF A SUBJECT OF A FUTURE CHANGE AND/OR REGENERATION, THE MODEL ITSELF IS CONSIDERED FINAL
 -- ---- MATCHES ARE NECESSARY FOR THESE DATA CONSISTENCY, YET THEY ARE NOT NEEDED FOR THE DEVELOPMENT OF THE STATISTICS DISPLAY
+-- ---- THE MOCKED DATA NEITHER MATCH THE MOCKED MATCHES, MATCHUPS NOR EVENTS
 
 -- COMPETITION ID = 1
 INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
@@ -292,9 +389,8 @@ INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_c
 -- ---- END, START OF A SUBJECT OF A FUTURE CHANGE OR REGENERATION
 
 
-
 -- INSERT INTO `matches` (`id_match`, `competition`, `host`, `guest`, `date`) VALUES ();
 
--- INSERT INTO `matchup` (`id_matchup`, `match`, `goalkeeper`, `team`, `user`, `host`, `profi`) VALUES ();
+-- INSERT INTO `matchup` (`id_matchup`, `id_match`, `goalkeeper`, `id_team`, `id_user`, `host`) VALUES ();
 
--- INSERT INTO `events` (`id_event`, `match`, `team`, `user`, `type`, `minute`, `value`) VALUES ();
+-- INSERT INTO `events` (`id_event`, `id_match`, `id_team`, `id_user`, `type`, `minute`, `value`) VALUES ();
