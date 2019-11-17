@@ -31,7 +31,6 @@ function getRank(playerData) {
 export function TeamStatisticsPlayers({filterBy}) {
     let {id_team} = useParams();
     const [state] = useGetTeamStatistics(id_team);
-    console.log("state from statistics", state);
 
     const players = getPlayers(state, filterBy);
     if (players) {

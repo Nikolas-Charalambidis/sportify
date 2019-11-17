@@ -9,14 +9,14 @@ const router = Router();
  * /matches:
  *   get:
  *     tags:
- *       - Matches
+ *       - AdminMatches
  *     name: Match
  *     summary: Get all matches
  *     responses:
  *       200:
- *         description: Matches found
+ *         description: AdminMatches found
  *       404:
- *         description: Matches not found
+ *         description: AdminMatches not found
  */
 router.get('/', async (req, res, next) => {
 	const matches = await new MatchService(req).allMatches();
@@ -28,7 +28,7 @@ router.get('/', async (req, res, next) => {
  * /matches/{id_match}:
  *   get:
  *     tags:
- *       - Matches
+ *       - AdminMatches
  *     name: Match
  *     summary: Get a match by ID
  *     parameters:
@@ -58,10 +58,10 @@ router.get('/:id_match', async (req, res, next) => {
 
 /**
  * @swagger
- * /matches/{id_match}/matchups:
+ * /matches/{id_match}/matchup/{host}:
  *   get:
  *     tags:
- *       - Matches
+ *       - AdminMatches
  *     name: Match
  *     summary: Get matchups by match ID
  *     parameters:
@@ -79,11 +79,11 @@ router.get('/:id_match', async (req, res, next) => {
  *         description: Matchups not found
  */
 
-router.get('/:id_match/matchups', async (req, res, next) => {
+router.get('/:id_match/matchup/:host', async (req, res, next) => {
 	try {
-		const { id_match } = req.params;
-		const match = await new MatchService(req).getMatchupsByMatchId(id_match);
-		res.status(200).json({ error: false, msg: 'OK', matchups: match});
+		const { id_match, host } = req.params;
+		const matchup = await new MatchService(req).getMatchupsByMatchId(id_match, host);
+		res.status(200).json({ error: false, msg: 'OK', matchup: matchup});
 	} catch(e) {
 		next(e);
 	}
@@ -94,8 +94,8 @@ router.get('/:id_match/matchups', async (req, res, next) => {
  * /matches/{id_match}/events:
  *   get:
  *     tags:
- *       - Matches
- *     name: Matches
+ *       - AdminMatches
+ *     name: AdminMatches
  *     summary: Get events by match ID
  *     parameters:
  *       - name: id_match
@@ -112,11 +112,11 @@ router.get('/:id_match/matchups', async (req, res, next) => {
  *         description: Events not found
  */
 
-router.get('/:id_match/events', async (req, res, next) => {
+router.get('/:id_match/events/:host', async (req, res, next) => {
 	try {
-		const { id_match } = req.params;
-		const match = await new MatchService(req).getEventsByMatchId(id_match);
-		res.status(200).json({ error: false, msg: 'OK', events: match});
+		const { id_match, host } = req.params;
+		const events = await new MatchService(req).getEventsByMatchId(id_match, host);
+		res.status(200).json({ error: false, msg: 'OK', events: events});
 	} catch(e) {
 		next(e);
 	}
@@ -127,8 +127,8 @@ router.get('/:id_match/events', async (req, res, next) => {
  * /matches/{id_match}:
  *   delete:
  *     tags:
- *       - Matches
- *     name: Matches
+ *       - AdminMatches
+ *     name: AdminMatches
  *     summary: Delete match by match ID
  *     parameters:
  *       - in: path

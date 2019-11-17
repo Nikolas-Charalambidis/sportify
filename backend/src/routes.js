@@ -6,6 +6,8 @@ import authRoutes_v1 from './modules/auth/authRoutes_v1';
 import othersRoutes_v1 from './modules/others/othersRoutes_v1';
 import teamMembershipRoutes_v1 from './modules/teamMembership/teamMembershipRoutes_v1';
 import matchRoutes_v1 from './modules/matches/matchRoutes_v1';
+import eventRoutes_v1 from './modules/events/eventRoutes_v1';
+import matchupRoutes_v1 from './modules/matchups/matchupRoutes_v1';
 
 const router = Router();
 
@@ -26,5 +28,11 @@ console.log("[initialized] teamMembershipRoutes_v1     /api/v1/teamMembership");
 
 router.use('/api/v1/matches', matchRoutes_v1);
 console.log("[initialized] matchRoutes_v1              /api/v1/matches");
+
+router.use('/api/v1/events', eventRoutes_v1);
+console.log("[initialized] eventRoutes_v1              /api/v1/events");
+
+router.use('/api/v1/matchups', matchupRoutes_v1);
+console.log("[initialized] matchupRoutes_v1              /api/v1/matchup");
 
 export default router;

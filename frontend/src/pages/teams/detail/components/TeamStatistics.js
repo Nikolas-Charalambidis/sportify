@@ -13,7 +13,6 @@ export function TeamStatistics() {
 
     const [statisticsFilter, setStatisticsFilter] = useState('league');
     const handleChange = (event) => {
-        console.log("event", event);
         setStatisticsFilter(event);
     };
 

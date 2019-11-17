@@ -20,7 +20,6 @@ export function TeamDataForm({api, team_data, membersState}) {
     const [sportsState] = useGetSports();
     const [typesState] = useGetTeamTypes();
 
-    console.log("team_data", team_data);
 
     let new_activation_button_state = team_data.active === 0 ? "Aktivovat" : "Deaktivovat";
     const [activationButtonState, setActivationButtonState] = useState(new_activation_button_state);

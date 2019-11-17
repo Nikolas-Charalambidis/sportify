@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import {DB_CONNECTION_KEY} from "../../libs/connection";
+import TeamService from "../teamMembership/teamMembershipService";
 
 const router = Router();
 
 /**
  * @swagger
- * /teamMembership:
+ * /teamMembership/getAvailablePlayers:
  *   get:
  *     tags:
  *       - TeamMembership
@@ -15,8 +15,14 @@ const router = Router();
  *       200:
  *         description: All sports returned
  */
-router.post('/', async (req, res, next) => {
-
+router.post('/getAvailablePlayers', async (req, res, next) => {
+    try {
+        const { id_team, id_match } = req.body;
+        const players =  await new TeamService(req).getAvailablePlayers(id_team, id_match);
+        res.status(200).json({ error: false, msg: 'OK', players: players});
+    } catch(e) {
+        next(e);
+    }
 });
 
 /**
