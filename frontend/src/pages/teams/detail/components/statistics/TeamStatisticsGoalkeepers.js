@@ -1,5 +1,6 @@
 import React from 'react';
 import {useParams} from "react-router-dom";
+import {useHistory} from 'react-router-dom';
 import {useGetTeamStatistics} from "../../../../../api/team/teamClient_v1";
 import {Heading} from "../../../../../atoms";
 import {Table} from "../../../../../organisms/Table";
@@ -30,11 +31,18 @@ function getRank(playerData) {
 
 export function TeamStatisticsGoalkeepers({filterBy}) {
     let {id_team} = useParams();
+    let history = useHistory();
     const [state] = useGetTeamStatistics(id_team);
 
     const goalkeepers = getGoalkeepers(state, filterBy);
     if (goalkeepers) {
         goalkeepers.sort((a, b) => b.goalkeeper_success_rate - a.goalkeeper_success_rate);
+    }
+
+    function handleClick(row) {
+        if (row) {
+            history.push("/users/" + row.original.id_user);
+        }
     }
 
     const columns = [
@@ -88,7 +96,13 @@ export function TeamStatisticsGoalkeepers({filterBy}) {
             {!state.isLoading && state.error &&
             <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
             {!state.isLoading && !state.error && (
-                <Table className="defaultCursor" data={goalkeepers} columns={columns}/>
+                <Table data={goalkeepers} columns={columns}getTdProps={(state, rowInfo) => {
+                    return {
+                        onClick: () => {
+                            handleClick(rowInfo);
+                        }
+                    }
+                }}/>
             )}
         </div>
     );
