@@ -125,6 +125,11 @@ CREATE TABLE `team_statistics` (
  -- `goalkeeper_success_rate`           -- rate is calculated
 );
 
+CREATE TABLE `logs` (
+    `id_logs` int PRIMARY KEY AUTO_INCREMENT,
+    `log` varchar(255)
+);
+
 -- KEYS ----------------------------------------------------------------------------------------------------------------
 ALTER TABLE `teams` ADD FOREIGN KEY (`id_sport`) REFERENCES `sports` (`id_sport`);
 ALTER TABLE `teams` ADD FOREIGN KEY (`id_leader`) REFERENCES `users` (`id_user`);
@@ -163,56 +168,104 @@ ALTER TABLE `team_statistics` ADD FOREIGN KEY (`id_competition`) REFERENCES `com
 
 -- --- MATCHUP TABLE TO TEAM_STATISTICS SYNCHRONIZATION BLOCK START
 DELIMITER //
-CREATE PROCEDURE procedure_matchup(IN new_id_match int(11), new_id_team int(11), new_id_user int(11), new_goalkeeper int(2))
+CREATE PROCEDURE on_matchup_write(
+    triggered_id_match int(11), triggered_id_team int(11), triggered_id_user int(11), triggered_goalkeeper int(2))
 BEGIN
     DECLARE rows int(11);
     DECLARE competition int(11);
 
-    SELECT m.id_competition INTO competition FROM matches AS m
-        JOIN matchup AS mup ON m.id_match = mup.id_match
-        WHERE mup.id_match = new_id_match AND mup.id_user = new_id_user AND mup.id_team = new_id_team;
+    SELECT m.id_competition INTO competition FROM matches AS m WHERE m.id_match = triggered_id_match;
 
     SELECT COUNT(*) INTO rows FROM team_statistics AS ts
-        WHERE ts.id_user = new_id_user AND ts.id_team = new_id_team AND ts.id_competition = competition;
+        WHERE ts.id_user = triggered_id_user AND ts.id_team = triggered_id_team AND ts.id_competition = competition;
 
     IF rows > 0 THEN
         -- team_statistics has a record
-        IF new_goalkeeper = 0 THEN
+        IF triggered_goalkeeper = 0 THEN
             -- field player
             UPDATE team_statistics AS ts SET ts.field_matches = ts.field_matches + 1
-            WHERE id_user = new_id_user AND id_team = new_id_team AND id_competition = competition;
+                WHERE id_user = triggered_id_user AND id_team = triggered_id_team AND id_competition = competition;
         ELSE
             -- goalkeeper
             UPDATE team_statistics AS ts SET ts.goalkeeper_matches = ts.goalkeeper_matches + 1, ts.goalkeeper_minutes = ts.goalkeeper_minutes + 60
-            WHERE id_user = new_id_user AND id_team = new_id_team AND id_competition = competition;
+                WHERE id_user = triggered_id_user AND id_team = triggered_id_team AND id_competition = competition;
         END IF;
     ELSE
         -- team_statistics has no record
-        IF new_goalkeeper = 0 THEN --
+        IF triggered_goalkeeper = 0 THEN
         -- field player
-            INSERT INTO team_statistics VALUES (NULL, new_id_user, new_id_team, competition, 1, 0, 0, 0, 0, 0, 0, 0, 0);
+            INSERT INTO team_statistics VALUES (NULL, triggered_id_user, triggered_id_team, competition, 1, 0, 0, 0, 0, 0, 0, 0, 0);
         ELSE
             -- goalkeeper
-            INSERT INTO team_statistics VALUES (NULL, new_id_user, new_id_team, competition, 0, 0, 0, 0, 1, 60, 0, 0, 0);
+            INSERT INTO team_statistics VALUES (NULL, triggered_id_user, triggered_id_team, competition, 0, 0, 0, 0, 1, 60, 0, 0, 0);
         END IF;
     END IF;
 END//
 DELIMITER ;
 
 DELIMITER //
+CREATE PROCEDURE on_matchup_remove(
+    triggered_id_match int(11), triggered_id_team int(11), triggered_id_user int(11), triggered_goalkeeper int(2))
+BEGIN
+    DECLARE competition int(11);
+    SELECT m.id_competition INTO competition FROM matches AS m WHERE m.id_match = triggered_id_match;
+
+    IF triggered_goalkeeper = 0 THEN
+        -- field player
+        UPDATE team_statistics AS ts SET ts.field_matches = ts.field_matches - 1
+            WHERE id_user = triggered_id_user AND id_team = triggered_id_team AND id_competition = competition;
+    ELSE
+        -- goalkeeper
+        UPDATE team_statistics AS ts SET ts.goalkeeper_matches = ts.goalkeeper_matches - 1, ts.goalkeeper_minutes = ts.goalkeeper_minutes - 60
+            WHERE id_user = triggered_id_user AND id_team = triggered_id_team AND id_competition = competition;
+    END IF;
+
+    -- remove fields with all zeros
+    DELETE FROM team_statistics
+        WHERE field_matches = 0 AND field_assists = 0 AND field_goals = 0 AND field_suspensions = 0
+        AND goalkeeper_minutes = 0 AND goalkeeper_goals = 0 AND goalkeeper_matches = 0
+        AND goalkeeper_shoots = 0 AND goalkeeper_zeros = 0;
+END//
+DELIMITER ;
+
+DELIMITER //
 CREATE TRIGGER after_insert_matchup AFTER INSERT ON matchup FOR EACH ROW
 BEGIN
-    CALL procedure_matchup(new.id_match, new.id_team, new.id_user, new.goalkeeper);
+    CALL on_matchup_write(new.id_match, new.id_team, new.id_user, new.goalkeeper);
 END; //
 DELIMITER ;
 
 DELIMITER //
 CREATE TRIGGER after_update_matchup AFTER UPDATE ON matchup FOR EACH ROW
 BEGIN
-    CALL procedure_matchup(new.id_match, new.id_team, new.id_user, new.goalkeeper);
+    CALL on_matchup_write(new.id_match, new.id_team, new.id_user, new.goalkeeper);
+END; //
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER after_delete_matchup AFTER DELETE ON matchup FOR EACH ROW
+BEGIN
+    CALL on_matchup_remove(old.id_match, old.id_team, old.id_user, old.goalkeeper);
 END; //
 DELIMITER ;
 -- --- MATCHUP TABLE TO TEAM_STATISTICS SYNCHRONIZATION BLOCK END
+
+-- --- EVENTS TABLE TO TEAM_STATISTICS SYNCHRONIZATION BLOCK START
+DELIMITER //
+CREATE TRIGGER after_insert_events AFTER INSERT ON events FOR EACH ROW
+BEGIN
+    DECLARE rows int(11);
+    DECLARE competition int(11);
+
+    SELECT DISTINCTROW m.id_competition INTO competition FROM matches AS m
+        JOIN events AS e ON m.id_match = e.id_match
+        WHERE e.id_match = new.id_match AND e.id_user = new.id_user AND e.id_team = new.id_team;
+
+    SELECT COUNT(*) INTO rows FROM team_statistics AS ts
+        WHERE ts.id_user = new.id_user AND ts.id_team = new.id_team AND ts.id_competition = competition;
+END//
+DELIMITER ;
+-- --- EVENTS TABLE TO TEAM_STATISTICS SYNCHRONIZATION BLOCK END
 
 -- Data ----------------------------------------------------------------------------------------------------------------
 -- USERS
