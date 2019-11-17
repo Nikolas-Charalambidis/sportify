@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Table} from "../../../../../organisms/Table";
 import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../../../assets/images/loading.gif";
@@ -6,15 +6,10 @@ import {Heading} from "../../../../../atoms";
 import {useApi} from "../../../../../hooks/useApi";
 import Button from "react-bootstrap/Button";
 import deleteIcon from "../../../../../assets/images/delete.png";
-import {AddShotModal} from "./AddShotModal";
 import {deleteEvent} from "../../../../../api/events/eventClient_v1";
 
-export function Events({id_team, id_match, host, eventsState, fetchEvents}) {
+export function Events({eventsState, fetchEvents}) {
     const api = useApi();
-
-    const [showShotModal, setShotModal] = useState(false);
-    const closeShotModal = () => setShotModal(false);
-    const openShotModal = () => setShotModal(true);
 
     const handleDeleteEvent = async (id_event) => {
         const result = await deleteEvent(api, id_event);
@@ -45,10 +40,6 @@ export function Events({id_team, id_match, host, eventsState, fetchEvents}) {
             accessor: "minute"
         },
         {
-            Header: "Hodnota",
-            accessor: "value"
-        },
-        {
             Header: '',
             accessor: "id_event",
             filterable:false,
@@ -68,13 +59,7 @@ export function Events({id_team, id_match, host, eventsState, fetchEvents}) {
             <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
             {(!eventsState.isLoading && !eventsState.error) &&
                 <div>
-                    <Button variant="primary" type="button" onClick={openShotModal} >
-                        Přidat střelu
-                    </Button>
                     <Table className="defaultCursor" columns={columnsEvents} data={eventsState.events}/>
-                    <AddShotModal id_team={id_team} id_match={id_match} host={host} fetchEvents={fetchEvents}
-                                  show={showShotModal} handleClose={closeShotModal}
-                    />
                 </div>
             }
         </div>

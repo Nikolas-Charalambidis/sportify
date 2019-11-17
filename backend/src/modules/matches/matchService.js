@@ -59,7 +59,7 @@ export default class MatchService {
 		const match_id = Number(id_match);
 		matchValidations.validateMatchId(match_id);
 		const query =
-			`SELECT e.id_event, e.id_match, e.id_team, e.id_user, e.type, e.minute, e.value, e.host, 
+			`SELECT e.id_event, e.id_match, e.id_team, e.id_user, e.type, e.minute, e.host, 
 				CONCAT(ua1.name, ' ', ua1.surname) AS name_assistance1,
 				CONCAT(ua2.name, ' ', ua2.surname) AS name_assistance2,
 				CONCAT(u.name, ' ', u.surname) AS name
@@ -67,7 +67,22 @@ export default class MatchService {
 			 LEFT JOIN users AS u ON u.id_user=e.id_user
 			 LEFT JOIN users AS ua1 ON ua1.id_user=e.id_assistance1
 			 LEFT JOIN users AS ua2 ON ua2.id_user=e.id_assistance2
-			 WHERE e.id_match=? AND e.host=?`;
+			 WHERE e.id_match=? AND e.host=? AND NOT e.type='shot'`;
 		return this.dbConnection.query(query, [match_id, host]);
+	}
+
+	async getShotsByMatchId(id_match, host) {
+		const match_id = Number(id_match);
+		matchValidations.validateMatchId(match_id);
+		const query =
+			`SELECT e.id_event, e.id_match, e.id_team, e.id_user, e.type, e.value, e.host
+			 FROM events AS e
+			 WHERE e.id_match=? AND e.host=? AND e.type='shot'`;
+		const result = await this.dbConnection.query(query, [match_id, host]);
+
+		if (result.length === 0) {
+			throw {status: 404, msg: 'Zápas nebyl nalezen v databázi'};
+		}
+		return result[0];
 	}
 }

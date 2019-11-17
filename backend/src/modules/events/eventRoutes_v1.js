@@ -41,6 +41,47 @@ router.delete('/:id_event', async (req, res, next) => {
 
 /**
  * @swagger
+ * /events/shots:
+ *   patch:
+ *     tags:
+ *       - Events
+ *     name: Events
+ *     summary: Change count of shots
+ *     consumes: application/json
+ *     produces: application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             id_event:
+ *               type: integer
+ *             value:
+ *               type: integer
+ *     responses:
+ *       200:
+ *         description: Count of shots changed
+ *       400:
+ *         description: Invalid request
+ *       404:
+ *         description: Event not found
+ *       500:
+ *         description: Unexpected error
+ */
+router.patch('/shots', async (req, res, next) => {
+	try {
+		const { id_event, value } = req.body;
+		await new EventService(req).changeShots(id_event, value);
+		res.status(200).json({ error: false, msg: 'Počet střel byl úspěšně změněn'});
+	} catch(e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
  * /events/:
  *   post:
  *     tags:

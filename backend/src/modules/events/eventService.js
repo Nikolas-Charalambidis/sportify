@@ -53,4 +53,17 @@ export default class EventService {
 			throw {status: 500, msg: 'Přidání eventu se nezdařilo'};
 		}
 	}
+
+	async changeShots(id_event, value){
+		const event_id = Number(id_event);
+		const value_number = Number(value);
+		console.log("values", event_id, value_number);
+		eventValidation.validateChangeShotsData(event_id, value_number);
+		const result = await this.dbConnection.query(
+			`UPDATE events SET value=? WHERE id_event=?`, [value_number, event_id]
+		);
+		if (result.affectedRows === 0) {
+			throw {status: 404, msg: 'Event nebyl nalezen v databázi'};
+		}
+	}
 }

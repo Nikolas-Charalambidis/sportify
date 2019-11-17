@@ -75,6 +75,31 @@ export function useGetEvents(id_match, host) {
     return [state, fetchData];
 }
 
+export function useGetShots(id_match, host) {
+    const api = useApi();
+    const [state, setState] = useState({
+        isLoading: true,
+        error: false
+    });
+
+    useEffect( () => {
+        const fetchData = () => {
+            setState({isLoading: true, error: false, events: null});
+            api
+                .get(`${config.API_BASE_PATH}/matches/${id_match}/shots/${host}`)
+                .then(({data}) => {
+                    const {shots} = data;
+                    setState({isLoading: false, error: false, shots: shots});
+                })
+                .catch(({response}) => {
+                    setState({isLoading: false, error: true, shots: null});
+                });
+        };
+        fetchData();
+    }, [api, id_match, host]); // eslint-disable-line
+    return [state];
+}
+
 export async function deleteMatch(api, id_match) {
     let result = false;
     await api

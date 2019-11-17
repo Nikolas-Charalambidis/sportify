@@ -20,7 +20,6 @@ export function Matchup({id_team, id_match, host, availablePlayers, fetchAvailab
         show: true,
         id_user: id_user
     });
-    console.log("players", availablePlayers);
 
     const columnsMatchup = [
         {
