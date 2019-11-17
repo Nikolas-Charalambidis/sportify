@@ -27,7 +27,7 @@ export default class TeamMembershipService {
 		const team_id = Number(id_team);
 		const match_id = Number(id_match);
 		teamMembershipValidation.validateAvailablePlayersData(id_team, id_match);
-		const result = await this.dbConnection.query(
+		return this.dbConnection.query(
 			`SELECT u.id_user, CONCAT(u.name, ' ', u.surname) AS name 
 			 FROM team_membership AS t
 			 JOIN users AS u ON u.id_user=t.id_user
@@ -38,9 +38,5 @@ export default class TeamMembershipService {
 			 )`
 			, [team_id, team_id, match_id]
 		);
-		if (result.length === 0) {
-			throw {status: 404, msg: 'Tým nebo zápas nebyl nalezen v databázi'};
-		}
-		return result;
 	}
 }

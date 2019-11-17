@@ -32,7 +32,7 @@ export default class MatchupService {
 			[matchup_id]
 		);
 		if (result.affectedRows === 0) {
-			throw {status: 500, msg: 'Odstranění hráče ze sestavy se nezdařilo'};
+			throw {status: 404, msg: 'Nepodařilo se nalézt patřičný záznam v databázi'};
 		}
 		await this.dbConnection.query(
 			`DELETE FROM events WHERE id_user=? OR id_assistance1=? OR id_assistance2=?`,

@@ -1,5 +1,5 @@
 import React from 'react';
-import {useGetAvailablePlayers} from "../../../../api/matches/matchClient_v1";
+import {useGetAvailablePlayers} from "../../../../api/teamMembership/teamMembershipClient_v1";
 import {Tab, Tabs} from "react-bootstrap";
 import {TeamTab} from "./TeamTab";
 

@@ -17,7 +17,7 @@ import {DeleteMatchModal} from "./components/matchup/DeleteMatchModal";
 import moment from "moment";
 import {useGetTeam} from "../../../api/team/teamClient_v1";
 
-export function AdminMatches() {
+export function MatchDetailAdminPage() {
     const history = useHistory();
     const {user} = useAuth();
     if (!user) {

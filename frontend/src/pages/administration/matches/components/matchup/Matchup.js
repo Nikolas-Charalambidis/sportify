@@ -20,6 +20,7 @@ export function Matchup({id_team, id_match, host, availablePlayers, fetchAvailab
         show: true,
         id_user: id_user
     });
+    console.log("players", availablePlayers);
 
     const columnsMatchup = [
         {
@@ -32,8 +33,9 @@ export function Matchup({id_team, id_match, host, availablePlayers, fetchAvailab
             Cell: row => (
                 <div>
                     {row.original.goalkeeper ? <span>Ano</span> : <span>Ne&nbsp;</span>}
-                    <Button variant="link" onClick={() => {
-                        if(setGoalkeeper(api, row.original.id_matchup, row.original.goalkeeper)){
+                    <Button variant="link" onClick={async () => {
+                        const result = await setGoalkeeper(api, row.original.id_matchup, row.original.goalkeeper)
+                        if(result){
                             fetchMatchup();
                         }
                     }}
@@ -85,14 +87,24 @@ export function Matchup({id_team, id_match, host, availablePlayers, fetchAvailab
             <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
             {(!matchupState.isLoading && !matchupState.error) &&
                 <div>
-                    <CustomSelect name="id_type"
-                                  options={availablePlayers.players}
-                                  getOptionLabel={option => `${option.name}`}
-                                  getOptionValue={option => `${option.id_user}`}
-                                  placeholder={host ? "Hráči host" : "Hráči guest"}
-                                  isSearchable={true}
-                                  onChange={options => handleAddPlayer(options.id_user)}
-                    />
+                    { availablePlayers.isLoading &&  <div className="text-center"><Image src={loadingGif}/></div>}
+                    {(!availablePlayers.isLoading && availablePlayers.error) &&
+                        <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>
+                    }
+                    {(!availablePlayers.isLoading && !availablePlayers.error && availablePlayers.players.length === 0) &&
+                        <Heading size="xs" className="alert-warning pt-2 pb-2 mt-2 text-center">Nejsou dostupní žádní další hráči</Heading>
+                    }
+                    {(!availablePlayers.isLoading && !availablePlayers.error && availablePlayers.players.length !== 0) &&
+                        <CustomSelect name="id_type"
+                                      options={availablePlayers.players}
+                                      getOptionLabel={option => `${option.name}`}
+                                      getOptionValue={option => `${option.id_user}`}
+                                      placeholder={host ? "Hráči host" : "Hráči guest"}
+                                      isSearchable={true}
+                                      isOptionDisabled={(option) => option.disabled === true}
+                                      onChange={options => handleAddPlayer(options.id_user)}
+                        />
+                    }
                     <Table className="defaultCursor" columns={columnsMatchup} data={matchupState.matchup}/>
                     <AddGoalSuspensionModal params={showGoalModal} handleClose={closeGoalSuspensionModal} matchup={matchupState.matchup}
                                  id_team={id_team} id_match={id_match} host={host} fetchEvents={fetchEvents}

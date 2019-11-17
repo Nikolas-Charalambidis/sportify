@@ -1,6 +1,6 @@
 import React from 'react';
 import {Tab, Tabs} from "react-bootstrap";
-import {useGetAvailablePlayers} from "../../../../api/matches/matchClient_v1";
+import {useGetAvailablePlayers} from "../../../../api/teamMembership/teamMembershipClient_v1";
 import {TeamTab} from "./TeamTab";
 
 export function MatchDetailSingle({id_match, data}) {
