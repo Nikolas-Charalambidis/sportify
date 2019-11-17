@@ -10,7 +10,7 @@ const router = Router();
  *     tags:
  *       - Events
  *     name: Events
- *     summary: Verify user email and password
+ *     summary: Delete event by Event ID
  *     consumes: application/json
  *     produces: application/json
  *     parameters:
@@ -26,6 +26,8 @@ const router = Router();
  *         description: Invalid request
  *       404:
  *         description: Event not found
+ *       500:
+ *         description: Unexpected error
  */
 router.delete('/:id_event', async (req, res, next) => {
 	try {
@@ -39,23 +41,44 @@ router.delete('/:id_event', async (req, res, next) => {
 
 /**
  * @swagger
- * /events/{id_event}:
- *   delete:
+ * /events/:
+ *   post:
  *     tags:
  *       - Events
  *     name: Events
- *     summary: Verify user email and password
+ *     summary: Add new event
  *     consumes: application/json
  *     produces: application/json
  *     parameters:
- *       - name: id_event
- *         in: path
+ *       - in: body
+ *         name: body
  *         required: true
  *         schema:
- *           type: integer
+ *           type: object
+ *           properties:
+ *             id_user:
+ *               type: integer
+ *             type:
+ *               type: string
+ *             id_team:
+ *               type: integer
+ *             id_match:
+ *               type: integer
+ *             id_assistance1:
+ *               type: integer
+ *             id_assistance2:
+ *               type: integer
+ *             minute:
+ *               type: integer
+ *             value:
+ *               type: integer
+ *             host:
+ *               type: boolean
  *     responses:
  *       201:
  *         description: Event added
+ *       500:
+ *         description: Unexpected error
  */
 router.post('/', async (req, res, next) => {
 	try {

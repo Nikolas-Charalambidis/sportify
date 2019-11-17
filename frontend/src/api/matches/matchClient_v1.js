@@ -75,31 +75,6 @@ export function useGetEvents(id_match, host) {
     return [state, fetchData];
 }
 
-export function useGetAvailablePlayers(id_team, id_match) {
-    const api = useApi();
-    const [state, setState] = useState({
-        isLoading: true
-    });
-
-    const fetchData = () => {
-        api
-            .post(`${config.API_BASE_PATH}/teamMembership/getAvailablePlayers`, {id_team: id_team, id_match: id_match})
-            .then(({data}) => {
-                const {players} = data;
-                setState({isLoading: false, error: false, players: players});
-            })
-            .catch(() => {
-                setState({isLoading: false, error: true, players: null});
-            });
-    };
-
-    useEffect( () => {
-        fetchData();
-
-    }, [api, id_match, id_team]); // eslint-disable-line
-    return [state, fetchData];
-}
-
 export async function deleteMatch(api, id_match) {
     let result = false;
     await api

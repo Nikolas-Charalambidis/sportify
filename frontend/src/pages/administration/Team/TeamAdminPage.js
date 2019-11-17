@@ -36,10 +36,9 @@ export function TeamAdminPage() {
 
     function handleClick(row) {
         if (row) {
-            history.push("/matches/" + row.original.id_match);
+            history.push(`/administration/matches/${id_team}/${row.original.id_match}`);
         }
     }
-
 
     const columns = [
         {
@@ -48,10 +47,6 @@ export function TeamAdminPage() {
             Cell: props => moment(props.value).format('L'),
             filterMethod: (filter, row) =>
                 row[filter.id].toLowerCase().startsWith(filter.value.toLowerCase()),
-
-
-
-
         },
         {
             Header: "Domací",
@@ -126,6 +121,7 @@ export function TeamAdminPage() {
         {
             Header: "Soutěž",
             accessor: "competition_name",
+            Cell: row => row.original.competition_name===null ?  "Amatérský zápas" : row.original.competition_name,
             filterMethod: (filter, row) => {
                 if (filter.value === 'all') {
                     return true;
@@ -162,20 +158,20 @@ export function TeamAdminPage() {
                         <li className="breadcrumb-item"><span className="active">{state.team_data.name}</span></li>
                     </Breadcrumb>
                     <TeamDataForm api={api} team_data={state.team_data} membersState={membersState}/>
+                    <h2 className="mt-4">Odehrané zápasy</h2>
+                    {matchesState.isLoading && <div className="text-center"><Image src={loadingGif}/></div>}
+                    {(!matchesState.isLoading && matchesState.error) && <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
+                    {(!matchesState.isLoading && !matchesState.error) &&
+                        <Table columns={columns} data={matchesState.team_data} getTdProps={(state, rowInfo) => {
+                            return {
+                                onClick: () => {
+                                    handleClick(rowInfo);
+                                }
+                            }
+                        }}/>
+                    }
                 </div>
             }
-            <h2 className="mt-4">Odehrané zápasy</h2>
-            {(state.isLoading || matchesState.isLoading) && <div className="text-center"><Image src={loadingGif}/></div>}
-            {((!matchesState.isLoading && matchesState.error) || (!state.isLoading && state.error)) && <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
-            {((!matchesState.isLoading && !matchesState.error) && (!state.isLoading && !state.error)) && (
-                <Table columns={columns} data={matchesState.team_data} getTdProps={(state, rowInfo) => {
-                    return {
-                        onClick: () => {
-                            handleClick(rowInfo);
-                        }
-                    }
-                }}/>
-            )}
         </div>
     );
 }

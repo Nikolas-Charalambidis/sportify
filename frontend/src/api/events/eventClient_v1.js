@@ -11,7 +11,6 @@ export async function addEvent(api, values) {
         .catch(({ response }) => {
             const {data} = response;
             window.flash(data.msg, 'danger');
-            result =  false;
         });
     return result;
 }
@@ -27,7 +26,6 @@ export async function deleteEvent(api, id_event) {
         .catch(({ response }) => {
             const {data} = response;
             window.flash(data.msg, 'danger');
-            result =  false;
         });
     return result;
 }

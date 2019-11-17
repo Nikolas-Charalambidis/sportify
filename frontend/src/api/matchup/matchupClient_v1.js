@@ -1,16 +1,17 @@
 import {config} from "../../config";
 
-export function setGoalkeeper(api, id_matchup, goalkeeper) {
-    api.patch(`${config.API_BASE_PATH}/matchups/setGoalkeeper`, {id_matchup: id_matchup, goalkeeper: !goalkeeper})
+export async function setGoalkeeper(api, id_matchup, goalkeeper) {
+    let result = false;
+    await api.patch(`${config.API_BASE_PATH}/matchups/setGoalkeeper`, {id_matchup: id_matchup, goalkeeper: !goalkeeper})
         .then(({data}) => {
             window.flash(data.msg, 'success');
-            return true;
+            result = true;
         })
         .catch(({response}) => {
             const {data} = response;
             window.flash(data.msg, 'danger');
-            return false;
         });
+    return result;
 }
 
 export async function addPlayer(api, values) {
@@ -24,7 +25,6 @@ export async function addPlayer(api, values) {
         .catch(({response}) => {
             const {data} = response;
             window.flash(data.msg, 'danger');
-            result =  false;
         });
     return result;
 }
@@ -40,7 +40,6 @@ export async function deletePlayer(api, id_matchup, id_user) {
         .catch(({response}) => {
             const {data} = response;
             window.flash(data.msg, 'danger');
-            result =  false;
         });
     return result;
 }

@@ -19,7 +19,7 @@ import { TeamsAdminList} from "./pages/administration/Team/TeamsAdminList";
 import {ResetPassword} from "./pages/auth/ResetPassword";
 import {ResendToken} from "./pages/auth/ResendToken";
 import { AdministrationMenu } from './pages/administration/Administration/AdministrationMenu';
-import { AdminMatches } from './pages/administration/matches/AdminMatches';
+import { MatchDetailAdminPage } from './pages/administration/matches/MatchDetailAdminPage';
 import { UserDetail } from './pages/users/detail/UserDetail';
 
 export function Routes() {
@@ -46,7 +46,7 @@ export function Routes() {
             <Route path="/administration/profile" exact component={Profile} />
 			<Route path="/administration/teams/:id_team" exact component={TeamAdminPage} />
             <Route path="/administration/teams" exact component={TeamsAdminList} />
-			<Route path="/administration/matches/:id_team/:id_match" exact component={AdminMatches} />
+			<Route path="/administration/matches/:id_team/:id_match" exact component={MatchDetailAdminPage} />
 
 			<Route path="*" component={Page404}/>
 		</Switch>
