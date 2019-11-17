@@ -88,7 +88,9 @@ CREATE TABLE `events` (
     `id_match` int NOT NULL,
     `id_team` int NOT NULL,
     `id_user` int,
-    `type` ENUM ('shot', 'goal', 'assistance1', 'assistance2', 'suspension_2', 'suspension_2_2','suspension_5', 'suspension_pp', 'suspension_pp_end', 'suspension_penalty'),
+    `type` ENUM ('shot', 'goal', 'suspension_2', 'suspension_2_2','suspension_5', 'suspension_pp', 'suspension_pp_end', 'suspension_penalty'),
+    `id_assistance1` int,
+    `id_assistance2` int,
     `minute` int,
     `value` tinyint,
     `host` boolean NOT NULL
@@ -148,6 +150,8 @@ ALTER TABLE `team_membership` ADD FOREIGN KEY (`id_position`) REFERENCES `positi
 ALTER TABLE `events` ADD FOREIGN KEY (`id_match`) REFERENCES `matches` (`id_match`) ON DELETE CASCADE;
 ALTER TABLE `events` ADD FOREIGN KEY (`id_team`) REFERENCES `teams` (`id_team`);
 ALTER TABLE `events` ADD FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`);
+ALTER TABLE `events` ADD FOREIGN KEY (`id_assistance1`) REFERENCES `users` (`id_user`);
+ALTER TABLE `events` ADD FOREIGN KEY (`id_assistance2`) REFERENCES `users` (`id_user`);
 
 ALTER TABLE `matchup` ADD FOREIGN KEY (`id_match`) REFERENCES `matches` (`id_match`) ON DELETE CASCADE;
 ALTER TABLE `matchup` ADD FOREIGN KEY (`id_team`) REFERENCES `teams` (`id_team`);
@@ -296,8 +300,6 @@ INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host)
 INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (6, 1, true, 1, 6, false);
 INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (7, 1, false, 1, 7, false);
 INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (8, 1, false, 1, 8, false);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (9, 1, false, 1, 9, false);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (10, 1, false, 1, 10, false);
 
 INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (11, 3, true, 1, 1, true);
 INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (12, 3, false, 1, 2, true);
@@ -307,45 +309,33 @@ INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host)
 INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (16, 3, true, 2, 11, false);
 INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (17, 3, false, 2, 12, false);
 INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (18, 3, false, 2, 13, false);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (19, 3, false, 2, 14, false);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (20, 3, false, 2, 15, false);
 
 -- EVENTS
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (1, 1, 1, 5, 'goal', 40, null, true);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (2, 1, 1, 4, 'assistance1', 40, null, true);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (3, 1, 1, 2, 'goal', 48, null, true);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (4, 1, 1, 2, 'suspension_2', 51, null, true);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (5, 1, 1, 10, 'goal', 52, null, false);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (6, 1, 1, null, 'shot', null, 45, true);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (7, 1, 1, null, 'shot', null, 49, false);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
+    VALUES (1, 1, 1, 1, 'goal', 4, 5, 40, null, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
+    VALUES (3, 1, 1, 2, 'goal', null, null, 48, null, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
+    VALUES (4, 1, 1, 2, 'suspension_2', null, null, 51, null, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
+    VALUES (5, 1, 1, 3, 'goal', null, null, 52, null, false);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
+    VALUES (6, 1, 1, null, 'shot', null, null, null, 45, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
+    VALUES (7, 1, 1, null, 'shot', null, null, null, 49, false);
 
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (8, 3, 1, 4, 'goal', 32, null, true);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (9, 3, 1, 5, 'assistance1', 32, null, true);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (10, 3, 1, 2, 'assistance2', 32, null, true);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (11, 3, 2, 13, 'goal', 36, null, false);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (12, 3, 2, 13, 'goal', 41, null, false);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (13, 3, 2, 14, 'assistance1', 41, null, false);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (14, 3, 2, 15, 'assistance2', 41, null, false);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (15, 3, 2, 13, 'suspension_5', 52, null, false);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (16, 3, 1, null, 'shot', null, 32, true);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (17, 3, 2, null, 'shot', null, 66, false);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
+    VALUES (8, 3, 1, 4, 'goal', 5, 2, 32, null, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
+    VALUES (11, 3, 2, 13, 'goal', null, null, 36, null, false);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
+    VALUES (12, 3, 2, 13, 'goal', 14, 15, 41, null, false);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
+    VALUES (15, 3, 2, 13, 'suspension_5', null, null, 52, null, false);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
+    VALUES (16, 3, 1, null, 'shot', null, null, null, 32, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
+    VALUES (17, 3, 2, null, 'shot', null, null, null, 66, false);
 
 -- ---- MOCKED, START OF A SUBJECT OF A FUTURE CHANGE AND/OR REGENERATION, THE MODEL ITSELF IS CONSIDERED FINAL
 -- ---- MATCHES ARE NECESSARY FOR THESE DATA CONSISTENCY, YET THEY ARE NOT NEEDED FOR THE DEVELOPMENT OF THE STATISTICS DISPLAY
