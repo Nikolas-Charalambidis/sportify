@@ -1,11 +1,13 @@
 import React from 'react';
 import {Matchup} from "./matchup/Matchup";
 import {Events} from "./events/Events";
-import {useGetEvents, useGetMatchup} from "../../../../api/matches/matchClient_v1";
+import {useGetEvents, useGetMatchup, useGetShots} from "../../../../api/matches/matchClient_v1";
+import {Shots} from "./events/Shots";
 
 export function TeamTab({id_team, id_match, host, availablePlayers, fetchAvailablePlayers}) {
     const [matchupState, fetchMatchup] = useGetMatchup(id_match, host);
     const [eventsState, fetchEvents] = useGetEvents(id_match, host);
+    const [shotsState] = useGetShots(id_match, host);
 
     return (
         <div>
@@ -14,9 +16,8 @@ export function TeamTab({id_team, id_match, host, availablePlayers, fetchAvailab
                      matchupState={matchupState} fetchMatchup={fetchMatchup}
                      fetchEvents={fetchEvents}
             />
-
-            <Events id_team={id_team} id_match={id_match} host={host}
-                    eventsState={eventsState} fetchEvents={fetchEvents}
+            <Shots id_team={id_team} id_match={id_match} host={host} shotsState={shotsState} />
+            <Events eventsState={eventsState} fetchEvents={fetchEvents}
             />
         </div>
     );
