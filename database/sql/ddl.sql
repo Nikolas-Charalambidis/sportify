@@ -161,6 +161,59 @@ ALTER TABLE `team_statistics` ADD FOREIGN KEY (`id_user`) REFERENCES `users` (`i
 ALTER TABLE `team_statistics` ADD FOREIGN KEY (`id_team`) REFERENCES `teams` (`id_team`);
 ALTER TABLE `team_statistics` ADD FOREIGN KEY (`id_competition`) REFERENCES `competitions` (`id_competition`);
 
+-- --- MATCHUP TABLE TO TEAM_STATISTICS SYNCHRONIZATION BLOCK START
+DELIMITER //
+CREATE PROCEDURE procedure_matchup(IN new_id_match int(11), new_id_team int(11), new_id_user int(11), new_goalkeeper int(2))
+BEGIN
+    DECLARE rows int(11);
+    DECLARE competition int(11);
+
+    SELECT m.id_competition INTO competition FROM matches AS m
+        JOIN matchup AS mup ON m.id_match = mup.id_match
+        WHERE mup.id_match = new_id_match AND mup.id_user = new_id_user AND mup.id_team = new_id_team;
+
+    SELECT COUNT(*) INTO rows FROM team_statistics AS ts
+        WHERE ts.id_user = new_id_user AND ts.id_team = new_id_team AND ts.id_competition = competition;
+
+    IF rows > 0 THEN
+        -- team_statistics has a record
+        IF new_goalkeeper = 0 THEN
+            -- field player
+            UPDATE team_statistics AS ts SET ts.field_matches = ts.field_matches + 1
+            WHERE id_user = new_id_user AND id_team = new_id_team AND id_competition = competition;
+        ELSE
+            -- goalkeeper
+            UPDATE team_statistics AS ts SET ts.goalkeeper_matches = ts.goalkeeper_matches + 1, ts.goalkeeper_minutes = ts.goalkeeper_minutes + 60
+            WHERE id_user = new_id_user AND id_team = new_id_team AND id_competition = competition;
+        END IF;
+    ELSE
+        -- team_statistics has no record
+        IF new_goalkeeper = 0 THEN --
+        -- field player
+            INSERT INTO team_statistics VALUES (NULL, new_id_user, new_id_team, competition, 1, 0, 0, 0, 0, 0, 0, 0, 0);
+        ELSE
+            -- goalkeeper
+            INSERT INTO team_statistics VALUES (NULL, new_id_user, new_id_team, competition, 0, 0, 0, 0, 1, 60, 0, 0, 0);
+        END IF;
+    END IF;
+END//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER after_insert_matchup AFTER INSERT ON matchup FOR EACH ROW
+BEGIN
+    CALL procedure_matchup(new.id_match, new.id_team, new.id_user, new.goalkeeper);
+END; //
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER after_update_matchup AFTER UPDATE ON matchup FOR EACH ROW
+BEGIN
+    CALL procedure_matchup(new.id_match, new.id_team, new.id_user, new.goalkeeper);
+END; //
+DELIMITER ;
+-- --- MATCHUP TABLE TO TEAM_STATISTICS SYNCHRONIZATION BLOCK END
+
 -- Data ----------------------------------------------------------------------------------------------------------------
 -- USERS
 -- Password is hashed using bcrypt "Heslo123", 10 rounds
@@ -341,42 +394,42 @@ INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1
 -- ---- MATCHES ARE NECESSARY FOR THESE DATA CONSISTENCY, YET THEY ARE NOT NEEDED FOR THE DEVELOPMENT OF THE STATISTICS DISPLAY
 -- ---- THE MOCKED DATA NEITHER MATCH THE MOCKED MATCHES, MATCHUPS NOR EVENTS
 
--- COMPETITION ID = 1
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (1, 1, 1, 1, 0, 0, 0, 0, 5, 300, 9, 2, 356);
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (2, 2, 1, 1, 5, 0, 6, 2, 0, 0, 0, 0, 0);
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (3, 3, 1, 1, 5, 2, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (4, 4, 1, 1, 5, 1, 4, 1, 0, 0, 0, 0, 0);
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (5, 5, 1, 1, 5, 5, 2, 4, 0, 0, 0, 0, 0);
-
--- COMPETITION ID = 4
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (6, 1, 1, 4, 0, 0, 0, 0, 20, 1200, 52, 6, 1659);
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (7, 2, 1, 4, 20, 0, 18, 0, 0, 0, 0, 0, 0);
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (8, 3, 1, 4, 20, 7, 10, 7, 0, 0, 0, 0, 0);
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (9, 4, 1, 4, 20, 19, 14, 4, 0, 0, 0, 0, 0);
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (10, 5, 1, 4, 20, 31, 16, 14, 0, 0, 0, 0, 0);
-
--- FREE TIME MATCHES (COMPETITION ID = null)
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (11, 1, 1, null, 2, 1, 4, 0, 2, 120, 6, 0, 215);
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (12, 2, 1, null, 2, 0, 3, 0, 2, 120, 12, 0, 322);
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (13, 3, 1, null, 4, 2, 1, 0, 0, 0, 0, 0, 0);
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (14, 4, 1, null, 4, 6, 8, 0, 0, 0, 0, 0, 0);
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (15, 5, 1, null, 4, 9, 0, 0, 0, 0, 0, 0, 0);
--- ---- END, START OF A SUBJECT OF A FUTURE CHANGE OR REGENERATION
+-- -- COMPETITION ID = 1
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (1, 1, 1, 1, 0, 0, 0, 0, 5, 300, 9, 2, 356);
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (2, 2, 1, 1, 5, 0, 6, 2, 0, 0, 0, 0, 0);
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (3, 3, 1, 1, 5, 2, 0, 0, 0, 0, 0, 0, 0);
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (4, 4, 1, 1, 5, 1, 4, 1, 0, 0, 0, 0, 0);
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (5, 5, 1, 1, 5, 5, 2, 4, 0, 0, 0, 0, 0);
+--
+-- -- COMPETITION ID = 4
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (6, 1, 1, 4, 0, 0, 0, 0, 20, 1200, 52, 6, 1659);
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (7, 2, 1, 4, 20, 0, 18, 0, 0, 0, 0, 0, 0);
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (8, 3, 1, 4, 20, 7, 10, 7, 0, 0, 0, 0, 0);
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (9, 4, 1, 4, 20, 19, 14, 4, 0, 0, 0, 0, 0);
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (10, 5, 1, 4, 20, 31, 16, 14, 0, 0, 0, 0, 0);
+--
+-- -- FREE TIME MATCHES (COMPETITION ID = null)
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (11, 1, 1, null, 2, 1, 4, 0, 2, 120, 6, 0, 215);
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (12, 2, 1, null, 2, 0, 3, 0, 2, 120, 12, 0, 322);
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (13, 3, 1, null, 4, 2, 1, 0, 0, 0, 0, 0, 0);
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (14, 4, 1, null, 4, 6, 8, 0, 0, 0, 0, 0, 0);
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (15, 5, 1, null, 4, 9, 0, 0, 0, 0, 0, 0, 0);
+-- -- ---- END, START OF A SUBJECT OF A FUTURE CHANGE OR REGENERATION
 
 
 -- INSERT INTO `matches` (`id_match`, `competition`, `host`, `guest`, `date`) VALUES ();
