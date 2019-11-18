@@ -70,7 +70,7 @@ export function MatchDetailAdminPage() {
                                 <p><b>Název soutěže:</b> {stateMatch.match.competition_name ? stateMatch.match.competition_name : "Amatérský zápas"}</p>
                                 <p><b>Datum konání zápasu:</b> {moment(stateMatch.match.date).local().format("DD. MM. YYYY HH:mm")}</p>
                             </Col>
-                            <Col>
+                            <Col className="text-right">
                                 <Button variant="primary" type="button" onClick={handleShow}>
                                     Odstranit zápas
                                 </Button>
