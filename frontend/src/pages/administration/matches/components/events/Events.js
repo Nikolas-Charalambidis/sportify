@@ -17,6 +17,7 @@ export function Events({eventsState, fetchEvents}) {
             fetchEvents();
         }
     };
+    console.log("events", eventsState);
 
     const columnsEvents = [
         {
@@ -25,7 +26,30 @@ export function Events({eventsState, fetchEvents}) {
         },
         {
             Header: "Typ",
-            accessor: "type"
+            accessor: "type",
+            filterMethod: (filter, row) => {
+                if (filter.value === 'all') {
+                    return true;
+                } else {
+                    return row[filter.id] === filter.value;
+                }
+            },
+
+            Filter: ({filter, onChange}) =>
+                <select
+                    onChange={event => onChange(event.target.value)}
+                    style={{width: "100%"}}
+                    value={filter ? filter.value : "all"}
+                >
+                    <option value="all">Vše</option>
+                    <option value="goal">goal</option>
+                    <option value="suspension_2">suspension_2</option>
+                    <option value="suspension_2_2">suspension_2_2</option>
+                    <option value="suspension_5">suspension_5</option>
+                    <option value="suspension_pp">suspension_pp</option>
+                    <option value="suspension_pp_end">suspension_pp_end</option>
+                    <option value="suspension_penalty">suspension_penalty</option>
+                </select>
         },
         {
             Header: "Asistence 1",
@@ -37,7 +61,34 @@ export function Events({eventsState, fetchEvents}) {
         },
         {
             Header: "Minuta",
-            accessor: "minute"
+            accessor: "minute",
+            filterMethod: (filter, row) => {
+                if (filter.value === 'all') {
+                    return true;
+                } else {
+                    if(filter.value === "1"){
+                        return ((row[filter.id]-0)*(row[filter.id]-20) <= 0);
+                    }
+                    if(filter.value === "2"){
+                        return ((row[filter.id]-21)*(row[filter.id]-40) <= 0);
+                    }
+                    if(filter.value === "3"){
+                        return ((row[filter.id]-41)*(row[filter.id]-60) <= 0);
+                    }
+                }
+            },
+
+            Filter: ({filter, onChange}) =>
+                <select
+                    onChange={event => onChange(event.target.value)}
+                    style={{width: "100%"}}
+                    value={filter ? filter.value : "all"}
+                >
+                    <option value="all">Vše</option>
+                    <option value="1">1. třetina</option>
+                    <option value="2">2. třetina</option>
+                    <option value="3">3. třetina</option>
+                </select>
         },
         {
             Header: '',
