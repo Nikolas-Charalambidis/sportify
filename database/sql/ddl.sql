@@ -172,94 +172,85 @@ ALTER TABLE `team_statistics` ADD FOREIGN KEY (`id_competition`) REFERENCES `com
 
 -- --- MATCHUP TABLE TO TEAM_STATISTICS SYNCHRONIZATION BLOCK START
 DELIMITER //
-CREATE PROCEDURE on_after_insert_matchup(
-    triggered_id_match int(11), triggered_id_team int(11), triggered_id_user int(11), triggered_goalkeeper int(2))
+CREATE PROCEDURE generate_team_statistics_on_matchup_records(
+    triggered_id_match int(11), triggered_id_team int(11), triggered_id_user int(11))
 BEGIN
-    DECLARE rows int(11);
     DECLARE competition int(11);
+    DECLARE count_field_matches int(11);
+    DECLARE count_goalkeeper_matches int(11);
+    DECLARE count_records int(11);
 
     SELECT m.id_competition INTO competition FROM matches AS m WHERE m.id_match = triggered_id_match;
 
-    SELECT COUNT(*) INTO rows FROM team_statistics AS ts
-        WHERE ts.id_user = triggered_id_user AND
-              ts.id_team = triggered_id_team AND
-              IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition);
+    SELECT count(ts.id_team_statistics) INTO count_records FROM team_statistics AS ts
+        WHERE ts.id_user = triggered_id_user
+          AND ts.id_team = triggered_id_team
+          AND IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition);
 
-    IF rows > 0 THEN
-        -- team_statistics has a record
-        IF triggered_goalkeeper = 0 THEN
-            -- field player
-            UPDATE team_statistics AS ts SET ts.field_matches = ts.field_matches + 1
-                WHERE id_user = triggered_id_user AND
-                      id_team = triggered_id_team AND
-                      IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition);
-        ELSE
-            -- goalkeeper
-            UPDATE team_statistics AS ts SET ts.goalkeeper_matches = ts.goalkeeper_matches + 1, ts.goalkeeper_minutes = ts.goalkeeper_minutes + 60
-                WHERE id_user = triggered_id_user AND
-                      id_team = triggered_id_team AND
-                      IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition);
-        END IF;
+    -- update field player statistics
+    SELECT COUNT(mup.id_match) INTO count_field_matches FROM matchup AS mup
+        JOIN matches m ON mup.id_match = m.id_match
+        WHERE mup.id_user=triggered_id_user
+          AND mup.id_team=triggered_id_team
+          AND mup.goalkeeper = 0
+          AND IF(competition IS NULL, m.id_competition IS NULL, m.id_competition = competition);
+
+    IF (count_records > 0) THEN
+        UPDATE team_statistics AS ts
+        SET ts.field_matches = count_field_matches
+        WHERE ts.id_user = triggered_id_user
+          AND ts.id_team = triggered_id_team
+          AND IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition);
     ELSE
-        -- team_statistics has no record
-        IF triggered_goalkeeper = 0 THEN
-        -- field player
-            INSERT INTO team_statistics VALUES (NULL, triggered_id_user, triggered_id_team, competition, 1, 0, 0, 0, 0, 0, 0, 0, 0);
-        ELSE
-            -- goalkeeper
-            INSERT INTO team_statistics VALUES (NULL, triggered_id_user, triggered_id_team, competition, 0, 0, 0, 0, 1, 60, 0, 0, 0);
-        END IF;
+        INSERT INTO team_statistics (id_team_statistics, id_user, id_team, id_competition, field_matches)
+            VALUES (NULL, triggered_id_user, triggered_id_team, competition, count_field_matches);
     END IF;
-END//
-DELIMITER ;
 
-DELIMITER //
-CREATE PROCEDURE on_after_delete_matchup(
-    triggered_id_match int(11), triggered_id_team int(11), triggered_id_user int(11), triggered_goalkeeper int(2))
-BEGIN
-    DECLARE competition int(11);
-    SELECT m.id_competition INTO competition FROM matches AS m WHERE m.id_match = triggered_id_match;
+    -- update goalkeeper statistics
+    SELECT COUNT(mup.id_match) INTO count_goalkeeper_matches FROM matchup AS mup
+        JOIN matches m ON mup.id_match = m.id_match
+        WHERE mup.id_user=triggered_id_user
+          AND mup.id_team=triggered_id_team
+          AND mup.goalkeeper = 1
+          AND IF(competition IS NULL, m.id_competition IS NULL, m.id_competition = competition);
 
-    IF triggered_goalkeeper = 0 THEN
-        -- field player
-        UPDATE team_statistics AS ts SET ts.field_matches = ts.field_matches - 1
-            WHERE id_user = triggered_id_user AND
-                  id_team = triggered_id_team AND
-                  IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition);
+    IF (count_records > 0) THEN
+        UPDATE team_statistics AS ts
+            SET ts.goalkeeper_matches = count_goalkeeper_matches, ts.goalkeeper_minutes = count_goalkeeper_matches * 60
+            WHERE ts.id_user = triggered_id_user
+              AND ts.id_team = triggered_id_team
+              AND IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition);
     ELSE
-        -- goalkeeper
-        UPDATE team_statistics AS ts SET ts.goalkeeper_matches = ts.goalkeeper_matches - 1, ts.goalkeeper_minutes = ts.goalkeeper_minutes - 60
-            WHERE id_user = triggered_id_user AND
-                  id_team = triggered_id_team AND
-                  IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition);
+        INSERT INTO team_statistics (id_team_statistics, id_user, id_team, id_competition, goalkeeper_matches, goalkeeper_minutes)
+            VALUES (NULL, triggered_id_user, triggered_id_team, competition, count_goalkeeper_matches, count_goalkeeper_matches * 60);
     END IF;
 
     -- remove fields with all zeros
     DELETE FROM team_statistics
-        WHERE field_matches = 0 AND field_assists = 0 AND field_goals = 0 AND field_suspensions = 0
-        AND goalkeeper_minutes = 0 AND goalkeeper_goals = 0 AND goalkeeper_matches = 0
-        AND goalkeeper_shoots = 0 AND goalkeeper_zeros = 0;
+    WHERE field_matches = 0 AND field_assists = 0 AND field_goals = 0 AND field_suspensions = 0
+      AND goalkeeper_minutes = 0 AND goalkeeper_goals = 0 AND goalkeeper_matches = 0
+      AND goalkeeper_shoots = 0 AND goalkeeper_zeros = 0;
 END//
 DELIMITER ;
 
 DELIMITER //
-CREATE TRIGGER after_insert_matchup AFTER INSERT ON matchup FOR EACH ROW
+CREATE TRIGGER TR_MATCHUP_AFTER_INSERT AFTER INSERT ON matchup FOR EACH ROW
 BEGIN
-    CALL on_after_insert_matchup(new.id_match, new.id_team, new.id_user, new.goalkeeper);
+    CALL generate_team_statistics_on_matchup_records(new.id_match, new.id_team, new.id_user);
 END; //
 DELIMITER ;
 
 DELIMITER //
-CREATE TRIGGER after_update_matchup AFTER UPDATE ON matchup FOR EACH ROW
+CREATE TRIGGER TR_MATCHUP_AFTER_UPDATE AFTER UPDATE ON matchup FOR EACH ROW
 BEGIN
-    -- TODO: UPDATE OLD/NEW GOALKEEPER (MEDIUM)
+    CALL generate_team_statistics_on_matchup_records(new.id_match, new.id_team, new.id_user);
 END; //
 DELIMITER ;
 
 DELIMITER //
-CREATE TRIGGER after_delete_matchup AFTER DELETE ON matchup FOR EACH ROW
+CREATE TRIGGER TR_MATCHUP_AFTER_DELETE AFTER DELETE ON matchup FOR EACH ROW
 BEGIN
-    CALL on_after_delete_matchup(old.id_match, old.id_team, old.id_user, old.goalkeeper);
+    CALL generate_team_statistics_on_matchup_records(old.id_match, old.id_team, old.id_user);
 END; //
 DELIMITER ;
 -- --- MATCHUP TABLE TO TEAM_STATISTICS SYNCHRONIZATION BLOCK END
