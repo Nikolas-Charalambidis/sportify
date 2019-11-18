@@ -166,9 +166,9 @@ ALTER TABLE `team_statistics` ADD FOREIGN KEY (`id_user`) REFERENCES `users` (`i
 ALTER TABLE `team_statistics` ADD FOREIGN KEY (`id_team`) REFERENCES `teams` (`id_team`);
 ALTER TABLE `team_statistics` ADD FOREIGN KEY (`id_competition`) REFERENCES `competitions` (`id_competition`);
 
--- TODO: TRIGGER ON `MACTHUP` DELETE - ALL THE RELEVANT EVENTS SHOULD BE REMOVED AS WELL
+-- TODO: TRIGGER ON `MACTHUP` DELETE - ALL THE RELEVANT EVENTS SHOULD BE REMOVED AS WELL (EASY)
 
--- TODO: TRIGGER ON `MATCH` INSERT - CRETE AND EVENT WITH 0 SHOOTS
+-- TODO: TRIGGER ON `MATCH` INSERT - CRETE AND EVENT WITH 0 SHOOTS (EASY)
 
 -- --- MATCHUP TABLE TO TEAM_STATISTICS SYNCHRONIZATION BLOCK START
 DELIMITER //
@@ -252,7 +252,7 @@ DELIMITER ;
 DELIMITER //
 CREATE TRIGGER after_update_matchup AFTER UPDATE ON matchup FOR EACH ROW
 BEGIN
-    -- TODO: UPDATE OLD/NEW GOALKEEPER
+    -- TODO: UPDATE OLD/NEW GOALKEEPER (MEDIUM)
 END; //
 DELIMITER ;
 
@@ -307,7 +307,7 @@ BEGIN
                   ts.id_team = opponent_team AND
                   IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition);
         -- update opponent's goalkeeper zeros
-        -- TODO: UPDATE OPPONENT'S GOALKEEPER ZEROS
+        -- TODO: UPDATE OPPONENT'S GOALKEEPER ZEROS (INSANE)
     ELSEIF triggered_type = 'shot' THEN
         -- update opponent's goalkeeper
         UPDATE team_statistics AS ts SET ts.goalkeeper_shoots = ts.goalkeeper_shoots + triggered_value
@@ -344,14 +344,14 @@ DELIMITER ;
 DELIMITER //
 CREATE TRIGGER after_update_events AFTER UPDATE ON events FOR EACH ROW
 BEGIN
-    -- TODO: UPDATE GOALKEEPER ON CHANGED SHOOTS
+    -- TODO: UPDATE GOALKEEPER ON CHANGED SHOOTS (MEDIUM)
 END//
 DELIMITER ;
 
 DELIMITER //
 CREATE TRIGGER after_delete_events AFTER UPDATE ON events FOR EACH ROW
 BEGIN
-    -- TODO: ON DELETE TRIGGER
+    -- TODO: ON DELETE TRIGGER (MEDIUM)
 END//
 DELIMITER ;
 -- --- EVENTS TABLE TO TEAM_STATISTICS SYNCHRONIZATION BLOCK END
