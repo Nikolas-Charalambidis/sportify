@@ -80,7 +80,6 @@ router.post('/', async (req, res, next) => {
 router.delete('/:id_matchup/:id_user', async (req, res, next) => {
 	try {
 		const { id_matchup, id_user } = req.params;
-		console.log("body params", { id_matchup, id_user });
 		await new MatchupService(req).deletePlayerFromMatchup(id_matchup, id_user);
 		res.status(200).json({ error: false, msg: 'Hráč byl úspěšně odstraněn ze zápasu'});
 	} catch(e) {

@@ -42,7 +42,25 @@ export function Matchup({id_team, id_match, host, availablePlayers, fetchAvailab
                         Změnit
                     </Button>
                 </div>
-            )
+            ),
+            filterMethod: (filter, row) => {
+                if (filter.value === 'all') {
+                    return true;
+                } else {
+                    return row[filter.id] === Number(filter.value);
+                }
+            },
+
+            Filter: ({filter, onChange}) =>
+                <select
+                    onChange={event => onChange(event.target.value)}
+                    style={{width: "100%"}}
+                    value={filter ? filter.value : "all"}
+                >
+                    <option value="all">Vše</option>
+                    <option value={1}>Ano</option>
+                    <option value={0}>Ne</option>
+                </select>
         },
         {
             Header: 'Akce',
