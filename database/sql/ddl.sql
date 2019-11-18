@@ -109,20 +109,20 @@ CREATE TABLE `team_statistics` (
     `id_team_statistics` int PRIMARY KEY AUTO_INCREMENT,
     `id_user` int NOT NULL,
     `id_team` int NOT NULL,
-    `id_competition` int,               -- null competition is a free time matches category
-    `field_matches` int NOT NULL,       -- matches count as a field player, starts at 0
-    `field_goals` int NOT NULL,         -- goals scored as a field player, starts at 0
-    `field_assists` int NOT NULL,       -- assists as a field player, starts at 0
- -- `field_points`                      -- points as a field player, starts at 0.. calculated as SUM of goals + assists, no need to persist
- -- `field_average_points               -- average of `points`
-    `field_suspensions` int NOT NULL,   -- sum of all suspensions as a field player, starts at 0
-    `goalkeeper_matches` int NOT NULL,  -- matches count as a goalkeeper
-    `goalkeeper_minutes` int NOT NULL,  -- minutes played as a goalkeeper, starts at 0
-    `goalkeeper_goals` int NOT NULL,    -- goals received as a goalkeeper
-    `goalkeeper_zeros` int NOT NULL,    -- matches where 0 goals were received as a goalkeeper
- -- `goalkeeper_average_zeros`          -- average of `goalkeeper_zeros`
-    `goalkeeper_shoots` int NOT NULL    -- count of all shoots shot to a player as a goalkeeper, starts at 0
- -- `goalkeeper_success_rate`           -- rate is calculated
+    `id_competition` int,                           -- null competition is a free time matches category
+    `field_matches` int NOT NULL DEFAULT 0,         -- matches count as a field player, starts at 0
+    `field_goals` int NOT NULL DEFAULT 0,           -- goals scored as a field player, starts at 0
+    `field_assists` int NOT NULL DEFAULT 0,         -- assists as a field player, starts at 0
+ -- `field_points`                                  -- points as a field player, starts at 0.. calculated as SUM of goals + assists, no need to persist
+ -- `field_average_points                           -- average of `points`
+    `field_suspensions` int NOT NULL DEFAULT 0,     -- sum of all suspensions as a field player, starts at 0
+    `goalkeeper_matches` int NOT NULL DEFAULT 0,    -- matches count as a goalkeeper
+    `goalkeeper_minutes` int NOT NULL DEFAULT 0,    -- minutes played as a goalkeeper, starts at 0
+    `goalkeeper_goals` int NOT NULL DEFAULT 0,      -- goals received as a goalkeeper
+    `goalkeeper_zeros` int NOT NULL DEFAULT 0,      -- matches where 0 goals were received as a goalkeeper
+ -- `goalkeeper_average_zeros`                      -- average of `goalkeeper_zeros`
+    `goalkeeper_shoots` int NOT NULL DEFAULT 0      -- count of all shoots shot to a player as a goalkeeper, starts at 0
+ -- `goalkeeper_success_rate`                       -- rate is calculated
 );
 
 CREATE TABLE `logs` (
