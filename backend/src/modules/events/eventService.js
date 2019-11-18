@@ -57,7 +57,6 @@ export default class EventService {
 	async changeShots(id_event, value){
 		const event_id = Number(id_event);
 		const value_number = Number(value);
-		console.log("values", event_id, value_number);
 		eventValidation.validateChangeShotsData(event_id, value_number);
 		const result = await this.dbConnection.query(
 			`UPDATE events SET value=? WHERE id_event=?`, [value_number, event_id]
