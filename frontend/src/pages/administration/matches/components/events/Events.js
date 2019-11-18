@@ -17,7 +17,6 @@ export function Events({eventsState, fetchEvents}) {
             fetchEvents();
         }
     };
-    console.log("events", eventsState);
 
     const columnsEvents = [
         {
