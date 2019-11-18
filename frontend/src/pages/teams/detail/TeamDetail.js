@@ -5,15 +5,17 @@ import "react-datepicker/dist/react-datepicker.css";
 import {Heading} from '../../../atoms';
 import {Breadcrumb, Image, Tabs, Tab} from 'react-bootstrap';
 import {TeamSquad} from "./components/TeamSquad";
-import {useGetTeam} from "../../../api/team/teamClient_v1";
+import {useGetTeam, useGetTeamMatches} from "../../../api/team/teamClient_v1";
 import {TeamCompetitions} from "./components/TeamCompetitions";
 import {TeamStatistics} from "./components/TeamStatistics";
 import loadingGif from "../../../assets/images/loading.gif";
 import {TeamData} from "./components/TeamData";
+import {MatchList} from "../../../organisms/MatchList";
 
 export function TeamDetail() {
     let {id_team} = useParams();
     const [state] = useGetTeam(id_team);
+    const [matchesState] = useGetTeamMatches(id_team);
 
     return (
         <div>
@@ -40,6 +42,9 @@ export function TeamDetail() {
                     </Tab>
                     <Tab eventKey="statistics" title="Statistiky">
                         <TeamStatistics/>
+                    </Tab>
+                    <Tab eventKey="matches" title="Zápasy">
+                        <MatchList matchesState={matchesState} admin={false} id_team={id_team} />
                     </Tab>
                 </Tabs>
             </div>

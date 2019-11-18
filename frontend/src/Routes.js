@@ -46,7 +46,7 @@ export function Routes() {
             <Route path="/administration/profile" exact component={Profile} />
 			<Route path="/administration/teams/:id_team" exact component={TeamAdminPage} />
             <Route path="/administration/teams" exact component={TeamsAdminList} />
-			<Route path="/administration/matches/:id_team/:id_match" exact component={MatchDetailAdminPage} />
+			<Route path="/administration/teams/:id_team/matches/:id_match" exact component={MatchDetailAdminPage} />
 
 			<Route path="*" component={Page404}/>
 		</Switch>
