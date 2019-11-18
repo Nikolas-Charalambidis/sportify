@@ -166,9 +166,13 @@ ALTER TABLE `team_statistics` ADD FOREIGN KEY (`id_user`) REFERENCES `users` (`i
 ALTER TABLE `team_statistics` ADD FOREIGN KEY (`id_team`) REFERENCES `teams` (`id_team`);
 ALTER TABLE `team_statistics` ADD FOREIGN KEY (`id_competition`) REFERENCES `competitions` (`id_competition`);
 
+-- TODO: TRIGGER ON `MACTHUP` DELETE - ALL THE RELEVANT EVENTS SHOULD BE REMOVED AS WELL
+
+-- TODO: TRIGGER ON `MATCH` INSERT - CRETE AND EVENT WITH 0 SHOOTS
+
 -- --- MATCHUP TABLE TO TEAM_STATISTICS SYNCHRONIZATION BLOCK START
 DELIMITER //
-CREATE PROCEDURE on_matchup_write(
+CREATE PROCEDURE on_after_insert_matchup(
     triggered_id_match int(11), triggered_id_team int(11), triggered_id_user int(11), triggered_goalkeeper int(2))
 BEGIN
     DECLARE rows int(11);
@@ -177,19 +181,24 @@ BEGIN
     SELECT m.id_competition INTO competition FROM matches AS m WHERE m.id_match = triggered_id_match;
 
     SELECT COUNT(*) INTO rows FROM team_statistics AS ts
-        WHERE ts.id_user = triggered_id_user AND ts.id_team = triggered_id_team AND ts.id_competition = competition;
+        WHERE ts.id_user = triggered_id_user AND
+              ts.id_team = triggered_id_team AND
+              IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition);
 
     IF rows > 0 THEN
         -- team_statistics has a record
         IF triggered_goalkeeper = 0 THEN
             -- field player
             UPDATE team_statistics AS ts SET ts.field_matches = ts.field_matches + 1
-                WHERE id_user = triggered_id_user AND id_team = triggered_id_team AND id_competition = competition;
+                WHERE id_user = triggered_id_user AND
+                      id_team = triggered_id_team AND
+                      IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition);
         ELSE
             -- goalkeeper
             UPDATE team_statistics AS ts SET ts.goalkeeper_matches = ts.goalkeeper_matches + 1, ts.goalkeeper_minutes = ts.goalkeeper_minutes + 60
-                WHERE id_user = triggered_id_user AND id_team = triggered_id_team AND id_competition = competition;
-            -- TODO: RECALCULATE ALL IF GOALKEEPER REPLACED IN A MATCH
+                WHERE id_user = triggered_id_user AND
+                      id_team = triggered_id_team AND
+                      IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition);
         END IF;
     ELSE
         -- team_statistics has no record
@@ -199,14 +208,13 @@ BEGIN
         ELSE
             -- goalkeeper
             INSERT INTO team_statistics VALUES (NULL, triggered_id_user, triggered_id_team, competition, 0, 0, 0, 0, 1, 60, 0, 0, 0);
-            -- TODO: RECALCULATE ALL IF GOALKEEPER REPLACED IN A MATCH
         END IF;
     END IF;
 END//
 DELIMITER ;
 
 DELIMITER //
-CREATE PROCEDURE on_matchup_remove(
+CREATE PROCEDURE on_after_delete_matchup(
     triggered_id_match int(11), triggered_id_team int(11), triggered_id_user int(11), triggered_goalkeeper int(2))
 BEGIN
     DECLARE competition int(11);
@@ -215,11 +223,15 @@ BEGIN
     IF triggered_goalkeeper = 0 THEN
         -- field player
         UPDATE team_statistics AS ts SET ts.field_matches = ts.field_matches - 1
-            WHERE id_user = triggered_id_user AND id_team = triggered_id_team AND id_competition = competition;
+            WHERE id_user = triggered_id_user AND
+                  id_team = triggered_id_team AND
+                  IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition);
     ELSE
         -- goalkeeper
         UPDATE team_statistics AS ts SET ts.goalkeeper_matches = ts.goalkeeper_matches - 1, ts.goalkeeper_minutes = ts.goalkeeper_minutes - 60
-            WHERE id_user = triggered_id_user AND id_team = triggered_id_team AND id_competition = competition;
+            WHERE id_user = triggered_id_user AND
+                  id_team = triggered_id_team AND
+                  IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition);
     END IF;
 
     -- remove fields with all zeros
@@ -233,67 +245,113 @@ DELIMITER ;
 DELIMITER //
 CREATE TRIGGER after_insert_matchup AFTER INSERT ON matchup FOR EACH ROW
 BEGIN
-    CALL on_matchup_write(new.id_match, new.id_team, new.id_user, new.goalkeeper);
+    CALL on_after_insert_matchup(new.id_match, new.id_team, new.id_user, new.goalkeeper);
 END; //
 DELIMITER ;
 
 DELIMITER //
 CREATE TRIGGER after_update_matchup AFTER UPDATE ON matchup FOR EACH ROW
 BEGIN
-    CALL on_matchup_write(new.id_match, new.id_team, new.id_user, new.goalkeeper);
+    -- TODO: UPDATE OLD/NEW GOALKEEPER
 END; //
 DELIMITER ;
 
 DELIMITER //
 CREATE TRIGGER after_delete_matchup AFTER DELETE ON matchup FOR EACH ROW
 BEGIN
-    CALL on_matchup_remove(old.id_match, old.id_team, old.id_user, old.goalkeeper);
+    CALL on_after_delete_matchup(old.id_match, old.id_team, old.id_user, old.goalkeeper);
 END; //
 DELIMITER ;
 -- --- MATCHUP TABLE TO TEAM_STATISTICS SYNCHRONIZATION BLOCK END
 
 -- --- EVENTS TABLE TO TEAM_STATISTICS SYNCHRONIZATION BLOCK START
 DELIMITER //
-CREATE TRIGGER after_insert_events AFTER INSERT ON events FOR EACH ROW
+CREATE PROCEDURE on_after_insert_event(
+    triggered_id_match int(11), triggered_id_team int(11), triggered_id_user int(11), triggered_type varchar(255),
+    triggered_host int(2), triggered_id_assistance1 int(11), triggered_id_assistance2 int(11), triggered_value int(11))
 BEGIN
     DECLARE competition int(11);
     DECLARE opponent_user_goalkeeper int(11);
     DECLARE opponent_team int(11);
 
-    SELECT m.id_competition INTO competition FROM matches AS m WHERE m.id_match = new.id_match;
+    SELECT m.id_competition INTO competition FROM matches AS m WHERE m.id_match = triggered_id_match;
 
     SELECT mup.id_user INTO opponent_user_goalkeeper FROM matchup AS mup
-        WHERE id_match = new.id_match and mup.host = !new.host AND mup.goalkeeper = 1;
+        WHERE id_match = triggered_id_match and mup.host = !triggered_host AND mup.goalkeeper = 1;
 
     SELECT mup.id_team INTO opponent_team FROM matchup AS mup
-        WHERE id_match = new.id_match and mup.host = !new.host AND mup.goalkeeper = 1;
+        WHERE id_match = triggered_id_match and mup.host = !triggered_host AND mup.goalkeeper = 1;
 
-    insert into logs values (NULL, CONCAT('ev=', new.id_event, '(', new.type, '), this=', new.id_team, ', other=', opponent_team, ', gk=', opponent_user_goalkeeper, ' competition=', competition IS NULL));
+    -- insert into logs values (NULL, CONCAT('ev=', new.id_event, '(', new.type, '), this=', new.id_team, ', other=', opponent_team, ', gk=', opponent_user_goalkeeper, ' host=', new.host, ', competition=', IF(competition IS NULL, 'null', competition)));
 
-    IF new.type = 'goal' THEN
+    IF triggered_type = 'goal' THEN
         -- update goal to a player
         UPDATE team_statistics AS ts SET ts.field_goals = ts.field_goals + 1
-            WHERE ts.id_user = new.id_user AND id_team = new.id_team AND id_competition = competition;
+            WHERE ts.id_user = triggered_id_user AND
+                  ts.id_team = triggered_id_team AND
+                  IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition);
         -- update assists
-        IF new.id_assistance1 IS NOT NULL THEN
+        IF triggered_id_assistance1 IS NOT NULL THEN
             UPDATE team_statistics AS ts SET ts.field_assists = ts.field_assists + 1
-                WHERE ts.id_user = new.id_assistance1 AND ts.id_team = new.id_team AND ts.id_competition = competition; END IF;
-        IF new.id_assistance2 IS NOT NULL THEN
+                WHERE ts.id_user = triggered_id_assistance1 AND
+                      ts.id_team = triggered_id_team AND
+                      IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition); END IF;
+        IF triggered_id_assistance2 IS NOT NULL THEN
             UPDATE team_statistics AS ts SET ts.field_assists = ts.field_assists + 1
-            WHERE ts.id_user = new.id_assistance2 AND ts.id_team = new.id_team AND ts.id_competition = competition; END IF;
+                WHERE ts.id_user = triggered_id_assistance2 AND
+                      ts.id_team = triggered_id_team AND
+                      IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition); END IF;
+        -- update opponent's goalkeeper received goals
+        UPDATE team_statistics AS ts SET ts.goalkeeper_goals = ts.goalkeeper_goals + 1
+            WHERE ts.id_user = opponent_user_goalkeeper AND
+                  ts.id_team = opponent_team AND
+                  IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition);
+        -- update opponent's goalkeeper zeros
+        -- TODO: UPDATE OPPONENT'S GOALKEEPER ZEROS
+    ELSEIF triggered_type = 'shot' THEN
         -- update opponent's goalkeeper
-        UPDATE team_statistics AS ts SET ts.goalkeeper_zeros = 0, ts.goalkeeper_goals = ts.goalkeeper_goals + 1
-            WHERE ts.id_user = opponent_user_goalkeeper AND ts.id_team = opponent_team AND ts.id_competition = competition;
-    ELSEIF new.type = 'shot' THEN
-        -- update opponent's goalkeeper
-        -- TODO: FIX AGGREGATE SUM OF SHOTS
-        UPDATE team_statistics AS ts SET ts.goalkeeper_shoots = ts.goalkeeper_shoots + new.value
-            WHERE ts.id_user = opponent_user_goalkeeper AND ts.id_team = opponent_team AND ts.id_competition = competition;
+        UPDATE team_statistics AS ts SET ts.goalkeeper_shoots = ts.goalkeeper_shoots + triggered_value
+            WHERE ts.id_user = opponent_user_goalkeeper AND
+                  ts.id_team = opponent_team AND
+                  IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition);
+    ELSEIF triggered_type LIKE 'suspension%' THEN
+        UPDATE team_statistics AS ts
+        SET ts.field_suspensions = ts.field_suspensions +
+            CASE
+                WHEN triggered_type = 'suspension_2' THEN 2
+                WHEN triggered_type = 'suspension_2_2' THEN 4
+                WHEN triggered_type = 'suspension_5' THEN 5
+                WHEN triggered_type LIKE 'suspension_pp%' THEN 10
+                ELSE 0
+            END
+        WHERE ts.id_user = triggered_id_user AND
+              ts.id_team = triggered_id_team AND
+              IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition);
     ELSE
-        -- TODO: SUSPENSIONS
-        insert into logs values (NULL, CONCAT('here'));
+        insert into logs values (NULL, CONCAT('unknown event.type=', triggered_type));
     END IF;
+END//
+DELIMITER ;
 
+DELIMITER //
+CREATE TRIGGER after_insert_events AFTER INSERT ON events FOR EACH ROW
+BEGIN
+    CALL on_after_insert_event(new.id_match, new.id_team, new.id_user, new.type,
+        new.host, new.id_assistance1, new.id_assistance2, new.value);
+END//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER after_update_events AFTER UPDATE ON events FOR EACH ROW
+BEGIN
+    -- TODO: UPDATE GOALKEEPER ON CHANGED SHOOTS
+END//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER after_delete_events AFTER UPDATE ON events FOR EACH ROW
+BEGIN
+    -- TODO: ON DELETE TRIGGER
 END//
 DELIMITER ;
 -- --- EVENTS TABLE TO TEAM_STATISTICS SYNCHRONIZATION BLOCK END
@@ -451,28 +509,30 @@ INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host)
 INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
     VALUES (1, 1, 1, 1, 'goal', 4, 5, 40, null, true);
 INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
-    VALUES (3, 1, 1, 2, 'goal', null, null, 48, null, true);
+    VALUES (2, 1, 1, 2, 'goal', null, null, 48, null, true);
 INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
-    VALUES (4, 1, 1, 2, 'suspension_2', null, null, 51, null, true);
+    VALUES (3, 1, 1, 2, 'suspension_2', null, null, 51, null, true);
 INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
-    VALUES (5, 1, 1, 3, 'goal', null, null, 52, null, false);
+    VALUES (4, 1, 1, 3, 'goal', null, null, 52, null, false);
 INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
-    VALUES (6, 1, 1, null, 'shot', null, null, null, 45, true);
+    VALUES (5, 1, 1, null, 'shot', null, null, null, 45, true);
 INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
-    VALUES (7, 1, 1, null, 'shot', null, null, null, 49, false);
+    VALUES (6, 1, 1, null, 'shot', null, null, null, 49, false);
 
 INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
-    VALUES (8, 3, 1, 4, 'goal', 5, 2, 32, null, true);
+    VALUES (7, 3, 1, 4, 'goal', 5, 2, 32, null, true);
 INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
-    VALUES (11, 3, 2, 13, 'goal', null, null, 36, null, false);
+    VALUES (8, 3, 2, 13, 'goal', null, null, 36, null, false);
 INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
-    VALUES (12, 3, 2, 13, 'goal', 14, 15, 41, null, false);
+    VALUES (9, 3, 2, 13, 'goal', 14, 15, 41, null, false);
 INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
-    VALUES (15, 3, 2, 13, 'suspension_5', null, null, 52, null, false);
+    VALUES (10, 3, 2, 13, 'suspension_5', null, null, 52, null, false);
 INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
-    VALUES (16, 3, 1, null, 'shot', null, null, null, 32, true);
+    VALUES (11, 3, 2, 13, 'suspension_2_2', null, null, 52, null, false);
 INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
-    VALUES (17, 3, 2, null, 'shot', null, null, null, 66, false);
+    VALUES (12, 3, 1, null, 'shot', null, null, null, 32, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
+    VALUES (13, 3, 2, null, 'shot', null, null, null, 66, false);
 
 -- ---- MOCKED, START OF A SUBJECT OF A FUTURE CHANGE AND/OR REGENERATION, THE MODEL ITSELF IS CONSIDERED FINAL
 -- ---- MATCHES ARE NECESSARY FOR THESE DATA CONSISTENCY, YET THEY ARE NOT NEEDED FOR THE DEVELOPMENT OF THE STATISTICS DISPLAY
