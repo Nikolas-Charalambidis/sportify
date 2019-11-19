@@ -23,11 +23,27 @@ export function MatchList({matchesState, id_team, admin}) {
         {
             Header: "Datum",
             accessor: "date",
-            Placeholder: "DD.MM.RRRR",
             Cell: props =>
                 moment(props.value).locale('cs').format('L'),
-            filterMethod: (filter, row) =>
-                moment(row[filter.id]).locale('cs').format('L').toLowerCase().startsWith(filter.value.toLowerCase())
+            filterMethod: (filter, row) => {
+                if (filter.value === 'all') {
+                    return true;
+                } else {
+                    return row[filter.id].substring(0,4) === filter.value.substring(0,4);
+                }
+            },
+
+            Filter: ({filter, onChange}) =>
+                <select
+                    onChange={event => onChange(event.target.value)}
+                    style={{width: "100%"}}
+                    value={filter ? filter.value : "all"}
+                >
+                    <option value="all">Vše</option>
+                    {
+                        FilteringOptions(matchesState, "date", 0, 4)
+                    }
+                </select>
         },
         {
             Header: "Domací",
@@ -78,26 +94,7 @@ export function MatchList({matchesState, id_team, admin}) {
         {
             Header: "Skóre",
             accessor: "score",
-            Cell: ({row}) => (<span>{row.type}</span>),
-            filterMethod: (filter, row) => {
-                if (filter.value === 'all') {
-                    return true;
-                } else {
-                    return row[filter.id] === filter.value;
-                }
-            },
-
-            Filter: ({filter, onChange}) =>
-                <select
-                    onChange={event => onChange(event.target.value)}
-                    style={{width: "100%"}}
-                    value={filter ? filter.value : "all"}
-                >
-                    <option value="all">Vše</option>
-                    {
-                        FilteringOptions(matchesState, "score")
-                    }
-                </select>
+            filterable: false,
         },
         {
             Header: "Soutěž",
