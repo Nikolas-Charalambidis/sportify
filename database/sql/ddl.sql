@@ -166,10 +166,6 @@ ALTER TABLE `team_statistics` ADD FOREIGN KEY (`id_user`) REFERENCES `users` (`i
 ALTER TABLE `team_statistics` ADD FOREIGN KEY (`id_team`) REFERENCES `teams` (`id_team`);
 ALTER TABLE `team_statistics` ADD FOREIGN KEY (`id_competition`) REFERENCES `competitions` (`id_competition`);
 
--- TODO: TRIGGER ON `MACTHUP` DELETE - ALL THE RELEVANT EVENTS SHOULD BE REMOVED AS WELL (EASY)
-
--- TODO: TRIGGER ON `MATCH` INSERT - CRETE AND EVENT WITH 0 SHOOTS (EASY)
-
 -- --- MATCHUP TABLE TO TEAM_STATISTICS SYNCHRONIZATION BLOCK START
 DELIMITER //
 CREATE PROCEDURE generate_team_statistics_on_matchup_records(
@@ -253,11 +249,25 @@ DELIMITER ;
 DELIMITER //
 CREATE TRIGGER TR_MATCHUP_AFTER_DELETE AFTER DELETE ON matchup FOR EACH ROW
 BEGIN
+
+    -- TODO: TRIGGER ON `MACTHUP` DELETE - ALL THE RELEVANT EVENTS SHOULD BE REMOVED AS WELL
+    --       PLACE IT HERE AND DON'T REMOVE THE LATTER PROCEDURE CALL
+
     CALL generate_team_statistics_on_matchup_records(
             old.id_match, old.id_team, old.id_user);
 END; //
 DELIMITER ;
 -- --- MATCHUP TABLE TO TEAM_STATISTICS SYNCHRONIZATION BLOCK END
+
+-- --- MATCH TABLE TRIGGERS BLOCK START
+DELIMITER //
+CREATE TRIGGER TR_MATCH_AFTER_INSERT AFTER INSERT ON matchup FOR EACH ROW
+BEGIN
+    -- TODO: TRIGGER ON `MATCH` INSERT - CRETE AND EVENT WITH 0 SHOOTS
+    --       PLACE IT HERE
+END; //
+DELIMITER ;
+-- --- MATCH TABLE TRIGGERS BLOCK END
 
 -- --- EVENTS TABLE TO TEAM_STATISTICS SYNCHRONIZATION BLOCK START
 DELIMITER //
@@ -495,14 +505,14 @@ BEGIN
       AND e.type = 'goal';
 
     -- calculate zeros
-    SELECT COUNT(DISTINCTROW mup.id_match) INTO matches FROM matchup AS mup
+    SELECT COUNT(DISTINCT(mup.id_match)) INTO matches FROM matchup AS mup
     JOIN matches AS m ON mup.id_match = m.id_match
     WHERE mup.id_user = goalkeeper_id_user
       AND mup.id_team = goalkeeper_id_team
       AND IF(competition IS NULL, m.id_competition IS NULL, m.id_competition = competition)
       AND mup.goalkeeper = 1;
 
-    SELECT COUNT(DISTINCTROW mup.id_match) INTO non_zeros FROM matchup AS mup
+    SELECT COUNT(DISTINCT(mup.id_match)) INTO non_zeros FROM matchup AS mup
     JOIN events AS e ON mup.id_match = e.id_match
     JOIN matches AS m ON e.id_match = m.id_match
     WHERE mup.id_user = goalkeeper_id_user
