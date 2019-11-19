@@ -25,7 +25,7 @@ export function AddSuspensionForm({id_user, handleClose, addEvent, id_team, id_m
                 id_assistance1: null,
                 id_assistance2: null,
                 minute: '',
-                value: 1,
+                value: null,
                 host: host
             }}
             onSubmit={values => {

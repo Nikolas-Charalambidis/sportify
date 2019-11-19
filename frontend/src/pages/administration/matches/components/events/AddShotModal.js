@@ -7,12 +7,12 @@ import * as yup from "yup";
 import {addEvent} from "../../../../../api/events/eventClient_v1";
 
 const schema = yup.object().shape({
-    id_user: yup.number().nullable(),
+    id_user: yup.number().integer().nullable(),
     type: yup.string().required(),
-    id_team: yup.number().required(),
-    id_match: yup.number().required(),
-    id_assistance1: yup.number().nullable(),
-    id_assistance2: yup.number().nullable(),
+    id_team: yup.number().integer().required(),
+    id_match: yup.number().integer().required(),
+    id_assistance1: yup.number().integer().nullable(),
+    id_assistance2: yup.number().integer().nullable(),
     minute: yup.number().integer().min(1).max(60).required(),
     value: yup.number().required(),
     host: yup.number().required(),
