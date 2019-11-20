@@ -202,7 +202,6 @@ router.get('/', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
 	try {
 		const { id_sport, name, id_type, id_leader, id_position } = req.body;
-		console.log("received data", { id_sport, name, id_type, id_leader, id_position });
 		const id = await new TeamService(req).addNewTeam(id_sport, name, id_type, id_leader);
 		let msg = "Tým byl úspěšně vytvořen";
 		try {
@@ -388,7 +387,7 @@ router.delete('/:id_team', async(req, res, next) => {
  *   get:
  *     tags:
  *       - Teams
- *     name: Matches
+ *     name: AdminMatches
  *     summary: Get all matches by team ID
  *     consumes: application/json
  *     produces: application/json

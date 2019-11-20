@@ -9,23 +9,25 @@ import {useState} from "react";
 import {ChangeTeamData, ChangeSetActive} from "../../../../api/team/teamClient_v1";
 import {CustomSelect} from "../../../../atoms/Select";
 import {useGetSports, useGetTeamTypes} from "../../../../api/others/othersClient_v1";
+import {useApi} from "../../../../hooks/useApi";
 
 const schemaChangeData = yup.object().shape({
     name: yup.string().required(),
 });
 
-export function TeamDataForm({api, team_data, membersState}) {
+export function TeamDataForm({team_data, membersState}) {
     let new_url = team_data.avatar_url === null ? defaultTeamAvatar : team_data.avatar_url;
     const [imageState, setImageState] = useState(new_url);
     const [sportsState] = useGetSports();
     const [typesState] = useGetTeamTypes();
 
-    console.log("team_data", team_data);
 
     let new_activation_button_state = team_data.active === 0 ? "Aktivovat" : "Deaktivovat";
     const [activationButtonState, setActivationButtonState] = useState(new_activation_button_state);
     const [status, setStatus] = useState(team_data.active !== 0);
     const [heading, setHeading] = useState(team_data.name);
+
+    const api = useApi();
 
     return (
         <div>

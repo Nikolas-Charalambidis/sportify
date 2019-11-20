@@ -28,9 +28,6 @@ export function CreateTeamModal({api, id_user, show, handleClose}) {
     const [sportsState] = useGetSports();
     const [typesState] = useGetTeamTypes();
     const [positionsState] = useGetTeamPositions();
-    console.log("sports", sportsState);
-    console.log("types", typesState);
-    console.log("positions", positionsState);
 
     return (
         <Modal show={show} onHide={handleClose}>

@@ -88,7 +88,9 @@ CREATE TABLE `events` (
     `id_match` int NOT NULL,
     `id_team` int NOT NULL,
     `id_user` int,
-    `type` ENUM ('shot', 'goal', 'assistance1', 'assistance2', 'suspension_2', 'suspension_2_2','suspension_5', 'suspension_pp', 'suspension_pp_end', 'suspension_penalty'),
+    `type` ENUM ('shot', 'goal', 'suspension_2', 'suspension_2_2','suspension_5', 'suspension_pp', 'suspension_pp_end', 'suspension_penalty'),
+    `id_assistance1` int,
+    `id_assistance2` int,
     `minute` int,
     `value` tinyint,
     `host` boolean NOT NULL
@@ -107,20 +109,25 @@ CREATE TABLE `team_statistics` (
     `id_team_statistics` int PRIMARY KEY AUTO_INCREMENT,
     `id_user` int NOT NULL,
     `id_team` int NOT NULL,
-    `id_competition` int,               -- null competition is a free time matches category
-    `field_matches` int NOT NULL,       -- matches count as a field player, starts at 0
-    `field_goals` int NOT NULL,         -- goals scored as a field player, starts at 0
-    `field_assists` int NOT NULL,       -- assists as a field player, starts at 0
- -- `field_points`                      -- points as a field player, starts at 0.. calculated as SUM of goals + assists, no need to persist
- -- `field_average_points               -- average of `points`
-    `field_suspensions` int NOT NULL,   -- sum of all suspensions as a field player, starts at 0
-    `goalkeeper_matches` int NOT NULL,  -- matches count as a goalkeeper
-    `goalkeeper_minutes` int NOT NULL,  -- minutes played as a goalkeeper, starts at 0
-    `goalkeeper_goals` int NOT NULL,    -- goals received as a goalkeeper
-    `goalkeeper_zeros` int NOT NULL,    -- matches where 0 goals were received as a goalkeeper
- -- `goalkeeper_average_zeros`          -- average of `goalkeeper_zeros`
-    `goalkeeper_shoots` int NOT NULL    -- count of all shoots shot to a player as a goalkeeper, starts at 0
- -- `goalkeeper_success_rate`           -- rate is calculated
+    `id_competition` int,                           -- null competition is a free time matches category
+    `field_matches` int NOT NULL DEFAULT 0,         -- matches count as a field player, starts at 0
+    `field_goals` int NOT NULL DEFAULT 0,           -- goals scored as a field player, starts at 0
+    `field_assists` int NOT NULL DEFAULT 0,         -- assists as a field player, starts at 0
+ -- `field_points`                                  -- points as a field player, starts at 0.. calculated as SUM of goals + assists, no need to persist
+ -- `field_average_points                           -- average of `points`
+    `field_suspensions` int NOT NULL DEFAULT 0,     -- sum of all suspensions as a field player, starts at 0
+    `goalkeeper_matches` int NOT NULL DEFAULT 0,    -- matches count as a goalkeeper
+    `goalkeeper_minutes` int NOT NULL DEFAULT 0,    -- minutes played as a goalkeeper, starts at 0
+    `goalkeeper_goals` int NOT NULL DEFAULT 0,      -- goals received as a goalkeeper
+    `goalkeeper_zeros` int NOT NULL DEFAULT 0,      -- matches where 0 goals were received as a goalkeeper
+ -- `goalkeeper_average_zeros`                      -- average of `goalkeeper_zeros`
+    `goalkeeper_shoots` int NOT NULL DEFAULT 0      -- count of all shoots shot to a player as a goalkeeper, starts at 0
+ -- `goalkeeper_success_rate`                       -- rate is calculated
+);
+
+CREATE TABLE `logs` (
+    `id_logs` int PRIMARY KEY AUTO_INCREMENT,
+    `log` varchar(255)
 );
 
 -- KEYS ----------------------------------------------------------------------------------------------------------------
@@ -148,6 +155,8 @@ ALTER TABLE `team_membership` ADD FOREIGN KEY (`id_position`) REFERENCES `positi
 ALTER TABLE `events` ADD FOREIGN KEY (`id_match`) REFERENCES `matches` (`id_match`) ON DELETE CASCADE;
 ALTER TABLE `events` ADD FOREIGN KEY (`id_team`) REFERENCES `teams` (`id_team`);
 ALTER TABLE `events` ADD FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`);
+ALTER TABLE `events` ADD FOREIGN KEY (`id_assistance1`) REFERENCES `users` (`id_user`);
+ALTER TABLE `events` ADD FOREIGN KEY (`id_assistance2`) REFERENCES `users` (`id_user`);
 
 ALTER TABLE `matchup` ADD FOREIGN KEY (`id_match`) REFERENCES `matches` (`id_match`) ON DELETE CASCADE;
 ALTER TABLE `matchup` ADD FOREIGN KEY (`id_team`) REFERENCES `teams` (`id_team`);
@@ -156,6 +165,457 @@ ALTER TABLE `matchup` ADD FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`)
 ALTER TABLE `team_statistics` ADD FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`);
 ALTER TABLE `team_statistics` ADD FOREIGN KEY (`id_team`) REFERENCES `teams` (`id_team`);
 ALTER TABLE `team_statistics` ADD FOREIGN KEY (`id_competition`) REFERENCES `competitions` (`id_competition`);
+
+-- --- MATCHUP TABLE TO TEAM_STATISTICS SYNCHRONIZATION BLOCK START
+DELIMITER //
+CREATE PROCEDURE generate_team_statistics_on_matchup_records(
+    triggered_id_match int(11), triggered_id_team int(11), triggered_id_user int(11))
+BEGIN
+    DECLARE competition int(11);
+    DECLARE count_field_matches int(11);
+    DECLARE count_goalkeeper_matches int(11);
+    DECLARE count_records int(11);
+
+    SELECT m.id_competition INTO competition FROM matches AS m WHERE m.id_match = triggered_id_match;
+
+    SET count_records = count_team_statistics_records(
+            triggered_id_user, triggered_id_team, competition);
+
+    -- calculate field player matches statistics
+    SELECT COUNT(1) INTO count_field_matches FROM matchup AS mup
+    JOIN matches m ON mup.id_match = m.id_match
+    WHERE mup.id_user=triggered_id_user
+      AND mup.id_team=triggered_id_team
+      AND mup.goalkeeper = 0
+      AND IF(competition IS NULL, m.id_competition IS NULL, m.id_competition = competition);
+
+    IF (count_field_matches IS NULL) THEN SET count_field_matches = 0; END IF;
+
+    -- generate to team_statistics
+    IF (count_records > 0) THEN
+        UPDATE team_statistics AS ts
+        SET ts.field_matches = count_field_matches
+        WHERE ts.id_user = triggered_id_user
+          AND ts.id_team = triggered_id_team
+          AND IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition);
+    ELSE
+        INSERT INTO team_statistics (id_team_statistics, id_user, id_team, id_competition, field_matches)
+        VALUES (NULL, triggered_id_user, triggered_id_team, competition, count_field_matches);
+    END IF;
+
+    -- calculate goalkeeper matches statistics
+    SELECT COUNT(1) INTO count_goalkeeper_matches FROM matchup AS mup
+    JOIN matches m ON mup.id_match = m.id_match
+    WHERE mup.id_user=triggered_id_user
+      AND mup.id_team=triggered_id_team
+      AND mup.goalkeeper = 1
+      AND IF(competition IS NULL, m.id_competition IS NULL, m.id_competition = competition);
+
+    IF (count_goalkeeper_matches IS NULL) THEN SET count_goalkeeper_matches = 0; END IF;
+
+    -- generate to team_statistics
+    IF (count_records > 0) THEN
+        UPDATE team_statistics AS ts
+        SET ts.goalkeeper_matches = count_goalkeeper_matches, ts.goalkeeper_minutes = count_goalkeeper_matches * 60
+        WHERE ts.id_user = triggered_id_user
+          AND ts.id_team = triggered_id_team
+          AND IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition);
+    ELSE
+        INSERT INTO team_statistics(id_team_statistics, id_user, id_team, id_competition, goalkeeper_matches, goalkeeper_minutes)
+        VALUES (NULL, triggered_id_user, triggered_id_team, competition, count_goalkeeper_matches, count_goalkeeper_matches * 60);
+    END IF;
+
+    -- remove fields with all zeros
+    CALL remove_empty_records();
+END//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER TR_MATCHUP_AFTER_INSERT AFTER INSERT ON matchup FOR EACH ROW
+BEGIN
+    CALL generate_team_statistics_on_matchup_records(
+            new.id_match, new.id_team, new.id_user);
+END; //
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER TR_MATCHUP_AFTER_UPDATE AFTER UPDATE ON matchup FOR EACH ROW
+BEGIN
+    CALL generate_team_statistics_on_matchup_records(
+            new.id_match, new.id_team, new.id_user);
+END; //
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER TR_MATCHUP_AFTER_DELETE AFTER DELETE ON matchup FOR EACH ROW
+BEGIN
+
+    -- TODO: TRIGGER ON `MACTHUP` DELETE - ALL THE RELEVANT EVENTS SHOULD BE REMOVED AS WELL
+    --       PLACE IT HERE AND DON'T REMOVE THE LATTER PROCEDURE CALL
+
+    CALL generate_team_statistics_on_matchup_records(
+            old.id_match, old.id_team, old.id_user);
+END; //
+DELIMITER ;
+-- --- MATCHUP TABLE TO TEAM_STATISTICS SYNCHRONIZATION BLOCK END
+
+-- --- MATCH TABLE TRIGGERS BLOCK START
+DELIMITER //
+CREATE TRIGGER TR_MATCH_AFTER_INSERT AFTER INSERT ON matchup FOR EACH ROW
+BEGIN
+    -- TODO: TRIGGER ON `MATCH` INSERT - CRETE AND EVENT WITH 0 SHOOTS
+    --       PLACE IT HERE
+END; //
+DELIMITER ;
+-- --- MATCH TABLE TRIGGERS BLOCK END
+
+-- --- EVENTS TABLE TO TEAM_STATISTICS SYNCHRONIZATION BLOCK START
+DELIMITER //
+CREATE PROCEDURE generate_team_statistics_on_event_records(
+    triggered_id_match int(11), triggered_id_team int(11), triggered_id_user int(11), triggered_type varchar(255),
+    triggered_host int(2), triggered_id_assistance1 int(11), triggered_id_assistance2 int(11))
+BEGIN
+    DECLARE competition int(11);
+    DECLARE opponent_user_goalkeeper int(11);
+    DECLARE opponent_team int(11);
+
+    SELECT m.id_competition INTO competition FROM matches AS m WHERE m.id_match = triggered_id_match;
+
+    SELECT mup.id_user INTO opponent_user_goalkeeper FROM matchup AS mup
+    WHERE id_match = triggered_id_match AND mup.host = !triggered_host AND mup.goalkeeper = 1;
+
+    SELECT mup.id_team INTO opponent_team FROM matchup AS mup
+    WHERE id_match = triggered_id_match AND mup.host = !triggered_host AND mup.goalkeeper = 1;
+
+    IF triggered_type = 'shot' THEN
+        -- recalculate opponent goalkeeper's shoots
+        CALL generate_team_statistics_goalkeeper_shoots_data(
+                opponent_user_goalkeeper, opponent_team, competition);
+    ELSEIF triggered_type = 'goal' THEN
+        -- recalculate player's goals
+        CALL generate_team_statistics_player_goals_data(
+                triggered_id_user, triggered_id_team, competition);
+        -- recalculate player's 1st assists, if any
+        IF triggered_id_assistance1 IS NOT NULL THEN
+            CALL generate_team_statistics_player_assists_data(
+                    triggered_id_assistance1, triggered_id_team, competition);
+        END IF;
+        -- recalculate player's 2nd assists, if any
+        IF triggered_id_assistance2 IS NOT NULL THEN
+            CALL generate_team_statistics_player_assists_data(
+                    triggered_id_assistance2, triggered_id_team, competition);
+        END IF;
+        -- recalculate opponent goalkeeper's goals data
+        CALL generate_team_statistics_goalkeeper_goals_data(
+                opponent_user_goalkeeper, opponent_team, competition);
+    ELSEIF triggered_type LIKE 'suspension%' THEN
+        -- recalculate player's suspensions
+        CALL generate_team_statistics_player_suspensions_data(
+                triggered_id_user, triggered_id_team, competition);
+    ELSE
+        -- log unknown event
+        INSERT INTO logs VALUES (NULL, CONCAT('ERROR: ', 'unknown event.type=', triggered_type));
+    END IF;
+
+    -- remove fields with all zeros
+    CALL remove_empty_records();
+END//
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE generate_team_statistics_player_goals_data(
+    triggered_id_user int(11), triggered_id_team int(11), competition int(11))
+BEGIN
+    DECLARE count_records int(11);
+    DECLARE goals int(11);
+
+    SET count_records = count_team_statistics_records(
+            triggered_id_user, triggered_id_team, competition);
+
+    -- calculate goals
+    SELECT COUNT(1) INTO goals FROM events AS e
+    JOIN matches AS m ON e.id_match = m.id_match
+    WHERE e.id_user = triggered_id_user
+      AND e.id_team = triggered_id_team
+      AND e.type = 'goal'
+      AND IF(competition IS NULL, m.id_competition IS NULL, m.id_competition = competition);
+
+    IF (goals IS NULL) THEN SET goals = 0; END IF;
+
+    -- generate to team_statistics
+    IF (count_records > 0) THEN
+        UPDATE team_statistics AS ts SET ts.field_goals = goals
+        WHERE ts.id_user = triggered_id_user
+          AND ts.id_team = triggered_id_team
+          AND IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition);
+    ELSE
+        -- should not happen, log the event
+        CALL log_possible_inconsistency('generate_team_statistics_player_goals_data',
+                                        CONCAT('id_user=', triggered_id_user, ', id_team=', triggered_id_team,
+                                               ', id_competition=', IF(competition IS NULL, 'null', competition)));
+        INSERT team_statistics (id_team_statistics, id_user, id_team, id_competition, field_matches, field_goals)
+        VALUES(NULL, triggered_id_user, triggered_id_team, competition, 1, goals);
+    END IF;
+END//
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE generate_team_statistics_player_suspensions_data(
+    triggered_id_user int(11), triggered_id_team int(11), competition int(11))
+BEGIN
+    DECLARE count_records int(11);
+    DECLARE suspensions int(11);
+
+    SET count_records = count_team_statistics_records(
+            triggered_id_user, triggered_id_team, competition);
+
+    -- calculate suspensions
+    SELECT SUM(CASE
+                   WHEN e.type = 'suspension_2' THEN 2
+                   WHEN e.type = 'suspension_2_2' THEN 4
+                   WHEN e.type = 'suspension_5' THEN 5
+                   WHEN e.type LIKE 'suspension_pp%' THEN 10
+                   ELSE 0 END)
+    INTO suspensions
+    FROM events AS e
+    JOIN matches AS m ON e.id_match = m.id_match
+    WHERE e.id_user = triggered_id_user
+      AND e.id_team = triggered_id_team
+      AND e.type LIKE 'suspension%'
+      AND IF(competition IS NULL, m.id_competition IS NULL, m.id_competition = competition);
+
+    IF (suspensions IS NULL) THEN SET suspensions = 0; END IF;
+
+    -- generate to team_statistics
+    IF (count_records > 0) THEN
+        UPDATE team_statistics AS ts SET ts.field_suspensions = suspensions
+        WHERE ts.id_user = triggered_id_user
+          AND ts.id_team = triggered_id_team
+          AND IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition);
+    ELSE
+        -- should not happen, log the event
+        CALL log_possible_inconsistency('generate_team_statistics_player_suspensions_data',
+                                        CONCAT('id_user=', triggered_id_user, ', id_team=', triggered_id_team,
+                                               ', id_competition=', IF(competition IS NULL, 'null', competition)));
+        INSERT team_statistics (id_team_statistics, id_user, id_team, id_competition, field_matches, field_suspensions)
+        VALUES(NULL, triggered_id_user, triggered_id_team, competition, 1, suspensions);
+    END IF;
+END//
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE generate_team_statistics_player_assists_data(
+    triggered_id_user int(11), triggered_id_team int(11), competition int(11))
+BEGIN
+    DECLARE count_records int(11);
+    DECLARE assists int(11);
+
+    SET count_records = count_team_statistics_records(
+            triggered_id_user, triggered_id_team, competition);
+
+    -- calculate assists
+    SELECT COUNT(1) INTO assists FROM events AS e
+    JOIN matches AS m ON e.id_match = m.id_match
+    WHERE (e.id_assistance1 = triggered_id_user OR e.id_assistance2 = triggered_id_user)
+      AND e.id_team = triggered_id_team
+      AND e.type = 'goal'
+      AND IF(competition IS NULL, m.id_competition IS NULL, m.id_competition = competition);
+
+    IF (assists IS NULL) THEN SET assists = 0; END IF;
+
+    -- generate to team_statistics
+    IF (count_records > 0) THEN
+        UPDATE team_statistics AS ts SET ts.field_assists = assists
+        WHERE ts.id_user = triggered_id_user
+          AND ts.id_team = triggered_id_team
+          AND IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition);
+    ELSE
+        -- should not happen, log the event
+        CALL log_possible_inconsistency('generate_team_statistics_player_assists_data',
+                                        CONCAT('id_user=', triggered_id_user, ', id_team=', triggered_id_team,
+                                               ', id_competition=', IF(competition IS NULL, 'null', competition)));
+        INSERT team_statistics (id_team_statistics, id_user, id_team, id_competition, field_matches, field_assists)
+        VALUES(NULL, triggered_id_user, triggered_id_team, competition, 1, assists);
+    END IF;
+END//
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE generate_team_statistics_goalkeeper_shoots_data(
+    goalkeeper_id_user int(11), goalkeeper_id_team int(11), competition int(11))
+BEGIN
+    DECLARE count_records int(11);
+    DECLARE shoots int(11);
+
+    SET count_records = count_team_statistics_records(
+        goalkeeper_id_user, goalkeeper_id_team, competition);
+
+    -- calculate shoots
+    SELECT SUM(e.value) INTO shoots FROM matchup AS mup
+    JOIN events AS e ON mup.id_match = e.id_match
+    JOIN matches AS m ON e.id_match = m.id_match
+    WHERE mup.id_user = goalkeeper_id_user
+      AND mup.id_team = goalkeeper_id_team
+      AND IF(competition IS NULL, m.id_competition IS NULL, m.id_competition = competition)
+      AND e.host != mup.host
+      AND mup.goalkeeper = 1
+      AND e.type = 'shot';
+
+    IF (shoots IS NULL) THEN SET shoots = 0; END IF;
+
+    -- generate to team_statistics
+    IF (count_records > 0) THEN
+        UPDATE team_statistics AS ts SET ts.goalkeeper_shoots = shoots
+        WHERE ts.id_user = goalkeeper_id_user
+          AND ts.id_team = goalkeeper_id_team
+          AND IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition);
+    ELSE
+        -- should not happen, log the event
+        CALL log_possible_inconsistency('generate_team_statistics_goalkeeper_shoots_data',
+                                        CONCAT('id_user=', goalkeeper_id_user, ', id_team=', goalkeeper_id_team,
+                                               ', id_competition=', IF(competition IS NULL, 'null', competition)));
+        INSERT team_statistics (id_team_statistics, id_user, id_team, id_competition, goalkeeper_matches, goalkeeper_minutes, goalkeeper_shoots)
+        VALUES(NULL, goalkeeper_id_user, goalkeeper_id_team, competition, 1, 60, shoots);
+    END IF;
+END//
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE generate_team_statistics_goalkeeper_goals_data(
+    goalkeeper_id_user int(11), goalkeeper_id_team int(11), competition int(11))
+BEGIN
+    DECLARE count_records int(11);
+    DECLARE goals int(11);
+    DECLARE matches int(11);
+    DECLARE non_zeros int(11);
+    DECLARE zeros int(11);
+
+    SET count_records = count_team_statistics_records(
+            goalkeeper_id_user, goalkeeper_id_team, competition);
+
+    -- calculate goals
+    SELECT COUNT(1) INTO goals FROM matchup AS mup
+    JOIN events AS e ON mup.id_match = e.id_match
+    JOIN matches AS m ON e.id_match = m.id_match
+    WHERE mup.id_user = goalkeeper_id_user
+      AND mup.id_team = goalkeeper_id_team
+      AND IF(competition IS NULL, m.id_competition IS NULL, m.id_competition = competition)
+      AND e.host != mup.host
+      AND mup.goalkeeper = 1
+      AND e.type = 'goal';
+
+    -- calculate zeros
+    SELECT COUNT(DISTINCT(mup.id_match)) INTO matches FROM matchup AS mup
+    JOIN matches AS m ON mup.id_match = m.id_match
+    WHERE mup.id_user = goalkeeper_id_user
+      AND mup.id_team = goalkeeper_id_team
+      AND IF(competition IS NULL, m.id_competition IS NULL, m.id_competition = competition)
+      AND mup.goalkeeper = 1;
+
+    SELECT COUNT(DISTINCT(mup.id_match)) INTO non_zeros FROM matchup AS mup
+    JOIN events AS e ON mup.id_match = e.id_match
+    JOIN matches AS m ON e.id_match = m.id_match
+    WHERE mup.id_user = goalkeeper_id_user
+      AND mup.id_team = goalkeeper_id_team
+      AND IF(competition IS NULL, m.id_competition IS NULL, m.id_competition = competition)
+      AND e.host != mup.host
+      AND mup.goalkeeper = 1
+      AND e.type = 'goal';
+
+    IF (matches IS NULL) THEN SET matches = 0; END IF;
+    IF (non_zeros IS NULL) THEN SET non_zeros = 0; END IF;
+
+    SET zeros = matches - non_zeros;
+
+    -- generate to team_statistics
+    IF (count_records > 0) THEN
+        UPDATE team_statistics AS ts SET ts.goalkeeper_goals = goals, ts.goalkeeper_zeros = zeros
+        WHERE ts.id_user = goalkeeper_id_user
+          AND ts.id_team = goalkeeper_id_team
+          AND IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition);
+    ELSE
+        -- should not happen, log the event
+        CALL log_possible_inconsistency('generate_team_statistics_goalkeeper_goals_data',
+                                        CONCAT('id_user=', goalkeeper_id_user, ', id_team=', goalkeeper_id_team,
+                                               ', id_competition=', IF(competition IS NULL, 'null', competition)));
+        INSERT team_statistics (id_team_statistics, id_user, id_team, id_competition,
+                                goalkeeper_matches, goalkeeper_minutes, goalkeeper_shoots, goalkeeper_zeros)
+        VALUES(NULL, goalkeeper_id_user, goalkeeper_id_team, competition, 1, 60, goals, zeros);
+    END IF;
+END//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER after_insert_events AFTER INSERT ON events FOR EACH ROW
+BEGIN
+    CALL generate_team_statistics_on_event_records(
+            new.id_match, new.id_team, new.id_user, new.type,
+            new.host, new.id_assistance1, new.id_assistance2);
+END//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER after_update_events AFTER UPDATE ON events FOR EACH ROW
+BEGIN
+    CALL generate_team_statistics_on_event_records(
+            new.id_match, new.id_team, new.id_user, new.type,
+            new.host, new.id_assistance1, new.id_assistance2);
+END//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER after_delete_events AFTER DELETE ON events FOR EACH ROW
+BEGIN
+    CALL generate_team_statistics_on_event_records(
+            old.id_match, old.id_team, old.id_user, old.type,
+            old.host, old.id_assistance1, old.id_assistance2);
+END//
+DELIMITER ;
+-- --- EVENTS TABLE TO TEAM_STATISTICS SYNCHRONIZATION BLOCK END
+
+DELIMITER //
+CREATE FUNCTION count_team_statistics_records(triggered_id_user int(11), triggered_id_team int(11), competition int(11))
+    RETURNS int(255)
+BEGIN
+    DECLARE count_records int(11);
+    SELECT COUNT(1) INTO count_records FROM team_statistics AS ts
+    WHERE ts.id_user = triggered_id_user
+      AND ts.id_team = triggered_id_team
+      AND IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition);
+    IF (count_records IS NULL) THEN SET count_records = 0; END IF;
+    RETURN count_records;
+END//
+
+DELIMITER //
+CREATE PROCEDURE remove_empty_records()
+BEGIN
+    DELETE FROM team_statistics
+    WHERE field_matches = 0 AND field_assists = 0 AND field_goals = 0 AND field_suspensions = 0
+      AND goalkeeper_matches = 0 AND goalkeeper_goals = 0;
+END//
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE log_possible_inconsistency(called_procedure varchar(255), parameters varchar(255))
+BEGIN
+    CALL log('WARN', called_procedure, CONCAT('possible inconsistency regenerating team_statistics for ', parameters));
+END//
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE log(log_type varchar(255), called_procedure varchar(255), message varchar(255))
+BEGIN
+    DECLARE type varchar(255);
+    CASE UPPER(log_type)
+        WHEN 'SEVERE' THEN SET type = '[SEVERE]';
+        WHEN 'ERROR' THEN SET type = '[ERROR] ';
+        WHEN 'WARN' THEN SET type = '[WARN]  ';
+        WHEN 'INFO' THEN SET type = '[INFO]  ';
+        ELSE SET type = '[]      ';
+        END CASE;
+    INSERT INTO logs VALUES (NULL, CONCAT(type, '[', NOW(), '] ', called_procedure, '> ', message));
+END//
+DELIMITER ;
 
 -- Data ----------------------------------------------------------------------------------------------------------------
 -- USERS
@@ -288,109 +748,106 @@ INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES
 INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES (4, 1, 2, 3, '2018-11-11 16:00:00');
 INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES (5, 1, 3, 1, '2018-11-12 16:00:00');
 
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (1, 1, true, 1, 1, true);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (2, 1, false, 1, 2, true);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (3, 1, false, 1, 3, true);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (4, 1, false, 1, 4, true);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (5, 1, false, 1, 5, true);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (6, 1, true, 1, 6, false);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (7, 1, false, 1, 7, false);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (8, 1, false, 1, 8, false);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (9, 1, false, 1, 9, false);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (10, 1, false, 1, 10, false);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (1, 1, true, 1, 1, false);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (2, 1, false, 1, 2, false);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (3, 1, false, 1, 3, false);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (4, 1, false, 1, 4, false);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (5, 1, false, 1, 5, false);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (6, 1, true, 1, 6, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (7, 1, false, 1, 7, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (8, 1, false, 1, 8, true);
 
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (11, 3, true, 1, 1, true);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (12, 3, false, 1, 2, true);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (13, 3, false, 1, 3, true);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (14, 3, false, 1, 4, true);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (15, 3, false, 1, 5, true);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (16, 3, true, 2, 11, false);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (17, 3, false, 2, 12, false);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (18, 3, false, 2, 13, false);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (19, 3, false, 2, 14, false);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (20, 3, false, 2, 15, false);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (11, 2, true, 1, 1, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (12, 2, false, 1, 2, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (13, 2, false, 1, 3, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (14, 2, false, 1, 4, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (15, 2, false, 1, 5, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (16, 2, true, 1, 6, false);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (17, 2, false, 1, 7, false);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (18, 2, false, 1, 8, false);
+
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (19, 3, true, 1, 1, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (20, 3, false, 1, 2, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (21, 3, false, 1, 3, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (22, 3, false, 1, 4, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (23, 3, false, 1, 5, true);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (24, 3, true, 2, 11, false);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (25, 3, false, 2, 12, false);
+INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (26, 3, false, 2, 13, false);
 
 -- EVENTS
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (1, 1, 1, 5, 'goal', 40, null, true);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (2, 1, 1, 4, 'assistance1', 40, null, true);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (3, 1, 1, 2, 'goal', 48, null, true);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (4, 1, 1, 2, 'suspension_2', 51, null, true);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (5, 1, 1, 10, 'goal', 52, null, false);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (6, 1, 1, null, 'shot', null, 45, true);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (7, 1, 1, null, 'shot', null, 49, false);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
+VALUES (1, 1, 1, 5, 'goal', 4, null, 40, null, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
+VALUES (2, 1, 1, 2, 'goal', null, null, 48, null, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
+VALUES (3, 1, 1, 2, 'suspension_2', null, null, 51, null, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
+VALUES (4, 1, 1, 8, 'goal', null, null, 52, null, false);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
+VALUES (5, 1, 1, null, 'shot', null, null, null, 45, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
+VALUES (6, 1, 1, null, 'shot', null, null, null, 49, false);
 
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (8, 3, 1, 4, 'goal', 32, null, true);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (9, 3, 1, 5, 'assistance1', 32, null, true);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (10, 3, 1, 2, 'assistance2', 32, null, true);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (11, 3, 2, 13, 'goal', 36, null, false);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (12, 3, 2, 13, 'goal', 41, null, false);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (13, 3, 2, 14, 'assistance1', 41, null, false);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (14, 3, 2, 15, 'assistance2', 41, null, false);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (15, 3, 2, 13, 'suspension_5', 52, null, false);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (16, 3, 1, null, 'shot', null, 32, true);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, minute, value, host)
-    VALUES (17, 3, 2, null, 'shot', null, 66, false);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
+VALUES (7, 2, 1, 7, 'goal', 8, null, 16, null, false);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
+VALUES (8, 2, 1, null, 'shot', null, null, null, 57, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
+VALUES (9, 2, 1, null, 'shot', null, null, null, 59, false);
+
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
+VALUES (10, 3, 1, 4, 'goal', 5, 2, 32, null, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
+VALUES (11, 3, 2, 13, 'goal', null, null, 36, null, false);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
+VALUES (12, 3, 2, 13, 'goal', 11, 12, 41, null, false);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
+VALUES (13, 3, 2, 13, 'suspension_5', null, null, 50, null, false);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
+VALUES (14, 3, 2, 13, 'suspension_2_2', null, null, 56, null, false);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
+VALUES (15, 3, 1, null, 'shot', null, null, null, 32, true);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
+VALUES (16, 3, 2, null, 'shot', null, null, null, 66, false);
 
 -- ---- MOCKED, START OF A SUBJECT OF A FUTURE CHANGE AND/OR REGENERATION, THE MODEL ITSELF IS CONSIDERED FINAL
 -- ---- MATCHES ARE NECESSARY FOR THESE DATA CONSISTENCY, YET THEY ARE NOT NEEDED FOR THE DEVELOPMENT OF THE STATISTICS DISPLAY
 -- ---- THE MOCKED DATA NEITHER MATCH THE MOCKED MATCHES, MATCHUPS NOR EVENTS
 
--- COMPETITION ID = 1
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (1, 1, 1, 1, 0, 0, 0, 0, 5, 300, 9, 2, 356);
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (2, 2, 1, 1, 5, 0, 6, 2, 0, 0, 0, 0, 0);
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (3, 3, 1, 1, 5, 2, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (4, 4, 1, 1, 5, 1, 4, 1, 0, 0, 0, 0, 0);
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (5, 5, 1, 1, 5, 5, 2, 4, 0, 0, 0, 0, 0);
-
--- COMPETITION ID = 4
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (6, 1, 1, 4, 0, 0, 0, 0, 20, 1200, 52, 6, 1659);
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (7, 2, 1, 4, 20, 0, 18, 0, 0, 0, 0, 0, 0);
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (8, 3, 1, 4, 20, 7, 10, 7, 0, 0, 0, 0, 0);
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (9, 4, 1, 4, 20, 19, 14, 4, 0, 0, 0, 0, 0);
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (10, 5, 1, 4, 20, 31, 16, 14, 0, 0, 0, 0, 0);
-
--- FREE TIME MATCHES (COMPETITION ID = null)
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (11, 1, 1, null, 2, 1, 4, 0, 2, 120, 6, 0, 215);
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (12, 2, 1, null, 2, 0, 3, 0, 2, 120, 12, 0, 322);
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (13, 3, 1, null, 4, 2, 1, 0, 0, 0, 0, 0, 0);
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (14, 4, 1, null, 4, 6, 8, 0, 0, 0, 0, 0, 0);
-INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
-    VALUES (15, 5, 1, null, 4, 9, 0, 0, 0, 0, 0, 0, 0);
--- ---- END, START OF A SUBJECT OF A FUTURE CHANGE OR REGENERATION
-
-
--- INSERT INTO `matches` (`id_match`, `competition`, `host`, `guest`, `date`) VALUES ();
-
--- INSERT INTO `matchup` (`id_matchup`, `id_match`, `goalkeeper`, `id_team`, `id_user`, `host`) VALUES ();
-
--- INSERT INTO `events` (`id_event`, `id_match`, `id_team`, `id_user`, `type`, `minute`, `value`) VALUES ();
+-- -- COMPETITION ID = 1
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (1, 1, 1, 1, 0, 0, 0, 0, 5, 300, 9, 2, 356);
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (2, 2, 1, 1, 5, 0, 6, 2, 0, 0, 0, 0, 0);
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (3, 3, 1, 1, 5, 2, 0, 0, 0, 0, 0, 0, 0);
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (4, 4, 1, 1, 5, 1, 4, 1, 0, 0, 0, 0, 0);
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (5, 5, 1, 1, 5, 5, 2, 4, 0, 0, 0, 0, 0);
+--
+-- -- COMPETITION ID = 4
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (6, 1, 1, 4, 0, 0, 0, 0, 20, 1200, 52, 6, 1659);
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (7, 2, 1, 4, 20, 0, 18, 0, 0, 0, 0, 0, 0);
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (8, 3, 1, 4, 20, 7, 10, 7, 0, 0, 0, 0, 0);
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (9, 4, 1, 4, 20, 19, 14, 4, 0, 0, 0, 0, 0);
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (10, 5, 1, 4, 20, 31, 16, 14, 0, 0, 0, 0, 0);
+--
+-- -- FREE TIME MATCHES (COMPETITION ID = null)
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (11, 1, 1, null, 2, 1, 4, 0, 2, 120, 6, 0, 215);
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (12, 2, 1, null, 2, 0, 3, 0, 2, 120, 12, 0, 322);
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (13, 3, 1, null, 4, 2, 1, 0, 0, 0, 0, 0, 0);
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (14, 4, 1, null, 4, 6, 8, 0, 0, 0, 0, 0, 0);
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shoots` )
+--     VALUES (15, 5, 1, null, 4, 9, 0, 0, 0, 0, 0, 0, 0);
+-- -- ---- END, START OF A SUBJECT OF A FUTURE CHANGE OR REGENERATION

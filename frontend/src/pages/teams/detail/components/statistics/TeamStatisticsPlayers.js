@@ -7,6 +7,7 @@ import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../../../assets/images/loading.gif";
 import {OverlayTriggerTable} from "../../../../../atoms/OverlayTriggerTable";
 import * as Icons from "@fortawesome/free-solid-svg-icons";
+import {useHistory} from 'react-router-dom';
 
 function getPlayers(state, filterBy) {
     let competitionId = null;
@@ -30,12 +31,18 @@ function getRank(playerData) {
 
 export function TeamStatisticsPlayers({filterBy}) {
     let {id_team} = useParams();
+    let history = useHistory();
     const [state] = useGetTeamStatistics(id_team);
-    console.log("state from statistics", state);
 
     const players = getPlayers(state, filterBy);
     if (players) {
         players.sort((a, b) => b.field_points - a.field_points);
+    }
+
+    function handleClick(row) {
+        if (row) {
+            history.push("/users/" + row.original.id_user);
+        }
     }
 
     const columns = [
@@ -89,7 +96,13 @@ export function TeamStatisticsPlayers({filterBy}) {
             {(!state.isLoading && state.error) &&
             <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
             {(!state.isLoading && !state.error) &&
-                <Table className="defaultCursor" data={players} columns={columns}/>
+                <Table data={players} columns={columns} getTdProps={(state, rowInfo) => {
+                    return {
+                        onClick: () => {
+                            handleClick(rowInfo);
+                        }
+                    }
+                }}/>
             }
         </div>
     );

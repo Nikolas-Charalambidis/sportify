@@ -222,6 +222,26 @@ label {
   height: 39px !important;
 }
 
+.css-1uccc91-singleValue {
+  top: 62% !important;
+}
+
+::-webkit-input-placeholder {
+  text-align: center;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+  text-align: center;
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+  text-align: center;
+}
+
+:-ms-input-placeholder {
+  text-align: center;
+}
+
 .css-1wa3eu0-placeholder {
   top: 40%;
 }

@@ -15,11 +15,10 @@ export function TeamsAdminList() {
     const {user} = useAuth();
     const [state] = useGetUserOwnedTeams(user.id_user);
     const api = useApi();
-    console.log("id_user", user);
+
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    console.log('state', state);
 
     let history = useHistory();
     const columns = [

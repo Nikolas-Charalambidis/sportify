@@ -51,7 +51,7 @@ export default class TeamService {
 			FROM team_membership AS t
    			JOIN users AS u ON t.id_user = u.id_user
    			JOIN positions AS p ON t.id_position = p.id_position
-   			WHERE id_team = ?;`
+   			WHERE id_team = ? AND t.status='active'`
 			, team_id
 		);
 		return players;
@@ -225,7 +225,6 @@ export default class TeamService {
 						WHERE ts.id_team=? AND id_competition IS NOT null
 						GROUP BY ts.id_user`
 			, team_id);
-		console.log("data", {individual: invidividual, competitions_aggregate: competitions_aggregate});
 		return {individual: invidividual, competitions_aggregate: competitions_aggregate};
 	}
 
@@ -238,7 +237,7 @@ export default class TeamService {
 				host.name AS host_name, guest.name AS guest_name,
 				c.name AS competition_name
 			 FROM matches as m
-			 JOIN competitions as c ON m.id_competition=c.id_competition 
+			 LEFT JOIN competitions as c ON m.id_competition=c.id_competition 
 			 JOIN teams as host ON m.id_host=host.id_team 
 			 JOIN teams as guest ON m.id_guest=guest.id_team
 			 WHERE m.id_host=? OR m.id_guest=?`,

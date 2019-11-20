@@ -29,7 +29,7 @@ export function Profile() {
 
     const [state] = useGetUser(user.id_user);
     const [teamState] = useGetUserTeams(user.id_user);
-    console.log("teamState", teamState);
+
     const [competitionState] = useGetUserCompetition(user.id_user);
 
     return (
