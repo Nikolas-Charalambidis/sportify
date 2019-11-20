@@ -14,7 +14,7 @@ export default class MatchupService {
 		const user_id = Number(id_user);
 		matchupValidations.validateAddPlayerData(match_id, team_id, user_id, host);
 		const result = await this.dbConnection.query(
-			`INSERT INTO matchup (id_matchup, id_match, goalkeeper, id_team, id_user, host)
+			`INSERT INTO matchups (id_matchup, id_match, goalkeeper, id_team, id_user, host)
 			 VALUES (NULL, ?, 0, ?, ?, ?)`,
 			[match_id, team_id, user_id, host]
 		);
@@ -28,7 +28,7 @@ export default class MatchupService {
 		const user_id = Number(id_user);
 		matchupValidations.validateDeleteFromMatchupData(matchup_id, user_id);
 		let result = await this.dbConnection.query(
-			`DELETE FROM matchup WHERE id_matchup=?`,
+			`DELETE FROM matchups WHERE id_matchup=?`,
 			[matchup_id]
 		);
 		if (result.affectedRows === 0) {
@@ -44,7 +44,7 @@ export default class MatchupService {
 		const matchup_id = Number(id_matchup);
 		matchupValidations.validateSetGoalkeeperData(matchup_id, goalkeeper);
 		let result = await this.dbConnection.query(
-			`UPDATE matchup SET goalkeeper=? WHERE id_matchup=?`,
+			`UPDATE matchups SET goalkeeper=? WHERE id_matchup=?`,
 			[goalkeeper, matchup_id]
 		);
 		if (result.affectedRows === 0) {
