@@ -21,6 +21,7 @@ import {ResendToken} from "./pages/auth/ResendToken";
 import { AdministrationMenu } from './pages/administration/Administration/AdministrationMenu';
 import { MatchDetailAdminPage } from './pages/administration/matches/MatchDetailAdminPage';
 import { UserDetail } from './pages/users/detail/UserDetail';
+import { MatchCreateForm } from './pages/match/create-form/MatchCreateForm';
 
 export function Routes() {
 	return (
@@ -34,7 +35,8 @@ export function Routes() {
 			<Route path="/confirmEmail/:id_user/:hash" exact component={ConfirmEmail} />
 
 			<Route path="/leagues" exact component={Leagues}/>
-			<Route path="/matches" exact component={Matches}/>
+            <Route path="/matches" exact component={Matches} />
+            <Route path="/match-create-form" exact component={MatchCreateForm} />
 			<Route path="/statistics" exact component={Statistics} />
 			<Route path="/aboutus" exact component={AboutUs}/>
 			<Route path="/contact" exact component={Contact}/>

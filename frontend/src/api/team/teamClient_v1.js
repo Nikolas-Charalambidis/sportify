@@ -138,7 +138,7 @@ export function ChangeTeamData(api, id_team, values, setHeading) {
             setHeading(name);
         })
         .catch(({response}) => {
-            const {data} = response;
+            const { data } = response;
             window.flash(data.msg, 'danger');
         });
 }
