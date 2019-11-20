@@ -96,7 +96,7 @@ CREATE TABLE `events` (
     `host` boolean NOT NULL
 );
 
-CREATE TABLE `matchup` (
+CREATE TABLE `matchups` (
     `id_matchup` int PRIMARY KEY AUTO_INCREMENT,
     `id_match` int NOT NULL,
     `goalkeeper` boolean NOT NULL,
@@ -158,9 +158,9 @@ ALTER TABLE `events` ADD FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`);
 ALTER TABLE `events` ADD FOREIGN KEY (`id_assistance1`) REFERENCES `users` (`id_user`);
 ALTER TABLE `events` ADD FOREIGN KEY (`id_assistance2`) REFERENCES `users` (`id_user`);
 
-ALTER TABLE `matchup` ADD FOREIGN KEY (`id_match`) REFERENCES `matches` (`id_match`) ON DELETE CASCADE;
-ALTER TABLE `matchup` ADD FOREIGN KEY (`id_team`) REFERENCES `teams` (`id_team`);
-ALTER TABLE `matchup` ADD FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`);
+ALTER TABLE `matchups` ADD FOREIGN KEY (`id_match`) REFERENCES `matches` (`id_match`) ON DELETE CASCADE;
+ALTER TABLE `matchups` ADD FOREIGN KEY (`id_team`) REFERENCES `teams` (`id_team`);
+ALTER TABLE `matchups` ADD FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`);
 
 ALTER TABLE `team_statistics` ADD FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`);
 ALTER TABLE `team_statistics` ADD FOREIGN KEY (`id_team`) REFERENCES `teams` (`id_team`);
@@ -168,7 +168,7 @@ ALTER TABLE `team_statistics` ADD FOREIGN KEY (`id_competition`) REFERENCES `com
 
 -- --- MATCHUP TABLE TO TEAM_STATISTICS SYNCHRONIZATION BLOCK START
 DELIMITER //
-CREATE PROCEDURE generate_team_statistics_on_matchup_records(
+CREATE PROCEDURE generate_team_statistics_on_matchups_records(
     triggered_id_match int(11), triggered_id_team int(11), triggered_id_user int(11))
 BEGIN
     DECLARE competition int(11);
@@ -182,7 +182,7 @@ BEGIN
             triggered_id_user, triggered_id_team, competition);
 
     -- calculate field player matches statistics
-    SELECT COUNT(1) INTO count_field_matches FROM matchup AS mup
+    SELECT COUNT(1) INTO count_field_matches FROM matchups AS mup
     JOIN matches m ON mup.id_match = m.id_match
     WHERE mup.id_user=triggered_id_user
       AND mup.id_team=triggered_id_team
@@ -204,7 +204,7 @@ BEGIN
     END IF;
 
     -- calculate goalkeeper matches statistics
-    SELECT COUNT(1) INTO count_goalkeeper_matches FROM matchup AS mup
+    SELECT COUNT(1) INTO count_goalkeeper_matches FROM matchups AS mup
     JOIN matches m ON mup.id_match = m.id_match
     WHERE mup.id_user=triggered_id_user
       AND mup.id_team=triggered_id_team
@@ -231,29 +231,29 @@ END//
 DELIMITER ;
 
 DELIMITER //
-CREATE TRIGGER TR_MATCHUP_AFTER_INSERT AFTER INSERT ON matchup FOR EACH ROW
+CREATE TRIGGER TR_MATCHUP_AFTER_INSERT AFTER INSERT ON matchups FOR EACH ROW
 BEGIN
-    CALL generate_team_statistics_on_matchup_records(
+    CALL generate_team_statistics_on_matchups_records(
             new.id_match, new.id_team, new.id_user);
 END; //
 DELIMITER ;
 
 DELIMITER //
-CREATE TRIGGER TR_MATCHUP_AFTER_UPDATE AFTER UPDATE ON matchup FOR EACH ROW
+CREATE TRIGGER TR_MATCHUP_AFTER_UPDATE AFTER UPDATE ON matchups FOR EACH ROW
 BEGIN
-    CALL generate_team_statistics_on_matchup_records(
+    CALL generate_team_statistics_on_matchups_records(
             new.id_match, new.id_team, new.id_user);
 END; //
 DELIMITER ;
 
 DELIMITER //
-CREATE TRIGGER TR_MATCHUP_AFTER_DELETE AFTER DELETE ON matchup FOR EACH ROW
+CREATE TRIGGER TR_MATCHUP_AFTER_DELETE AFTER DELETE ON matchups FOR EACH ROW
 BEGIN
 
     -- TODO: TRIGGER ON `MACTHUP` DELETE - ALL THE RELEVANT EVENTS SHOULD BE REMOVED AS WELL
     --       PLACE IT HERE AND DON'T REMOVE THE LATTER PROCEDURE CALL
 
-    CALL generate_team_statistics_on_matchup_records(
+    CALL generate_team_statistics_on_matchups_records(
             old.id_match, old.id_team, old.id_user);
 END; //
 DELIMITER ;
@@ -261,7 +261,7 @@ DELIMITER ;
 
 -- --- MATCH TABLE TRIGGERS BLOCK START
 DELIMITER //
-CREATE TRIGGER TR_MATCH_AFTER_INSERT AFTER INSERT ON matchup FOR EACH ROW
+CREATE TRIGGER TR_MATCH_AFTER_INSERT AFTER INSERT ON matchups FOR EACH ROW
 BEGIN
     -- TODO: TRIGGER ON `MATCH` INSERT - CRETE AND EVENT WITH 0 SHOOTS
     --       PLACE IT HERE
@@ -281,10 +281,10 @@ BEGIN
 
     SELECT m.id_competition INTO competition FROM matches AS m WHERE m.id_match = triggered_id_match;
 
-    SELECT mup.id_user INTO opponent_user_goalkeeper FROM matchup AS mup
+    SELECT mup.id_user INTO opponent_user_goalkeeper FROM matchups AS mup
     WHERE id_match = triggered_id_match AND mup.host = !triggered_host AND mup.goalkeeper = 1;
 
-    SELECT mup.id_team INTO opponent_team FROM matchup AS mup
+    SELECT mup.id_team INTO opponent_team FROM matchups AS mup
     WHERE id_match = triggered_id_match AND mup.host = !triggered_host AND mup.goalkeeper = 1;
 
     IF triggered_type = 'shot' THEN
@@ -451,7 +451,7 @@ BEGIN
         goalkeeper_id_user, goalkeeper_id_team, competition);
 
     -- calculate shoots
-    SELECT SUM(e.value) INTO shoots FROM matchup AS mup
+    SELECT SUM(e.value) INTO shoots FROM matchups AS mup
     JOIN events AS e ON mup.id_match = e.id_match
     JOIN matches AS m ON e.id_match = m.id_match
     WHERE mup.id_user = goalkeeper_id_user
@@ -494,7 +494,7 @@ BEGIN
             goalkeeper_id_user, goalkeeper_id_team, competition);
 
     -- calculate goals
-    SELECT COUNT(1) INTO goals FROM matchup AS mup
+    SELECT COUNT(1) INTO goals FROM matchups AS mup
     JOIN events AS e ON mup.id_match = e.id_match
     JOIN matches AS m ON e.id_match = m.id_match
     WHERE mup.id_user = goalkeeper_id_user
@@ -505,14 +505,14 @@ BEGIN
       AND e.type = 'goal';
 
     -- calculate zeros
-    SELECT COUNT(DISTINCT(mup.id_match)) INTO matches FROM matchup AS mup
+    SELECT COUNT(DISTINCT(mup.id_match)) INTO matches FROM matchups AS mup
     JOIN matches AS m ON mup.id_match = m.id_match
     WHERE mup.id_user = goalkeeper_id_user
       AND mup.id_team = goalkeeper_id_team
       AND IF(competition IS NULL, m.id_competition IS NULL, m.id_competition = competition)
       AND mup.goalkeeper = 1;
 
-    SELECT COUNT(DISTINCT(mup.id_match)) INTO non_zeros FROM matchup AS mup
+    SELECT COUNT(DISTINCT(mup.id_match)) INTO non_zeros FROM matchups AS mup
     JOIN events AS e ON mup.id_match = e.id_match
     JOIN matches AS m ON e.id_match = m.id_match
     WHERE mup.id_user = goalkeeper_id_user
@@ -748,32 +748,32 @@ INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES
 INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES (4, 1, 2, 3, '2018-11-11 16:00:00');
 INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES (5, 1, 3, 1, '2018-11-12 16:00:00');
 
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (1, 1, true, 1, 1, false);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (2, 1, false, 1, 2, false);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (3, 1, false, 1, 3, false);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (4, 1, false, 1, 4, false);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (5, 1, false, 1, 5, false);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (6, 1, true, 1, 6, true);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (7, 1, false, 1, 7, true);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (8, 1, false, 1, 8, true);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (1, 1, true, 1, 1, false);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (2, 1, false, 1, 2, false);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (3, 1, false, 1, 3, false);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (4, 1, false, 1, 4, false);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (5, 1, false, 1, 5, false);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (6, 1, true, 1, 6, true);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (7, 1, false, 1, 7, true);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (8, 1, false, 1, 8, true);
 
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (11, 2, true, 1, 1, true);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (12, 2, false, 1, 2, true);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (13, 2, false, 1, 3, true);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (14, 2, false, 1, 4, true);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (15, 2, false, 1, 5, true);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (16, 2, true, 1, 6, false);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (17, 2, false, 1, 7, false);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (18, 2, false, 1, 8, false);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (11, 2, true, 1, 1, true);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (12, 2, false, 1, 2, true);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (13, 2, false, 1, 3, true);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (14, 2, false, 1, 4, true);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (15, 2, false, 1, 5, true);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (16, 2, true, 1, 6, false);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (17, 2, false, 1, 7, false);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (18, 2, false, 1, 8, false);
 
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (19, 3, true, 1, 1, true);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (20, 3, false, 1, 2, true);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (21, 3, false, 1, 3, true);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (22, 3, false, 1, 4, true);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (23, 3, false, 1, 5, true);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (24, 3, true, 2, 11, false);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (25, 3, false, 2, 12, false);
-INSERT INTO `matchup` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (26, 3, false, 2, 13, false);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (19, 3, true, 1, 1, true);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (20, 3, false, 1, 2, true);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (21, 3, false, 1, 3, true);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (22, 3, false, 1, 4, true);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (23, 3, false, 1, 5, true);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (24, 3, true, 2, 11, false);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (25, 3, false, 2, 12, false);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (26, 3, false, 2, 13, false);
 
 -- EVENTS
 INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
