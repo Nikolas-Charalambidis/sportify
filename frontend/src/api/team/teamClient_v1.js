@@ -200,6 +200,40 @@ export function useGetTeamCompetition(id_team) {
     return [state];
 }
 
+export function useGetTeamMatches(id_team) {
+    const api = useApi();
+    const [state, setState] = useState({
+        isLoading: true
+    });
+    useEffect( () => {
+        async function fetchData() {
+            api
+                .get(`${config.API_BASE_PATH}/teams/${id_team}/matches`)
+                .then(({ data }) => {
+                    const { matches } = data;
+                    setState({ isLoading: false, error: false, team_data: matches });
+                })
+                .catch(( { response } ) => {
+                    const { data, status} = response;
+                    setState({ isLoading: false, error: true, team_data: null });
+                    switch (status) {
+                        case 400:
+                            window.flash(data.msg, 'danger');
+                            break;
+                        case 500:
+                            window.flash(data.msg, 'danger');
+                            break;
+                        default:
+                            window.flash("Neočekávaná chyba", 'danger');
+                            break;
+                    }
+                });
+        }
+        fetchData().then();
+    }, [api, id_team]);
+    return [state];
+}
+
 export function useGetTeamStatistics(id_team) {
     const api = useApi();
     const [state, setState] = useState({
