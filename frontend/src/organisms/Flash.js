@@ -8,7 +8,9 @@ import * as Icons from "@fortawesome/free-solid-svg-icons"
 const iconsEnum = {
     'warning': Icons.faExclamationTriangle,
     'success': Icons.faCheckCircle,
-    'danger': Icons.faExclamationCircle
+    'danger': Icons.faExclamationCircle,
+    'info': Icons.faInfoCircle,
+    '': Icons.faExclamationCircle,
 };
 
 function FlashBase() {
