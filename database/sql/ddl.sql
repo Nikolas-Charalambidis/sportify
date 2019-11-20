@@ -59,8 +59,10 @@ CREATE TABLE `competition_membership` (
 CREATE TABLE `matches` (
     `id_match` int PRIMARY KEY AUTO_INCREMENT,
     `id_competition` int,
-    `id_host` int NOT NULL,
     `id_guest` int NOT NULL,
+    `id_host` int NOT NULL,
+    `goals_guest` int DEFAULT 0,
+    `goals_host` int DEFAULT 0,
     `date` datetime NOT NULL
 );
 
@@ -546,8 +548,40 @@ END//
 DELIMITER ;
 
 DELIMITER //
+CREATE PROCEDURE generate_match_goals_data(triggered_id_match int(11), triggered_id_team int(11), triggered_type varchar(255), triggered_host int(2))
+BEGIN
+    DECLARE goals int(11);
+    DECLARE match_start datetime;
+
+    IF triggered_type = 'goal' THEN
+        SELECT COUNT(*) INTO goals FROM events AS e
+        WHERE e.type = 'goal'
+          AND e.host = triggered_host
+          AND e.id_match = triggered_id_match
+          AND e.id_team = triggered_id_team;
+
+        IF goals IS NULL THEN SET goals = 0; END IF;
+        SELECT m.date INTO match_start FROM matches AS m WHERE m.id_match = triggered_id_match;
+        IF (match_start > NOW()) THEN SET goals = -1; END IF;
+
+        IF triggered_host THEN
+            UPDATE matches AS m SET m.goals_host = goals
+            WHERE m.id_match = triggered_id_match AND m.id_host = triggered_id_team;
+        ELSE
+            UPDATE matches AS m SET m.goals_guest = goals
+            WHERE m.id_match = triggered_id_match AND m.id_guest = triggered_id_team;
+        END IF;
+    END IF;
+END//
+DELIMITER ;
+
+DELIMITER //
 CREATE TRIGGER after_insert_events AFTER INSERT ON events FOR EACH ROW
 BEGIN
+    -- recalculate match goals
+    CALL generate_match_goals_data(
+            new.id_match, new.id_team, new.type, new.host);
+    -- recalculate team_statistics
     CALL generate_team_statistics_on_event_records(
             new.id_match, new.id_team, new.id_user, new.type,
             new.host, new.id_assistance1, new.id_assistance2);
@@ -557,6 +591,10 @@ DELIMITER ;
 DELIMITER //
 CREATE TRIGGER after_update_events AFTER UPDATE ON events FOR EACH ROW
 BEGIN
+    -- recalculate match goals
+    CALL generate_match_goals_data(
+            new.id_match, new.id_team, new.type, new.host);
+    -- recalculate team_statistics
     CALL generate_team_statistics_on_event_records(
             new.id_match, new.id_team, new.id_user, new.type,
             new.host, new.id_assistance1, new.id_assistance2);
@@ -566,6 +604,10 @@ DELIMITER ;
 DELIMITER //
 CREATE TRIGGER after_delete_events AFTER DELETE ON events FOR EACH ROW
 BEGIN
+    -- recalculate match goals
+    CALL generate_match_goals_data(
+            old.id_match, old.id_team, old.type, old.host);
+    -- recalculate team_statistics
     CALL generate_team_statistics_on_event_records(
             old.id_match, old.id_team, old.id_user, old.type,
             old.host, old.id_assistance1, old.id_assistance2);

@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import MatchService from "./matchService";
-import TeamService from "../teams/teamService";
 
 const router = Router();
 
