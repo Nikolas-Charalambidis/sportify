@@ -34,6 +34,10 @@ export default class MatchupService {
 		if (result.affectedRows === 0) {
 			throw {status: 404, msg: 'Nepodařilo se nalézt patřičný záznam v databázi'};
 		}
+		await this.dbConnection.query(
+			`DELETE FROM events WHERE id_user=? OR id_assistance1=? OR id_assistance2=?`,
+			[user_id, user_id, user_id]
+		);
 	}
 
 	async setGoalkeeper(id_matchup, goalkeeper) {
