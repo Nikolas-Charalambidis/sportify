@@ -43,8 +43,8 @@ CREATE TABLE `competitions` (
     `name` varchar(255) UNIQUE NOT NULL,
     `id_leader` int NOT NULL,
     `id_sport` int NOT NULL,
-    `start_date` datetime NOT NULL,
-    `end_date` datetime NOT NULL,
+    `start_date` date NOT NULL,
+    `end_date` date NOT NULL,
     `avatar_url` varchar(512),
     `avatar_public_id` varchar(255)
 );
@@ -63,7 +63,7 @@ CREATE TABLE `matches` (
     `id_host` int NOT NULL,
     `goals_guest` int DEFAULT 0,
     `goals_host` int DEFAULT 0,
-    `date` datetime NOT NULL
+    `date` date NOT NULL
 );
 
 CREATE TABLE `team_membership` (
@@ -252,10 +252,10 @@ DELIMITER //
 CREATE TRIGGER TR_MATCHUP_AFTER_DELETE AFTER DELETE ON matchups FOR EACH ROW
 BEGIN
     -- remove all events of the related match-ups
-    DELETE FROM events AS e
-    WHERE (e.id_user = old.id_user OR e.id_assistance1 = old.id_user OR e.id_assistance2 = old.id_user)
-    AND e.id_match = old.id_match
-    AND e.id_team = old.id_team;
+    DELETE FROM events
+    WHERE (old.id_user = id_user OR old.id_user = id_assistance1 OR old.id_user = id_assistance2)
+      AND old.id_match = id_match
+      AND old.id_team = id_team;
 
     CALL generate_team_statistics_on_matchups_records(
             old.id_match, old.id_team, old.id_user);
@@ -772,10 +772,10 @@ INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `stat
 INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (36, 5, 36, 'active', 3);
 
 -- CONPETITIONS
-INSERT INTO `competitions` (`id_competition`, `name`, `id_leader`, `id_sport`, `start_date`, `end_date`) VALUES (1, 'Hokejová liga 19-20', 1, 1, '2019-09-01 23:59:59', '2020-04-01 23:59:59');
-INSERT INTO `competitions` (`id_competition`, `name`, `id_leader`, `id_sport`, `start_date`, `end_date`) VALUES (2, 'Florbalová liga', 1, 2, '2017-06-20 23:59:59', '2018-11-20 23:59:59');
-INSERT INTO `competitions` (`id_competition`, `name`, `id_leader`, `id_sport`, `start_date`, `end_date`) VALUES (3, 'Hokejbalová liga', 1, 3, '2019-09-01 23:59:59', '2020-04-01 23:59:59');
-INSERT INTO `competitions` (`id_competition`, `name`, `id_leader`, `id_sport`, `start_date`, `end_date`) VALUES (4, 'Hokejová liga 18-19', 1, 1, '2018-09-01 23:59:59', '2019-04-01 23:59:59');
+INSERT INTO `competitions` (`id_competition`, `name`, `id_leader`, `id_sport`, `start_date`, `end_date`) VALUES (1, 'Hokejová liga 19-20', 1, 1, '2019-09-01', '2020-04-01');
+INSERT INTO `competitions` (`id_competition`, `name`, `id_leader`, `id_sport`, `start_date`, `end_date`) VALUES (2, 'Florbalová liga', 1, 2, '2017-06-20', '2018-11-20');
+INSERT INTO `competitions` (`id_competition`, `name`, `id_leader`, `id_sport`, `start_date`, `end_date`) VALUES (3, 'Hokejbalová liga', 1, 3, '2019-09-01', '2020-04-01');
+INSERT INTO `competitions` (`id_competition`, `name`, `id_leader`, `id_sport`, `start_date`, `end_date`) VALUES (4, 'Hokejová liga 18-19', 1, 1, '2018-09-01', '2019-04-01');
 
 -- CONPETITION MEMBERSHIP
 INSERT INTO `competition_membership` (`id_competition_membership`, `id_competition`, `id_team`, `status`) VALUES (1, 1, 1, 'active');
@@ -786,11 +786,11 @@ INSERT INTO `competition_membership` (`id_competition_membership`, `id_competiti
 INSERT INTO `competition_membership` (`id_competition_membership`, `id_competition`, `id_team`, `status`) VALUES (6, 4, 2, 'active');
 
 -- MATCHES
-INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES (1, null, 1, 1, '2018-11-04 16:00:00');
-INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES (2, null, 1, 1, '2018-11-05 16:00:00');
-INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES (3, 1, 1, 2, '2018-11-10 16:00:00');
-INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES (4, 1, 2, 3, '2018-11-11 16:00:00');
-INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES (5, 1, 3, 1, '2018-11-12 16:00:00');
+INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES (1, null, 1, 1, '2018-11-04');
+INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES (2, null, 1, 1, '2018-11-05');
+INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES (3, 1, 1, 2, '2018-11-10');
+INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES (4, 1, 2, 3, '2018-11-11');
+INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES (5, 1, 3, 1, '2018-11-12');
 
 INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (1, 1, true, 1, 1, false);
 INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (2, 1, false, 1, 2, false);

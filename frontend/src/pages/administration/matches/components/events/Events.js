@@ -7,6 +7,7 @@ import {useApi} from "../../../../../hooks/useApi";
 import Button from "react-bootstrap/Button";
 import deleteIcon from "../../../../../assets/images/delete.png";
 import {deleteEvent} from "../../../../../api/events/eventClient_v1";
+import {eventTypesList, eventTypesEnum} from "../../../../../enums/enums";
 
 export function Events({eventsState, fetchEvents}) {
     const api = useApi();
@@ -26,6 +27,9 @@ export function Events({eventsState, fetchEvents}) {
         {
             Header: "Typ",
             accessor: "type",
+            Cell: row => (
+                eventTypesEnum[row.original.type]
+            ),
             filterMethod: (filter, row) => {
                 if (filter.value === 'all') {
                     return true;
@@ -41,13 +45,10 @@ export function Events({eventsState, fetchEvents}) {
                     value={filter ? filter.value : "all"}
                 >
                     <option value="all">Vše</option>
-                    <option value="goal">goal</option>
-                    <option value="suspension_2">suspension_2</option>
-                    <option value="suspension_2_2">suspension_2_2</option>
-                    <option value="suspension_5">suspension_5</option>
-                    <option value="suspension_pp">suspension_pp</option>
-                    <option value="suspension_pp_end">suspension_pp_end</option>
-                    <option value="suspension_penalty">suspension_penalty</option>
+                    {eventTypesList.map((object, index) => (
+                        <option key={index} value={object.id}>{object.value}</option>
+                    ))}
+
                 </select>
         },
         {
