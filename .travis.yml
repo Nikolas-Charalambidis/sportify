@@ -9,7 +9,7 @@ matrix:
       - cd database
       - docker build -t mysql_sportify .
       - docker run -d -p 3306:3306 --name mysql_sportify mysql_sportify:latest
-      - sleep 90
+      - sleep 60
       - docker exec -i mysql_sportify mysql -uroot -ppassword  <<< "SELECT 1"
       - docker stop mysql_sportify
 
