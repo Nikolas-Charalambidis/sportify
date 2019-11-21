@@ -22,6 +22,7 @@ import { AdministrationMenu } from './pages/administration/Administration/Admini
 import { MatchDetailAdminPage } from './pages/administration/matches/MatchDetailAdminPage';
 import { UserDetail } from './pages/users/detail/UserDetail';
 import { MatchCreateForm } from './pages/match/create-form/MatchCreateForm';
+import {MatchDetail} from "./pages/matches/detail/MatchDetail";
 
 export function Routes() {
 	return (
@@ -41,6 +42,7 @@ export function Routes() {
 			<Route path="/aboutus" exact component={AboutUs}/>
 			<Route path="/contact" exact component={Contact}/>
 			<Route path="/teams/:id_team" exact component={TeamDetail} />
+			<Route path="/teams/:id_team/matches/:id_match" exact component={MatchDetail} />
 			<Route path="/teams" exact component={TeamList} />
 			<Route path="/users/:id_user" exact component={UserDetail} />
 
