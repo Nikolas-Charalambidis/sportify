@@ -140,6 +140,7 @@ label {
   position: fixed !important;
   z-index: 10;
   width: 75%;
+  margin-left: 12%;
   margin-top: 10px;
   left: 6px !important;
   border-radius: 0 !important;
@@ -195,7 +196,7 @@ label {
 @media only screen and (max-width: 400px) {
   .alert {
     width: 90%;
-    transform: translate3d(10px, 67px, 0px);
+    margin-left: 3%;
 
     .alert-labelled-cell {
       padding-right: 50px;

@@ -1,0 +1,54 @@
+.match-score {
+  .team-home h2, .team-visiting h2 {
+    font-size: 35px !important;
+    font-weight: 700;
+    margin-bottom: 0;
+    text-align: center;
+  }
+
+  .team-home, .team-visiting {
+    float: left;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    min-height: 1px;
+    width: 50%;
+    background: #fff;
+    color: black;
+    position: relative;
+    z-index: 10;
+    border-top: 1px solid #d5dbe1;
+    border-bottom: 1px solid #d5dbe1;
+  }
+
+  .score {
+
+    span {
+      display: block;
+      float: left;
+      background: #FEDF00 !important;
+      color: black !important;
+      padding: 0 8px;
+      width: 100%;
+      height: 100%;
+      font-size: 50px !important;
+      font-weight: bold;
+      text-align: center;
+    }
+  }
+}
+
+.match .heading ul {
+  list-style: none inside;
+  padding: 0;
+  display: inline-block;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.match .heading ul li {
+  font-size: 35px;
+  font-weight: lighter !important;
+  display: inline-block;
+}
+
