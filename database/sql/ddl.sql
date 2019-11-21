@@ -251,9 +251,11 @@ DELIMITER ;
 DELIMITER //
 CREATE TRIGGER TR_MATCHUP_AFTER_DELETE AFTER DELETE ON matchups FOR EACH ROW
 BEGIN
-
-    -- TODO: TRIGGER ON `MACTHUP` DELETE - ALL THE RELEVANT EVENTS SHOULD BE REMOVED AS WELL
-    --       PLACE IT HERE AND DON'T REMOVE THE LATTER PROCEDURE CALL
+    -- remove all events of the related match-ups
+    DELETE FROM events AS e
+    WHERE (e.id_user = old.id_user OR e.id_assistance1 = old.id_user OR e.id_assistance2 = old.id_user)
+    AND e.id_match = old.id_match
+    AND e.id_team = old.id_team;
 
     CALL generate_team_statistics_on_matchups_records(
             old.id_match, old.id_team, old.id_user);
