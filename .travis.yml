@@ -8,7 +8,9 @@ matrix:
       script:
       - cd database
       - docker build -t mysql_sportify .
-    
+      - docker run -p 3306:3306 --name mysql_sportify mysql_sportify:latest
+      - docker exec -i mysql_sportify mysql -uroot -ppassword  <<< "SELECT 1"
+
     - language: node_js
       node_js:
         - 10
