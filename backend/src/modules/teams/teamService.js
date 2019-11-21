@@ -235,6 +235,7 @@ export default class TeamService {
 			`SELECT 
 				m.id_match, m.date,
 				host.name AS host_name, guest.name AS guest_name,
+				m.goals_host AS goals_host, m.goals_guest AS goals_guest,
 				c.name AS competition_name
 			 FROM matches as m
 			 LEFT JOIN competitions as c ON m.id_competition=c.id_competition 
