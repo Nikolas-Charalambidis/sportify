@@ -18,7 +18,6 @@ export function MatchList({matchesState, id_team, admin}) {
             }
         }
     }
-
     const columns = [
         {
             Header: "Datum",
