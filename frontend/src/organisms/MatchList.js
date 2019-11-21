@@ -94,6 +94,8 @@ export function MatchList({matchesState, id_team, admin}) {
         {
             Header: "Skóre",
             accessor: "score",
+            Cell: props =>
+              <span>{props.original.goals_host}:{props.original.goals_guest}</span>,
             filterable: false,
         },
         {
