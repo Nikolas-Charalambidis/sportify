@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Table} from "../../../../../organisms/Table";
 import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../../../assets/images/loading.gif";
@@ -8,9 +8,15 @@ import Button from "react-bootstrap/Button";
 import deleteIcon from "../../../../../assets/images/delete.png";
 import {deleteEvent} from "../../../../../api/events/eventClient_v1";
 import {eventTypesList, eventTypesEnum} from "../../../../../enums/enums";
+import {DeleteModal} from "../../../../../atoms/DeleteModal";
 
 export function Events({eventsState, fetchEvents}) {
     const api = useApi();
+
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+    const [ID, setID] = useState(null);
 
     const handleDeleteEvent = async (id_event) => {
         const result = await deleteEvent(api, id_event);
@@ -95,7 +101,10 @@ export function Events({eventsState, fetchEvents}) {
             accessor: "id_event",
             filterable:false,
             Cell: row => (
-                <Button variant="link" onClick={() => handleDeleteEvent(row.original.id_event)}>
+                <Button variant="link" onClick={() => {
+                    setID(row.original.id_event);
+                    handleShow();
+                }}>
                     <Image style={{ width: '2rem' }} src={deleteIcon} />
                 </Button>
             )
@@ -111,6 +120,8 @@ export function Events({eventsState, fetchEvents}) {
             {(!eventsState.isLoading && !eventsState.error) &&
                 <div>
                     <Table className="defaultCursor" columns={columnsEvents} data={eventsState.events}/>
+                    <DeleteModal key="events" show={show} heading="Delete eventu" text="Opravdu si přejete odstranit event?"
+                                 handleClose={handleClose} deleteFunction={handleDeleteEvent} idItem={ID}/>
                 </div>
             }
         </div>
