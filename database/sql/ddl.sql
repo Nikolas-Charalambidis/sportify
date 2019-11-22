@@ -883,7 +883,7 @@ DELIMITER ;
 --     VALUES (1, 1, 1, 1, 0, 0, 0, 0, 5, 300, 9, 2, 356);
 -- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shots` )
 --     VALUES (2, 2, 1, 1, 5, 0, 6, 2, 0, 0, 0, 0, 0);
--- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_soots` )
+-- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shots` )
 --     VALUES (3, 3, 1, 1, 5, 2, 0, 0, 0, 0, 0, 0, 0);
 -- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shots` )
 --     VALUES (4, 4, 1, 1, 5, 1, 4, 1, 0, 0, 0, 0, 0);
