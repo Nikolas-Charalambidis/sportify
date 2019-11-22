@@ -1,5 +1,5 @@
 import {useApi} from "../../hooks/useApi";
-import { useEffect, useState} from "react";
+import { useEffect, useState, useRef, useCallback} from "react";
 import {config} from '../../config';
 
 export function useGetMatch(id_match) {
@@ -49,6 +49,19 @@ export function useGetMatchup(id_match, host) {
     return [state, fetchData];
 }
 
+const fetchDataBase = ({ setState, api, id_match, host }) => {
+    setState({isLoading: true, error: false, events: null});
+    api
+        .get(`${config.API_BASE_PATH}/matches/${id_match}/events/${host}`)
+        .then(({data}) => {
+            const {events} = data;
+            setState({isLoading: false, error: false, events: events});
+        })
+        .catch(() => {
+            setState({isLoading: false, error: true, match: null});
+        })
+};
+
 export function useGetEvents(id_match, host) {
     const api = useApi();
     const [state, setState] = useState({
@@ -56,22 +69,20 @@ export function useGetEvents(id_match, host) {
         error: false
     });
 
-    const fetchData = () => {
-        setState({isLoading: true, error: false, events: null});
-        api
-            .get(`${config.API_BASE_PATH}/matches/${id_match}/events/${host}`)
-            .then(({data}) => {
-                const {events} = data;
-                setState({isLoading: false, error: false, events: events});
-            })
-            .catch(() => {
-                setState({isLoading: false, error: true, match: null});
-            })
-    };
+    const argsRef = useRef({ id_match, host, api });
+    useEffect(() => {
+        argsRef.current = ({ id_match, host, api });
+    }, [id_match, host, api]);
 
-    useEffect( () => {
-        fetchData();
-    }, [api, id_match, host]); // eslint-disable-line
+    const fetchData = useCallback(() => {
+        const { id_match, host, api } = argsRef.current;
+        fetchDataBase({ setState, api, id_match, host })
+    }, []);
+
+    useEffect(() => {
+        fetchData()
+    }, [id_match, host, fetchData]);
+
     return [state, fetchData];
 }
 

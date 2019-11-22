@@ -10,6 +10,7 @@ import deleteIcon from "../../../../../assets/images/delete.png";
 import addIcon from "../../../../../assets/images/add.png";
 import {AddGoalSuspensionModal} from "../events/AddGoalSuspensionModal";
 import {addPlayer, deletePlayer, setGoalkeeper} from "../../../../../api/matchup/matchupClient_v1";
+import {DeleteModal} from "../../../../../atoms/DeleteModal";
 
 export function Matchup({id_team, id_match, host, availablePlayers, fetchAvailablePlayers, matchupState, fetchMatchup, fetchEvents}) {
     const api = useApi();
@@ -20,6 +21,11 @@ export function Matchup({id_team, id_match, host, availablePlayers, fetchAvailab
         show: true,
         id_user: id_user
     });
+
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+    const [ID, setID] = useState(null);
 
     const columnsMatchup = [
         {
@@ -71,7 +77,10 @@ export function Matchup({id_team, id_match, host, availablePlayers, fetchAvailab
                     <Button variant="link" onClick={() => openGoalSuspensionModal(row.original.id_user)}>
                         <Image style={{ width: '2rem' }} src={addIcon} />
                     </Button>
-                    <Button variant="link" onClick={() => handleDeletePlayer(row.original.id_matchup, row.original.id_user)}>
+                    <Button variant="link" onClick={() => {
+                        setID({id_matchup: row.original.id_matchup, id_user: row.original.id_user});
+                        handleShow();
+                    }}>
                         <Image style={{ width: '2rem' }} src={deleteIcon} />
                     </Button>
                 </div>
@@ -80,15 +89,15 @@ export function Matchup({id_team, id_match, host, availablePlayers, fetchAvailab
     ];
 
     const handleAddPlayer = async (id_user) => {
-        const result = await addPlayer(api, {id_team: id_team, id_match: id_match, id_user: id_user, host: host});
+        const result = await addPlayer(api, {id_team: id_team, id_match: id_match, id_user: id_user, host: host, goalkeeper: false});
         if(result) {
             fetchMatchup();
             fetchAvailablePlayers();
         }
     };
 
-    const handleDeletePlayer = async (id_matchup, id_user) => {
-        const result = await deletePlayer(api, id_matchup, id_user);
+    const handleDeletePlayer = async (id) => {
+        const result = await deletePlayer(api, id.id_matchup, id.id_user);
         if(result) {
             fetchMatchup();
             fetchAvailablePlayers();
@@ -112,7 +121,7 @@ export function Matchup({id_team, id_match, host, availablePlayers, fetchAvailab
                         <Heading size="xs" className="alert-warning pt-2 pb-2 mt-2 text-center">Nejsou dostupní žádní další hráči</Heading>
                     }
                     {(!availablePlayers.isLoading && !availablePlayers.error && availablePlayers.players.length !== 0) &&
-                        <CustomSelect name="id_type"
+                        <CustomSelect name="id_type" label="Přidání hráče do sestavy"
                                       options={availablePlayers.players}
                                       getOptionLabel={option => `${option.name}`}
                                       getOptionValue={option => `${option.id_user}`}
@@ -126,6 +135,9 @@ export function Matchup({id_team, id_match, host, availablePlayers, fetchAvailab
                     <AddGoalSuspensionModal params={showGoalModal} handleClose={closeGoalSuspensionModal} matchup={matchupState.matchup}
                                  id_team={id_team} id_match={id_match} host={host} fetchEvents={fetchEvents}
                     />
+                    <DeleteModal key="players" show={show} heading="Delete hráče ze zápasu"
+                                 text="Opravdu si přejete odstranit hráče ze zápasu a tím i všechny eventy, na které je navázán?"
+                                 handleClose={handleClose} deleteFunction={handleDeletePlayer} idItem={ID}/>
                 </div>
             }
         </div>

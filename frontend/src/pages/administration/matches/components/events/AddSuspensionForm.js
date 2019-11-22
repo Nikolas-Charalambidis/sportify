@@ -3,15 +3,7 @@ import {Button, Form, Modal} from "react-bootstrap";
 import {Field} from "../../../../../atoms";
 import {Formik} from "formik";
 import {CustomSelect} from "../../../../../atoms/Select";
-
-const suspensions = [
-    {id_suspension: "suspension_2", suspension: "suspension_2"},
-    {id_suspension: "suspension_2_2", suspension: "suspension_2_2"},
-    {id_suspension: "suspension_5", suspension: "suspension_5"},
-    {id_suspension: "suspension_pp", suspension: "suspension_pp"},
-    {id_suspension: "suspension_pp_end", suspension: "suspension_pp_end"},
-    {id_suspension: "suspension_penalty", suspension: "suspension_penalty"},
-];
+import {suspensionTypesList} from "../../../../../enums/enums";
 
 export function AddSuspensionForm({id_user, handleClose, addEvent, id_team, id_match, host, schema}) {
     return (
@@ -19,7 +11,7 @@ export function AddSuspensionForm({id_user, handleClose, addEvent, id_team, id_m
             validationSchema={schema}
             initialValues={{
                 id_user: id_user,
-                type: suspensions[0].id_suspension,
+                type: suspensionTypesList[0].id,
                 id_team: id_team,
                 id_match: id_match,
                 id_assistance1: null,
@@ -41,12 +33,12 @@ export function AddSuspensionForm({id_user, handleClose, addEvent, id_team, id_m
                            isInvalid={!!errors.minute}/>
 
                     <CustomSelect name="type" label="Typ trestu"
-                                  options={suspensions}
-                                  getOptionLabel={option => `${option.suspension}`}
-                                  getOptionValue={option => `${option.id_suspension}`}
+                                  options={suspensionTypesList}
+                                  getOptionLabel={option => `${option.value}`}
+                                  getOptionValue={option => `${option.id}`}
                                   isSearchable={true}
-                                  placeholder={suspensions[0].suspension}
-                                  onChange={options => setFieldValue(options.id_suspension)}
+                                  placeholder={suspensionTypesList[0].value}
+                                  onChange={option => setFieldValue("type", option.id)}
                     />
 
                 </Modal.Body>

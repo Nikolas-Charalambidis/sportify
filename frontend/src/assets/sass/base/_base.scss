@@ -96,6 +96,25 @@ label {
   }
 }
 
+.btn-danger {
+  background: red !important;
+  color: #ffffff !important;
+  font-family: "Proxima", Arial, sans-serif !important;
+  text-transform: uppercase;
+  padding: 8px 25px !important;
+  font-size: 16px !important;
+  letter-spacing: 2px;
+  border-radius: 2px !important;
+  text-decoration: none !important;
+  border: 1px solid red !important;
+
+  &:hover {
+    background: black !important;
+    color: white !important;
+    border-color: black !important;
+  }
+}
+
 .btn-secondary {
   background: white !important;
   color: black !important;

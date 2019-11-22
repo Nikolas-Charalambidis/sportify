@@ -4,7 +4,7 @@ import {Heading} from '../../../atoms/';
 import {Breadcrumb, Button} from "react-bootstrap";
 import {NavLink as Link, useHistory, useParams} from "react-router-dom";
 import {useAuth} from "../../../utils/auth";
-import {useGetMatch} from "../../../api/matches/matchClient_v1";
+import {deleteMatch, useGetMatch} from "../../../api/matches/matchClient_v1";
 import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../assets/images/loading.gif";
 import {useApi} from "../../../hooks/useApi";
@@ -13,9 +13,9 @@ import {MatchDetailMultiple} from "./components/MatchDetailMultiple";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import {DeleteMatchModal} from "./components/matchup/DeleteMatchModal";
 import moment from "moment";
 import {useGetTeam} from "../../../api/team/teamClient_v1";
+import {DeleteModal} from "../../../atoms/DeleteModal";
 
 export function MatchDetailAdminPage() {
     const history = useHistory();
@@ -39,6 +39,15 @@ export function MatchDetailAdminPage() {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const [ID, setID] = useState(null);
+
+    const handleDeleteMatch = async (id) => {
+        handleClose();
+        const result = await deleteMatch(api, id.id_match);
+        if(result){
+            history.replace(`/administration/teams/${id.id_team}`);
+        }
+    };
 
     return (
         <div>
@@ -71,14 +80,19 @@ export function MatchDetailAdminPage() {
                                 <p><b>Datum konání zápasu:</b> {moment(stateMatch.match.date).local().format("DD. MM. YYYY HH:mm")}</p>
                             </Col>
                             <Col className="text-right">
-                                <Button variant="primary" type="button" onClick={handleShow}>
+                                <Button variant="danger" type="button" onClick={() => {
+                                    setID({id_team: id_team, id_match: id_match});
+                                    handleShow();
+                                }}>
                                     Odstranit zápas
                                 </Button>
                             </Col>
                         </Row>
                     </Container>
 
-                    <DeleteMatchModal show={show} api={api} history={history} id_team={id_team} id_match={stateMatch.match.id_match} handleClose={handleClose} />
+                    <DeleteModal key="match" show={show} heading="Delete zápasu"
+                                 text="Opravdu si přejete odstranit zápas a sním i všechny zázanmy o hráčích a eventech?"
+                                 handleClose={handleClose} deleteFunction={handleDeleteMatch} idItem={ID}/>
 
                     {stateMatch.match.host_name === stateMatch.match.guest_name ?
                         <MatchDetailSingle id_match={id_match} data={stateMatch.match}/> :

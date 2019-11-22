@@ -8,18 +8,25 @@ export default class MatchupService {
 		this.dbConnection = req[DB_CONNECTION_KEY];
 	}
 
-	async addPlayerToMatchup(id_match, id_team, id_user, host) {
-		const match_id = Number(id_match);
-		const team_id = Number(id_team);
-		const user_id = Number(id_user);
-		matchupValidations.validateAddPlayerData(match_id, team_id, user_id, host);
-		const result = await this.dbConnection.query(
-			`INSERT INTO matchups (id_matchup, id_match, goalkeeper, id_team, id_user, host)
-			 VALUES (NULL, ?, 0, ?, ?, ?)`,
-			[match_id, team_id, user_id, host]
+	async addPlayersToMatchup(values, id_match) {
+		const array = [];
+		values.map(item => {
+			const data = matchupValidations.validateAddPlayerData(item, id_match);
+			array.push([
+				data.id_match,
+				data.goalkeeper,
+				data.id_team,
+				data.id_user,
+				data.host
+			]);
+		});
+
+		const result = await this.dbConnection.batch(
+			`INSERT INTO matchups (id_match, goalkeeper, id_team, id_user, host)
+			 	  VALUES (?, ?, ?, ?, ?)`, array
 		);
-		if (result.affectedRows === 0) {
-			throw {status: 500, msg: 'Přidání hráče do sestavy se nezdařilo'};
+		if(result.affectedRows !== values.length) {
+			throw {status: 500, msg: 'Nepodařilo se uložit všechny hráče'};
 		}
 	}
 
