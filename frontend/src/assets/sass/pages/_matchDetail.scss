@@ -61,3 +61,26 @@
   font-size: 30px;
   color: red;
 }
+
+.dateOfCompetition {
+  margin-top: -20px;
+  font-size: 22px;
+}
+
+.adminMatchTabs {
+  .nav-item {
+    background-color: transparent;
+    border: none !important;
+    color: black !important;
+    border-bottom: 1px solid black !important;
+  }
+  .active {
+    border: 1px solid black !important;
+    border-bottom: none !important;
+    color: black !important;
+  }
+}
+
+.nameOfCompetition {
+  margin-top: -25px;
+}

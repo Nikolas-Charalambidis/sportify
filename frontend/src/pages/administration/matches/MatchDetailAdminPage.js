@@ -66,7 +66,7 @@ export function MatchDetailAdminPage() {
                 </li>
                 <li className="breadcrumb-item"><span className="active">Detail Zápasu</span></li>
             </Breadcrumb>
-            <Heading>Detail zápasu</Heading>
+            <Heading className="mt-5">Detail zápasu</Heading>
 
             {stateMatch.isLoading && <div className="text-center"><Image src={loadingGif}/></div>}
             {(!stateMatch.isLoading && stateMatch.error) &&
@@ -75,11 +75,11 @@ export function MatchDetailAdminPage() {
                 <div>
                     <Container>
                         <Row>
-                            <Col>
-                                <p><b>Název soutěže:</b> {stateMatch.match.competition_name ? stateMatch.match.competition_name : "Amatérský zápas"}</p>
-                                <p><b>Datum konání zápasu:</b> {moment(stateMatch.match.date).local().format("DD. MM. YYYY HH:mm")}</p>
+                            <Col xs={{span: 12}} sm={{span: 6}}>
+                                <Heading className="text-left nameOfCompetition" size="lg">{stateMatch.match.competition_name ? stateMatch.match.competition_name : "Amatérský zápas"}</Heading>
+                                <p className="dateOfCompetition">{moment(stateMatch.match.date).local().format("DD. MM. YYYY HH:mm")}</p>
                             </Col>
-                            <Col className="text-right">
+                            <Col xs={{span: 12}} sm={{span: 6}} className="text-right mb-sm-0 mb-3">
                                 <Button variant="danger" type="button" onClick={() => {
                                     setID({id_team: id_team, id_match: id_match});
                                     handleShow();
