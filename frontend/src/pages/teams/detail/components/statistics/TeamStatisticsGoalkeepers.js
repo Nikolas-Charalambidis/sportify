@@ -80,7 +80,7 @@ export function TeamStatisticsGoalkeepers({filterBy}) {
         },
         {
             Header: <OverlayTriggerTable header="Střely" placement="bottom" icon={Icons.faInfo} message="Počet vychytaných střel" />,
-            accessor: "goalkeeper_shoots",
+            accessor: "goalkeeper_shots",
             filterable: false,
         },
         {
