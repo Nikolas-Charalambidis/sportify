@@ -792,14 +792,14 @@ INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES
 INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES (4, 1, 2, 3, '2018-11-11');
 INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES (5, 1, 3, 1, '2018-11-12');
 
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (1, 1, true, 1, 1, false);
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (2, 1, false, 1, 2, false);
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (3, 1, false, 1, 3, false);
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (4, 1, false, 1, 4, false);
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (5, 1, false, 1, 5, false);
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (6, 1, true, 1, 6, true);
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (7, 1, false, 1, 7, true);
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (8, 1, false, 1, 8, true);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (1, 1, true, 1, 1, true);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (2, 1, false, 1, 2, true);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (3, 1, false, 1, 3, true);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (4, 1, false, 1, 4, true);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (5, 1, false, 1, 5, true);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (6, 1, true, 1, 6, false);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (7, 1, false, 1, 7, false);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (8, 1, false, 1, 8, false);
 
 INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (11, 2, true, 1, 1, true);
 INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (12, 2, false, 1, 2, true);
