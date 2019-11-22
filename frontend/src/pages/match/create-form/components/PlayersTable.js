@@ -10,7 +10,7 @@ import { Button } from 'react-bootstrap';
 import { AddGoalSuspensionModal } from "./events/AddGoalSuspensionModal";
 import addIcon from "../../../../assets/images/add.png";
 
-export function PlayersTable({ id_team, state, events }) {
+export function PlayersTable({ id_team, state, events, setEvent, host }) {
     const remappedState = state.players.map(item => item.player);
     const [positionsState] = useGetTeamPositions();
     let history = useHistory();
@@ -22,42 +22,29 @@ export function PlayersTable({ id_team, state, events }) {
         id_user: id_user
     });
 
-    const goals = [
-        {
-            id: 1,
-            value: 1,
-        },
-        {
-            id: 1,
-            value: 1,
-        },
-        {
-            id: 1,
-            value: 1,
-        },
-        {
-            id: 2,
-            value: 1,
-        },
-        {
-            id: 3,
-            value: 1,
-        },
-        {
-            id: 1,
-            value: 1,
-        },
-    ];
+    function getRowPlayer(data) {
+        const player = data._original;
+        return player
+    }
 
     function getGoals(data) {
-        const player = data._original;
-        const countGoals = goals.filter(g => g.id === 1).length;
-        return countGoals;
+        const player = getRowPlayer(data);
+        const goals = events.filter(e => e.id_user === player.id_user && e.type === 'goal').length;
+        return goals;
     };
 
-    function addGoal(data) {
-        console.log("gol", data);
+    function getAssists(data) {
+        const player = getRowPlayer(data);
+        const assists1 = events.filter(e => e.id_assistance1 === player.id_user).length;
+        const assists2 = events.filter(e => e.id_assistance2 === player.id_user).length;
+        return assists1 + assists2;
     };
+
+    function getSuspensions(data) {
+        const player = getRowPlayer(data);
+        const suspension = events.filter(e => e.id_user === player.id_user && e.type.includes("suspension")).length;        
+        return suspension;
+    }
 
     function addPenalty(data) {
         console.log("trest", data);
@@ -103,9 +90,11 @@ export function PlayersTable({ id_team, state, events }) {
         },
         {
             Header: 'Astistence',
+            Cell: ({ row }) => <span>{getAssists(row)}</span>
         },
         {
             Header: 'Trestné minuty',
+            Cell: ({ row }) => <span>{getSuspensions(row)}</span>
         },
         {
             Header: 'Akce',
@@ -115,7 +104,6 @@ export function PlayersTable({ id_team, state, events }) {
                         <Button variant="link" onClick={() => openGoalSuspensionModal(row._original.id_user)}>
                             <Image style={{ width: '2rem' }} src={addIcon} />
                         </Button>
-                        <Button type="submit" variant="secondary" onClick={() => addPenalty(row)}>Trest</Button>
                     </span>
                 )
             }
@@ -143,7 +131,7 @@ export function PlayersTable({ id_team, state, events }) {
             <Table columns={columns} data={remappedState}/>
             )}
             <AddGoalSuspensionModal params={showGoalModal} handleClose={closeGoalSuspensionModal} matchup={remappedState}
-                id_team={id_team} events={events} host={1} />
+                id_team={id_team} events={events} setEvent={setEvent} host={host} />
         </div>
     );
 }

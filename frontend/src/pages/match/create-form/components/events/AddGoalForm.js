@@ -12,11 +12,11 @@ export function AddGoalForm({id_user, handleClose, addEvent, matchup, id_team, h
                     id_user: id_user,
                     type: "goal",
                     id_team: id_team,
-                    id_match: 1,
+                    id_match: null,
                     id_assistance1: null,
                     id_assistance2: null,
                     minute: '',
-                    value: 0,
+                    value: null,
                     host: host
                 }}
             onSubmit={values => {

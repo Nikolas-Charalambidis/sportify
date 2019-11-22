@@ -34,9 +34,13 @@ export function MatchCreateForm() {
     setShowVisitingPlayersModal(false);
     };
 
-    let events = [];
+    const [allEvents, setEvents] = useState([]);
 
-    const [allEvents, setEvents] = useState();
+    function test() {
+        console.log(allEvents);
+    };
+
+
 
     return (
     <div>
@@ -102,7 +106,7 @@ export function MatchCreateForm() {
                     </Col>
                     {!isEmpty(homePlayersState.players) && (
                         <Col>
-                        <PlayersTable id_team={Number(values.id_team_home)} state={homePlayersState} events={events}/>
+                                                <PlayersTable id_team={Number(values.id_team_home)} state={homePlayersState} events={allEvents} setEvent={setEvents} host={true}/>
                         </Col>
                     )}
                     </Row>
@@ -146,8 +150,8 @@ export function MatchCreateForm() {
                         </div>
                     </Col>
                     {!isEmpty(visitingPlayersState.players) && (
-                        <Col>
-                        <PlayersTable state={visitingPlayersState} />
+                                            <Col>
+                                                <PlayersTable id_team={Number(values.id_team_visiting)} state={visitingPlayersState} events={allEvents} setEvent={setEvents} host={false} />
                         </Col>
                     )}
                     </Row>
@@ -155,7 +159,7 @@ export function MatchCreateForm() {
                 </Row>
                 <Row>
                 <Col className="mb-4 mt-lg-0" lg={{ span: 5, offset: 0 }}>
-                    <Button type="submit" block onClick={console.log(events)}>
+                    <Button type="submit" block onClick={() => test()}>
                     Uložit
                     </Button>
                 </Col>
