@@ -13,6 +13,7 @@ import {addPlayer, deletePlayer, setGoalkeeper} from "../../../../../api/matchup
 
 export function Matchup({id_team, id_match, host, availablePlayers, fetchAvailablePlayers, matchupState, fetchMatchup, fetchEvents}) {
     const api = useApi();
+    console.log("matchup", availablePlayers);
 
     const [showGoalModal, setShowGoalModal] = useState({ show: false });
     const closeGoalSuspensionModal = () => setShowGoalModal(false);
@@ -80,7 +81,7 @@ export function Matchup({id_team, id_match, host, availablePlayers, fetchAvailab
     ];
 
     const handleAddPlayer = async (id_user) => {
-        const result = await addPlayer(api, {id_team: id_team, id_match: id_match, id_user: id_user, host: host});
+        const result = await addPlayer(api, {id_team: id_team, id_match: id_match, id_user: id_user, host: host, goalkeeper: false});
         if(result) {
             fetchMatchup();
             fetchAvailablePlayers();
@@ -112,7 +113,7 @@ export function Matchup({id_team, id_match, host, availablePlayers, fetchAvailab
                         <Heading size="xs" className="alert-warning pt-2 pb-2 mt-2 text-center">Nejsou dostupní žádní další hráči</Heading>
                     }
                     {(!availablePlayers.isLoading && !availablePlayers.error && availablePlayers.players.length !== 0) &&
-                        <CustomSelect name="id_type"
+                        <CustomSelect name="id_type" label="Přidání hráče do sestavy"
                                       options={availablePlayers.players}
                                       getOptionLabel={option => `${option.name}`}
                                       getOptionValue={option => `${option.id_user}`}

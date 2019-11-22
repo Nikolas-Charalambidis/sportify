@@ -124,8 +124,70 @@ router.patch('/shots', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
 	try {
 		const {values} = req.body;
-		await new EventService(req).addEvent(values);
+		await new EventService(req).addEvents([values], values.id_match);
 		res.status(201).json({ error: false, msg: 'Event byl úspěšně přidán'});
+	} catch(e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
+ * /events/bulk:
+ *   post:
+ *     tags:
+ *       - Events
+ *     name: Events
+ *     summary: Add new events - bulk insert
+ *     consumes: application/json
+ *     produces: application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         required: true
+ *         type: object
+ *         properties:
+ *           id_match:
+ *             type: integer
+ *           events:
+ *             type: array
+ *             items:
+ *               type: object
+ *               properties:
+ *                 id_user:
+ *                   type: integer
+ *                   nullable: true
+ *                 type:
+ *                   type: string
+ *                 id_team:
+ *                   type: integer
+ *                 id_match:
+ *                   type: integer
+ *                 id_assistance1:
+ *                   type: integer
+ *                   nullable: true
+ *                 id_assistance2:
+ *                   type: integer
+ *                   nullable: true
+ *                 minute:
+ *                   type: integer
+ *                   nullable: true
+ *                 value:
+ *                   type: integer
+ *                   nullable: true
+ *                 host:
+ *                   type: boolean
+ *     responses:
+ *       201:
+ *         description: Event added
+ *       500:
+ *         description: Unexpected error
+ */
+router.post('/bulk', async (req, res, next) => {
+	try {
+		const {events, id_match} = req.body;
+		await new EventService(req).addEvents(events, id_match);
+		res.status(201).json({ error: false, msg: 'Eventy byly úspěšně přidány'});
 	} catch(e) {
 		next(e);
 	}

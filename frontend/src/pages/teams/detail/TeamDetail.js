@@ -1,7 +1,6 @@
 import React from 'react';
 import {NavLink as Link, useParams} from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
-
 import {Heading} from '../../../atoms';
 import {Breadcrumb, Image, Tabs, Tab} from 'react-bootstrap';
 import {TeamSquad} from "./components/TeamSquad";

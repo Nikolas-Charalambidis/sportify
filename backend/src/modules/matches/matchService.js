@@ -12,6 +12,24 @@ export default class MatchService {
 		return this.dbConnection.query(`SELECT * FROM matches`);
 	}
 
+	async addNewMatch(id_competition, id_host, id_guest, date) {
+		const host_id = Number(id_host);
+		const guest_id = Number(id_guest);
+		let competition_id = id_competition;
+		if(id_competition){
+			competition_id = Number(id_competition);
+		}
+		matchValidations.validateCreateMatchData(competition_id, host_id, guest_id, date);
+		const result = await this.dbConnection.query(
+			`INSERT INTO matches (id_match, id_competition, id_host, id_guest, date) VALUES (NULL, ?, ?, ?, ?)`,
+			[competition_id, host_id, guest_id, date]
+		);
+		if (result.affectedRows === 0) {
+			throw {status: 500, msg: 'Vytvoření nového uživatele selhalo'};
+		}
+		return result.insertId;
+	}
+
 	async findMatchById(id_match) {
 		const match_id = Number(id_match);
 		matchValidations.validateMatchId(match_id);
@@ -49,7 +67,7 @@ export default class MatchService {
 		const query =
 			`SELECT m.id_matchup, m.id_match, m.goalkeeper, m.id_team, m.id_user, m.host, 
 				CONCAT(u.name, ' ', u.surname) AS name
-			 FROM matchup AS m
+			 FROM matchups AS m
 			 JOIN users AS u ON u.id_user=m.id_user
 			 WHERE m.id_match=? AND m.host=?`;
 		return this.dbConnection.query(query, [match_id, host]);

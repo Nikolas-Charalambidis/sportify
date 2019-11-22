@@ -6,6 +6,51 @@ const router = Router();
 /**
  * @swagger
  * /matches:
+ *   post:
+ *     tags:
+ *       - AdminMatches
+ *     name: Create Match
+ *     summary: Create new Match
+ *     consumes: application/json
+ *     produces: application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             id_competition:
+ *               type: integer
+ *               nullable: true
+ *             id_host:
+ *               type: integer
+ *             id_guest:
+ *               type: integer
+ *             date:
+ *               type: string
+ *               example: "2018-11-04"
+ *     responses:
+ *       201:
+ *         description: Match created
+ *       400:
+ *         description: Invalid request
+ *       500:
+ *         description: Unexpected error
+ */
+router.post('/', async (req, res, next) => {
+	try {
+		const { id_competition, id_host, id_guest, date } = req.body;
+		const id_match = await new MatchService(req).addNewMatch(id_competition, id_host, id_guest, date);
+		res.status(201).json({ error: false, msg: 'Nový zápas byl úspěšně vytvořen', id_match: id_match});
+	} catch(e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
+ * /matches:
  *   get:
  *     tags:
  *       - AdminMatches
@@ -73,6 +118,11 @@ router.get('/:id_match', async (req, res, next) => {
  *         required: true
  *         schema:
  *           type: integer
+ *       - name: host
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: boolean
  *     responses:
  *       200:
  *         description: Matchups found

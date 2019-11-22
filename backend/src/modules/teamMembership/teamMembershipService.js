@@ -34,7 +34,7 @@ export default class TeamMembershipService {
 			 WHERE t.id_team=?
 			 AND t.status='active'
 			 AND t.id_user NOT IN (
-			 	SELECT id_user FROM matchup WHERE id_team=? AND id_match=?
+			 	SELECT id_user FROM matchups WHERE id_team=? AND id_match=?
 			 )`
 			, [team_id, team_id, match_id]
 		);
