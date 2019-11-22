@@ -146,6 +146,46 @@ router.get('/:id_match/matchup/:host', async (req, res, next) => {
 
 /**
  * @swagger
+ * /matches/{id_match}/events/{host}:
+ *   get:
+ *     tags:
+ *       - AdminMatches
+ *     name: AdminMatches
+ *     summary: Get shots by match ID
+ *     parameters:
+ *       - name: id_match
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - name: host
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: boolean
+ *     responses:
+ *       200:
+ *         description: Shots found
+ *       400:
+ *         description: Invalid request
+ *       404:
+ *         description: Shots not found
+ *       500:
+ *         description: Unexpected error
+ */
+
+router.get('/:id_match/events/:host', async (req, res, next) => {
+	try {
+		const { id_match, host } = req.params;
+		const events = await new MatchService(req).getEventsByMatchId(id_match, host);
+		res.status(200).json({ error: false, msg: 'OK', events: events});
+	} catch(e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
  * /matches/{id_match}/events:
  *   get:
  *     tags:
@@ -169,10 +209,10 @@ router.get('/:id_match/matchup/:host', async (req, res, next) => {
  *         description: Unexpected error
  */
 
-router.get('/:id_match/events/:host', async (req, res, next) => {
+router.get('/:id_match/events', async (req, res, next) => {
 	try {
-		const { id_match, host } = req.params;
-		const events = await new MatchService(req).getEventsByMatchId(id_match, host);
+		const { id_match } = req.params;
+		const events = await new MatchService(req).getAllEventsByMatchId(id_match);
 		res.status(200).json({ error: false, msg: 'OK', events: events});
 	} catch(e) {
 		next(e);

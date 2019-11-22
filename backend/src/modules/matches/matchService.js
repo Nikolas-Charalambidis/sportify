@@ -85,8 +85,50 @@ export default class MatchService {
 			 LEFT JOIN users AS u ON u.id_user=e.id_user
 			 LEFT JOIN users AS ua1 ON ua1.id_user=e.id_assistance1
 			 LEFT JOIN users AS ua2 ON ua2.id_user=e.id_assistance2
-			 WHERE e.id_match=? AND e.host=? AND NOT e.type='shot'`;
+			 WHERE e.id_match=? AND e.host=? AND NOT e.type='shot'
+			 ORDER BY e.minute`;
 		return this.dbConnection.query(query, [match_id, host]);
+	}
+
+	async getAllEventsByMatchId(id_match) {
+		const match_id = Number(id_match);
+		matchValidations.validateMatchId(match_id);
+		const queryGoals =
+			`SELECT e.id_event, e.id_match, e.id_team, t.name AS team_name, e.id_user, e.type, e.minute, e.host, 
+				CONCAT(ua1.name, ' ', ua1.surname) AS name_assistance1,
+				CONCAT(ua2.name, ' ', ua2.surname) AS name_assistance2,
+				CONCAT(u.name, ' ', u.surname) AS user_name
+			 FROM events AS e
+			 LEFT JOIN users AS u ON u.id_user=e.id_user
+			 LEFT JOIN users AS ua1 ON ua1.id_user=e.id_assistance1
+			 LEFT JOIN users AS ua2 ON ua2.id_user=e.id_assistance2
+			 JOIN teams AS t ON t.id_team=e.id_team
+			 WHERE e.id_match=? AND e.type='goal' AND e.minute BETWEEN ? AND ?
+			 ORDER BY e.minute`;
+		const querySuspensions =
+			`SELECT e.id_event, e.id_match, e.id_team, t.name AS team_name, e.id_user, e.type, e.minute, e.host, 
+				CONCAT(ua1.name, ' ', ua1.surname) AS name_assistance1,
+				CONCAT(ua2.name, ' ', ua2.surname) AS name_assistance2,
+				CONCAT(u.name, ' ', u.surname) AS user_name
+			 FROM events AS e
+			 LEFT JOIN users AS u ON u.id_user=e.id_user
+			 LEFT JOIN users AS ua1 ON ua1.id_user=e.id_assistance1
+			 LEFT JOIN users AS ua2 ON ua2.id_user=e.id_assistance2
+			 JOIN teams AS t ON t.id_team=e.id_team
+			 WHERE e.id_match=? AND NOT e.type='shot' AND NOT e.type='goal' AND e.minute BETWEEN ? AND ?
+			 ORDER BY e.minute`;
+
+		const result1Goals = await this.dbConnection.query(queryGoals, [match_id, 1, 20]);
+		const result2Goals = await this.dbConnection.query(queryGoals, [match_id, 21, 40]);
+		const result3Goals = await this.dbConnection.query(queryGoals, [match_id, 41, 60]);
+		const result1Suspensions = await this.dbConnection.query(querySuspensions, [match_id, 1, 20]);
+		const result2Suspensions = await this.dbConnection.query(querySuspensions, [match_id, 21, 40]);
+		const result3Suspensions = await this.dbConnection.query(querySuspensions, [match_id, 41, 60]);
+		return {
+			first: {goals: result1Goals, suspensions: result1Suspensions},
+			second: {goals: result2Goals, suspensions: result2Suspensions},
+			third: {goals: result3Goals, suspensions: result3Suspensions}
+		}
 	}
 
 	async getShotsByMatchId(id_match, host) {
