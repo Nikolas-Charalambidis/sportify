@@ -1,6 +1,5 @@
 import React, { useState }  from 'react';
 import 'react-table/react-table.css';
-import { useHistory } from 'react-router-dom';
 import { Heading } from '../../../../atoms';
 import { Table } from '../../../../organisms/Table';
 import Image from 'react-bootstrap/esm/Image';
@@ -13,7 +12,6 @@ import addIcon from "../../../../assets/images/add.png";
 export function PlayersTable({ id_team, state, events, setEvent, host }) {
     const remappedState = state.players.map(item => item.player);
     const [positionsState] = useGetTeamPositions();
-    let history = useHistory();
 
     const [showGoalModal, setShowGoalModal] = useState({ show: false });
     const closeGoalSuspensionModal = () => setShowGoalModal(false);
@@ -45,10 +43,6 @@ export function PlayersTable({ id_team, state, events, setEvent, host }) {
         const suspension = events.filter(e => e.id_user === player.id_user && e.type.includes("suspension")).length;        
         return suspension;
     }
-
-    function addPenalty(data) {
-        console.log("trest", data);
-    };
 
     const columns = [
         {
