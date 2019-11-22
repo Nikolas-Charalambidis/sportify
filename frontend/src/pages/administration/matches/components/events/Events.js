@@ -5,10 +5,11 @@ import loadingGif from "../../../../../assets/images/loading.gif";
 import {Heading} from "../../../../../atoms";
 import {useApi} from "../../../../../hooks/useApi";
 import Button from "react-bootstrap/Button";
-import deleteIcon from "../../../../../assets/images/delete.png";
 import {deleteEvent} from "../../../../../api/events/eventClient_v1";
 import {eventTypesList, eventTypesEnum} from "../../../../../enums/enums";
 import {DeleteModal} from "../../../../../atoms/DeleteModal";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import * as Icons from "@fortawesome/free-solid-svg-icons";
 
 export function Events({eventsState, fetchEvents}) {
     const api = useApi();
@@ -97,7 +98,7 @@ export function Events({eventsState, fetchEvents}) {
                 </select>
         },
         {
-            Header: '',
+            Header: 'Akce',
             accessor: "id_event",
             filterable:false,
             Cell: row => (
@@ -105,7 +106,7 @@ export function Events({eventsState, fetchEvents}) {
                     setID(row.original.id_event);
                     handleShow();
                 }}>
-                    <Image style={{ width: '2rem' }} src={deleteIcon} />
+                    <FontAwesomeIcon className="removeIcon" icon={Icons.faTrashAlt} size="1x"/>
                 </Button>
             )
         }
@@ -113,7 +114,7 @@ export function Events({eventsState, fetchEvents}) {
 
     return (
         <div>
-            <h2>Události</h2>
+            <Heading className="mt-4" size="lg">Události</Heading>
             {eventsState.isLoading &&  <div className="text-center"><Image src={loadingGif}/></div>}
             {(!eventsState.isLoading && eventsState.error) &&
             <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
