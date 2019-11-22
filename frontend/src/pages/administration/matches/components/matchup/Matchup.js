@@ -6,11 +6,11 @@ import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../../../assets/images/loading.gif";
 import {Heading} from "../../../../../atoms";
 import Button from "react-bootstrap/Button";
-import deleteIcon from "../../../../../assets/images/delete.png";
-import addIcon from "../../../../../assets/images/add.png";
 import {AddGoalSuspensionModal} from "../events/AddGoalSuspensionModal";
 import {addPlayer, deletePlayer, setGoalkeeper} from "../../../../../api/matchup/matchupClient_v1";
 import {DeleteModal} from "../../../../../atoms/DeleteModal";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import * as Icons from "@fortawesome/free-solid-svg-icons"
 
 export function Matchup({id_team, id_match, host, availablePlayers, fetchAvailablePlayers, matchupState, fetchMatchup, fetchEvents}) {
     const api = useApi();
@@ -75,13 +75,13 @@ export function Matchup({id_team, id_match, host, availablePlayers, fetchAvailab
             Cell: row => (
                 <div>
                     <Button variant="link" onClick={() => openGoalSuspensionModal(row.original.id_user)}>
-                        <Image style={{ width: '2rem' }} src={addIcon} />
+                        <FontAwesomeIcon className="addIcon" icon={Icons.faPlus} size="1x"/>
                     </Button>
                     <Button variant="link" onClick={() => {
                         setID({id_matchup: row.original.id_matchup, id_user: row.original.id_user});
                         handleShow();
                     }}>
-                        <Image style={{ width: '2rem' }} src={deleteIcon} />
+                        <FontAwesomeIcon className="removeIcon" icon={Icons.faTrashAlt} size="1x"/>
                     </Button>
                 </div>
             )

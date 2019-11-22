@@ -34,7 +34,7 @@ export default class MatchService {
 		const match_id = Number(id_match);
 		matchValidations.validateMatchId(match_id);
 		const result = await this.dbConnection.query(
-			`SELECT m.id_competition, m.id_guest, m.id_host, m.id_match, m.date,
+			`SELECT m.id_competition, m.goals_guest, m.goals_host, m.id_guest, m.id_host, m.id_match, m.date,
 			 guest.name AS guest_name, host.name AS host_name, c.name AS competition_name 
 			 FROM matches AS m
 			 LEFT JOIN competitions AS c ON c.id_competition=m.id_competition

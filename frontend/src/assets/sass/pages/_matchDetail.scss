@@ -52,3 +52,82 @@
   display: inline-block;
 }
 
+.addIcon {
+  font-size: 25px;
+  color: green;
+}
+
+.removeIcon {
+  font-size: 30px;
+  color: red;
+}
+
+.dateOfCompetition {
+  margin-top: -20px;
+  font-size: 22px;
+}
+
+.adminMatchTabs {
+  .nav-item {
+    background-color: transparent;
+    border: none !important;
+    color: black !important;
+    border-bottom: 1px solid black !important;
+  }
+  .active {
+    border: 1px solid black !important;
+    border-bottom: none !important;
+    color: black !important;
+  }
+}
+
+.nameOfCompetition {
+  margin-top: -25px;
+}
+
+.h3MatchDetail {
+  padding-bottom: 2px;
+  font-size: 28px !important;
+  border-bottom: 4px solid #eae6ee;
+}
+
+.eventsDiv {
+  h4 {
+    text-transform: uppercase;
+    font-size: 20px;
+  }
+
+  .table-hover tr:hover {
+    background: #FEDF00 !important;
+    color: black !important;
+  }
+
+  table {
+    width: 100%;
+    margin: 0 0 30px;
+    padding: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
+
+    tbody tr td {
+      font-size: 18px;
+      text-align: center;
+      border-bottom: 1px solid #eae6ee;
+    }
+
+    tbody tr {
+      background-color: white;
+    }
+
+    thead tr th {
+      background: #eae6ee;
+      color: black;
+      font-family: "Proxima N", Arial, sans-serif;
+      text-align: center;
+      border-bottom: 2px solid black;
+      font-weight: normal;
+      text-transform: uppercase;
+      font-size: 16px;
+    }
+  }
+}

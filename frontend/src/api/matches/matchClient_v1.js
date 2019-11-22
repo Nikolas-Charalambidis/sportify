@@ -126,3 +126,27 @@ export async function deleteMatch(api, id_match) {
         });
     return result;
 }
+
+export function useGetAllEvents(id_match) {
+    const api = useApi();
+    const [state, setState] = useState({
+        isLoading: true
+    });
+    useEffect( () => {
+        async function fetchData() {
+            await api
+                .get(`${config.API_BASE_PATH}/matches/${id_match}/events`)
+                .then(({data}) => {
+                    const {events} = data;
+                    setState({isLoading: false, error: false, events: events});
+                })
+                .catch(( { response } ) => {
+                    const {data} = response;
+                    setState({isLoading: false, error: true, match: null});
+                    window.flash(data.msg, 'danger');
+                });
+        }
+        fetchData().then();
+    }, [api, id_match]);
+    return [state];
+}

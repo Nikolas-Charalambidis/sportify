@@ -28,9 +28,13 @@
     border-bottom: none !important;
     color: black !important;
   }
+}
 
-  .nav-item:nth-child(2) {
-    border-left: none !important;
-    border-right: none !important;
+.teamTabs {
+  .nav-tabs {
+    .nav-item:nth-child(2) {
+      border-left: none !important;
+      border-right: none !important;
+    }
   }
 }
