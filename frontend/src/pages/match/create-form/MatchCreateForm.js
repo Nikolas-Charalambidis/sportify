@@ -21,55 +21,56 @@ const schema = yup.object().shape({
 });
 
 export function MatchCreateForm() {
-  const [state] = useGetTeams();
-  const teams = getTeam(state);
+    const [state] = useGetTeams();
+    const teams = getTeam(state);
 
-  const [homePlayersState, setHomePlayers] = useState({ id: '', players: [] });
-  const [visitingPlayersState, setVisitingPlayers] = useState({
-    id: '',
-    players: [],
-  });
+    const [homePlayersState, setHomePlayers] = useState({ id: '', players: [] });
+    const [visitingPlayersState, setVisitingPlayers] = useState({id: '', players: [] });
 
-  const [showHomePlayersModal, setShowHomePlayersModal] = useState(false);
-  const [showVisitingPlayersModal, setShowVisitingPlayersModal] = useState(
-    false,
-  );
-  const handleClose = () => {
+    const [showHomePlayersModal, setShowHomePlayersModal] = useState(false);
+    const [showVisitingPlayersModal, setShowVisitingPlayersModal] = useState(false);
+    const handleClose = () => {
     setShowHomePlayersModal(false);
     setShowVisitingPlayersModal(false);
-  };
+    };
 
-  console.log(homePlayersState);
-  return (
+    const [allEvents, setEvents] = useState([]);
+
+    function test() {
+        console.log(allEvents);
+    };
+
+
+
+    return (
     <div>
-      <Breadcrumb>
+        <Breadcrumb>
         <Breadcrumb.Item href="/">Domů</Breadcrumb.Item>
         <Breadcrumb.Item active>Nový zápas</Breadcrumb.Item>
-      </Breadcrumb>
+        </Breadcrumb>
 
-      {state.isLoading && <div>Načítám data...</div>}
-      {!state.isLoading && state.error && <div>Data se nepodařilo načíst</div>}
-      {!state.isLoading && !state.error && (
+        {state.isLoading && <div>Načítám data...</div>}
+        {!state.isLoading && state.error && <div>Data se nepodařilo načíst</div>}
+        {!state.isLoading && !state.error && (
         <Formik
-          initialValues={{
+            initialValues={{
             id_team_home: teams.id_team,
             id_team_visiting: teams.id_team,
-          }}
-          validationSchema={schema}
-          onSubmit={values => {
+            }}
+            validationSchema={schema}
+            onSubmit={values => {
             console.log('submit', values);
             console.log('players', selectedPlayers);
-          }}
+            }}
         >
-          {({ handleSubmit, setFieldValue, values, errors }) => (
+            {({ handleSubmit, setFieldValue, values, errors }) => (
             <Form noValidate onSubmit={handleSubmit}>
-              {console.log(values)}
-              <Heading className="pageHeading mt-4 mb-5">Nový zápas</Heading>
-              <Row>
-                <Col xl={10} lg={10}>
-                  <Row>
+                <Heading className="pageHeading mt-4 mb-5">Nový zápas</Heading>
+                <Row>
+                <Col xl={12} lg={12}>
+                    <Row>
                     <Col sm={{ span: 6, offset: 0 }}>
-                      <CustomSelect
+                        <CustomSelect
                         label="Domácí"
                         name="id_team_home"
                         options={teams}
@@ -77,41 +78,41 @@ export function MatchCreateForm() {
                         getOptionValue={option => `${option.id_team}`}
                         placeholder="Vyberte tým"
                         onChange={option => {
-                          setFieldValue('id_team_home', `${option.id_team}`);
-                          setHomePlayers({
+                            setFieldValue('id_team_home', `${option.id_team}`);
+                            setHomePlayers({
                             id: option.id_team,
                             players: [],
-                          });
+                            });
                         }}
                         isSearchable={true}
-                      />
+                        />
                     </Col>
                     <Col sm={{ span: 6, offset: 0 }}>
-                      <div className="form-group">
+                        <div className="form-group">
                         <div
-                          className="form-label"
-                          style={{ height: '27px', marginBottom: '8px' }}
+                            className="form-label"
+                            style={{ height: '27px', marginBottom: '8px' }}
                         />
                         <Button
-                          type="submit"
-                          variant="secondary"
-                          block
-                          onClick={() => setShowHomePlayersModal(true)}
-                          disabled={isEmpty(homePlayersState.id)}
+                            type="submit"
+                            variant="secondary"
+                            block
+                            onClick={() => setShowHomePlayersModal(true)}
+                            disabled={isEmpty(homePlayersState.id)}
                         >
-                          Soupiska domácích
+                            Soupiska domácích
                         </Button>
-                      </div>
+                        </div>
                     </Col>
                     {!isEmpty(homePlayersState.players) && (
-                      <Col>
-                        <PlayersTable state={homePlayersState} />
-                      </Col>
+                        <Col>
+                                                <PlayersTable id_team={Number(values.id_team_home)} state={homePlayersState} events={allEvents} setEvent={setEvents} host={true}/>
+                        </Col>
                     )}
-                  </Row>
-                  <Row>
+                    </Row>
+                    <Row>
                     <Col sm={{ span: 6, offset: 0 }}>
-                      <CustomSelect
+                        <CustomSelect
                         label="Hosté"
                         name="id_team_visiting"
                         options={teams}
@@ -119,66 +120,66 @@ export function MatchCreateForm() {
                         getOptionValue={option => `${option.id_team}`}
                         placeholder="Vyberte tým"
                         onChange={option => {
-                          setFieldValue(
+                            setFieldValue(
                             'id_team_visiting',
                             `${option.id_team}`,
-                          );
-                          setVisitingPlayers({
+                            );
+                            setVisitingPlayers({
                             id: option.id_team,
                             players: [],
-                          });
+                            });
                         }}
                         isSearchable={true}
-                      />
+                        />
                     </Col>
                     <Col sm={{ span: 6, offset: 0 }}>
-                      <div className="form-group">
+                        <div className="form-group">
                         <div
-                          className="form-label"
-                          style={{ height: '27px', marginBottom: '8px' }}
+                            className="form-label"
+                            style={{ height: '27px', marginBottom: '8px' }}
                         />
                         <Button
-                          type="submit"
-                          variant="secondary"
-                          block
-                          onClick={() => setShowVisitingPlayersModal(true)}
-                          disabled={isEmpty(visitingPlayersState.id)}
+                            type="submit"
+                            variant="secondary"
+                            block
+                            onClick={() => setShowVisitingPlayersModal(true)}
+                            disabled={isEmpty(visitingPlayersState.id)}
                         >
-                          Soupiska hostu
+                            Soupiska hostu
                         </Button>
-                      </div>
+                        </div>
                     </Col>
                     {!isEmpty(visitingPlayersState.players) && (
-                      <Col>
-                        <PlayersTable state={visitingPlayersState} />
-                      </Col>
+                                            <Col>
+                                                <PlayersTable id_team={Number(values.id_team_visiting)} state={visitingPlayersState} events={allEvents} setEvent={setEvents} host={false} />
+                        </Col>
                     )}
-                  </Row>
+                    </Row>
                 </Col>
-              </Row>
-              <Row>
+                </Row>
+                <Row>
                 <Col className="mb-4 mt-lg-0" lg={{ span: 5, offset: 0 }}>
-                  <Button type="submit" block>
+                    <Button type="submit" block onClick={() => test()}>
                     Uložit
-                  </Button>
+                    </Button>
                 </Col>
-              </Row>
-              <PlayerSelectModal
+                </Row>
+                <PlayerSelectModal
                 show={showHomePlayersModal}
                 handleClose={handleClose}
                 state={homePlayersState}
                 setter={setHomePlayers}
-              />
-              <PlayerSelectModal
+                />
+                <PlayerSelectModal
                 show={showVisitingPlayersModal}
                 handleClose={handleClose}
                 state={visitingPlayersState}
                 setter={setVisitingPlayers}
-              />
+                />
             </Form>
-          )}
+            )}
         </Formik>
-      )}
+        )}
     </div>
-  );
+    );
 }
