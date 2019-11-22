@@ -10,10 +10,13 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import moment from "moment";
 import {GoalEvents} from "./components/GoalEvents";
+import {MatchSquad} from "./components/MatchSquad";
 
 export function MatchDetail() {
     let {id_team, id_match} = useParams();
     const [stateMatch] = useGetMatch(id_match);
+
+    console.log(stateMatch);
 
     return (
         <div>
@@ -66,6 +69,12 @@ export function MatchDetail() {
                         <Heading size="sm" className="mt-4">2. třetina</Heading>
                     </div>
 
+
+                    <Heading size="lg" className="mt-5 h3MatchDetail text-left">Zápis z utkání</Heading>
+                    <div className="eventsDiv">
+                        <Heading size="sm" className="mt-4">Domácí</Heading>
+                        <MatchSquad id_match={id_match} host={true}/>
+                    </div>
                 </div>
             </div>
             }
