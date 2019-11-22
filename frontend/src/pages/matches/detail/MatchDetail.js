@@ -9,6 +9,7 @@ import {useGetMatch} from "../../../api/matches/matchClient_v1";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import moment from "moment";
+import {GoalEvents} from "./components/GoalEvents";
 
 export function MatchDetail() {
     let {id_team, id_match} = useParams();
@@ -56,6 +57,15 @@ export function MatchDetail() {
                             <h2>{stateMatch.match.guest_name}</h2>
                         </Col>
                     </Row>
+
+                    <Heading size="lg" className="mt-5 h3MatchDetail text-left">Zápis z utkání</Heading>
+                    <div className="eventsDiv">
+                        <Heading size="sm" className="mt-4">1. třetina</Heading>
+                        <GoalEvents/>
+
+                        <Heading size="sm" className="mt-4">2. třetina</Heading>
+                    </div>
+
                 </div>
             </div>
             }
