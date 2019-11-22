@@ -168,7 +168,7 @@ ALTER TABLE `team_statistics` ADD FOREIGN KEY (`id_user`) REFERENCES `users` (`i
 ALTER TABLE `team_statistics` ADD FOREIGN KEY (`id_team`) REFERENCES `teams` (`id_team`);
 ALTER TABLE `team_statistics` ADD FOREIGN KEY (`id_competition`) REFERENCES `competitions` (`id_competition`);
 
--- --- MATCHUP TABLE TO TEAM_STATISTICS SYNCHRONIZATION BLOCK START
+-- --- MATCHUPS TABLE TO TEAM_STATISTICS SYNCHRONIZATION BLOCK START
 DELIMITER //
 CREATE PROCEDURE generate_team_statistics_on_matchups_records(
     triggered_id_match int(11), triggered_id_team int(11), triggered_id_user int(11))
@@ -233,7 +233,7 @@ END//
 DELIMITER ;
 
 DELIMITER //
-CREATE TRIGGER TR_MATCHUP_AFTER_INSERT AFTER INSERT ON matchups FOR EACH ROW
+CREATE TRIGGER TR_MATCHUPS_AFTER_INSERT AFTER INSERT ON matchups FOR EACH ROW
 BEGIN
     CALL generate_team_statistics_on_matchups_records(
             new.id_match, new.id_team, new.id_user);
@@ -241,7 +241,7 @@ END; //
 DELIMITER ;
 
 DELIMITER //
-CREATE TRIGGER TR_MATCHUP_AFTER_UPDATE AFTER UPDATE ON matchups FOR EACH ROW
+CREATE TRIGGER TR_MATCHUPS_AFTER_UPDATE AFTER UPDATE ON matchups FOR EACH ROW
 BEGIN
     CALL generate_team_statistics_on_matchups_records(
             new.id_match, new.id_team, new.id_user);
@@ -249,7 +249,7 @@ END; //
 DELIMITER ;
 
 DELIMITER //
-CREATE TRIGGER TR_MATCHUP_AFTER_DELETE AFTER DELETE ON matchups FOR EACH ROW
+CREATE TRIGGER TR_MATCHUPS_AFTER_DELETE AFTER DELETE ON matchups FOR EACH ROW
 BEGIN
     -- remove all events of the related match-ups
     DELETE FROM events
@@ -261,17 +261,7 @@ BEGIN
             old.id_match, old.id_team, old.id_user);
 END; //
 DELIMITER ;
--- --- MATCHUP TABLE TO TEAM_STATISTICS SYNCHRONIZATION BLOCK END
-
--- --- MATCH TABLE TRIGGERS BLOCK START
-DELIMITER //
-CREATE TRIGGER TR_MATCH_AFTER_INSERT AFTER INSERT ON matchups FOR EACH ROW
-BEGIN
-    -- TODO: TRIGGER ON `MATCH` INSERT - CRETE AND EVENT WITH 0 SHOOTS
-    --       PLACE IT HERE
-END; //
-DELIMITER ;
--- --- MATCH TABLE TRIGGERS BLOCK END
+-- --- MATCHUPS TABLE TO TEAM_STATISTICS SYNCHRONIZATION BLOCK END
 
 -- --- EVENTS TABLE TO TEAM_STATISTICS SYNCHRONIZATION BLOCK START
 DELIMITER //
@@ -451,35 +441,37 @@ BEGIN
     DECLARE count_records int(11);
     DECLARE shots int(11);
 
-    SET count_records = count_team_statistics_records(
-        goalkeeper_id_user, goalkeeper_id_team, competition);
+    IF goalkeeper_id_user IS NOT NULL THEN
+        SET count_records = count_team_statistics_records(
+                goalkeeper_id_user, goalkeeper_id_team, competition);
 
-    -- calculate shots
-    SELECT SUM(e.value) INTO shots FROM matchups AS mup
-    JOIN events AS e ON mup.id_match = e.id_match
-    JOIN matches AS m ON e.id_match = m.id_match
-    WHERE mup.id_user = goalkeeper_id_user
-      AND mup.id_team = goalkeeper_id_team
-      AND IF(competition IS NULL, m.id_competition IS NULL, m.id_competition = competition)
-      AND e.host != mup.host
-      AND mup.goalkeeper = 1
-      AND e.type = 'shot';
+        -- calculate shots
+        SELECT SUM(e.value) INTO shots FROM matchups AS mup
+                                                JOIN events AS e ON mup.id_match = e.id_match
+                                                JOIN matches AS m ON e.id_match = m.id_match
+        WHERE mup.id_user = goalkeeper_id_user
+          AND mup.id_team = goalkeeper_id_team
+          AND IF(competition IS NULL, m.id_competition IS NULL, m.id_competition = competition)
+          AND e.host != mup.host
+          AND mup.goalkeeper = 1
+          AND e.type = 'shot';
 
-    IF (shots IS NULL) THEN SET shots = 0; END IF;
+        IF (shots IS NULL) THEN SET shots = 0; END IF;
 
-    -- generate to team_statistics
-    IF (count_records > 0) THEN
-        UPDATE team_statistics AS ts SET ts.goalkeeper_shots = shots
-        WHERE ts.id_user = goalkeeper_id_user
-          AND ts.id_team = goalkeeper_id_team
-          AND IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition);
-    ELSE
-        -- should not happen, log the event
-        CALL log_possible_inconsistency('generate_team_statistics_goalkeeper_shots_data',
-                                        CONCAT('id_user=', goalkeeper_id_user, ', id_team=', goalkeeper_id_team,
-                                               ', id_competition=', IF(competition IS NULL, 'null', competition)));
-        INSERT team_statistics (id_team_statistics, id_user, id_team, id_competition, goalkeeper_matches, goalkeeper_minutes, goalkeeper_shots)
-        VALUES(NULL, goalkeeper_id_user, goalkeeper_id_team, competition, 1, 60, shots);
+        -- generate to team_statistics
+        IF (count_records > 0) THEN
+            UPDATE team_statistics AS ts SET ts.goalkeeper_shots = shots
+            WHERE ts.id_user = goalkeeper_id_user
+              AND ts.id_team = goalkeeper_id_team
+              AND IF(competition IS NULL, ts.id_competition IS NULL, ts.id_competition = competition);
+        ELSE
+            -- should not happen, log the event
+            CALL log_possible_inconsistency('generate_team_statistics_goalkeeper_shots_data',
+                                            CONCAT('id_user=', goalkeeper_id_user, ', id_team=', goalkeeper_id_team,
+                                                   ', id_competition=', IF(competition IS NULL, 'null', competition)));
+            INSERT team_statistics (id_team_statistics, id_user, id_team, id_competition, goalkeeper_matches, goalkeeper_minutes, goalkeeper_shots)
+            VALUES(NULL, goalkeeper_id_user, goalkeeper_id_team, competition, 1, 60, shots);
+        END IF;
     END IF;
 END//
 DELIMITER ;
@@ -578,7 +570,7 @@ END//
 DELIMITER ;
 
 DELIMITER //
-CREATE TRIGGER after_insert_events AFTER INSERT ON events FOR EACH ROW
+CREATE TRIGGER TR_EVENTS_AFTER_INSERT AFTER INSERT ON events FOR EACH ROW
 BEGIN
     -- recalculate match goals
     CALL generate_match_goals_data(
@@ -591,7 +583,7 @@ END//
 DELIMITER ;
 
 DELIMITER //
-CREATE TRIGGER after_update_events AFTER UPDATE ON events FOR EACH ROW
+CREATE TRIGGER TR_EVENTS_AFTER_UPDATE AFTER UPDATE ON events FOR EACH ROW
 BEGIN
     -- recalculate match goals
     CALL generate_match_goals_data(
@@ -604,7 +596,7 @@ END//
 DELIMITER ;
 
 DELIMITER //
-CREATE TRIGGER after_delete_events AFTER DELETE ON events FOR EACH ROW
+CREATE TRIGGER TR_EVENTS_AFTER_DELETE AFTER DELETE ON events FOR EACH ROW
 BEGIN
     -- recalculate match goals
     CALL generate_match_goals_data(
@@ -842,7 +834,45 @@ INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1
     (13, 3, 2, 13, 'suspension_5', null, null, 50, null, false),
     (14, 3, 2, 13, 'suspension_2_2', null, null, 56, null, false),
     (15, 3, 1, null, 'shot', null, null, null, 32, true),
-    (16, 3, 2, null, 'shot', null, null, null, 66, false);
+    (16, 3, 2, null, 'shot', null, null, null, 66, false),
+
+    (17, 4, 2, null, 'shot', null, null, null, 0, true),
+    (18, 4, 3, null, 'shot', null, null, null, 0, false),
+
+    (19, 5, 3, null, 'shot', null, null, null, 0, true),
+    (20, 5, 1, null, 'shot', null, null, null, 0, false);
+
+
+-- --- MATCHES TABLE TRIGGERS BLOCK START
+DELIMITER //
+CREATE TRIGGER TR_MATCHES_AFTER_INSERT AFTER INSERT ON matches FOR EACH ROW
+BEGIN
+    DECLARE count_host_records int(11);
+    DECLARE count_guest_records int(11);
+
+    SELECT COUNT(1) INTO count_host_records FROM events AS e
+    WHERE e.id_match = new.id_match
+      AND e.type = 'shot'
+      AND e.host = true;
+
+    SELECT COUNT(1) INTO count_guest_records FROM events AS e
+    WHERE e.id_match = new.id_match
+      AND e.type = 'shot'
+      AND e.host = true;
+
+    IF (count_host_records = 0) THEN
+        INSERT INTO events (id_event, id_match, id_team, type, value, host) VALUES
+        (NULL, new.id_match, new.id_host, 'shot', 0, true);
+    END IF;
+
+    IF (count_host_records = 0) THEN
+        INSERT INTO events (id_event, id_match, id_team, type, value, host) VALUES
+        (NULL, new.id_match, new.id_guest, 'shot', 0, false);
+    END IF;
+END; //
+DELIMITER ;
+-- --- MATCHES TABLE TRIGGERS BLOCK END
+
 
 -- ---- MOCKED, START OF A SUBJECT OF A FUTURE CHANGE AND/OR REGENERATION, THE MODEL ITSELF IS CONSIDERED FINAL
 -- ---- MATCHES ARE NECESSARY FOR THESE DATA CONSISTENCY, YET THEY ARE NOT NEEDED FOR THE DEVELOPMENT OF THE STATISTICS DISPLAY
