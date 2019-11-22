@@ -664,196 +664,185 @@ DELIMITER ;
 -- Data ----------------------------------------------------------------------------------------------------------------
 -- USERS
 -- Password is hashed using bcrypt "Heslo123", 10 rounds
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (1,  'user1@test.cz',       '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Karel', 'Dvořák', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (2,  'user2@test.cz',       '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Evžen', 'Vomáčka', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (3,  'user3@test.cz',       '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Michal', 'Nový', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (4,  'user4@test.cz',       '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Zdeněk', 'Svěrák', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (5,  'user5@test.cz',       '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Jaroslav', 'Blažek', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (6,  'user6@test.cz',       '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Emanuel', 'Motýlek', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (7,  'user7@test.cz',       '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Karel', 'Vopustka', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (8,  'user8@test.cz',       '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Jan', 'Dlouhý', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (9,  'user9@test.cz',       '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Jakub', 'Kukla', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (10, 'user10@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Ondřej', 'Sokol', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (11, 'user11@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Václav', 'Kulhánek', false);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (12, 'user12@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Vladimír', 'Perušič', false);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (13, 'user13@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Vilém', 'Stehlík', false);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (14, 'user14@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Jan', 'Pekař', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (15, 'user15@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Lukáš', 'Patočka', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (16, 'user16@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Jirka', 'Král', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (17, 'user17@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Nikola', 'Stará', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (18, 'user18@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Tomáš', 'Klavík', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (19, 'user19@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Miloslav', 'Mikeš', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (20, 'user20@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Miroslav', 'Šťastný', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (21, 'user21@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Kamil', 'Polívka', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (22, 'user22@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Patrik', 'Vašíček', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (23, 'user23@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Dominik', 'Strahovský', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (24, 'user24@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Pavel', 'Kovář', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (25, 'user25@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Rostislav', 'Říha', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (26, 'user26@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Jan', 'Hoffman', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (27, 'user27@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'David', 'Kolečko', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (28, 'user28@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Matěj', 'Čajkovský', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (29, 'user29@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Tomáš', 'Vošahlík', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (30, 'user30@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Vincent', 'Nejezchleba', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (31, 'user31@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'José', 'Narraro', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (32, 'user32@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Karel', 'Vyskočil', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (33, 'user33@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Marek', 'Dohnal', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (34, 'user34@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Michael', 'Kohl', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (35, 'user35@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Petr', 'Vazal', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (36, 'user36@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Pavel', 'Snížek', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (37, 'user37@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Lojza', 'Ptáček', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (38, 'user38@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Ignác', 'Rychlý', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (39, 'user39@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Fratnišek', 'Svoboda', true);
-INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES (40, 'unverified@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Not', 'Verified', false);
+INSERT INTO `users` (`id_user`, `email`, `password`, `name`, `surname`, `verified`) VALUES
+    (1,  'user1@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Karel', 'Dvořák', true),
+    (2,  'user2@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Evžen', 'Vomáčka', true),
+    (3,  'user3@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Michal', 'Nový', true),
+    (4,  'user4@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Zdeněk', 'Svěrák', true),
+    (5,  'user5@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Jaroslav', 'Blažek', true),
+    (6,  'user6@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Emanuel', 'Motýlek', true),
+    (7,  'user7@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Karel', 'Vopustka', true),
+    (8,  'user8@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Jan', 'Dlouhý', true),
+    (9,  'user9@test.cz',      '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Jakub', 'Kukla', true),
+    (10, 'user10@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Ondřej', 'Sokol', true),
+    (11, 'user11@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Václav', 'Kulhánek', false),
+    (12, 'user12@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Vladimír', 'Perušič', false),
+    (13, 'user13@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Vilém', 'Stehlík', false),
+    (14, 'user14@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Jan', 'Pekař', true),
+    (15, 'user15@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Lukáš', 'Patočka', true),
+    (16, 'user16@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Jirka', 'Král', true),
+    (17, 'user17@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Nikola', 'Stará', true),
+    (18, 'user18@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Tomáš', 'Klavík', true),
+    (19, 'user19@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Miloslav', 'Mikeš', true),
+    (20, 'user20@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Miroslav', 'Šťastný', true),
+    (21, 'user21@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Kamil', 'Polívka', true),
+    (22, 'user22@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Patrik', 'Vašíček', true),
+    (23, 'user23@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Dominik', 'Strahovský', true),
+    (24, 'user24@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Pavel', 'Kovář', true),
+    (25, 'user25@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Rostislav', 'Říha', true),
+    (26, 'user26@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Jan', 'Hoffman', true),
+    (27, 'user27@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'David', 'Kolečko', true),
+    (28, 'user28@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Matěj', 'Čajkovský', true),
+    (29, 'user29@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Tomáš', 'Vošahlík', true),
+    (30, 'user30@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Vincent', 'Nejezchleba', true),
+    (31, 'user31@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'José', 'Narraro', true),
+    (32, 'user32@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Karel', 'Vyskočil', true),
+    (33, 'user33@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Marek', 'Dohnal', true),
+    (34, 'user34@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Michael', 'Kohl', true),
+    (35, 'user35@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Petr', 'Vazal', true),
+    (36, 'user36@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Pavel', 'Snížek', true),
+    (37, 'user37@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Lojza', 'Ptáček', true),
+    (38, 'user38@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Ignác', 'Rychlý', true),
+    (39, 'user39@test.cz',     '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Fratnišek', 'Svoboda', true),
+    (40, 'unverified@test.cz', '$2a$10$NcgTt5bSUnrf/Isf2BWCMe0kfGuO4AC9KeXitZ/a8bLN68d0akuEu', 'Not', 'Verified', false);
 
 -- CONFIRM TOKENS
 INSERT INTO `tokens` (`id_token`, `id_user`, `hash`, `validity`, `type`) VALUES (1, 40, '39247679', '2020-12-29 00:09:33', 'confirm');
 
 -- SPORTS
-INSERT INTO `sports` (`id_sport`, `sport`) VALUES (1, 'Hokej');
-INSERT INTO `sports` (`id_sport`, `sport`) VALUES (2, 'Florbal');
-INSERT INTO `sports` (`id_sport`, `sport`) VALUES (3, 'Hokejbal');
+INSERT INTO `sports` (`id_sport`, `sport`) VALUES (1, 'Hokej'), (2, 'Florbal'), (3, 'Hokejbal');
 
 -- TEAM TYPES
-INSERT INTO `team_types` (`id_type`, `type`) VALUES (1, 'Ligový');
-INSERT INTO `team_types` (`id_type`, `type`) VALUES (2, 'Volnočasový');
+INSERT INTO `team_types` (`id_type`, `type`) VALUES (1, 'Ligový'), (2, 'Volnočasový');
 
 -- TEAMS
-INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`, `active`) VALUES (1, 1, 'Hokejisti pro srandu a žízeň', 1, 1, 1, true);
-INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`, `active`) VALUES (2, 1, 'The Rural Jurors', 6, 1, 6, true);
-INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`, `active`) VALUES (3, 1, 'Game of Throws', 14, 2, 14, true);
-INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`, `active`) VALUES (4, 3, 'Not Last Place', 19, 2, 19, true);
-INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`, `active`) VALUES (5, 3, 'The Salty Pretzels', 24, 1, 24, true);
+INSERT INTO `teams` (`id_team`, `id_sport`, `name`, `id_leader`, `id_type`, `id_contact_person`, `active`) VALUES
+    (1, 1, 'Hokejisti pro srandu a žízeň', 1, 1, 1, true),
+    (2, 1, 'The Rural Jurors', 6, 1, 6, true),
+    (3, 1, 'Game of Throws', 14, 2, 14, true),
+    (4, 3, 'Not Last Place', 19, 2, 19, true),
+    (5, 3, 'The Salty Pretzels', 24, 1, 24, true);
 
 -- TEAM POSITIONS
-INSERT INTO `positions` (`id_position`, `position`, `is_goalkeeper`) VALUES (1, 'Brankář', true);
-INSERT INTO `positions` (`id_position`, `position`, `is_goalkeeper`) VALUES (2, 'Obránce', false);
-INSERT INTO `positions` (`id_position`, `position`, `is_goalkeeper`) VALUES (3, 'Útočník', false);
+INSERT INTO `positions` (`id_position`, `position`, `is_goalkeeper`) VALUES
+    (1, 'Brankář', true), (2, 'Obránce', false), (3, 'Útočník', false);
 
 -- TEAM-MEMBERSHIP
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (1, 1, 1, 'active', 1);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (2, 1, 2, 'active', 2);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (3, 1, 3, 'active', 2);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (4, 1, 4, 'active', 3);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (5, 1, 5, 'active', 3);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (6, 1, 6, 'active', 1);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (7, 1, 7, 'active', 2);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (8, 1, 8, 'active', 2);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (9, 1, 9, 'active', 3);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (10, 1, 10, 'active', 3);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES
+    (1, 1, 1, 'active', 1),
+    (2, 1, 2, 'active', 2),
+    (3, 1, 3, 'active', 2),
+    (4, 1, 4, 'active', 3),
+    (5, 1, 5, 'active', 3),
+    (6, 1, 6, 'active', 1),
+    (7, 1, 7, 'active', 2),
+    (8, 1, 8, 'active', 2),
+    (9, 1, 9, 'active', 3),
+    (10, 1, 10, 'active', 3),
 
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (11, 2, 11, 'active', 1);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (12, 2, 12, 'active', 2);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (13, 2, 13, 'active', 2);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (14, 2, 14, 'active', 3);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (15, 2, 15, 'active', 3);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (16, 2, 16, 'active', 1);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (17, 2, 17, 'active', 2);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (18, 2, 18, 'active', 2);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (19, 2, 19, 'active', 3);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (20, 2, 20, 'active', 3);
+    (11, 2, 11, 'active', 1),
+    (12, 2, 12, 'active', 2),
+    (13, 2, 13, 'active', 2),
+    (14, 2, 14, 'active', 3),
+    (15, 2, 15, 'active', 3),
+    (16, 2, 16, 'active', 1),
+    (17, 2, 17, 'active', 2),
+    (18, 2, 18, 'active', 2),
+    (19, 2, 19, 'active', 3),
+    (20, 2, 20, 'active', 3),
 
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (21, 3, 21, 'active', 1);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (22, 3, 22, 'active', 2);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (23, 3, 23, 'active', 2);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (24, 3, 24, 'active', 3);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (25, 3, 25, 'active', 3);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (26, 3, 26, 'active', 1);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (27, 3, 27, 'active', 2);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (28, 3, 28, 'active', 2);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (29, 3, 29, 'active', 3);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (30, 3, 30, 'active', 3);
+    (21, 3, 21, 'active', 1),
+    (22, 3, 22, 'active', 2),
+    (23, 3, 23, 'active', 2),
+    (24, 3, 24, 'active', 3),
+    (25, 3, 25, 'active', 3),
+    (26, 3, 26, 'active', 1),
+    (27, 3, 27, 'active', 2),
+    (28, 3, 28, 'active', 2),
+    (29, 3, 29, 'active', 3),
+    (30, 3, 30, 'active', 3),
 
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (31, 4, 31, 'active', 1);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (32, 4, 32, 'active', 2);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (33, 4, 33, 'active', 3);
+    (31, 4, 31, 'active', 1),
+    (32, 4, 32, 'active', 2),
+    (33, 4, 33, 'active', 3);
 
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (34, 5, 34, 'active', 1);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (35, 5, 35, 'active', 2);
-INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES (36, 5, 36, 'active', 3);
+INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `status`, `id_position`) VALUES
+    (34, 5, 34, 'active', 1),
+    (35, 5, 35, 'active', 2),
+    (36, 5, 36, 'active', 3);
 
 -- CONPETITIONS
-INSERT INTO `competitions` (`id_competition`, `name`, `id_leader`, `id_sport`, `start_date`, `end_date`) VALUES (1, 'Hokejová liga 19-20', 1, 1, '2019-09-01', '2020-04-01');
-INSERT INTO `competitions` (`id_competition`, `name`, `id_leader`, `id_sport`, `start_date`, `end_date`) VALUES (2, 'Florbalová liga', 1, 2, '2017-06-20', '2018-11-20');
-INSERT INTO `competitions` (`id_competition`, `name`, `id_leader`, `id_sport`, `start_date`, `end_date`) VALUES (3, 'Hokejbalová liga', 1, 3, '2019-09-01', '2020-04-01');
-INSERT INTO `competitions` (`id_competition`, `name`, `id_leader`, `id_sport`, `start_date`, `end_date`) VALUES (4, 'Hokejová liga 18-19', 1, 1, '2018-09-01', '2019-04-01');
+INSERT INTO `competitions` (`id_competition`, `name`, `id_leader`, `id_sport`, `start_date`, `end_date`) VALUES
+    (1, 'Hokejová liga 19-20', 1, 1, '2019-09-01', '2020-04-01'),
+    (2, 'Florbalová liga', 1, 2, '2017-06-20', '2018-11-20'),
+    (3, 'Hokejbalová liga', 1, 3, '2019-09-01', '2020-04-01'),
+    (4, 'Hokejová liga 18-19', 1, 1, '2018-09-01', '2019-04-01');
 
 -- CONPETITION MEMBERSHIP
-INSERT INTO `competition_membership` (`id_competition_membership`, `id_competition`, `id_team`, `status`) VALUES (1, 1, 1, 'active');
-INSERT INTO `competition_membership` (`id_competition_membership`, `id_competition`, `id_team`, `status`) VALUES (2, 1, 2, 'active');
-INSERT INTO `competition_membership` (`id_competition_membership`, `id_competition`, `id_team`, `status`) VALUES (3, 1, 3, 'active');
-INSERT INTO `competition_membership` (`id_competition_membership`, `id_competition`, `id_team`, `status`) VALUES (4, 3, 4, 'active');
-INSERT INTO `competition_membership` (`id_competition_membership`, `id_competition`, `id_team`, `status`) VALUES (5, 4, 1, 'active');
-INSERT INTO `competition_membership` (`id_competition_membership`, `id_competition`, `id_team`, `status`) VALUES (6, 4, 2, 'active');
+INSERT INTO `competition_membership` (`id_competition_membership`, `id_competition`, `id_team`, `status`) VALUES
+    (1, 1, 1, 'active'),
+    (2, 1, 2, 'active'),
+    (3, 1, 3, 'active'),
+    (4, 3, 4, 'active'),
+    (5, 4, 1, 'active'),
+    (6, 4, 2, 'active');
 
 -- MATCHES
-INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES (1, null, 1, 1, '2018-11-04');
-INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES (2, null, 1, 1, '2018-11-05');
-INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES (3, 1, 1, 2, '2018-11-10');
-INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES (4, 1, 2, 3, '2018-11-11');
-INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES (5, 1, 3, 1, '2018-11-12');
+INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES
+    (1, null, 1, 1, '2018-11-04'),
+    (2, null, 1, 1, '2018-11-05'),
+    (3, 1, 1, 2, '2018-11-10'),
+    (4, 1, 2, 3, '2018-11-11'),
+    (5, 1, 3, 1, '2018-11-12');
 
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (1, 1, true, 1, 1, false);
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (2, 1, false, 1, 2, false);
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (3, 1, false, 1, 3, false);
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (4, 1, false, 1, 4, false);
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (5, 1, false, 1, 5, false);
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (6, 1, true, 1, 6, true);
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (7, 1, false, 1, 7, true);
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (8, 1, false, 1, 8, true);
+INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES
+    (1, 1, true, 1, 1, true),
+    (2, 1, false, 1, 2, true),
+    (3, 1, false, 1, 3, true),
+    (4, 1, false, 1, 4, true),
+    (5, 1, false, 1, 5, true),
+    (6, 1, true, 1, 6, false),
+    (7, 1, false, 1, 7, false),
+    (8, 1, false, 1, 8, false),
 
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (11, 2, true, 1, 1, true);
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (12, 2, false, 1, 2, true);
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (13, 2, false, 1, 3, true);
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (14, 2, false, 1, 4, true);
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (15, 2, false, 1, 5, true);
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (16, 2, true, 1, 6, false);
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (17, 2, false, 1, 7, false);
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (18, 2, false, 1, 8, false);
+    (11, 2, true, 1, 1, true),
+    (12, 2, false, 1, 2, true),
+    (13, 2, false, 1, 3, true),
+    (14, 2, false, 1, 4, true),
+    (15, 2, false, 1, 5, true),
+    (16, 2, true, 1, 6, false),
+    (17, 2, false, 1, 7, false),
+    (18, 2, false, 1, 8, false),
 
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (19, 3, true, 1, 1, true);
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (20, 3, false, 1, 2, true);
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (21, 3, false, 1, 3, true);
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (22, 3, false, 1, 4, true);
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (23, 3, false, 1, 5, true);
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (24, 3, true, 2, 11, false);
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (25, 3, false, 2, 12, false);
-INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES (26, 3, false, 2, 13, false);
+    (19, 3, true, 1, 1, true),
+    (20, 3, false, 1, 2, true),
+    (21, 3, false, 1, 3, true),
+    (22, 3, false, 1, 4, true),
+    (23, 3, false, 1, 5, true),
+    (24, 3, true, 2, 11, false),
+    (25, 3, false, 2, 12, false),
+    (26, 3, false, 2, 13, false);
 
 -- EVENTS
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
-VALUES (1, 1, 1, 5, 'goal', 4, null, 40, null, true);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
-VALUES (2, 1, 1, 2, 'goal', null, null, 48, null, true);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
-VALUES (3, 1, 1, 2, 'suspension_2', null, null, 51, null, true);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
-VALUES (4, 1, 1, 8, 'goal', null, null, 52, null, false);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
-VALUES (5, 1, 1, null, 'shot', null, null, null, 45, true);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
-VALUES (6, 1, 1, null, 'shot', null, null, null, 49, false);
+INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host) VALUES
+    (1, 1, 1, 5, 'goal', 4, null, 40, null, true),
+    (2, 1, 1, 2, 'goal', null, null, 48, null, true),
+    (3, 1, 1, 2, 'suspension_2', null, null, 51, null, true),
+    (4, 1, 1, 8, 'goal', null, null, 52, null, false),
+    (5, 1, 1, null, 'shot', null, null, null, 45, true),
+    (6, 1, 1, null, 'shot', null, null, null, 49, false),
 
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
-VALUES (7, 2, 1, 7, 'goal', 8, null, 16, null, false);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
-VALUES (8, 2, 1, null, 'shot', null, null, null, 57, true);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
-VALUES (9, 2, 1, null, 'shot', null, null, null, 59, false);
+    (7, 2, 1, 7, 'goal', 8, null, 16, null, false),
+    (8, 2, 1, null, 'shot', null, null, null, 57, true),
+    (9, 2, 1, null, 'shot', null, null, null, 59, false),
 
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
-VALUES (10, 3, 1, 4, 'goal', 5, 2, 32, null, true);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
-VALUES (11, 3, 2, 13, 'goal', null, null, 36, null, false);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
-VALUES (12, 3, 2, 13, 'goal', 11, 12, 41, null, false);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
-VALUES (13, 3, 2, 13, 'suspension_5', null, null, 50, null, false);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
-VALUES (14, 3, 2, 13, 'suspension_2_2', null, null, 56, null, false);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
-VALUES (15, 3, 1, null, 'shot', null, null, null, 32, true);
-INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1, id_assistance2, minute, value, host)
-VALUES (16, 3, 2, null, 'shot', null, null, null, 66, false);
+    (10, 3, 1, 4, 'goal', 5, 2, 32, null, true),
+    (11, 3, 2, 13, 'goal', null, null, 36, null, false),
+    (12, 3, 2, 13, 'goal', 11, 12, 41, null, false),
+    (13, 3, 2, 13, 'suspension_5', null, null, 50, null, false),
+    (14, 3, 2, 13, 'suspension_2_2', null, null, 56, null, false),
+    (15, 3, 1, null, 'shot', null, null, null, 32, true),
+    (16, 3, 2, null, 'shot', null, null, null, 66, false);
 
 -- ---- MOCKED, START OF A SUBJECT OF A FUTURE CHANGE AND/OR REGENERATION, THE MODEL ITSELF IS CONSIDERED FINAL
 -- ---- MATCHES ARE NECESSARY FOR THESE DATA CONSISTENCY, YET THEY ARE NOT NEEDED FOR THE DEVELOPMENT OF THE STATISTICS DISPLAY
