@@ -11,12 +11,11 @@ import Row from "react-bootstrap/Row";
 import moment from "moment";
 import {GoalEvents} from "./components/GoalEvents";
 import {MatchSquad} from "./components/MatchSquad";
+import {SuspensionsEvents} from "./components/SuspensionsEvents";
 
 export function MatchDetail() {
     let {id_team, id_match} = useParams();
     const [stateMatch] = useGetMatch(id_match);
-
-    console.log(stateMatch);
 
     return (
         <div>
@@ -45,17 +44,17 @@ export function MatchDetail() {
                     </Row>
 
                     <Row className="match-score">
-                        <Col lg={5} className=" align-self-center team-home">
+                        <Col lg={5} md={12} sm={12} xs={12} className=" align-self-center team-home">
                             <div className="text-center mt-2">Domácí:</div>
                             <h2>{stateMatch.match.host_name}</h2>
                         </Col>
-                        <Col lg={1} className="score align-self-center">
-                            <span className="home">4</span>
+                        <Col lg={1} md={12} sm={12} xs={12} className="mb-lg-0 mb-3 score align-self-center">
+                            <span className="home">{stateMatch.match.goals_host}</span>
                         </Col>
-                        <Col lg={1} className="align-self-center score">
-                            <span className="home">4</span>
+                        <Col lg={1} md={12} sm={12} xs={12} className="align-self-center score">
+                            <span className="home">{stateMatch.match.goals_guest}</span>
                         </Col>
-                        <Col lg={5} className="align-self-center team-visiting">
+                        <Col lg={5} md={12} sm={12} xs={12} className="align-self-center team-visiting">
                             <div className="text-center mt-2">Hosté:</div>
                             <h2>{stateMatch.match.guest_name}</h2>
                         </Col>
@@ -64,16 +63,25 @@ export function MatchDetail() {
                     <Heading size="lg" className="mt-5 h3MatchDetail text-left">Zápis z utkání</Heading>
                     <div className="eventsDiv">
                         <Heading size="sm" className="mt-4">1. třetina</Heading>
-                        <GoalEvents/>
+                        <GoalEvents id_match={id_match} period={1}/>
+                        <SuspensionsEvents id_match={id_match} period={1}/>
 
                         <Heading size="sm" className="mt-4">2. třetina</Heading>
+                        <GoalEvents id_match={id_match} period={2}/>
+                        <SuspensionsEvents id_match={id_match} period={2}/>
+
+                        <Heading size="sm" className="mt-4">3. třetina</Heading>
+                        <GoalEvents id_match={id_match} period={3}/>
+                        <SuspensionsEvents id_match={id_match} period={3}/>
                     </div>
 
-
-                    <Heading size="lg" className="mt-5 h3MatchDetail text-left">Zápis z utkání</Heading>
+                    <Heading size="lg" className="mt-5 h3MatchDetail text-left">Soupiska</Heading>
                     <div className="eventsDiv">
-                        <Heading size="sm" className="mt-4">Domácí</Heading>
-                        <MatchSquad id_match={id_match} host={true}/>
+                        <Heading size="sm" className="mt-5">Domácí</Heading>
+                        <MatchSquad id_match={id_match} host={1}/>
+
+                        <Heading size="sm" className="mt-3">Hosté</Heading>
+                        <MatchSquad id_match={id_match} host={0}/>
                     </div>
                 </div>
             </div>

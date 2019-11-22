@@ -1,41 +1,37 @@
 import React from 'react';
 import {useGetMatchup} from "../../../../api/matches/matchClient_v1";
+import Image from "react-bootstrap/esm/Image";
+import loadingGif from "../../../../assets/images/loading.gif";
+import {Heading} from "../../../../atoms";
 
 export function MatchSquad({id_match, host}) {
-    const [matchupState, fetchMatchup] = useGetMatchup(id_match, host);
-
-    console.log(matchupState)
+    const [matchupState] = useGetMatchup(id_match, host);
 
     return (
-        <div className="table-responsive mt-3">
-            <table className="table table-hover">
-                <thead>
-                <tr>
-                    <th>čas</th>
-                    <th>tým</th>
-                    <th>branky</th>
-                    <th>asistence</th>
-                    <th>typ gólu</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>13:36</td>
-                    <td>TRI</td>
-                    <td>Tomáš MARCINKO</td>
-                    <td>Erik HRŇA</td>
-                    <td>5/4</td>
-                </tr>
-                <tr>
-                    <td>13:36</td>
-                    <td>TRI</td>
-                    <td>Tomáš MARCINKO</td>
-                    <td>Erik HRŇA</td>
-                    <td>5/4</td>
-                </tr>
-                </tbody>
-            </table>
+        <div>
+            {matchupState.isLoading && <div className="text-center"><Image src={loadingGif}/></div>}
+            {(!matchupState.isLoading && matchupState.error) &&
+            <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
+            {(!matchupState.isLoading && !matchupState.error) &&
+            <div className="table-responsive mt-3">
+                <table className="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Jméno a příjmení</th>
+                        <th>Brankář</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {matchupState.matchup.map((anObjectMapped) => (
+                        <tr key={anObjectMapped.id_matchup}>
+                            <td>{anObjectMapped.name}</td>
+                            <td>{anObjectMapped.goalkeeper ? 'Ano' : 'Ne'}</td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </div>
+            }
         </div>
     );
 }
-
