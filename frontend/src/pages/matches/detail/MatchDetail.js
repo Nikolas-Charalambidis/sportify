@@ -12,6 +12,7 @@ import moment from "moment";
 import {GoalEvents} from "./components/GoalEvents";
 import {MatchSquad} from "./components/MatchSquad";
 import {SuspensionsEvents} from "./components/SuspensionsEvents";
+import Container from "react-bootstrap/Container";
 
 export function MatchDetail() {
     let {id_team, id_match} = useParams();
@@ -28,7 +29,7 @@ export function MatchDetail() {
                     <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
                     <li className="breadcrumb-item"><Link to="/teams">Týmy</Link></li>
                     <li className="breadcrumb-item"><Link to={'/teams/' + id_team}>Detail týmu</Link></li>
-                    <li className="breadcrumb-item"><span className="active">Zápas</span></li>
+                    <li className="breadcrumb-item"><span className="active">Detail zápasu</span></li>
                 </Breadcrumb>
 
                 <div className="container page match">
@@ -60,6 +61,23 @@ export function MatchDetail() {
                         </Col>
                     </Row>
 
+                    <Heading size="lg" className="mt-5 h3MatchDetail text-left">Soupiska</Heading>
+                    <div className="eventsDiv">
+                        <Container>
+                            <Row>
+                                <Col>
+                                    <Heading size="sm" className="d-lg-none mt-3">Domácí</Heading>
+                                    <MatchSquad id_match={id_match} host={1}/>
+                                </Col>
+                                <Col>
+                                    <Heading size="sm" className="d-lg-none mt-3">Hosté</Heading>
+                                    <MatchSquad id_match={id_match} host={0}/>
+                                </Col>
+                            </Row>
+                        </Container>
+                    </div>
+
+
                     <Heading size="lg" className="mt-5 h3MatchDetail text-left">Zápis z utkání</Heading>
                     <div className="eventsDiv">
                         <Heading size="sm" className="mt-4">1. třetina</Heading>
@@ -73,15 +91,6 @@ export function MatchDetail() {
                         <Heading size="sm" className="mt-4">3. třetina</Heading>
                         <GoalEvents id_match={id_match} period={3}/>
                         <SuspensionsEvents id_match={id_match} period={3}/>
-                    </div>
-
-                    <Heading size="lg" className="mt-5 h3MatchDetail text-left">Soupiska</Heading>
-                    <div className="eventsDiv">
-                        <Heading size="sm" className="mt-5">Domácí</Heading>
-                        <MatchSquad id_match={id_match} host={1}/>
-
-                        <Heading size="sm" className="mt-3">Hosté</Heading>
-                        <MatchSquad id_match={id_match} host={0}/>
                     </div>
                 </div>
             </div>
