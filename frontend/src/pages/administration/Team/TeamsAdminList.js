@@ -12,7 +12,11 @@ import {CreateTeamModal} from "./components/CreateTeamModal";
 import {useApi} from "../../../hooks/useApi";
 
 export function TeamsAdminList() {
+    const history = useHistory();
     const {user} = useAuth();
+    if (!user) {
+        history.replace('/');
+    }
     const [state] = useGetUserOwnedTeams(user.id_user);
     const api = useApi();
 
@@ -20,7 +24,6 @@ export function TeamsAdminList() {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    let history = useHistory();
     const columns = [
         {
             Header: "#",

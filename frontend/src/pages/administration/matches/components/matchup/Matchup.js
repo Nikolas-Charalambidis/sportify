@@ -107,7 +107,7 @@ export function Matchup({id_team, id_match, host, availablePlayers, fetchAvailab
 
     return (
         <div>
-            <h2>Sestava</h2>
+            <Heading size="lg" className="mt-5 h3MatchDetail text-left">Soupiska</Heading>
             {matchupState.isLoading &&  <div className="text-center"><Image src={loadingGif}/></div>}
             {(!matchupState.isLoading && matchupState.error) &&
             <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}

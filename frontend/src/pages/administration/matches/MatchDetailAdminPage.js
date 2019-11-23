@@ -10,12 +10,13 @@ import loadingGif from "../../../assets/images/loading.gif";
 import {useApi} from "../../../hooks/useApi";
 import {MatchDetailSingle} from "./components/MatchDetailSingle";
 import {MatchDetailMultiple} from "./components/MatchDetailMultiple";
-import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import moment from "moment";
 import {useGetTeam} from "../../../api/team/teamClient_v1";
 import {DeleteModal} from "../../../atoms/DeleteModal";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import * as Icons from "@fortawesome/free-solid-svg-icons";
 
 export function MatchDetailAdminPage() {
     const history = useHistory();
@@ -66,29 +67,31 @@ export function MatchDetailAdminPage() {
                 </li>
                 <li className="breadcrumb-item"><span className="active">Detail Zápasu</span></li>
             </Breadcrumb>
-            <Heading className="mt-5">Detail zápasu</Heading>
 
             {stateMatch.isLoading && <div className="text-center"><Image src={loadingGif}/></div>}
             {(!stateMatch.isLoading && stateMatch.error) &&
                 <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
             {(!stateMatch.isLoading && !stateMatch.error) &&
-                <div>
-                    <Container>
-                        <Row>
-                            <Col xs={{span: 12}} sm={{span: 6}}>
-                                <Heading className="text-left nameOfCompetition" size="lg">{stateMatch.match.competition_name ? stateMatch.match.competition_name : "Amatérský zápas"}</Heading>
-                                <p className="dateOfCompetition">{moment(stateMatch.match.date).local().format("DD. MM. YYYY HH:mm")}</p>
-                            </Col>
-                            <Col xs={{span: 12}} sm={{span: 6}} className="text-right mb-sm-0 mb-3">
-                                <Button variant="danger" type="button" onClick={() => {
-                                    setID({id_team: id_team, id_match: id_match});
-                                    handleShow();
-                                }}>
-                                    Odstranit zápas
-                                </Button>
-                            </Col>
-                        </Row>
-                    </Container>
+                <div className="container page match">
+                    <Row>
+                        <Col className="col-100 heading">
+                            <Heading size="lg">
+                                <ul>
+                                    <li>{stateMatch.match.competition_name ? stateMatch.match.competition_name : "Amatérský zápas "}</li>
+                                    <li>|{moment(stateMatch.match.date).local().format("DD. MM. YYYY HH:mm")}</li>
+                                    <li>
+                                        <Button variant="link" onClick={() => {
+                                            setID({id_team: id_team, id_match: id_match});
+                                            handleShow();
+                                        }}>
+                                            <FontAwesomeIcon className="removeIcon" icon={Icons.faTrashAlt} size="1x"/>
+                                        </Button>
+                                    </li>
+                                </ul>
+                            </Heading>
+                        </Col>
+                    </Row>
+
 
                     <DeleteModal key="match" show={show} heading="Delete zápasu"
                                  text="Opravdu si přejete odstranit zápas a sním i všechny zázanmy o hráčích a eventech?"

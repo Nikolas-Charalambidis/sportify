@@ -28,8 +28,34 @@ export function Events({eventsState, fetchEvents}) {
 
     const columnsEvents = [
         {
-            Header: "Hráč",
-            accessor: "name"
+            Header: "Minuta",
+            accessor: "minute",
+            filterMethod: (filter, row) => {
+                if (filter.value === 'all') {
+                    return true;
+                } else {
+                    if(filter.value === "1"){
+                        return ((row[filter.id]-0)*(row[filter.id]-20) <= 0);
+                    }
+                    if(filter.value === "2"){
+                        return ((row[filter.id]-21)*(row[filter.id]-40) <= 0);
+                    }
+                    if(filter.value === "3"){
+                        return ((row[filter.id]-41)*(row[filter.id]-60) <= 0);
+                    }
+                }
+            },
+            Filter: ({filter, onChange}) =>
+                <select
+                    onChange={event => onChange(event.target.value)}
+                    style={{width: "100%"}}
+                    value={filter ? filter.value : "all"}
+                >
+                    <option value="all">Vše</option>
+                    <option value="1">1. třetina</option>
+                    <option value="2">2. třetina</option>
+                    <option value="3">3. třetina</option>
+                </select>
         },
         {
             Header: "Typ",
@@ -59,43 +85,16 @@ export function Events({eventsState, fetchEvents}) {
                 </select>
         },
         {
+            Header: "Hráč",
+            accessor: "name"
+        },
+        {
             Header: "Asistence 1",
             accessor: "name_assistance1"
         },
         {
             Header: "Asistence 2",
             accessor: "name_assistance2"
-        },
-        {
-            Header: "Minuta",
-            accessor: "minute",
-            filterMethod: (filter, row) => {
-                if (filter.value === 'all') {
-                    return true;
-                } else {
-                    if(filter.value === "1"){
-                        return ((row[filter.id]-0)*(row[filter.id]-20) <= 0);
-                    }
-                    if(filter.value === "2"){
-                        return ((row[filter.id]-21)*(row[filter.id]-40) <= 0);
-                    }
-                    if(filter.value === "3"){
-                        return ((row[filter.id]-41)*(row[filter.id]-60) <= 0);
-                    }
-                }
-            },
-
-            Filter: ({filter, onChange}) =>
-                <select
-                    onChange={event => onChange(event.target.value)}
-                    style={{width: "100%"}}
-                    value={filter ? filter.value : "all"}
-                >
-                    <option value="all">Vše</option>
-                    <option value="1">1. třetina</option>
-                    <option value="2">2. třetina</option>
-                    <option value="3">3. třetina</option>
-                </select>
         },
         {
             Header: 'Akce',
@@ -114,7 +113,7 @@ export function Events({eventsState, fetchEvents}) {
 
     return (
         <div>
-            <Heading className="mt-4" size="lg">Události</Heading>
+            <Heading size="lg" className="mt-5 h3MatchDetail text-left">Události</Heading>
             {eventsState.isLoading &&  <div className="text-center"><Image src={loadingGif}/></div>}
             {(!eventsState.isLoading && eventsState.error) &&
             <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}

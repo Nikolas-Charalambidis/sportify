@@ -12,9 +12,8 @@ export default class TeamMembershipService {
 		const user = Number(id_user);
 		const position = Number(id_position);
 		teamMembershipValidation.validateNewMemberData(team, user, position, status);
-
 		const result = await this.dbConnection.query(
-			`INSERT INTO team_membership (id_team_membership, team, user, status, position) 
+			`INSERT INTO team_membership (id_team_membership, id_team, id_user, status, id_position) 
 			 VALUES (NULL, ?, ?, ?, ?)`,
 			[team, user, status, position]
 		);
