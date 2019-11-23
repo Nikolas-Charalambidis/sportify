@@ -37,7 +37,7 @@ export function Routes() {
 
 			<Route path="/leagues" exact component={Leagues}/>
             <Route path="/matches" exact component={Matches} />
-            <Route path="/match-create-form" exact component={MatchCreateForm} />
+            <Route path="/matches/match-create-form" exact component={MatchCreateForm} />
 			<Route path="/statistics" exact component={Statistics} />
 			<Route path="/aboutus" exact component={AboutUs}/>
 			<Route path="/contact" exact component={Contact}/>

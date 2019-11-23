@@ -2,6 +2,7 @@ import React from 'react';
 
 import {Heading} from '../atoms/';
 import {Breadcrumb} from "react-bootstrap";
+import {MatchMenuCard} from "./match/create-form/components/MatchMenuCard";
 
 export function Matches() {
     return (
@@ -11,7 +12,7 @@ export function Matches() {
                 <Breadcrumb.Item active>Zápasy</Breadcrumb.Item>
             </Breadcrumb>
             <Heading>Zápasy</Heading>
-            <p>This page is empty for now...</p>
+            <MatchMenuCard title="Vytvořit zápas" text="Formulář pro vytvoření zápasu" click="match-create-form"/>
         </div>
     );
 }
