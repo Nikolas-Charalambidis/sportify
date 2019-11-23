@@ -545,25 +545,27 @@ DELIMITER //
 CREATE PROCEDURE generate_match_goals_data(triggered_id_match int(11), triggered_id_team int(11), triggered_type varchar(255), triggered_host int(2))
 BEGIN
     DECLARE goals int(11);
-    DECLARE match_start datetime;
+    DECLARE match_start date;
 
     IF triggered_type = 'goal' THEN
-        SELECT COUNT(*) INTO goals FROM events AS e
-        WHERE e.type = 'goal'
-          AND e.host = triggered_host
-          AND e.id_match = triggered_id_match
-          AND e.id_team = triggered_id_team;
 
-        IF goals IS NULL THEN SET goals = 0; END IF;
         SELECT m.date INTO match_start FROM matches AS m WHERE m.id_match = triggered_id_match;
-        IF (match_start > NOW()) THEN SET goals = -1; END IF;
 
-        IF triggered_host THEN
-            UPDATE matches AS m SET m.goals_host = goals
-            WHERE m.id_match = triggered_id_match AND m.id_host = triggered_id_team;
-        ELSE
-            UPDATE matches AS m SET m.goals_guest = goals
-            WHERE m.id_match = triggered_id_match AND m.id_guest = triggered_id_team;
+        IF (match_start <= NOW()) THEN
+
+            SELECT COUNT(*) INTO goals FROM events AS e
+            WHERE e.type = 'goal'
+              AND e.host = triggered_host
+              AND e.id_match = triggered_id_match
+              AND e.id_team = triggered_id_team;
+
+            IF triggered_host THEN
+                UPDATE matches AS m SET m.goals_host = goals
+                WHERE m.id_match = triggered_id_match AND m.id_host = triggered_id_team;
+            ELSE
+                UPDATE matches AS m SET m.goals_guest = goals
+                WHERE m.id_match = triggered_id_match AND m.id_guest = triggered_id_team;
+            END IF;
         END IF;
     END IF;
 END//
@@ -781,11 +783,11 @@ INSERT INTO `competition_membership` (`id_competition_membership`, `id_competiti
 
 -- MATCHES
 INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES
-    (1, null, 1, 1, '2018-11-04'),
-    (2, null, 1, 1, '2018-11-05'),
-    (3, 1, 1, 2, '2018-11-10'),
-    (4, 1, 2, 3, '2018-11-11'),
-    (5, 1, 3, 1, '2018-11-12');
+    (1, null, 1, 1, '2019-11-04'),
+    (2, null, 1, 1, '2019-11-05'),
+    (3, 1, 1, 2, '2019-11-10'),
+    (4, 1, 2, 3, '2020-03-01'),
+    (5, 1, 3, 1, '2020-03-02');
 
 INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES
     (1, 1, true, 1, 1, true),
@@ -841,7 +843,6 @@ INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1
 
     (19, 5, 3, null, 'shot', null, null, null, 0, true),
     (20, 5, 1, null, 'shot', null, null, null, 0, false);
-
 
 -- --- MATCHES TABLE TRIGGERS BLOCK START
 DELIMITER //
