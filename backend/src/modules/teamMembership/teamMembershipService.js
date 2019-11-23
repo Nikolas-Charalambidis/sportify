@@ -13,7 +13,6 @@ export default class TeamMembershipService {
 		const position = Number(id_position);
 		console.log("data", id_team, id_user, id_position, status);
 		teamMembershipValidation.validateNewMemberData(team, user, position, status);
-		console.log("validated");
 		const result = await this.dbConnection.query(
 			`INSERT INTO team_membership (id_team_membership, id_team, id_user, status, id_position) 
 			 VALUES (NULL, ?, ?, ?, ?)`,
