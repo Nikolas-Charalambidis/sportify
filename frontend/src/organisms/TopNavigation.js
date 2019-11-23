@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import {Navbar, Button} from "react-bootstrap";
 import {NavLink as Link} from "react-router-dom";
@@ -8,16 +8,22 @@ import {useHistory} from "react-router";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import * as Icons from "@fortawesome/free-solid-svg-icons"
 
+
 function TopNavigationBase() {
     const {user, signout} = useAuth();
     const history = useHistory();
 
+    const [isOpen, setIsOpen] = useState(false);
+    const toggle = () => (window.innerWidth <= 765) ? setIsOpen(!isOpen) : setIsOpen(true);
+
     return (
+
+
         <Navbar id="navigation" sticky="top" expand="md">
             <Link to="/">
                 <Navbar.Brand/>
             </Link>
-            <Navbar.Toggle aria-controls="basic-navbar-nav"/>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={toggle}/>
 
             {user ? (
                 <>
@@ -47,15 +53,14 @@ function TopNavigationBase() {
                     </div>
                 </>
             )}
-
-            <Navbar.Collapse id="basic-navbar-nav">
+            <Navbar.Collapse id="basic-navbar-nav" in={isOpen}>
                 <ul className="m-auto">
-                    <li><Link className="nav-link" to="/teams" activeClassName="active">Týmy</Link></li>
-                    <li><Link className="nav-link" to="/leagues" activeClassName="active">Soutěže</Link></li>
-                    <li><Link className="nav-link" to="/matches" activeClassName="active">Zápasy</Link></li>
-                    <li><Link className="nav-link" to="/statistics" activeClassName="active">Statistiky</Link></li>
-                    <li><Link className="nav-link" to="/aboutus" activeClassName="active">O nás</Link></li>
-                    <li><Link className="nav-link" to="/contact" activeClassName="active">Kontakt</Link></li>
+                    <li><Link className="nav-link" to="/teams" activeClassName="active" onClick={toggle}>Týmy</Link></li>
+                    <li><Link className="nav-link" to="/leagues" activeClassName="active" onClick={toggle}>Soutěže</Link></li>
+                    <li><Link className="nav-link" to="/matches" activeClassName="active" onClick={toggle}>Zápasy</Link></li>
+                    <li><Link className="nav-link" to="/statistics" activeClassName="active" onClick={toggle}>Statistiky</Link></li>
+                    <li><Link className="nav-link" to="/aboutus" activeClassName="active" onClick={toggle}>O nás</Link></li>
+                    <li><Link className="nav-link" to="/contact" activeClassName="active" onClick={toggle}>Kontakt</Link></li>
                 </ul>
 
                 <div className="signUp d-none d-md-inline-block">

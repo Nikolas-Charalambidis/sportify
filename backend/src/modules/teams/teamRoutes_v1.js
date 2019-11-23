@@ -201,15 +201,14 @@ router.get('/', async (req, res, next) => {
  */
 router.post('/', async (req, res, next) => {
 	try {
-		const { id_sport, name, id_type, id_leader, position } = req.body;
+		const { id_sport, name, id_type, id_leader, id_position } = req.body;
 		const id = await new TeamService(req).addNewTeam(id_sport, name, id_type, id_leader);
 		let msg = "Tým byl úspěšně vytvořen";
 		try {
-			await new TeamMembershipService(req).addNewMember(id, id_leader, position, 'active');
+			await new TeamMembershipService(req).addNewMember(id, id_leader, id_position, 'active');
 		} catch(e) {
 			msg = "Tým byl vytvořen, ale přidání nového člena do týmu se nezdařilo. Kontaktujte prosím podporu."
 		}
-		console.log("id", id);
 		res.status(201).header('Location' , `/api/v1/teams/${id}`).json({ error: false, msg: msg, id_team: id});
 	} catch(e) {
 		next(e);
@@ -377,6 +376,39 @@ router.delete('/:id_team', async(req, res, next) => {
 		const { id_team } = req.params;
 		const team = await new TeamService(req).setActive(id_team, false);
 		res.status(200).json({ error: false, msg: 'OK', team_data: team});
+	} catch(e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
+ * /teams/{id_team}/matches:
+ *   get:
+ *     tags:
+ *       - Teams
+ *     name: AdminMatches
+ *     summary: Get all matches by team ID
+ *     consumes: application/json
+ *     produces: application/json
+ *     parameters:
+ *       - in: path
+ *         name: id_team
+ *         description: Team ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: All matches of team returned
+ *       400:
+ *         description: Invalid request
+ */
+router.get('/:id_team/matches', async (req, res, next) => {
+	try {
+		const { id_team } = req.params;
+		const matches = await new TeamService(req).getMatchesByTeam(id_team);
+		res.status(200).json({ error: false, msg: 'OK', matches: matches});
 	} catch(e) {
 		next(e);
 	}

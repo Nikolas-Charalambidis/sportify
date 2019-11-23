@@ -48,7 +48,14 @@ export function useGetTeam(id_team) {
                 .get(`${config.API_BASE_PATH}/teams/${id_team}`)
                 .then(({data}) => {
                     const {team} = data;
+                    // if(id_user){
+                    //     let authorized = id_user === team.id_leader;
+                    //     setState({isLoading: false, error: false, team_data: team, authorized: authorized});
+                    // } else {
+                    //     setState({isLoading: false, error: false, team_data: team});
+                    // }
                     setState({isLoading: false, error: false, team_data: team});
+
                 })
                 .catch(( { response } ) => {
                     const {data, status} = response;
@@ -131,7 +138,7 @@ export function ChangeTeamData(api, id_team, values, setHeading) {
             setHeading(name);
         })
         .catch(({response}) => {
-            const {data} = response;
+            const { data } = response;
             window.flash(data.msg, 'danger');
         });
 }
@@ -193,6 +200,40 @@ export function useGetTeamCompetition(id_team) {
     return [state];
 }
 
+export function useGetTeamMatches(id_team) {
+    const api = useApi();
+    const [state, setState] = useState({
+        isLoading: true
+    });
+    useEffect( () => {
+        async function fetchData() {
+            api
+                .get(`${config.API_BASE_PATH}/teams/${id_team}/matches`)
+                .then(({ data }) => {
+                    const { matches } = data;
+                    setState({ isLoading: false, error: false, team_data: matches });
+                })
+                .catch(( { response } ) => {
+                    const { data, status} = response;
+                    setState({ isLoading: false, error: true, team_data: null });
+                    switch (status) {
+                        case 400:
+                            window.flash(data.msg, 'danger');
+                            break;
+                        case 500:
+                            window.flash(data.msg, 'danger');
+                            break;
+                        default:
+                            window.flash("Neočekávaná chyba", 'danger');
+                            break;
+                    }
+                });
+        }
+        fetchData().then();
+    }, [api, id_team]);
+    return [state];
+}
+
 export function useGetTeamStatistics(id_team) {
     const api = useApi();
     const [state, setState] = useState({
@@ -228,9 +269,9 @@ export function useGetTeamStatistics(id_team) {
 }
 
 export function CreateTeam(history, api, id_user, values) {
-    const {name, id_sport, id_type, position} = values;
+    const {name, id_sport, id_type, id_position} = values;
     api
-        .post(`${config.API_BASE_PATH}/teams`, {id_leader: id_user, name: name, id_sport: id_sport, id_type: id_type, position: position})
+        .post(`${config.API_BASE_PATH}/teams`, {id_leader: id_user, name: name, id_sport: id_sport, id_type: id_type, id_position: id_position})
         .then(( { data } ) => {
             const { id_team } = data;
             window.flash(data.msg, 'success');

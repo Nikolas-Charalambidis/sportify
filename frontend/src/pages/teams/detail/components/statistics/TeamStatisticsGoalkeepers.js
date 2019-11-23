@@ -1,5 +1,6 @@
 import React from 'react';
 import {useParams} from "react-router-dom";
+import {useHistory} from 'react-router-dom';
 import {useGetTeamStatistics} from "../../../../../api/team/teamClient_v1";
 import {Heading} from "../../../../../atoms";
 import {Table} from "../../../../../organisms/Table";
@@ -13,14 +14,14 @@ function getGoalkeepers(state, filterBy) {
 
     if (!state.isLoading) {
         if (filterBy === 'league') {
-            return state.team.competitions_aggregate.filter(p => p.position === "goalkeeper");
+            return state.team.competitions_aggregate.filter(p => p.is_goalkeeper);
         }
 
         if (filterBy !== 'training') {
             competitionId = parseInt(filterBy);
         }
 
-        return state.team.individual.filter(p => p.position === "goalkeeper" && p.id_competition === competitionId)
+        return state.team.individual.filter(p => p.is_goalkeeper && p.id_competition === competitionId)
     }
 }
 
@@ -30,14 +31,25 @@ function getRank(playerData) {
 
 export function TeamStatisticsGoalkeepers({filterBy}) {
     let {id_team} = useParams();
+    let history = useHistory();
     const [state] = useGetTeamStatistics(id_team);
 
     const goalkeepers = getGoalkeepers(state, filterBy);
+    if (goalkeepers) {
+        goalkeepers.sort((a, b) => b.goalkeeper_success_rate - a.goalkeeper_success_rate);
+    }
+
+    function handleClick(row) {
+        if (row) {
+            history.push("/users/" + row.original.id_user);
+        }
+    }
+
     const columns = [
         {
-            Header: "#",
+            Header: "Pořadí",
             accessor: "rank",
-            width: 50,
+            filterable: false,
             Cell: (playerData) => getRank(playerData),
         },
         {
@@ -48,27 +60,33 @@ export function TeamStatisticsGoalkeepers({filterBy}) {
         },
         {
             Header: "Počet zápasů",
+            filterable: false,
             accessor: "goalkeeper_matches",
         },
         {
             Header: <OverlayTriggerTable header="Minut" placement="bottom" icon={Icons.faInfo} message="Počet odehraných minut" />,
             accessor: "goalkeeper_minutes",
+            filterable: false,
         },
         {
             Header: <OverlayTriggerTable header="Góly" placement="bottom" icon={Icons.faInfo} message="Poče obdržených gólů" />,
             accessor: "goalkeeper_goals",
+            filterable: false,
         },
         {
             Header: <OverlayTriggerTable header="Nuly" placement="bottom" icon={Icons.faInfo} message="Počet vychytaných nul na zápas" />,
             accessor: "goalkeeper_zeros",
+            filterable: false,
         },
         {
             Header: <OverlayTriggerTable header="Střely" placement="bottom" icon={Icons.faInfo} message="Počet vychytaných střel" />,
-            accessor: "goalkeeper_shoots",
+            accessor: "goalkeeper_shots",
+            filterable: false,
         },
         {
             Header: <OverlayTriggerTable header="Úspěšnost" placement="bottom" icon={Icons.faInfo} message="% úspěšnost brankáře" />,
             accessor: "goalkeeper_success_rate",
+            filterable: false,
         }
     ];
 
@@ -78,7 +96,13 @@ export function TeamStatisticsGoalkeepers({filterBy}) {
             {!state.isLoading && state.error &&
             <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
             {!state.isLoading && !state.error && (
-                <Table className="defaultCursor" data={goalkeepers} columns={columns}/>
+                <Table data={goalkeepers} columns={columns}getTdProps={(state, rowInfo) => {
+                    return {
+                        onClick: () => {
+                            handleClick(rowInfo);
+                        }
+                    }
+                }}/>
             )}
         </div>
     );

@@ -7,17 +7,12 @@ import {Heading} from "../../../../atoms";
 import {Table} from "../../../../organisms/Table";
 import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../../assets/images/loading.gif";
-import {getPositionEnumName} from "../../../../utils/enum-helper";
-
-const positionEnum = {
-    ATTACKER: 'attacker',
-    DEFENDER: 'defender',
-    GOALKEEPER: 'goalkeeper',
-};
+import {useGetTeamPositions} from "../../../../api/others/othersClient_v1";
 
 export function TeamSquad() {
     let {id_team} = useParams();
     const [state] = useGetMembers(id_team);
+    const [positionsState] = useGetTeamPositions();
 
     let history = useHistory();
     const columns = [
@@ -30,19 +25,15 @@ export function TeamSquad() {
         {
             Header: "Pozice",
             accessor: "position",
-            Cell: ({row}) => (<span>{getPositionEnumName(row.position)}</span>),
+            Cell: ({row}) => (<span>{row.position}</span>),
             filterMethod: (filter, row) => {
-                switch (filter.value) {
-                    case positionEnum.ATTACKER:
-                        return row[filter.id] === positionEnum.ATTACKER;
-                    case positionEnum.DEFENDER:
-                        return row[filter.id] === positionEnum.DEFENDER;
-                    case positionEnum.GOALKEEPER:
-                        return row[filter.id] === positionEnum.GOALKEEPER;
-                    default:
-                        return true;
+                if (filter.value === 'all') {
+                    return true;
+                } else {
+                    return row[filter.id] === filter.value;
                 }
             },
+
             Filter: ({filter, onChange}) =>
                 <select
                     onChange={event => onChange(event.target.value)}
@@ -50,33 +41,38 @@ export function TeamSquad() {
                     value={filter ? filter.value : "all"}
                 >
                     <option value="all">Vše</option>
-                    <option value="attacker">Útočník</option>
-                    <option value="defender">Obránce</option>
-                    <option value="goalkeeper">Brankář</option>
+                    {positionsState.positions.map((anObjectMapped, index) => (
+                        <option key={index} value={anObjectMapped.position}>{anObjectMapped.position}</option>
+                    ))}
                 </select>
         }
     ];
 
     function handleClick(row) {
         if (row) {
-            history.push("/user/" + row.original.id_user);
+            history.push("/users/" + row.original.id_user);
         }
     }
 
     return (
         <div>
-            {state.isLoading && <div className="text-center"><Image src={loadingGif}/></div>}
-            {!state.isLoading && state.error &&
+            {(state.isLoading || positionsState.isLoading) &&
+            <div className="text-center"><Image src={loadingGif}/></div>}
+            {(
+                (!state.isLoading && state.error) ||
+                (!positionsState.isLoading && positionsState.error)) &&
             <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
-            {!state.isLoading && !state.error && (
-                <Table columns={columns} data={state.players} getTdProps={(state, rowInfo) => {
-                    return {
-                        onClick: () => {
-                            handleClick(rowInfo);
-                        }
+            {(
+                (!state.isLoading && !state.error) &&
+                (!positionsState.isLoading && !positionsState.error)) &&
+            <Table columns={columns} data={state.players} getTdProps={(state, rowInfo) => {
+                return {
+                    onClick: () => {
+                        handleClick(rowInfo);
                     }
-                }}/>
-            )}
+                }
+            }}/>
+            }
         </div>
     );
 }
