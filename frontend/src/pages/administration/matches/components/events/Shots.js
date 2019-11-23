@@ -26,7 +26,7 @@ export function Shots({shotsState}) {
 
     return (
         <div>
-            <Heading className="mt-4" size="lg">Střely</Heading>
+            <Heading size="lg" className="mt-5 h3MatchDetail text-left">Střely</Heading>
             {shotsState.isLoading &&  <div className="text-center"><Image src={loadingGif}/></div>}
             {(!shotsState.isLoading && shotsState.error) &&
             <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
