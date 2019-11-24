@@ -42,6 +42,11 @@ export function PlayersTable({ id_team, state, events, setEvent, host }) {
         const player = getRowPlayer(data);
         const suspension = events.filter(e => e.id_user === player.id_user && e.type.includes("suspension")).length;        
         return suspension;
+    };
+    function getShots(data) {
+        const player = getRowPlayer(data);
+        const shots = events.filter(e => e.id_user === player.id_user && e.type === 'value').length;
+        return shots;
     }
 
     const columns = [
@@ -89,6 +94,10 @@ export function PlayersTable({ id_team, state, events, setEvent, host }) {
         {
             Header: 'Trestné minuty',
             Cell: ({ row }) => <span>{getSuspensions(row)}</span>
+        },
+        {
+            Header: 'Shots',
+            Cell: ({ row }) => <span>{getShots(row)}</span>
         },
         {
             Header: 'Akce',
