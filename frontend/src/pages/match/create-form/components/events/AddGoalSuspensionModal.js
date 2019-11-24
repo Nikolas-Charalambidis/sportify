@@ -4,6 +4,7 @@ import {Heading} from "../../../../../atoms";
 import * as yup from "yup";
 import { AddGoalForm } from "./AddGoalForm";
 import { AddSuspensionForm } from "./AddSuspensionForm";
+import { AddShotForm } from "./AddShotForm";
 
 const schema = yup.object().shape({
     id_user: yup.number().integer().required(),
@@ -40,6 +41,10 @@ export function AddGoalSuspensionModal({params, handleClose, matchup, id_team, e
                 <Tab eventKey="suspension" title="Přidat trest">
                     <AddSuspensionForm id_user={id_user} handleClose={handleClose} addEvent={handleAddEvent}
                         id_team={id_team} schema={schema} host={host} />
+                </Tab>
+                <Tab eventKey="shots" title="Přidat strely">
+                    <AddShotForm id_user={id_user} handleClose={handleClose} addEvent={handleAddEvent}
+                                       id_team={id_team} schema={schema} host={host} />
                 </Tab>
             </Tabs>
         </Modal>
