@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import TeamService from './teamService';
 import dotenv from "dotenv";
-import TeamMembershipService from "../teamMembership/teamMembershipService";
+import TeamMembershipService from "../teamMemberships/teamMembershipService";
 const multipart = require("connect-multiparty");
 const multipartMiddleware = multipart();
 
@@ -21,17 +21,17 @@ const router = Router();
  *     parameters:
  *       - name: id_team
  *         in: path
- *         description: TeamAdminPage ID
+ *         description: TeamDetailAdmin ID
  *         required: true
  *         schema:
  *           type: integer
  *     responses:
  *       200:
- *         description: TeamAdminPage found
+ *         description: TeamDetailAdmin found
  *       400:
  *         description: Invalid request
  *       404:
- *         description: TeamAdminPage not found
+ *         description: TeamDetailAdmin not found
  */
 
 router.get('/:id_team', async (req, res, next) => {
@@ -144,7 +144,7 @@ router.get('/avatar/:id_team', multipartMiddleware, async(req, res, next) => {
  *               type: integer
  *     responses:
  *       200:
- *         description: TeamAdminPage data has been changed
+ *         description: TeamDetailAdmin data has been changed
  *       400:
  *         description: Invalid request
  *       500:
@@ -192,10 +192,10 @@ router.get('/', async (req, res, next) => {
  *         name: body
  *         required: true
  *         schema:
- *           $ref: "#/definitions/TeamAdminPage"
+ *           $ref: "#/definitions/TeamDetailAdmin"
  *     responses:
  *       201:
- *         description: TeamAdminPage added
+ *         description: TeamDetailAdmin added
  *       400:
  *         description: Invalid request
  */
@@ -226,7 +226,7 @@ router.post('/', async (req, res, next) => {
  *     parameters:
  *       - name: id_team
  *         in: path
- *         description: TeamAdminPage ID
+ *         description: TeamDetailAdmin ID
  *         required: true
  *         schema:
  *           type: integer
@@ -260,7 +260,7 @@ router.get('/:id_team/players', async (req, res, next) => {
  *     parameters:
  *       - name: id_team
  *         in: path
- *         description: TeamAdminPage ID
+ *         description: TeamDetailAdmin ID
  *         required: true
  *         schema:
  *           type: integer
@@ -387,7 +387,7 @@ router.delete('/:id_team', async(req, res, next) => {
  *   get:
  *     tags:
  *       - Teams
- *     name: AdminMatches
+ *     name: Teams
  *     summary: Get all matches by team ID
  *     consumes: application/json
  *     produces: application/json
@@ -420,7 +420,7 @@ router.get('/:id_team/matches', async (req, res, next) => {
  *
  * @swagger
  * definitions:
- *   TeamAdminPage:
+ *   TeamDetailAdmin:
  *     properties:
  *       id_team:
  *         type: integer

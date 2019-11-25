@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {NavLink as Link} from "react-router-dom";
-import {Placeholder} from '../../templates/Placeholder';
+import {Placeholder} from '../../atoms/Placeholder';
 
 export function Page404() {
     return (

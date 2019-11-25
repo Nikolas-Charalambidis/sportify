@@ -170,7 +170,7 @@ router.get('/', async (req, res, next) => {
  *               type: string
  *     responses:
  *       201:
- *         description: TeamAdminPage added
+ *         description: TeamDetailAdmin added
  *       400:
  *         description: Invalid request
  */
@@ -259,7 +259,7 @@ router.get('/avatar/:id_user', multipartMiddleware, async(req, res, next) => {
  *   get:
  *     tags:
  *       - Users
- *     name: TeamAdminPage ownerships
+ *     name: TeamDetailAdmin ownerships
  *     summary: Get all teams the user is owner of
  *     parameters:
  *       - name: id_user
@@ -292,7 +292,7 @@ router.get('/:id_user/team', async(req, res, next) => {
  *   get:
  *     tags:
  *       - Users
- *     name: TeamAdminPage ownerships
+ *     name: TeamDetailAdmin ownerships
  *     summary: Get all competition the user is owner of
  *     parameters:
  *       - name: id_user
@@ -325,7 +325,7 @@ router.get('/:id_user/competition', async(req, res, next) => {
  *   get:
  *     tags:
  *       - Users
- *     name: TeamAdminPage memberships
+ *     name: TeamDetailAdmin memberships
  *     summary: Get all teams the user is member of
  *     parameters:
  *       - name: id_user
@@ -386,7 +386,7 @@ router.get('/:id_user/competitionMembership', async(req, res, next) => {
 });
 
 /**
- * TeamAdminPage object Swagger definition
+ * TeamDetailAdmin object Swagger definition
  *
  * @swagger
  * definitions:

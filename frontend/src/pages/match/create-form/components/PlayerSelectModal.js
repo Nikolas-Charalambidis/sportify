@@ -2,9 +2,9 @@ import React from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { concat, equals, includes, without } from 'ramda';
 import { Heading } from '../../../../atoms';
-import { useGetMembers } from '../../../../api/team/teamClient_v1';
-import { useGetTeamPositions } from '../../../../api/others/othersClient_v1';
-import { Table } from '../../../../organisms/Table';
+import { useGetMembers } from '../../../../api/teamClient_v1';
+import { useGetTeamPositions } from '../../../../api/othersClient_v1';
+import { Table } from '../../../../atoms/Table';
 
 function getPlayers(state) {
   if (state[0].players) {
