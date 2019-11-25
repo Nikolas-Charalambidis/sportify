@@ -1,10 +1,10 @@
 import React, { useState }  from 'react';
 import 'react-table/react-table.css';
 import { Heading } from '../../../../atoms';
-import { Table } from '../../../../organisms/Table';
+import { Table } from '../../../../atoms/Table';
 import Image from 'react-bootstrap/esm/Image';
 import loadingGif from '../../../../assets/images/loading.gif';
-import { useGetTeamPositions } from '../../../../api/others/othersClient_v1';
+import { useGetTeamPositions } from '../../../../api/othersClient_v1';
 import { Button } from 'react-bootstrap';
 import { AddGoalSuspensionModal } from "./events/AddGoalSuspensionModal";
 import addIcon from "../../../../assets/images/add.png";

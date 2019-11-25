@@ -10,7 +10,7 @@ import {useHistory} from "react-router";
 import {Formik} from "formik";
 import {Field} from "../../atoms/Field";
 import * as yup from "yup";
-import {AccountAdvantages} from "./components/AccountAdvantages";
+import {AccountAdvantages} from "../../atoms/AccountAdvantages";
 
 const schemaLogin = yup.object().shape({
     email: yup.string().email().required(),
