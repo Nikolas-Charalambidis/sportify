@@ -416,7 +416,7 @@ router.get('/:id_team/matches', async (req, res, next) => {
 
 
 /**
- * User object Swagger definition
+ * Team object Swagger definition
  *
  * @swagger
  * definitions:
