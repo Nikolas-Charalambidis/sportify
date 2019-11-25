@@ -386,7 +386,7 @@ router.get('/:id_user/competitionMembership', async(req, res, next) => {
 });
 
 /**
- * TeamDetailAdmin object Swagger definition
+ * User object Swagger definition
  *
  * @swagger
  * definitions:
