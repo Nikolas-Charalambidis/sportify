@@ -4,7 +4,7 @@ import {useGetAvailablePlayers} from "../../../api/teamMembershipClient_v1";
 import {MatchDetailTeamTabAdmin} from "./MatchDetailTeamTabAdmin";
 
 export function MatchDetailSingleAdmin({id_match, data}) {
-    const [stateAvailablePlayers, fetchAvailablePlayers] = useGetAvailablePlayers(data.id_host, id_match);
+    const [stateAvailablePlayers, fetchAvailablePlayers] = useGetAvailablePlayers(data.id_host, id_match, 'active');
 
     return (
             <div>
