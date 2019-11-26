@@ -23,6 +23,14 @@ export function AdministrationMenu() {
                     <AdministrationMenuCard title="Správa týmů" text="Správa, případné založení vlastního týmu umožňuje editovat údaje a zobrazovat soupisku hráčů." click="teams"/>
                 </Col>
             </Row>
+            <Row>
+                <Col lg={6} md={6}>
+                    <AdministrationMenuCard title="Vytvoření zápasu - form" text="Need to add text" click="matches/createForm"/>
+                </Col>
+                <Col lg={6} md={6} className="mt-4 mt-md-0">
+                    <AdministrationMenuCard title="Vytvoření zápasu interactive" text="Need to add text" click="matches/createInteractive"/>
+                </Col>
+            </Row>
         </div>
     );
 }
