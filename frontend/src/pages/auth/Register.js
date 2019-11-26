@@ -9,7 +9,7 @@ import {config} from '../../config';
 import * as yup from "yup";
 import {Formik} from "formik";
 import {Field} from "../../atoms/Field";
-import {AccountAdvantages} from "./components/AccountAdvantages";
+import {AccountAdvantages} from "../../atoms/AccountAdvantages";
 import {NavLink as Link} from "react-router-dom";
 
 const schema = yup.object().shape({

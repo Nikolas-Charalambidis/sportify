@@ -190,8 +190,8 @@ export default class TeamService {
 					ts.goalkeeper_goals,
 					ts.goalkeeper_zeros,
 					(ts.goalkeeper_zeros / ts.goalkeeper_matches) AS 'goalkeeper_average_zeros',
-					ts.goalkeeper_shoots,
-					CONCAT(100*(1 - ts.goalkeeper_goals/ts.goalkeeper_shoots), ' %') AS 'goalkeeper_success_rate'
+					ts.goalkeeper_shots,
+					CONCAT(100*(1 - ts.goalkeeper_goals/ts.goalkeeper_shots), ' %') AS 'goalkeeper_success_rate'
 				FROM team_statistics as ts	
 				JOIN users AS u ON ts.id_user = u.id_user
 				JOIN team_membership AS tm on u.id_user = tm.id_user
@@ -216,8 +216,8 @@ export default class TeamService {
 					SUM(ts.goalkeeper_goals) AS 'goalkeeper_goals',
 					SUM(ts.goalkeeper_zeros) AS 'goalkeeper_zeros',
 					(SUM(ts.goalkeeper_zeros)/SUM(ts.goalkeeper_matches)) AS 'goalkeeper_average_zeros',
-					SUM(ts.goalkeeper_shoots) AS 'goalkeeper_shoots',
-					CONCAT(100*(1 - SUM(ts.goalkeeper_goals)/SUM(ts.goalkeeper_shoots)), ' %') AS 'goalkeeper_success_rate'
+					SUM(ts.goalkeeper_shots) AS 'goalkeeper_shots',
+					CONCAT(100*(1 - SUM(ts.goalkeeper_goals)/SUM(ts.goalkeeper_shots)), ' %') AS 'goalkeeper_success_rate'
 						FROM team_statistics as ts
 						JOIN users AS u ON ts.id_user = u.id_user
 						JOIN team_membership tm on u.id_user = tm.id_user
@@ -235,6 +235,8 @@ export default class TeamService {
 			`SELECT 
 				m.id_match, m.date,
 				host.name AS host_name, guest.name AS guest_name,
+				IF (m.date > NOW(), NULL, m.goals_host) AS 'goals_host',
+			 	IF (m.date > NOW(), NULL, m.goals_guest) AS 'goals_guest',
 				c.name AS competition_name
 			 FROM matches as m
 			 LEFT JOIN competitions as c ON m.id_competition=c.id_competition 

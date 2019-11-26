@@ -2,13 +2,13 @@ import React from 'react';
 import {BrowserRouter} from 'react-router-dom';
 
 import {MainSection, ScrollToTop} from './atoms/'
-import {Flash} from './organisms/Flash';
+import {Flash} from './atoms/Flash';
 import {ApiProvider} from './hooks/useApi';
 import {AuthProvider} from './utils/auth';
 import {Routes} from './Routes';
 import Event from './utils/event';
-import {Footer} from "./organisms/Footer";
-import {TopNavigation} from "./organisms/TopNavigation";
+import {Footer} from "./atoms/Footer";
+import {TopNavigation} from "./atoms/TopNavigation";
 
 function AllProviders({children}) {
 	return (

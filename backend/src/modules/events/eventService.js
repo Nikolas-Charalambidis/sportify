@@ -1,8 +1,6 @@
 import dotenv from 'dotenv';
 import { DB_CONNECTION_KEY } from '../../libs/connection';
-import * as utils from '../../libs/utils';
 import * as eventValidation from "../events/eventValidations";
-import jwt from 'jsonwebtoken';
 
 dotenv.config();
 dotenv.config({path: '.env'});
@@ -26,32 +24,35 @@ export default class EventService {
 		}
 	}
 
-	async addEvent(values){
-		const { id_user, type, id_team, id_match, id_assistance1, id_assistance2, minute, value, host } = values;
-		let id_user_number = Number(id_user);
-		let id_assistance1_number = Number(id_assistance1);
-		let id_assistance2_number = Number(id_assistance2);
-		const id_minute_number = Number(minute);
-		const value_number = Number(value);
-		const host_number = Number(host);
+	async addEvents(values, id_match){
+		try {
+			const array = [];
+			values.map(item => {
+				const data = eventValidation.validateAddEventsData(item, id_match);
+				array.push([
+					data.type,
+					data.id_team,
+					data.id_match,
+					data.id_user,
+					data.id_assistance1,
+					data.id_assistance2,
+					data.minute,
+					data.value,
+					data.host
+				]);
+			});
 
-		if(!id_user_number){
-			id_user_number = null
+			const result = await this.dbConnection.batch(
+				`INSERT INTO events (type, id_team, id_match, id_user, id_assistance1, id_assistance2, minute, value, host)
+				 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, array
+			);
+			if(result.affectedRows !== values.length) {
+				throw {status: 500, msg: 'Nepodařilo se uložit všechny eventy'};
+			}
+		} catch (e) {
+			console.log("error", e);
 		}
-		if(!id_assistance1_number){
-			id_assistance1_number = null
-		}
-		if(!id_assistance2_number){
-			id_assistance2_number = null
-		}
-		const result = await this.dbConnection.query(
-			`INSERT INTO events (id_event, type, id_team, id_match, id_user, id_assistance1, id_assistance2, minute, value, host)
-			 VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			[type, id_team, id_match, id_user_number, id_assistance1_number, id_assistance2_number, id_minute_number, value_number, host_number]
-		);
-		if (result.affectedRows === 0) {
-			throw {status: 500, msg: 'Přidání eventu se nezdařilo'};
-		}
+
 	}
 
 	async changeShots(id_event, value){

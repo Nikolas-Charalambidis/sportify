@@ -28,6 +28,8 @@ const router = Router();
  *               type: integer
  *             host:
  *               type: boolean
+ *             goalkeeper:
+ *               type: boolean
  *     responses:
  *       201:
  *         description: Player added to matchup
@@ -40,9 +42,60 @@ const router = Router();
  */
 router.post('/', async (req, res, next) => {
 	try {
-		const { id_match, id_team, id_user, host } = req.body;
-		await new MatchupService(req).addPlayerToMatchup(id_match, id_team, id_user, host);
+		const values  = req.body;
+		await new MatchupService(req).addPlayersToMatchup([values], values.id_match);
 		res.status(201).json({ error: false, msg: 'Uživatel byl přidán do sestavy'});
+	} catch(e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
+ * /matchups/bulk:
+ *   post:
+ *     tags:
+ *       - Matchups
+ *     name: Add Player
+ *     summary: Add players to matchup - bulk insert
+ *     consumes: application/json
+ *     produces: application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         required: true
+ *         type: object
+ *         properties:
+ *           id_match:
+ *             type: integer
+ *           matchups:
+ *             type: array
+ *             items:
+ *               type: object
+ *               properties:
+ *                 id_match:
+ *                   type: integer
+ *                 id_team:
+ *                   type: integer
+ *                 id_user:
+ *                   type: integer
+ *                 host:
+ *                   type: boolean
+ *     responses:
+ *       201:
+ *         description: Player added to matchup
+ *       400:
+ *         description: Invalid request
+ *       404:
+ *         description: Item not found in database
+ *       500:
+ *         description: Unexpected error
+ */
+router.post('/bulk', async (req, res, next) => {
+	try {
+		const { matchups, id_match } = req.body;
+		await new MatchupService(req).addPlayersToMatchup(matchups, id_match);
+		res.status(201).json({ error: false, msg: 'Hráči byli přidáni do sestavy'});
 	} catch(e) {
 		next(e);
 	}

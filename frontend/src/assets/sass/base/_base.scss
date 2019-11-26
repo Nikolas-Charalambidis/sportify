@@ -96,6 +96,25 @@ label {
   }
 }
 
+.btn-danger {
+  background: red !important;
+  color: #ffffff !important;
+  font-family: "Proxima", Arial, sans-serif !important;
+  text-transform: uppercase;
+  padding: 8px 25px !important;
+  font-size: 16px !important;
+  letter-spacing: 2px;
+  border-radius: 2px !important;
+  text-decoration: none !important;
+  border: 1px solid red !important;
+
+  &:hover {
+    background: black !important;
+    color: white !important;
+    border-color: black !important;
+  }
+}
+
 .btn-secondary {
   background: white !important;
   color: black !important;
@@ -140,6 +159,7 @@ label {
   position: fixed !important;
   z-index: 10;
   width: 75%;
+  margin-left: 12%;
   margin-top: 10px;
   left: 6px !important;
   border-radius: 0 !important;
@@ -195,7 +215,7 @@ label {
 @media only screen and (max-width: 400px) {
   .alert {
     width: 90%;
-    transform: translate3d(10px, 67px, 0px);
+    margin-left: 3%;
 
     .alert-labelled-cell {
       padding-right: 50px;

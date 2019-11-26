@@ -1,10 +1,10 @@
 import React, { useState }  from 'react';
 import 'react-table/react-table.css';
 import { Heading } from '../../../../atoms';
-import { Table } from '../../../../organisms/Table';
+import { Table } from '../../../../atoms/Table';
 import Image from 'react-bootstrap/esm/Image';
 import loadingGif from '../../../../assets/images/loading.gif';
-import { useGetTeamPositions } from '../../../../api/others/othersClient_v1';
+import { useGetTeamPositions } from '../../../../api/othersClient_v1';
 import { Button } from 'react-bootstrap';
 import { AddGoalSuspensionModal } from "./events/AddGoalSuspensionModal";
 import addIcon from "../../../../assets/images/add.png";
@@ -42,6 +42,11 @@ export function PlayersTable({ id_team, state, events, setEvent, host }) {
         const player = getRowPlayer(data);
         const suspension = events.filter(e => e.id_user === player.id_user && e.type.includes("suspension")).length;        
         return suspension;
+    };
+    function getShots(data) {
+        const player = getRowPlayer(data);
+        const shots = events.filter(e => e.id_user === player.id_user && e.type === 'value').length;
+        return shots;
     }
 
     const columns = [
@@ -89,6 +94,10 @@ export function PlayersTable({ id_team, state, events, setEvent, host }) {
         {
             Header: 'Trestné minuty',
             Cell: ({ row }) => <span>{getSuspensions(row)}</span>
+        },
+        {
+            Header: 'Shots',
+            Cell: ({ row }) => <span>{getShots(row)}</span>
         },
         {
             Header: 'Akce',
