@@ -56,7 +56,7 @@ function TopNavigationBase() {
             <Navbar.Collapse id="basic-navbar-nav" in={isOpen}>
                 <ul className="m-auto">
                     <li><Link className="nav-link" to="/teams" activeClassName="active" onClick={toggle}>Týmy</Link></li>
-                    <li><Link className="nav-link" to="/leagues" activeClassName="active" onClick={toggle}>Soutěže</Link></li>
+                    <li><Link className="nav-link" to="/competitions" activeClassName="active" onClick={toggle}>Soutěže</Link></li>
                     <li><Link className="nav-link" to="/matches" activeClassName="active" onClick={toggle}>Zápasy</Link></li>
                     <li><Link className="nav-link" to="/statistics" activeClassName="active" onClick={toggle}>Statistiky</Link></li>
                     <li><Link className="nav-link" to="/aboutus" activeClassName="active" onClick={toggle}>O nás</Link></li>
