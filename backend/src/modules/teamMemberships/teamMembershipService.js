@@ -33,19 +33,18 @@ export default class TeamMembershipService {
 		}
 
 		if (id_match === undefined) {
-			console.log([team, ...values]);
 			return this.dbConnection.query(
 				`SELECT *, CONCAT(u.name, ' ', u.surname) AS name FROM team_membership AS t 
 				 JOIN users u on t.id_user = u.id_user WHERE t.id_team = ?` + where
 				, [team, ...values]
 			);
-		} else{ console.log([team, team, match, ...values]); return this.dbConnection.query(
+		} else return this.dbConnection.query(
 			`SELECT *, CONCAT(u.name, ' ', u.surname) AS name FROM team_membership AS t 
 				 JOIN users u on t.id_user = u.id_user 
 				 WHERE t.id_team = ? 
 				 AND t.id_user NOT IN(
 			 		SELECT id_user FROM matchups WHERE id_team=? AND id_match=?)` + where
 			, [team, team, match, ...values]
-		);}
+		);
 	}
 }
