@@ -11,6 +11,7 @@ import {addPlayer, deletePlayer, setGoalkeeper} from "../../../../api/matchupCli
 import {DeleteModal} from "../../../../atoms/DeleteModal";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import * as Icons from "@fortawesome/free-solid-svg-icons"
+import {PlayerSelectModal} from "./PlayerSelectModal";
 
 export function Matchup({id_team, id_match, host, availablePlayers, fetchAvailablePlayers, matchupState, fetchMatchup, fetchEvents}) {
     const api = useApi();
@@ -26,6 +27,12 @@ export function Matchup({id_team, id_match, host, availablePlayers, fetchAvailab
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [ID, setID] = useState(null);
+
+    const [showPlayerModal, setShowPlayerModal] = useState(false);
+    const handleClosePlayerModal = () => setShowPlayerModal(false);
+    const handleShowPlayerModal = () => setShowPlayerModal(true);
+
+    console.log("available", availablePlayers);
 
     const columnsMatchup = [
         {
@@ -121,15 +128,16 @@ export function Matchup({id_team, id_match, host, availablePlayers, fetchAvailab
                         <Heading size="xs" className="alert-warning pt-2 pb-2 mt-2 text-center">Nejsou dostupní žádní další hráči</Heading>
                     }
                     {(!availablePlayers.isLoading && !availablePlayers.error && availablePlayers.players.length !== 0) &&
-                        <CustomSelect name="id_type" label="Přidání hráče do sestavy"
-                                      options={availablePlayers.players}
-                                      getOptionLabel={option => `${option.name}`}
-                                      getOptionValue={option => `${option.id_user}`}
-                                      placeholder={host ? "Hráči host" : "Hráči guest"}
-                                      isSearchable={true}
-                                      isOptionDisabled={(option) => option.disabled === true}
-                                      onChange={options => handleAddPlayer(options.id_user)}
-                        />
+                        <div>
+                            <Button variant="primary" onClick={handleShowPlayerModal}>
+                                Vybrat hráče do sestavy
+                            </Button>
+                            <PlayerSelectModal show={showPlayerModal}
+                                                handleClose={handleClosePlayerModal}
+                                                players={availablePlayers.players}
+                            />
+
+                        </div>
                     }
                     <Table className="defaultCursor" columns={columnsMatchup} data={matchupState.matchup}/>
                     <AddGoalSuspensionModal params={showGoalModal} handleClose={closeGoalSuspensionModal} matchup={matchupState.matchup}

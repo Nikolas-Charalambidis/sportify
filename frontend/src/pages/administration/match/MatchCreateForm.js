@@ -6,7 +6,7 @@ import * as yup from 'yup';
 import { isEmpty } from 'ramda';
 import { useGetTeams } from '../../../api/teamClient_v1';
 import { CustomSelect } from '../../../atoms/Select';
-import { PlayerSelectModal } from '../../match/create-form/components/PlayerSelectModal';
+import { PlayerSelectModal2 } from '../../match/create-form/components/PlayerSelectModal2';
 import { PlayersTable } from '../../match/create-form/components/PlayersTable';
 
 let selectedPlayers = [];
@@ -164,13 +164,13 @@ export function MatchCreateForm() {
                     </Button>
                 </Col>
                 </Row>
-                <PlayerSelectModal
+                <PlayerSelectModal2
                 show={showHomePlayersModal}
                 handleClose={handleClose}
                 state={homePlayersState}
                 setter={setHomePlayers}
                 />
-                <PlayerSelectModal
+                <PlayerSelectModal2
                 show={showVisitingPlayersModal}
                 handleClose={handleClose}
                 state={visitingPlayersState}

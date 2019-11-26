@@ -12,7 +12,7 @@ function getPlayers(state) {
   }
 }
 
-export function PlayerSelectModal({ show, handleClose, state, setter }) {
+export function PlayerSelectModal2({ show, handleClose, state, setter }) {
   const members = useGetMembers(state.id);
   const players = getPlayers(members);
   const [positionsState] = useGetTeamPositions();
@@ -106,16 +106,9 @@ export function PlayerSelectModal({ show, handleClose, state, setter }) {
 
   return (
     <Modal show={show} onHide={handleClose}>
-      <div>
-        {state.isLoading && <div>Načítám data...</div>}
-        {!state.isLoading && state.error && (
-          <div>Data se nepodařilo načíst</div>
-        )}
-        {!state.isLoading && !state.error && (
-          <>
             <Modal.Header>
               <Modal.Title className="modal-title">
-                <Heading size="md">Vytvoření týmu</Heading>
+                <Heading size="md">Výběr hráčů do sestavy</Heading>
               </Modal.Title>
             </Modal.Header>
 
@@ -133,9 +126,6 @@ export function PlayerSelectModal({ show, handleClose, state, setter }) {
                 Uložit
               </Button>
             </Modal.Footer>
-          </>
-        )}
-      </div>
     </Modal>
   );
 }

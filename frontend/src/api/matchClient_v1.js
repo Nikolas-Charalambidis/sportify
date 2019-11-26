@@ -1,5 +1,5 @@
 import {useApi} from "../hooks/useApi";
-import { useEffect, useState, useRef, useCallback} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import {config} from '../config';
 
 export function useGetMatch(id_match) {
@@ -26,42 +26,6 @@ export function useGetMatch(id_match) {
     return [state];
 }
 
-export function useGetMatchup(id_match, host) {
-    const api = useApi();
-    const [state, setState] = useState({
-        isLoading: true
-    });
-    const fetchData = () => {
-        api
-            .get(`${config.API_BASE_PATH}/matches/${id_match}/matchup/${host}`)
-            .then(({data}) => {
-                const {matchup} = data;
-                setState({isLoading: false, error: false, matchup: matchup});
-            })
-            .catch(() => {
-                setState({isLoading: false, error: true, matchup: null});
-            });
-    };
-
-    useEffect( () => {
-        fetchData();
-    }, [api, id_match]); // eslint-disable-line
-    return [state, fetchData];
-}
-
-const fetchDataBase = ({ setState, api, id_match, host }) => {
-    setState({isLoading: true, error: false, events: null});
-    api
-        .get(`${config.API_BASE_PATH}/matches/${id_match}/events/${host}`)
-        .then(({data}) => {
-            const {events} = data;
-            setState({isLoading: false, error: false, events: events});
-        })
-        .catch(() => {
-            setState({isLoading: false, error: true, match: null});
-        })
-};
-
 export function useGetEvents(id_match, host) {
     const api = useApi();
     const [state, setState] = useState({
@@ -76,7 +40,49 @@ export function useGetEvents(id_match, host) {
 
     const fetchData = useCallback(() => {
         const { id_match, host, api } = argsRef.current;
-        fetchDataBase({ setState, api, id_match, host })
+        setState({isLoading: true, error: false, events: null});
+        api
+            .get(`${config.API_BASE_PATH}/matches/${id_match}/events/${host}`)
+            .then(({data}) => {
+                const {events} = data;
+                setState({isLoading: false, error: false, events: events});
+            })
+            .catch(() => {
+                setState({isLoading: false, error: true, match: null});
+            })
+    }, []);
+
+    useEffect(() => {
+        fetchData()
+    }, [id_match, host, fetchData]);
+
+    return [state, fetchData];
+}
+
+export function useGetMatchup(id_match, host) {
+    const api = useApi();
+    const [state, setState] = useState({
+        isLoading: true,
+        error: false
+    });
+
+    const argsRef = useRef({ id_match, host, api });
+    useEffect(() => {
+        argsRef.current = ({ id_match, host, api });
+    }, [id_match, host, api]);
+
+    const fetchData = useCallback(() => {
+        const { id_match, host, api } = argsRef.current;
+        setState({isLoading: true, error: false, events: null});
+        api
+            .get(`${config.API_BASE_PATH}/matches/${id_match}/matchup/${host}`)
+            .then(({data}) => {
+                const {matchup} = data;
+                setState({isLoading: false, error: false, matchup: matchup});
+            })
+            .catch(() => {
+                setState({isLoading: false, error: true, matchup: null});
+            });
     }, []);
 
     useEffect(() => {
