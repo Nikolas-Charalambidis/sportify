@@ -4,8 +4,8 @@ import {Tab, Tabs} from "react-bootstrap";
 import {MatchDetailTeamTabAdmin} from "./MatchDetailTeamTabAdmin";
 
 export function MatchDetailMultipleAdmin({id_match, data}) {
-    const [stateAvailablePlayersHost, fetchAvailablePlayersHost] = useGetAvailablePlayers(data.id_host, id_match);
-    const [stateAvailablePlayersGuest, fetchAvailablePlayersGuest] = useGetAvailablePlayers(data.id_guest, id_match);
+    const [stateAvailablePlayersHost, fetchAvailablePlayersHost] = useGetAvailablePlayers(data.id_host, id_match, 'active');
+    const [stateAvailablePlayersGuest, fetchAvailablePlayersGuest] = useGetAvailablePlayers(data.id_guest, id_match, 'active');
 
     return (
         <div>

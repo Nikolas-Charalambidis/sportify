@@ -5,12 +5,12 @@ const router = Router();
 
 /**
  * @swagger
- * /teamMembership/available:
+ * /teamMembership/team/{id_team}:
  *   get:
  *     tags:
  *       - TeamMembership
- *     name: Available players
- *     summary: Get all active players from team who are not in matchup yet
+ *     name: Team membership players
+ *     summary: Get all players from a team
  *     parameters:
  *       - name: id_team
  *         in: path
@@ -19,23 +19,31 @@ const router = Router();
  *         schema:
  *           type: integer
  *       - name: id_match
- *         in: path
- *         description: Match ID
- *         required: true
+ *         in: query
+ *         description: Filter by a certain team membership status
+ *         required: false
  *         schema:
  *           type: integer
+ *       - name: team_membership_status
+ *         in: query
+ *         description: Filter players who are not in a match-up of a certain match as id_match
+ *         required: false
+ *         schema:
+ *           type: string
+ *           enum: [active, inactive, declined, pending]
  *     responses:
  *       200:
- *         description: Available Players returned
+ *         description: Players returned
  *       400:
  *         description: Invalid request
  *       500:
  *         description: Unexpected error
  */
-router.get('/available/:id_team/:id_match', async (req, res, next) => {
+router.get('/team/:id_team', async (req, res, next) => {
     try {
-        const { id_team, id_match } = req.params;
-        const players =  await new TeamService(req).getAvailablePlayers(id_team, id_match);
+        const { id_team } = req.params;
+        const { id_match, team_membership_status } = req.query;
+        const players = await new TeamService(req).filteredTeamMemberships(id_team, id_match, team_membership_status);
         res.status(200).json({ error: false, msg: 'OK', players: players});
     } catch(e) {
         next(e);

@@ -22,20 +22,30 @@ export default class TeamMembershipService {
 		}
 	}
 
-	async getAvailablePlayers(id_team, id_match) {
-		const team_id = Number(id_team);
-		const match_id = Number(id_match);
-		teamMembershipValidation.validateAvailablePlayersData(id_team, id_match);
-		return this.dbConnection.query(
-			`SELECT u.id_user, CONCAT(u.name, ' ', u.surname) AS name 
-			 FROM team_membership AS t
-			 JOIN users AS u ON u.id_user=t.id_user
-			 WHERE t.id_team=?
-			 AND t.status='active'
-			 AND t.id_user NOT IN (
-			 	SELECT id_user FROM matchups WHERE id_team=? AND id_match=?
-			 )`
-			, [team_id, team_id, match_id]
-		);
+	async filteredTeamMemberships(id_team, id_match, team_membership_status) {
+		const {team, match, status} = teamMembershipValidation.validateFilteredTeamMembershipsData(id_team, id_match, team_membership_status);
+
+		var where = '';
+		var values = [];
+		if (status !== undefined) {
+			where = ' AND t.status=?';
+			values.push(status);
+		}
+
+		if (id_match === undefined) {
+			console.log([team, ...values]);
+			return this.dbConnection.query(
+				`SELECT *, CONCAT(u.name, ' ', u.surname) AS name FROM team_membership AS t 
+				 JOIN users u on t.id_user = u.id_user WHERE t.id_team = ?` + where
+				, [team, ...values]
+			);
+		} else{ console.log([team, team, match, ...values]); return this.dbConnection.query(
+			`SELECT *, CONCAT(u.name, ' ', u.surname) AS name FROM team_membership AS t 
+				 JOIN users u on t.id_user = u.id_user 
+				 WHERE t.id_team = ? 
+				 AND t.id_user NOT IN(
+			 		SELECT id_user FROM matchups WHERE id_team=? AND id_match=?)` + where
+			, [team, team, match, ...values]
+		);}
 	}
 }

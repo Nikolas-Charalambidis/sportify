@@ -8,6 +8,7 @@ export default class MatchupService {
 		this.dbConnection = req[DB_CONNECTION_KEY];
 	}
 
+	// TODO: Refactor... map() should not cause side-effect on array[]... use either forEach or better map directly into a new object
 	async addPlayersToMatchup(values, id_match) {
 		const array = [];
 		values.map(item => {
