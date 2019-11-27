@@ -28,7 +28,7 @@ export function TeamData({state}) {
                 <Row className="teamDetailDesc">
                     <Col sm={3} xs={6}>
                         <p>Vedoucí <FontAwesomeIcon className="ml-2" icon={Icons.faEye}/></p>
-                        <Link className="text-decoration-none" to={'/user/' + state.team_data.id_leader}>
+                        <Link className="text-decoration-none" to={'/users/' + state.team_data.id_leader}>
                             <Heading size="xs">
                                 {state.team_data.leader}
                             </Heading>
@@ -36,7 +36,7 @@ export function TeamData({state}) {
                     </Col>
                     <Col sm={3} xs={6}>
                         <p>Kontakt <FontAwesomeIcon className="ml-2" icon={Icons.faEye}/></p>
-                        <Link className="text-decoration-none" to={'/user/' + state.team_data.id_contact_person}>
+                        <Link className="text-decoration-none" to={'/users/' + state.team_data.id_contact_person}>
                             <Heading size="xs">
                                 {state.team_data.contact_person}
 
