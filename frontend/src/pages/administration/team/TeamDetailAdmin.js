@@ -1,14 +1,16 @@
 import React from 'react';
-import {Breadcrumb} from 'react-bootstrap';
+import {Breadcrumb, Tab, Tabs} from 'react-bootstrap';
 import 'moment/locale/cs';
 import {NavLink as Link, useHistory, useParams} from "react-router-dom";
-import {useGetTeam} from "../../../api/team/teamClient_v1";
-import {useGetMembers, useGetTeamMatches} from "../../../api/team/teamClient_v1";
-import {TeamDataForm} from "./components/TeamDataForm";
+import {useGetTeam} from "../../../api/teamClient_v1";
+import {useGetMembers, useGetTeamMatches} from "../../../api/teamClient_v1";
+import {TeamDataFormAdmin} from "../../../organisms/team/admin/TeamDataFormAdmin";
 import {useAuth} from "../../../utils/auth";
-import {MatchList} from "../../../organisms/MatchList";
+import {MatchList} from "../../../organisms/match/MatchList";
+import {TeamSquad} from "../../../organisms/team/public/TeamSquad";
 
-export function TeamAdminPage() {
+
+export function TeamDetailAdmin() {
     const history = useHistory();
     const {user} = useAuth();
     if (!user) {
@@ -41,9 +43,17 @@ export function TeamAdminPage() {
                         <li className="breadcrumb-item"><span className="active">{state.team_data.name}</span></li>
                     </Breadcrumb>
 
-                    <TeamDataForm team_data={state.team_data} membersState={membersState}/>
+                    <TeamDataFormAdmin team_data={state.team_data} membersState={membersState}/>
 
-                    <MatchList matchesState={matchesState} admin={true} id_team={id_team} />
+                    <Tabs className="mb-3" fill defaultActiveKey="squad" id="teamTabs">
+                        <Tab eventKey="squad" title="Sestava">
+                            <TeamSquad/>
+                            <h2 className="mt-4">Neaktivní hráči</h2>
+                        </Tab>
+                        <Tab eventKey="matches" title="Zápasy">
+                            <MatchList matchesState={matchesState} admin={true} id_team={id_team} />
+                        </Tab>
+                    </Tabs>
                 </div>
             }
         </div>
