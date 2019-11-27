@@ -12,9 +12,8 @@ import * as Icons from "@fortawesome/free-solid-svg-icons"
 function TopNavigationBase() {
     const {user, signout} = useAuth();
     const history = useHistory();
-
+    const toggle = () => (window.innerWidth <= 770) ? setIsOpen(!isOpen) : setIsOpen(true);
     const [isOpen, setIsOpen] = useState(false);
-    const toggle = () => (window.innerWidth <= 765) ? setIsOpen(!isOpen) : setIsOpen(true);
 
     return (
 
@@ -28,7 +27,7 @@ function TopNavigationBase() {
             {user ? (
                 <>
                     <div className="profileNavPanel">
-                        <Link to="/administration/profile">
+                        <Link to="/administration/">
                             <Button className="btn d-inline d-md-none  mr-2" variant="primary" type="button">
                                 <FontAwesomeIcon icon={Icons.faUserCircle} size="1x"/>
                             </Button>

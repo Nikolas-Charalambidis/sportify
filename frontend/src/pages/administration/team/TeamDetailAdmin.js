@@ -2,13 +2,13 @@ import React from 'react';
 import {Breadcrumb} from 'react-bootstrap';
 import 'moment/locale/cs';
 import {NavLink as Link, useHistory, useParams} from "react-router-dom";
-import {useGetTeam} from "../../../api/teamClient_v1";
-import {useGetMembers, useGetTeamMatches} from "../../../api/teamClient_v1";
-import {TeamDataFormAdmin} from "../../../organisms/team/admin/TeamDataFormAdmin";
+import {useGetTeam} from "../../../api/team/teamClient_v1";
+import {useGetMembers, useGetTeamMatches} from "../../../api/team/teamClient_v1";
+import {TeamDataForm} from "./components/TeamDataForm";
 import {useAuth} from "../../../utils/auth";
-import {MatchList} from "../../../organisms/match/MatchList";
+import {MatchList} from "../../../organisms/MatchList";
 
-export function TeamDetailAdmin() {
+export function TeamAdminPage() {
     const history = useHistory();
     const {user} = useAuth();
     if (!user) {
@@ -41,7 +41,7 @@ export function TeamDetailAdmin() {
                         <li className="breadcrumb-item"><span className="active">{state.team_data.name}</span></li>
                     </Breadcrumb>
 
-                    <TeamDataFormAdmin team_data={state.team_data} membersState={membersState}/>
+                    <TeamDataForm team_data={state.team_data} membersState={membersState}/>
 
                     <MatchList matchesState={matchesState} admin={true} id_team={id_team} />
                 </div>
