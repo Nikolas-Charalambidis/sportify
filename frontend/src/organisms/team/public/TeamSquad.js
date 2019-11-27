@@ -1,7 +1,7 @@
 import React from 'react';
 import "react-table/react-table.css";
 import {useHistory} from 'react-router-dom';
-import {useGetMembers} from "../../../api/teamClient_v1";
+import {useGetTeamMembership} from "../../../api/teamClient_v1";
 import {useParams} from "react-router-dom";
 import {Heading} from "../../../atoms";
 import {Table} from "../../../atoms/Table";
@@ -9,9 +9,9 @@ import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../assets/images/loading.gif";
 import {useGetTeamPositions} from "../../../api/othersClient_v1";
 
-export function TeamSquad() {
+export function TeamSquad(status) {
     let {id_team} = useParams();
-    const [state] = useGetMembers(id_team);
+    const [state] = useGetTeamMembership(id_team, status.status);
     const [positionsState] = useGetTeamPositions();
 
     let history = useHistory();

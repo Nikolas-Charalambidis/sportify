@@ -35,11 +35,13 @@ export default class TeamMembershipService {
 		if (id_match === undefined) {
 			return this.dbConnection.query(
 				`SELECT *, CONCAT(u.name, ' ', u.surname) AS name FROM team_membership AS t 
+				 JOIN positions p on t.id_position = p.id_position
 				 JOIN users u on t.id_user = u.id_user WHERE t.id_team = ?` + where
 				, [team, ...values]
 			);
 		} else return this.dbConnection.query(
 			`SELECT *, CONCAT(u.name, ' ', u.surname) AS name FROM team_membership AS t 
+				 JOIN positions p on t.id_position = p.id_position
 				 JOIN users u on t.id_user = u.id_user 
 				 WHERE t.id_team = ? 
 				 AND t.id_user NOT IN(

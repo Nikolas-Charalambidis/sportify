@@ -47,8 +47,9 @@ export function TeamDetailAdmin() {
 
                     <Tabs className="mb-3" fill defaultActiveKey="squad" id="teamTabs">
                         <Tab eventKey="squad" title="Sestava">
-                            <TeamSquad/>
+                            <TeamSquad status="active"/>
                             <h2 className="mt-4">Neaktivní hráči</h2>
+                            <TeamSquad status="inactive"/>
                         </Tab>
                         <Tab eventKey="matches" title="Zápasy">
                             <MatchList matchesState={matchesState} admin={true} id_team={id_team} />
