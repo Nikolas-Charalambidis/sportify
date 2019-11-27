@@ -1,5 +1,5 @@
 import React from 'react';
-import {Breadcrumb} from 'react-bootstrap';
+import {Breadcrumb, Tab, Tabs} from 'react-bootstrap';
 import 'moment/locale/cs';
 import {NavLink as Link, useHistory, useParams} from "react-router-dom";
 import {useGetTeam} from "../../../api/team/teamClient_v1";
@@ -7,6 +7,10 @@ import {useGetMembers, useGetTeamMatches} from "../../../api/team/teamClient_v1"
 import {TeamDataForm} from "./components/TeamDataForm";
 import {useAuth} from "../../../utils/auth";
 import {MatchList} from "../../../organisms/MatchList";
+import {TeamSquad} from "../../teams/detail/components/TeamSquad";
+import {TeamCompetitions} from "../../teams/detail/components/TeamCompetitions";
+import {TeamStatistics} from "../../teams/detail/components/TeamStatistics";
+import {Heading} from "../../../atoms";
 
 export function TeamAdminPage() {
     const history = useHistory();
@@ -43,7 +47,16 @@ export function TeamAdminPage() {
 
                     <TeamDataForm team_data={state.team_data} membersState={membersState}/>
 
-                    <MatchList matchesState={matchesState} admin={true} id_team={id_team} />
+                    <Tabs className="mb-3" fill defaultActiveKey="squad" id="teamTabs">
+                        <Tab eventKey="squad" title="Sestava">
+                            <TeamSquad/>
+                            <h2 className="mt-4">Neaktivní hráči</h2>
+                        </Tab>
+                        <Tab eventKey="matches" title="Zápasy">
+                            <MatchList matchesState={matchesState} admin={true} id_team={id_team} />
+                        </Tab>
+                    </Tabs>
+
                 </div>
             }
         </div>
