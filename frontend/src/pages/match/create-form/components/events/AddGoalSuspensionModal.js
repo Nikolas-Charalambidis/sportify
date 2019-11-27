@@ -2,8 +2,8 @@ import React from 'react';
 import {Modal, Tab, Tabs} from "react-bootstrap";
 import {Heading} from "../../../../../atoms";
 import * as yup from "yup";
-import { AddGoalForm } from "./AddGoalForm";
-import { AddSuspensionForm } from "./AddSuspensionForm";
+import { AddGoalForm } from "../../../../../organisms/match/admin/events/AddGoalForm";
+import { AddSuspensionForm } from "../../../../../organisms/match/admin/events/AddSuspensionForm";
 import { AddShotForm } from "./AddShotForm";
 
 const schema = yup.object().shape({
@@ -36,11 +36,11 @@ export function AddGoalSuspensionModal({params, handleClose, matchup, id_team, e
             <Tabs className="mb-3" fill defaultActiveKey="goal" id="teamTabs">
                 <Tab eventKey="goal" title="Přidat gól">
                     <AddGoalForm id_user={id_user} handleClose={handleClose} matchup={matchup} addEvent={handleAddEvent}
-                        id_team={id_team} schema={schema} host={host} />
+                        id_team={id_team} schema={schema} host={host} id_match={null} />
                 </Tab>
                 <Tab eventKey="suspension" title="Přidat trest">
                     <AddSuspensionForm id_user={id_user} handleClose={handleClose} addEvent={handleAddEvent}
-                        id_team={id_team} schema={schema} host={host} />
+                        id_team={id_team} schema={schema} host={host} id_match={null} />
                 </Tab>
                 <Tab eventKey="shots" title="Přidat strely">
                     <AddShotForm id_user={id_user} handleClose={handleClose} addEvent={handleAddEvent}
