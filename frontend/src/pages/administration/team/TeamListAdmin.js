@@ -26,12 +26,6 @@ export function TeamListAdmin() {
 
     const columns = [
         {
-            Header: "#",
-            width: 50,
-            accessor: "rank",
-            Cell: (playerData) => getPosition(playerData),
-        },
-        {
             Header: 'Název týmu',
             accessor: 'name',
         },
@@ -49,10 +43,6 @@ export function TeamListAdmin() {
         if (row) {
             history.push("teams/" + row.original.id_team);
         }
-    }
-
-    function getPosition(playerData) {
-        return (Number(playerData.index) + 1).toString();
     }
 
     return (
