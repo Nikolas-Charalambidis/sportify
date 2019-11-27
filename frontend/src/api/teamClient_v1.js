@@ -104,6 +104,31 @@ export function useGetMembers(id_team) {
     return [state];
 }
 
+export function useGetTeamMembership(id_team, status) {
+    const api = useApi();
+    const [state, setState] = useState({
+        isLoading: true
+    });
+    useEffect(() => {
+        async function fetchData() {
+            await api
+                .get(`${config.API_BASE_PATH}/teamMembership/team/${id_team}?team_membership_status=${status}`)
+                .then(({data}) => {
+                    const {players} = data;
+                    setState({isLoading: false, error: false, players: players});
+                })
+                .catch(( { response } ) => {
+                    const {data} = response;
+                    setState({isLoading: false, error: true, players: null});
+                    window.flash(data.msg, 'danger');
+                });
+        }
+
+        fetchData().then();
+    }, [api, id_team, status]);
+    return [state];
+}
+
 export function useGetCompetitions(id_team) {
     const api = useApi();
     const [state, setState] = useState({
