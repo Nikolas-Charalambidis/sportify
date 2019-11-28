@@ -18,9 +18,10 @@ export function TeamSquad({status, admin}) {
     const [positionsState] = useGetTeamPositions();
 
     const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
+    //const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [ID, setID] = useState(null);
+    console.log(show, ID);
 
     let history = useHistory();
     const columns = [
@@ -61,7 +62,7 @@ export function TeamSquad({status, admin}) {
             Header: 'Akce',
             accessor: "id_matchup",
             filterable: false,
-            show: (admin) ? true : false,
+            show: !!(admin),
             Cell: row => {
                 if(status === "active"){
                     return (
