@@ -35,7 +35,7 @@ A web application Sportify, as a semestral work, manages teams, leagues, matches
 
 ## Contribution
 
-Read [**CONTRIBUTING.md**](https://github.com/Nikolas-Charalambidis/4IT445/blob/master/CONTRIBUTING.md)
+Read [**CONTRIBUTING.md**](https://github.com/Nikolas-Charalambidis/4IT445/blob/master/CONTRIBUTING.md) (link to the master branch).
 
 ## Nice to have, better CI and improvements
 
