@@ -8,10 +8,10 @@ export default class MatchupService {
 		this.dbConnection = req[DB_CONNECTION_KEY];
 	}
 
-	async addPlayersToMatchup(values, id_match) {
+	async addPlayersToMatchup(values, id_match, host) {
 		const array = [];
 		values.map(item => {
-			const data = matchupValidations.validateAddPlayerData(item, id_match);
+			const data = matchupValidations.validateAddPlayerData(item, id_match, host);
 			array.push([
 				data.id_match,
 				data.goalkeeper,

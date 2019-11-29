@@ -1,46 +1,50 @@
 import React, { useState } from 'react';
 import { Heading } from '../../../atoms';
-import { Breadcrumb, Button, Col, Form, Row } from 'react-bootstrap';
-import { Formik } from 'formik';
-import * as yup from 'yup';
-import { isEmpty } from 'ramda';
+import { Breadcrumb, Button } from 'react-bootstrap';
 import { useGetTeams } from '../../../api/teamClient_v1';
-import { CustomSelect } from '../../../atoms/Select';
-import { PlayerSelectModal2 } from '../../match/create-form/components/PlayerSelectModal2';
-import { PlayersTable } from '../../match/create-form/components/PlayersTable';
-
-let selectedPlayers = [];
-
-function getTeam(state) {
-  return state.teams_data;
-}
-
-const schema = yup.object().shape({
-  id_team_home: yup.string().required(),
-  id_team_visiting: yup.number().required(),
-});
+import {MatchTeamSelect} from "../../../organisms/match/admin/create/MatchTeamSelect";
+import {ShotsParent} from "../../../organisms/match/admin/base/ShotsParent";
+import {Events} from "../../../organisms/match/admin/base/Events";
+import {MatchMatchupSingleCreateAdmin} from "../../../organisms/match/admin/create/matchup/MatchMatchupSingleCreateAdmin";
+import {MatchMatchupMultipleCreateAdmin} from "../../../organisms/match/admin/create/matchup/MatchMatchupMultipleCreateAdmin";
 
 export function MatchCreateForm() {
-    const [state] = useGetTeams();
-    const teams = getTeam(state);
+    const [formState, setFormState] = useState(false);
 
-    const [homePlayersState, setHomePlayers] = useState({ id: '', players: [] });
-    const [visitingPlayersState, setVisitingPlayers] = useState({id: '', players: [] });
+    const [teamsState] = useGetTeams();
+    const [hostState, setHostState] = useState({
+        id_team: null,
+        matchups: [],
+        events: [],
+        shots: 0
+    });
+    const [guestState, setGuestState] = useState({
+        id_team: null,
+        matchups: [],
+        events: [],
+        shots: 0
+    });
 
-    const [showHomePlayersModal, setShowHomePlayersModal] = useState(false);
-    const [showVisitingPlayersModal, setShowVisitingPlayersModal] = useState(false);
-    const handleClose = () => {
-    setShowHomePlayersModal(false);
-    setShowVisitingPlayersModal(false);
+    const handleCreateMatch = () => {
+        validateForm();
+        if(formState){
+            createMatch();
+        }
     };
 
-    const [allEvents, setEvents] = useState([]);
-
-    function test() {
-        console.log(allEvents);
+    const validateForm = () => {
+        if(hostState.matchups.length > 0 && guestState.matchups.length > 0){
+            setFormState(true);
+        } else {
+            window.flash("Nemůžete odeslat formulář s prázdnou soupiskou", "danger")
+        }
     };
 
-
+    const createMatch = () => {
+        setHostState({...hostState, host: true});
+        setGuestState({...guestState, host: false});
+        // Call function for save data into DB here... also handle errors, success and redirect...
+    };
 
     return (
     <div>
@@ -49,137 +53,46 @@ export function MatchCreateForm() {
         <Breadcrumb.Item active>Nový zápas</Breadcrumb.Item>
         </Breadcrumb>
 
-        {state.isLoading && <div>Načítám data...</div>}
-        {!state.isLoading && state.error && <div>Data se nepodařilo načíst</div>}
-        {!state.isLoading && !state.error && (
-        <Formik
-            initialValues={{
-            id_team_home: teams.id_team,
-            id_team_visiting: teams.id_team,
-            }}
-            validationSchema={schema}
-            onSubmit={values => {
-            console.log('submit', values);
-            console.log('players', selectedPlayers);
-            }}
-        >
-            {({ handleSubmit, setFieldValue, values, errors }) => (
-            <Form noValidate onSubmit={handleSubmit}>
-                <Heading className="pageHeading mt-4 mb-5">Nový zápas</Heading>
-                <Row>
-                <Col xl={12} lg={12}>
-                    <Row>
-                    <Col sm={{ span: 6, offset: 0 }}>
-                        <CustomSelect
-                        label="Domácí"
-                        name="id_team_home"
-                        options={teams}
-                        getOptionLabel={option => `${option.name}`}
-                        getOptionValue={option => `${option.id_team}`}
-                        placeholder="Vyberte tým"
-                        onChange={option => {
-                            setFieldValue('id_team_home', `${option.id_team}`);
-                            setHomePlayers({
-                            id: option.id_team,
-                            players: [],
-                            });
-                        }}
-                        isSearchable={true}
-                        />
-                    </Col>
-                    <Col sm={{ span: 6, offset: 0 }}>
-                        <div className="form-group">
-                        <div
-                            className="form-label"
-                            style={{ height: '27px', marginBottom: '8px' }}
-                        />
-                        <Button
-                            type="submit"
-                            variant="secondary"
-                            block
-                            onClick={() => setShowHomePlayersModal(true)}
-                            disabled={isEmpty(homePlayersState.id)}
-                        >
-                            Soupiska domácích
+        <Heading>Vytvoření zápasu</Heading>
+        {teamsState.isLoading && <div>Načítám data...</div>}
+        {(!teamsState.isLoading && teamsState.error) && <div>Data se nepodařilo načíst</div>}
+        {(!teamsState.isLoading && !teamsState.error) &&
+            <div>
+                <MatchTeamSelect teams={teamsState.teams_data}
+                                 setHostState={setHostState} setGuestState={setGuestState} />
+
+                {(hostState.id_team && guestState.id_team) &&
+                    <div>
+                        <Heading size="lg" className="mt-5 h3MatchDetail text-left">Soupiska</Heading>
+                        {hostState.id_team === guestState.id_team ?
+                            <MatchMatchupSingleCreateAdmin hostState={hostState} guestState={guestState}
+                                                           setHostState={setHostState} setGuestState={setGuestState}
+                            /> :
+                            <MatchMatchupMultipleCreateAdmin hostState={hostState} guestState={guestState}
+                                                             setHostState={setHostState} setGuestState={setGuestState}
+                            />
+                        }
+                        <Heading size="lg" className="mt-5 h3MatchDetail text-left">Střely</Heading>
+                        <ShotsParent type="create" params={{
+                            hostState: hostState,
+                            setHostState: setHostState,
+                            guestState: guestState,
+                            setGuestState: setGuestState
+                        }} />
+
+                        <Heading size="lg" className="mt-5 h3MatchDetail text-left">Události domácí</Heading>
+                        <Events type="create" eventsState={hostState} fetchEvents={setHostState} />
+
+                        <Heading size="lg" className="mt-5 h3MatchDetail text-left">Události hosté</Heading>
+                        <Events type="create" eventsState={guestState} fetchEvents={setGuestState} />
+
+                        <Button variant="primary" onClick={handleCreateMatch}>
+                            Vytvořit zápas
                         </Button>
-                        </div>
-                    </Col>
-                    {!isEmpty(homePlayersState.players) && (
-                        <Col>
-                                                <PlayersTable id_team={Number(values.id_team_home)} state={homePlayersState} events={allEvents} setEvent={setEvents} host={true}/>
-                        </Col>
-                    )}
-                    </Row>
-                    <Row>
-                    <Col sm={{ span: 6, offset: 0 }}>
-                        <CustomSelect
-                        label="Hosté"
-                        name="id_team_visiting"
-                        options={teams}
-                        getOptionLabel={option => `${option.name}`}
-                        getOptionValue={option => `${option.id_team}`}
-                        placeholder="Vyberte tým"
-                        onChange={option => {
-                            setFieldValue(
-                            'id_team_visiting',
-                            `${option.id_team}`,
-                            );
-                            setVisitingPlayers({
-                            id: option.id_team,
-                            players: [],
-                            });
-                        }}
-                        isSearchable={true}
-                        />
-                    </Col>
-                    <Col sm={{ span: 6, offset: 0 }}>
-                        <div className="form-group">
-                        <div
-                            className="form-label"
-                            style={{ height: '27px', marginBottom: '8px' }}
-                        />
-                        <Button
-                            type="submit"
-                            variant="secondary"
-                            block
-                            onClick={() => setShowVisitingPlayersModal(true)}
-                            disabled={isEmpty(visitingPlayersState.id)}
-                        >
-                            Soupiska hostu
-                        </Button>
-                        </div>
-                    </Col>
-                    {!isEmpty(visitingPlayersState.players) && (
-                                            <Col>
-                                                <PlayersTable id_team={Number(values.id_team_visiting)} state={visitingPlayersState} events={allEvents} setEvent={setEvents} host={false} />
-                        </Col>
-                    )}
-                    </Row>
-                </Col>
-                </Row>
-                <Row>
-                <Col className="mb-4 mt-lg-0" lg={{ span: 5, offset: 0 }}>
-                    <Button type="submit" block onClick={() => test()}>
-                    Uložit
-                    </Button>
-                </Col>
-                </Row>
-                <PlayerSelectModal2
-                show={showHomePlayersModal}
-                handleClose={handleClose}
-                state={homePlayersState}
-                setter={setHomePlayers}
-                />
-                <PlayerSelectModal2
-                show={showVisitingPlayersModal}
-                handleClose={handleClose}
-                state={visitingPlayersState}
-                setter={setVisitingPlayers}
-                />
-            </Form>
-            )}
-        </Formik>
-        )}
+                    </div>
+                }
+            </div>
+        }
     </div>
     );
 }

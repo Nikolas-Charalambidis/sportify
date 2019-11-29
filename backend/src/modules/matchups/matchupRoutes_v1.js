@@ -93,8 +93,8 @@ router.post('/', async (req, res, next) => {
  */
 router.post('/bulk', async (req, res, next) => {
 	try {
-		const { matchups, id_match } = req.body;
-		await new MatchupService(req).addPlayersToMatchup(matchups, id_match);
+		const { matchups, id_match, host } = req.body;
+		await new MatchupService(req).addPlayersToMatchup(matchups, id_match, host);
 		res.status(201).json({ error: false, msg: 'Hráči byli přidáni do sestavy'});
 	} catch(e) {
 		next(e);
@@ -108,7 +108,7 @@ router.post('/bulk', async (req, res, next) => {
  *     tags:
  *       - Matchups
  *     name: Matchups
- *     summary: Delete user from matchup by Matchup ID
+ *     summary: Delete user from matchup by MatchMatchupDetailAdmin ID
  *     parameters:
  *       - in: path
  *         name: id_matchup
@@ -147,7 +147,7 @@ router.delete('/:id_matchup/:id_user', async (req, res, next) => {
  *     tags:
  *       - Matchups
  *     name: Set goalkeeper
- *     summary: Change goalkeeper state by Matchup ID
+ *     summary: Change goalkeeper state by MatchMatchupDetailAdmin ID
  *     parameters:
  *       - in: body
  *         name: body
@@ -165,7 +165,7 @@ router.delete('/:id_matchup/:id_user', async (req, res, next) => {
  *       400:
  *         description: Invalid request
  *       404:
- *         description: Player not found in Matchup
+ *         description: Player not found in MatchMatchupDetailAdmin
  *       500:
  *         description: Unexpected error
  */

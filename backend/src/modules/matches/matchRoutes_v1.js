@@ -165,11 +165,11 @@ router.get('/:id_match/matchup/:host', async (req, res, next) => {
  *           type: boolean
  *     responses:
  *       200:
- *         description: Shots found
+ *         description: ShotsChildDetailAdmin found
  *       400:
  *         description: Invalid request
  *       404:
- *         description: Shots not found
+ *         description: ShotsChildDetailAdmin not found
  *       500:
  *         description: Unexpected error
  */
@@ -200,11 +200,11 @@ router.get('/:id_match/events/:host', async (req, res, next) => {
  *           type: integer
  *     responses:
  *       200:
- *         description: Shots found
+ *         description: ShotsChildDetailAdmin found
  *       400:
  *         description: Invalid request
  *       404:
- *         description: Shots not found
+ *         description: ShotsChildDetailAdmin not found
  *       500:
  *         description: Unexpected error
  */

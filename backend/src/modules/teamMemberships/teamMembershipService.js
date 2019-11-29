@@ -27,7 +27,7 @@ export default class TeamMembershipService {
 		const match_id = Number(id_match);
 		teamMembershipValidation.validateAvailablePlayersData(id_team, id_match);
 		return this.dbConnection.query(
-			`SELECT u.id_user, CONCAT(u.name, ' ', u.surname) AS name 
+			`SELECT u.id_user, CONCAT(u.name, ' ', u.surname) AS name, t.id_team as id_team 
 			 FROM team_membership AS t
 			 JOIN users AS u ON u.id_user=t.id_user
 			 WHERE t.id_team=?

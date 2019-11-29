@@ -1,10 +1,10 @@
 import React from 'react';
 import {Button, Form, Modal} from "react-bootstrap";
-import {Field} from "../../../../../atoms";
+import {Field} from "../../../../atoms";
 import {Formik} from "formik";
-import {CustomSelect} from "../../../../../atoms/Select";
+import {CustomSelect} from "../../../../atoms/Select";
 
-export function AddGoalForm({id_user, handleClose, addEvent, matchup, id_team, host, schema}) {
+export function AddGoalForm({id_user, handleClose, addEvent, matchup, id_team, id_match, host, schema}) {
     return (
              <Formik
                 validationSchema={schema}
@@ -12,16 +12,15 @@ export function AddGoalForm({id_user, handleClose, addEvent, matchup, id_team, h
                     id_user: id_user,
                     type: "goal",
                     id_team: id_team,
-                    id_match: null,
                     id_assistance1: null,
                     id_assistance2: null,
                     minute: '',
                     value: null,
                     host: host
                 }}
-            onSubmit={values => {
+                onSubmit={values => {
                     handleClose();
-                    addEvent(values);
+                    addEvent({...values, id_match: id_match});
                 }}
             >{({handleSubmit, setFieldValue, errors}) => (
                 <Form noValidate onSubmit={handleSubmit}>
@@ -46,7 +45,7 @@ export function AddGoalForm({id_user, handleClose, addEvent, matchup, id_team, h
                                       onChange={options => setFieldValue("id_assistance2", options.id_user)}
                         />
                     </Modal.Body>
-                    
+
                     <Modal.Footer>
                         <Button variant="primary" type="submit">
                             Přidat gól
