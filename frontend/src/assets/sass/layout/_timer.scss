@@ -1,0 +1,106 @@
+.clock {
+  text-align: center;
+  margin-bottom: 30px;
+
+  .column:first-child {
+    margin-right: 30px;
+  }
+
+  .column {
+    display: inline-block;
+    width: 12%;
+
+    .timer {
+      font-family: Proxima, Arial, sans-serif;
+      font-size: 65px;
+      font-weight: bold;
+      display: inline-block;
+      vertical-align: top;
+      width: 130px;
+      color: white;
+      letter-spacing: 6px;
+      background: black;
+      padding: 16px 0 16px 8px;
+    }
+
+    .text {
+      color: black;
+      text-transform: uppercase;
+      font-size: 25px;
+      margin-top: 8px;
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .clock .column {
+    width: 15%;
+  }
+
+  .clock .column:first-child {
+    margin-right: 16px;
+  }
+}
+
+@media (max-width: 993px) {
+  .clock .column {
+    width: 20%;
+  }
+}
+
+@media (max-width: 768px) {
+  .clock .column {
+    width: 28%;
+  }
+}
+
+@media (max-width: 500px) {
+  .clock .column {
+    width: 35%;
+  }
+}
+
+@media (max-width: 400px) {
+  .clock .column {
+    width: 45%;
+  }
+
+  .clock .column:first-child {
+    margin-right: 15px;
+  }
+}
+
+.timerButtons {
+  margin: 10px;
+
+  button {
+    margin: 5px;
+    padding: 10px 20px;
+    color: white !important;
+  }
+
+  button:hover:not(.active) {
+    background-color: black !important;
+    color:white !important;
+  }
+
+  .btn-play {
+    color: #007700 !important;
+    background: transparent;
+    border: 1px solid #007700 !important;
+  }
+
+  .btn-pause {
+    color: #880000 !important;
+    background: transparent;
+    border: 1px solid #880000 !important;
+  }
+
+  .active {
+    background-color: #FEDF00 !important;
+    cursor:auto;
+    color:black !important;
+    border: 1px solid #a28e00 !important;
+  }
+}
+
