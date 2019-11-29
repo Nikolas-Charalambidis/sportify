@@ -186,7 +186,7 @@ router.post('/', async(req, res, next) => {
 
 /**
  * @swagger
- * /users/avatar:
+ * //users/{id_user}/avatar:
  *   post:
  *     tags:
  *       - Users
