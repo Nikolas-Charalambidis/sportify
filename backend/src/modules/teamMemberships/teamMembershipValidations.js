@@ -4,7 +4,7 @@ export const validateNewMemberData = (id_team, id_user, position, status) => {
 	}
 };
 
-export const validateFilteredTeamMembershipsData = (id_team, id_user, id_match, team_membership_status) => {
+export const validateTeamMembershipsData = (id_team, id_user, id_match, team_membership_status) => {
 
 	const team = Number(id_team);
 	if (!team) {

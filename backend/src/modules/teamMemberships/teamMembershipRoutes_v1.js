@@ -57,6 +57,55 @@ router.get('/team/:id_team', async (req, res, next) => {
 });
 
 /**
+ * @swagger
+ * /teamMembership/team/{id_team}/user/{id_user}:
+ *   patch:
+ *     tags:
+ *       - TeamMembership
+ *     name: Updates user status of a team
+ *     summary: Get all players from a team
+ *     parameters:
+ *       - name: id_team
+ *         in: path
+ *         description: Team ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - name: id_user
+ *         in: path
+ *         description: User ID
+ *         required: false
+ *         schema:
+ *           type: integer
+ *       - name: body
+ *         in: body
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             status:
+ *               type: string
+ *               enum: [active, inactive, declined, pending]
+ *     responses:
+ *       200:
+ *         description: User updated
+ *       400:
+ *         description: Invalid request
+ *       500:
+ *         description: Unexpected error
+ */
+router.patch('/team/:id_team/user/:id_user', async (req, res, next) => {
+    try {
+        const { id_team, id_user } = req.params
+        const { status } = req.body;
+        await new TeamService(req).updateStatus(id_team, id_user, status);
+        res.status(200).json({ error: false, msg: 'Stav hráče byl změněn'});
+    } catch(e) {
+        next(e);
+    }
+});
+
+/**
  * TeamMembership object Swagger definition
  *
  * @swagger
