@@ -187,11 +187,18 @@ router.post('/', async(req, res, next) => {
 /**
  * @swagger
  * /users/avatar:
- *   get:
+ *   post:
  *     tags:
  *       - Users
  *     name: Login
  *     summary: Upload user avatar
+ *     parameters:
+ *       - name: id_user
+ *         in: path
+ *         description: User ID
+ *         required: true
+ *         schema:
+ *           type: integer
  *     responses:
  *       201:
  *         description: Avatar uploaded
@@ -202,9 +209,9 @@ router.post('/', async(req, res, next) => {
  *       500:
  *         description: Upload failed
  */
-router.post('/avatar', multipartMiddleware, async(req, res, next) => {
+router.post('/:id_user/avatar', multipartMiddleware, async(req, res, next) => {
 	try {
-		const { id } = req.body;
+		const { id_user } = req.params;
 		const params = {
 			folder: `sportify/${env.CLOUDINARY_FOLDER}/users`,
 			allowedFormats: ['jpg', 'jpeg', 'png'],
@@ -213,7 +220,7 @@ router.post('/avatar', multipartMiddleware, async(req, res, next) => {
 				{width: 200, height: 200,crop: "scale"}
 			]
 		};
-		const url = await new UserService(req).uploadAvatar(req.files.file.path, params, id);
+		const url = await new UserService(req).uploadAvatar(req.files.file.path, params, id_user);
 		res.status(201).json({ error: false, msg: 'Nahrání avatara proběhlo úspěšně', url: url});
 	} catch (e) {
 		next(e);
@@ -222,7 +229,7 @@ router.post('/avatar', multipartMiddleware, async(req, res, next) => {
 
 /**
  * @swagger
- * /users/avatar/{id_team}:
+ * /users/{id_user}/avatar:
  *   get:
  *     tags:
  *       - Users
@@ -243,7 +250,7 @@ router.post('/avatar', multipartMiddleware, async(req, res, next) => {
  *       404:
  *         description: User not found
  */
-router.get('/avatar/:id_user', multipartMiddleware, async(req, res, next) => {
+router.get('/:id_user/avatar', multipartMiddleware, async(req, res, next) => {
 	try {
 		const { id_user } = req.params;
 		const url = await new UserService(req).getAvatar(id_user);
