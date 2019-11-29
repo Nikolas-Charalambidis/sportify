@@ -24,6 +24,7 @@ import { UserDetail } from './pages/public/user/UserDetail';
 import { MatchCreateForm } from './pages/administration/match/MatchCreateForm';
 import {MatchDetail} from "./pages/public/match/MatchDetail";
 import {MatchCreateInteractive} from "./pages/administration/match/MatchCreateInteractive";
+import {CompetitionList} from "./pages/public/competition/CompetitionList";
 
 export function Routes() {
 	return (
@@ -45,6 +46,8 @@ export function Routes() {
 			<Route path="/teams/:id_team/matches/:id_match" exact component={MatchDetail} />
 			<Route path="/teams" exact component={TeamList} />
 			<Route path="/users/:id_user" exact component={UserDetail} />
+
+			<Route path="/competitions" exact component={CompetitionList} />
 
 			<Route path="/administration" exact component={AdministrationMenu} />
             <Route path="/administration/profile" exact component={UserProfile} />

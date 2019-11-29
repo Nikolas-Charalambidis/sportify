@@ -23,6 +23,24 @@ router.get('/teamTypes', async (req, res, next) => {
 
 /**
  * @swagger
+ * /others/competitionTypes:
+ *   get:
+ *     tags:
+ *       - Others
+ *     name: Competition types
+ *     summary: Get all competition types
+ *     responses:
+ *       200:
+ *         description: All competition types returned
+ */
+router.get('/competitionTypes', async (req, res, next) => {
+	const dbConnection = req[DB_CONNECTION_KEY];
+	const types = await dbConnection.query(`SELECT * FROM competition_types`);
+	await res.status(200).json({ error: false, msg: 'OK', types: types});
+});
+
+/**
+ * @swagger
  * /others/positions:
  *   get:
  *     tags:

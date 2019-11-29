@@ -12,9 +12,8 @@ import * as Icons from "@fortawesome/free-solid-svg-icons"
 function TopNavigationBase() {
     const {user, signout} = useAuth();
     const history = useHistory();
-
+    const toggle = () => (window.innerWidth <= 770) ? setIsOpen(!isOpen) : setIsOpen(true);
     const [isOpen, setIsOpen] = useState(false);
-    const toggle = () => (window.innerWidth <= 765) ? setIsOpen(!isOpen) : setIsOpen(true);
 
     return (
 
@@ -28,7 +27,7 @@ function TopNavigationBase() {
             {user ? (
                 <>
                     <div className="profileNavPanel">
-                        <Link to="/administration/profile">
+                        <Link to="/administration/">
                             <Button className="btn d-inline d-md-none  mr-2" variant="primary" type="button">
                                 <FontAwesomeIcon icon={Icons.faUserCircle} size="1x"/>
                             </Button>
@@ -56,7 +55,7 @@ function TopNavigationBase() {
             <Navbar.Collapse id="basic-navbar-nav" in={isOpen}>
                 <ul className="m-auto">
                     <li><Link className="nav-link" to="/teams" activeClassName="active" onClick={toggle}>Týmy</Link></li>
-                    <li><Link className="nav-link" to="/leagues" activeClassName="active" onClick={toggle}>Soutěže</Link></li>
+                    <li><Link className="nav-link" to="/competitions" activeClassName="active" onClick={toggle}>Soutěže</Link></li>
                     <li><Link className="nav-link" to="/matches" activeClassName="active" onClick={toggle}>Zápasy</Link></li>
                     <li><Link className="nav-link" to="/statistics" activeClassName="active" onClick={toggle}>Statistiky</Link></li>
                     <li><Link className="nav-link" to="/aboutus" activeClassName="active" onClick={toggle}>O nás</Link></li>

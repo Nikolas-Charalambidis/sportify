@@ -1,16 +1,22 @@
 import {useApi} from "../hooks/useApi";
 import { useEffect, useState} from "react";
 import {config} from '../config';
+import * as queryString from 'query-string';
 
-export function useGetAvailablePlayers(id_team, id_match) {
+export function useGetAvailablePlayers(id_team, id_match, status) {
     const api = useApi();
     const [state, setState] = useState({
         isLoading: true
     });
 
+    var queryParam;
+    if (status !== undefined && status !== null) {
+        queryParam = queryString.stringify({id_match: id_match, team_membership_status: status});
+    } else queryParam = queryString.stringify({id_match: id_match});
+
     const fetchData = () => {
         api
-            .get(`${config.API_BASE_PATH}/teamMembership/available/${id_team}/${id_match}`)
+            .get(`${config.API_BASE_PATH}/teamMembership/team/${id_team}?` + queryParam)
             .then(({data}) => {
                 const {players} = data;
                 setState({isLoading: false, error: false, players: players});
