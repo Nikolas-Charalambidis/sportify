@@ -23,7 +23,7 @@ export default class TeamMembershipService {
 	}
 
 	async filteredTeamMemberships(id_team, id_user,  id_match, team_membership_status) {
-		const {team, user, match, status} = teamMembershipValidation.validateFilteredTeamMembershipsData(id_team, id_user, id_match, team_membership_status);
+		const {team, user, match, status} = teamMembershipValidation.validateTeamMembershipsData(id_team, id_user, id_match, team_membership_status);
 
 		var where = '';
 		var values = [];
@@ -53,5 +53,18 @@ export default class TeamMembershipService {
 			 		SELECT id_user FROM matchups WHERE id_team=? AND id_match=?)` + where
 			, [team, team, match, ...values]
 		);
+	}
+
+	async updateStatus(id_team, id_user, team_membership_status) {
+		// eslint-disable-next-line no-unused-vars
+		const {team, user, status} = teamMembershipValidation.validateTeamMembershipsData(id_team, id_user, undefined, team_membership_status);
+
+		const result = await this.dbConnection.query(
+			`UPDATE team_membership SET status=? WHERE id_team=? AND id_user=?`,
+			[status, team, user]
+		);
+		if (result.affectedRows === 0) {
+			throw {status: 404, msg: 'Hráč nebo tým nebyl nalezen'};
+		}
 	}
 }
