@@ -18,6 +18,12 @@ const router = Router();
  *         required: true
  *         schema:
  *           type: integer
+ *       - name: id_user
+ *         in: query
+ *         description: Filter by a certain user
+ *         required: false
+ *         schema:
+ *           type: integer
  *       - name: id_match
  *         in: query
  *         description: Filter by a certain team membership status
@@ -42,8 +48,8 @@ const router = Router();
 router.get('/team/:id_team', async (req, res, next) => {
     try {
         const { id_team } = req.params;
-        const { id_match, team_membership_status } = req.query;
-        const players = await new TeamService(req).filteredTeamMemberships(id_team, id_match, team_membership_status);
+        const { id_user, id_match, team_membership_status } = req.query;
+        const players = await new TeamService(req).filteredTeamMemberships(id_team, id_user, id_match, team_membership_status);
         res.status(200).json({ error: false, msg: 'OK', players: players});
     } catch(e) {
         next(e);

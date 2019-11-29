@@ -22,14 +22,19 @@ export default class TeamMembershipService {
 		}
 	}
 
-	async filteredTeamMemberships(id_team, id_match, team_membership_status) {
-		const {team, match, status} = teamMembershipValidation.validateFilteredTeamMembershipsData(id_team, id_match, team_membership_status);
+	async filteredTeamMemberships(id_team, id_user,  id_match, team_membership_status) {
+		const {team, user, match, status} = teamMembershipValidation.validateFilteredTeamMembershipsData(id_team, id_user, id_match, team_membership_status);
 
 		var where = '';
 		var values = [];
 		if (status !== undefined) {
-			where = ' AND t.status=?';
+			where += ' AND t.status=?';
 			values.push(status);
+		}
+
+		if (user !== undefined) {
+			where += ' AND t.id_user=?';
+			values.push(user);
 		}
 
 		if (id_match === undefined) {
