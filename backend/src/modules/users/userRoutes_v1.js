@@ -186,12 +186,14 @@ router.post('/', async(req, res, next) => {
 
 /**
  * @swagger
- * //users/{id_user}/avatar:
+ * /users/{id_user}/avatar:
  *   post:
  *     tags:
  *       - Users
  *     name: Login
  *     summary: Upload user avatar
+ *     consumes:
+ *       - multipart/form-data
  *     parameters:
  *       - name: id_user
  *         in: path
@@ -199,6 +201,10 @@ router.post('/', async(req, res, next) => {
  *         required: true
  *         schema:
  *           type: integer
+ *       - in: formData
+ *         name: file
+ *         type: file
+ *         description: The file to upload.
  *     responses:
  *       201:
  *         description: Avatar uploaded

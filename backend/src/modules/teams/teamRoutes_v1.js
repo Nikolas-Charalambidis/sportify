@@ -52,6 +52,8 @@ router.get('/:id_team', async (req, res, next) => {
  *       - Teams
  *     name: Login
  *     summary: Upload team avatar
+ *     consumes:
+ *       - multipart/form-data
  *     parameters:
  *       - name: id_team
  *         in: path
@@ -59,6 +61,10 @@ router.get('/:id_team', async (req, res, next) => {
  *         required: true
  *         schema:
  *           type: integer
+ *       - in: formData
+ *         name: file
+ *         type: file
+ *         description: The file to upload.
  *     responses:
  *       201:
  *         description: Avatar uploaded
