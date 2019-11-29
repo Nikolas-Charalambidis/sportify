@@ -9,6 +9,8 @@ import Col from "react-bootstrap/Col";
 import moment from "moment";
 import {Heading} from "../../../atoms";
 import {MatchDetailScore} from "../../../organisms/match/public/MatchDetailScore";
+import NumericInput from 'react-numeric-input';
+import Button from "react-bootstrap/Button";
 
 export function MatchInteractiveEditForm() {
     const [play, setPlay] = useState(true);
@@ -62,13 +64,44 @@ export function MatchInteractiveEditForm() {
             </Timer>
 
 
-            <Row className="mt-5 bg-white">
-                <Col>
+            <Row className="mt-5 interactiveStats">
+                <Col className="bg-white">
                     <Heading size="lg">
                         Hokejisti pro srandu a žízeň
+                        <hr/>
                     </Heading>
+
+                    <Heading className="text-center" size="sm">Počet střel <FontAwesomeIcon className="ml-2" icon={Icons.faMeteor} size="1x"/></Heading>
+                    <div className="plusMinusDiv mb-2">
+                        <NumericInput
+                            className="form-control"
+                            value={0}
+                            min={0}
+                            max={100}
+                            step={1}
+                            precision={0}
+                            mobile
+                            strict
+                        />
+                    </div>
+
+                    <Heading className="text-center mt-5" size="sm">Počet gólů <span
+                        className="bgBlack">2</span></Heading>
+                    <div className="text-center">
+                        <Button variant="primary">
+                            Přidat gól
+                        </Button>
+                    </div>
+
+                    <Heading className="text-center mt-5" size="sm">Trestných minut <span className="bgBlack">15</span></Heading>
+                    <div className="text-center mb-4">
+                        <Button variant="primary">
+                            Přidat trest
+                        </Button>
+                    </div>
                 </Col>
-                <Col>
+
+                <Col className="bg-white">
                     <Heading size="lg">
                         The rural jurors
                     </Heading>

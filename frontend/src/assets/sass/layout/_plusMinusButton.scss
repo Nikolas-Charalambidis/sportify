@@ -1,0 +1,21 @@
+.plusMinusDiv {
+  .react-numeric-input {
+    width: 40% !important;
+    margin: 0 auto !important;
+    height: 60px;
+
+    input {
+      height: 58px;
+      outline: none !important;
+      box-shadow: none !important;
+      background-color: #F5F5F5;
+    }
+  }
+
+  b {
+    cursor: pointer !important;
+    padding: 5px 30px;
+    background-color: white !important;
+  }
+
+}
