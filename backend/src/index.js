@@ -13,8 +13,6 @@ dotenv.config({path: '.env'});
 const {PORT = 3001} = process.env;
 const api = express();
 
-api.listen(PORT, () => console.log(`\nAPI started at http://localhost:${PORT}`));
-
 api.use(bodyParser.json());
 api.use(cors());
 api.use(addDbToRequest);
@@ -24,6 +22,13 @@ api.use(router);
 
 // Add Swagger to routes before API is dispatched using "application/json"
 swagger(router, "v1");
+
+api.listen(PORT, () => console.log(
+	`\nAPI started at http://localhost:${PORT}` +
+	`\n  API v1:  http://localhost:${PORT}/api/v1` +
+	`\n  DOCS v1: http://localhost:${PORT}/docs/v1` +
+	`\n`
+));
 
 // Middleware
 api.use(function(req, res, next) {

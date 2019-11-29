@@ -142,21 +142,24 @@ router.delete('/:id_matchup/:id_user', async (req, res, next) => {
 
 /**
  * @swagger
- * /matchups/setGoalkeeper:
+ * /matchups/goalkeeper:
  *   patch:
  *     tags:
  *       - Matchups
  *     name: Set goalkeeper
  *     summary: Change goalkeeper state by Matchup ID
  *     parameters:
+ *       - in: path
+ *         name: id_matchup
+ *         required: true
+ *         schema:
+ *            type: integer
  *       - in: body
  *         name: body
  *         required: true
  *         schema:
  *           type: object
  *           properties:
- *             id_matchup:
- *               type: integer
  *             goalkeeper:
  *               type: boolean
  *     responses:
@@ -169,9 +172,10 @@ router.delete('/:id_matchup/:id_user', async (req, res, next) => {
  *       500:
  *         description: Unexpected error
  */
-router.patch('/setGoalkeeper', async (req, res, next) => {
+router.patch('/:id_matchup/goalkeeper', async (req, res, next) => {
 	try {
-		const { id_matchup, goalkeeper } = req.body;
+		const { id_matchup } = req.params;
+		const { goalkeeper } = req.body;
 		await new MatchupService(req).setGoalkeeper(id_matchup, goalkeeper);
 		res.status(200).json({ error: false, msg: 'Stav brankáře byl úspěšně změněn'});
 	} catch(e) {

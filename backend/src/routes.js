@@ -34,9 +34,9 @@ router.use('/api/v1/events', eventRoutes_v1);
 console.log("[initialized] eventRoutes_v1              /api/v1/events");
 
 router.use('/api/v1/matchups', matchupRoutes_v1);
-console.log("[initialized] matchupRoutes_v1              /api/v1/matchup");
+console.log("[initialized] matchupRoutes_v1            /api/v1/matchup");
 
 router.use('/api/v1/competitions', competitionRoutes_v1);
-console.log("[initialized] competitionRoutes_v1              /api/v1/competitions");
+console.log("[initialized] competitionRoutes_v1        /api/v1/competitions");
 
 export default router;

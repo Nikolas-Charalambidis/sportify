@@ -2,7 +2,7 @@ import {config} from "../config";
 
 export async function setGoalkeeper(api, id_matchup, goalkeeper) {
     let result = false;
-    await api.patch(`${config.API_BASE_PATH}/matchups/setGoalkeeper`, {id_matchup: id_matchup, goalkeeper: !goalkeeper})
+    await api.patch(`${config.API_BASE_PATH}/matchups/${id_matchup}/goalkeeper`, {goalkeeper: !goalkeeper})
         .then(({data}) => {
             window.flash(data.msg, 'success');
             result = true;
