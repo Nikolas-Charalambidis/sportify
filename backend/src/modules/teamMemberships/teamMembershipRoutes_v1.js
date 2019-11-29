@@ -96,7 +96,7 @@ router.get('/team/:id_team', async (req, res, next) => {
  */
 router.patch('/team/:id_team/user/:id_user', async (req, res, next) => {
     try {
-        const { id_team, id_user } = req.params
+        const { id_team, id_user } = req.params;
         const { status } = req.body;
         await new TeamService(req).updateStatus(id_team, id_user, status);
         res.status(200).json({ error: false, msg: 'Stav hráče byl změněn'});

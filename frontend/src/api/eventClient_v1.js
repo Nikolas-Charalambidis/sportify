@@ -34,7 +34,7 @@ export async function changeShots(api, values) {
     let result = false;
     const {id_event, value} = values;
     await api
-        .patch(`${config.API_BASE_PATH}/events/shots/`, {id_event: id_event, value: value})
+        .patch(`${config.API_BASE_PATH}/events/${id_event}/shots/`, {value: value})
         .then(({data}) => {
             window.flash(data.msg, 'success');
             result = true;

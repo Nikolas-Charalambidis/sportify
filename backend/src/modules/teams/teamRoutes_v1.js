@@ -46,12 +46,25 @@ router.get('/:id_team', async (req, res, next) => {
 
 /**
  * @swagger
- * /teams/avatar:
- *   get:
+ * /teams/{id_team}/avatar:
+ *   post:
  *     tags:
  *       - Teams
  *     name: Login
  *     summary: Upload team avatar
+ *     consumes:
+ *       - multipart/form-data
+ *     parameters:
+ *       - name: id_team
+ *         in: path
+ *         description: Team ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: formData
+ *         name: file
+ *         type: file
+ *         description: The file to upload.
  *     responses:
  *       201:
  *         description: Avatar uploaded
@@ -62,9 +75,9 @@ router.get('/:id_team', async (req, res, next) => {
  *       500:
  *         description: Upload failed
  */
-router.post('/avatar', multipartMiddleware, async(req, res, next) => {
+router.post('/:id_team/avatar', multipartMiddleware, async(req, res, next) => {
 	try {
-		const { id } = req.body;
+		const { id_team } = req.params;
 		const params = {
 			folder: `sportify/${env.CLOUDINARY_FOLDER}/teams`,
 			allowedFormats: ['jpg', 'jpeg', 'png'],
@@ -73,7 +86,7 @@ router.post('/avatar', multipartMiddleware, async(req, res, next) => {
 				{width: 200, height: 200,crop: "scale"}
 			]
 		};
-		const url = await new TeamService(req).uploadAvatar(req.files.file.path, params, id);
+		const url = await new TeamService(req).uploadAvatar(req.files.file.path, params, id_team);
 		res.status(201).json({ error: false, msg: 'Nahrání avatara proběhlo úspěšně', url: url});
 	} catch (e) {
 		next(e);
@@ -82,7 +95,7 @@ router.post('/avatar', multipartMiddleware, async(req, res, next) => {
 
 /**
  * @swagger
- * /teams/avatar/{id_team}:
+ * /teams/{id_team}/avatar:
  *   get:
  *     tags:
  *       - Teams
@@ -103,7 +116,7 @@ router.post('/avatar', multipartMiddleware, async(req, res, next) => {
  *       404:
  *         description: Team not found
  */
-router.get('/avatar/:id_team', multipartMiddleware, async(req, res, next) => {
+router.get('/:id_team/avatar', multipartMiddleware, async(req, res, next) => {
 	try {
 		const { id_user } = req.params;
 		const url = await new TeamService(req).getAvatar(id_user);
