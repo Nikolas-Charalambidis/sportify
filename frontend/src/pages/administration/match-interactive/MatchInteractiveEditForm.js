@@ -8,6 +8,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import moment from "moment";
 import {Heading} from "../../../atoms";
+import {MatchDetailScore} from "../../../organisms/match/public/MatchDetailScore";
 
 export function MatchInteractiveEditForm() {
     const [play, setPlay] = useState(true);
@@ -20,11 +21,15 @@ export function MatchInteractiveEditForm() {
                 <li className="breadcrumb-item"><span className="active">Interaktivní zápas</span></li>
             </Breadcrumb>
 
-            <Row className="mt-5 mb-3">
+            <Row className="mt-5 mb-2">
                 <Col className="text-center">
                     <Heading size="md">{moment().local().format("DD. MM. YYYY HH:mm")}</Heading>
                 </Col>
             </Row>
+
+            <MatchDetailScore hostGoals={2} hostName="Hokejisti pro srandu a žízeň" guestGoals={3}
+                              guestName="The rural jurors"/>
+
             <Timer initialTime={3599999}
                    direction="backward"
                    startImmediately={true}
@@ -32,7 +37,7 @@ export function MatchInteractiveEditForm() {
                    onPause={() => setPlay(false)}>
                 {({resume, pause}) => (
                     <React.Fragment>
-                        <div>
+                        <div className="mt-4">
                             <div className="clock">
                                 <div className="column">
                                     <div className="timer"><Timer.Minutes/></div>
@@ -55,6 +60,20 @@ export function MatchInteractiveEditForm() {
                     </React.Fragment>
                 )}
             </Timer>
+
+
+            <Row className="mt-5 bg-white">
+                <Col>
+                    <Heading size="lg">
+                        Hokejisti pro srandu a žízeň
+                    </Heading>
+                </Col>
+                <Col>
+                    <Heading size="lg">
+                        The rural jurors
+                    </Heading>
+                </Col>
+            </Row>
         </div>
     );
 }
