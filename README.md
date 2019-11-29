@@ -1,3 +1,6 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/60b0852d944d41b49262f33defd9051e)](https://www.codacy.com/manual/Nikolas-Charalambidis/4IT445?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Nikolas-Charalambidis/4IT445&amp;utm_campaign=Badge_Grade)
+[![codebeat badge](https://codebeat.co/badges/367e1edc-4f5b-4b5c-aad0-2e0d95d5c334)](https://codebeat.co/projects/github-com-nikolas-charalambidis-4it445-dev)
+
 # 4IT445 Agile web application development | Sportify
 
 A web application Sportify, as a semestral work, manages teams, leagues, matches, and players with a huge load of statistics. Developed for the 4IT445 Agile web application development course.

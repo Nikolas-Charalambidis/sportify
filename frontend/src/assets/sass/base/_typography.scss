@@ -1,0 +1,39 @@
+@font-face {
+  font-family: Futura PT;
+  font-style: normal;
+  src: url("../../fonts/futura_pt.otf");
+}
+
+@font-face {
+  font-family: Proxima;
+  font-weight: 300;
+  font-style: normal;
+  src: url("../../fonts/proxima.otf");
+}
+
+@font-face {
+  font-family: Proxima;
+  font-weight: bold;
+  font-style: normal;
+  src: url("../../fonts/proxima_bold.otf");
+}
+
+html, body{
+  font-family: "Proxima", Arial, sans-serif !important;
+}
+
+h2 {
+  text-align: center;
+  padding:10px 0;
+  font-family: "Futura PT", Arial, sans-serif;
+  font-size:35px !important;
+}
+
+h1 {
+  font-size: 45px !important;
+  margin-bottom:20px !important;
+  text-align: center;
+  font-weight: bold !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}

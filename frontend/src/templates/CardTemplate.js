@@ -1,93 +1,48 @@
-import {
-  Card,
-  CardDeck,
-  Col,
-  OverlayTrigger,
-  Row,
-  Tooltip,
-} from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {Card, CardDeck, Col, OverlayTrigger, Row, Tooltip} from 'react-bootstrap';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import React from 'react';
+import {useHistory} from "react-router";
+import {Heading} from "../atoms";
 
-// temporary CSS styles
-const footerInfo = {
-    textAlign: 'left',
-};
+export function CardTemplate({title, subtitle, pictureHeader, tooltipPictureHeader, mainPicture, textHeader, redirect}) {
+    let history = useHistory();
 
-const footerLeftLabel = {
-    width: '65%',
-}
+    function onRedirect() {
+        history.push(redirect);
+    }
 
-const footerRightLabel = {
-    width: '35%',
-    fontWeight: '600',
-};
-
-const footerScore = {
-    fontSize: '24px',
-    fontWeight: '600',
-};
-
-const headerDate = {
-    fontSize: '14px',
-    color: '#969696',
-};
-
-export function CardTemplate({ datum, nazev, podnazev, sport, logo, icon, stav, bodyAsistence, trest, vysledekZapasu }) {
-  return (
-    <Col lg={3} className="mt-4">
-      <CardDeck>
-        <Card>
-          <Card.Header>
-            {datum && (
-                <Row><Col style={headerDate}>{datum}</Col></Row>
-                )}            
-            <Row className="align-items-center">                          
-              <Col>
-                <Row>{nazev}</Row>
-                <Row>{podnazev}</Row>
-              </Col>
-              <Col className="text-right">
-                <OverlayTrigger
-                  overlay={<Tooltip id="tooltip-disabled">{sport}</Tooltip>}
-                >
-                  <FontAwesomeIcon icon={icon} size="2x" />
-                </OverlayTrigger>
-              </Col>
-            </Row>
-          </Card.Header>
-          <Row>
-            <Col className="text-center">
-                <Card.Img style={{ height: '150px', width: 'auto' }} src={logo} />
-                {(stav || bodyAsistence || trest || vysledekZapasu) && (
-                    <Card.Footer>
-                        {stav && (
-                            <label>{stav}</label>
-                        )}
-
-                        {bodyAsistence && (
-                            <div style={footerInfo}>
-                                <label style={footerLeftLabel}>Body/Asistence:</label>
-                                <label style={footerRightLabel}>{bodyAsistence}</label>
-                            </div>
-                        )}
-
-                        {trest && (
-                            <div style={footerInfo}>
-                                <label style={footerLeftLabel}>Trest 2m/5m:</label>
-                                <label style={footerRightLabel}>{trest}</label>
-                            </div>
-                        )}
-
-                        {vysledekZapasu && (
-                            <label style={footerScore}>{vysledekZapasu}</label>
-                        )}
-                    </Card.Footer>
-                )}                          
-            </Col>
-          </Row>
-        </Card>
-      </CardDeck>
-    </Col>
-  );
+    return (
+        <Col lg={4} md={6} sm={12} className="mt-4">
+            <CardDeck>
+                <Card onClick={onRedirect}>
+                    <Card.Header>
+                        <Row className="align-items-center">
+                            <Col lg={10} sm={10} xs={9}>
+                                <Row><Heading size="md" className="cardTitle">{title}</Heading></Row>
+                                <Row>{subtitle}</Row>
+                            </Col>
+                            <Col lg={2} sm={2} xs={3} className="text-right">
+                                <OverlayTrigger
+                                    overlay={<Tooltip id="tooltip-disabled">{tooltipPictureHeader}</Tooltip>}>
+                                    <FontAwesomeIcon icon={pictureHeader} size="2x"/>
+                                </OverlayTrigger>
+                            </Col>
+                        </Row>
+                    </Card.Header>
+                    <Row>
+                        <Col className="text-center">
+                            <Card.Img style={{height: '150px', width: 'auto'}} src={mainPicture}/>
+                            {(textHeader) && (
+                                <Card.Footer>
+                                    {textHeader && (
+                                        <label>{textHeader}</label>
+                                    )}
+                                </Card.Footer>
+                            )}
+                        </Col>
+                    </Row>
+                </Card>
+            </CardDeck>
+        </Col>
+    );
 }

@@ -1,14 +1,16 @@
 import React from 'react';
 
-import {Link} from '../../atoms';
+import {NavLink as Link} from "react-router-dom";
 import {Placeholder} from '../../templates/Placeholder';
 
 export function Page404() {
-	return (
-		<Placeholder title="Error 404">
-			<p>
-				Page not found, please return to <Link to="/">Home</Link>.
-			</p>
-		</Placeholder>
-	);
+    return (
+        <div>
+            <Placeholder title="Error 404">
+                <p>
+                    Page not found, please return to <Link to="/">Home</Link>.
+                </p>
+            </Placeholder>
+        </div>
+    );
 }
