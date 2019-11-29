@@ -4,11 +4,19 @@ export const validateNewMemberData = (id_team, id_user, position, status) => {
 	}
 };
 
-export const validateFilteredTeamMembershipsData = (id_team, id_match, team_membership_status) => {
+export const validateFilteredTeamMembershipsData = (id_team, id_user, id_match, team_membership_status) => {
 
 	const team = Number(id_team);
 	if (!team) {
 		throw {status: 400, msg: 'Chybějící nebo nevalidní tým'};
+	}
+
+	var user;
+	if (id_user !== undefined) {
+		user = Number(id_user);
+		if (!user) {
+			throw {status: 400, msg: 'Nevalidní uživatel'};
+		}
 	}
 
 	var match;
@@ -25,5 +33,5 @@ export const validateFilteredTeamMembershipsData = (id_team, id_match, team_memb
 		throw {status: 400, msg: 'Nevalidní stav'};
 	}
 
-	return {team, match, status};
+	return {team, user, match, status};
 };
