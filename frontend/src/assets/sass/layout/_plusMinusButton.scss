@@ -19,3 +19,24 @@
   }
 
 }
+
+
+@media (max-width: 986px) {
+  .plusMinusDiv {
+    .react-numeric-input {
+      width: 60% !important;
+      margin: 0 auto !important;
+      height: 60px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .plusMinusDiv {
+    .react-numeric-input {
+      width: 85% !important;
+      margin: 0 auto !important;
+      height: 60px;
+    }
+  }
+}

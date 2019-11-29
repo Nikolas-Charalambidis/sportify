@@ -16,3 +16,15 @@
     font-size: 22px !important;
   }
 }
+
+@media (max-width: 578px) {
+  .interactiveStats {
+    .col {
+      flex-basis: auto !important;
+    }
+
+    .col:last-child {
+      margin-top: 25px;
+    }
+  }
+}
