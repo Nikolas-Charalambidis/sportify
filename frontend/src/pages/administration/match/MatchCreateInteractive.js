@@ -5,9 +5,13 @@ import {Heading} from "../../../atoms";
 import {MatchTeamSelect} from "../../../organisms/match/admin/create/MatchTeamSelect";
 import {MatchMatchupSingleCreateAdmin} from "../../../organisms/match/admin/create/matchup/MatchMatchupSingleCreateAdmin";
 import {MatchMatchupMultipleCreateAdmin} from "../../../organisms/match/admin/create/matchup/MatchMatchupMultipleCreateAdmin";
+import {MatchInteractiveForm} from "../../../organisms/match/admin/create/interactive/MatchInteractiveForm";
+import {NavLink as Link} from "react-router-dom";
+import {MatchInteractiveSelect} from "../../../organisms/match/admin/create/interactive/MatchInteractiveSelect";
 
 export function MatchCreateInteractive() {
     const [teamsState] = useGetTeams();
+    const [matchupSelected, setMatchupSelected] = useState(false);
     const [hostState, setHostState] = useState({
         id_team: null,
         matchups: [],
@@ -21,38 +25,33 @@ export function MatchCreateInteractive() {
         shots: 0
     });
 
+    const getTeamName = (host) => {
+        let team = null;
+        if(host) {
+            team = teamsState.teams_data.filter(item => item.id_team === hostState.id_team);
+        } else {
+            team = teamsState.teams_data.filter(item => item.id_team === guestState.id_team)
+        }
+        return team[0].name;
+    };
+
     return (
         <div>
             <Breadcrumb>
-                <Breadcrumb.Item href="/">Domů</Breadcrumb.Item>
-                <Breadcrumb.Item active>Nový zápas</Breadcrumb.Item>
+                <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
+                <li className="breadcrumb-item"><Link to="/administration">Administrace</Link></li>
+                <li className="breadcrumb-item"><span className="active">Interaktivní zápas</span></li>
             </Breadcrumb>
 
             <Heading>Vytvoření zápasu</Heading>
-            {teamsState.isLoading && <div>Načítám data...</div>}
-            {(!teamsState.isLoading && teamsState.error) && <div>Data se nepodařilo načíst</div>}
-            {(!teamsState.isLoading && !teamsState.error) &&
-            <div>
-                <MatchTeamSelect teams={teamsState.teams_data}
-                                 setHostState={setHostState} setGuestState={setGuestState} />
-
-                {(hostState.id_team && guestState.id_team) &&
-                <div>
-                    <Heading size="lg" className="mt-5 h3MatchDetail text-left">Soupiska</Heading>
-                    {hostState.id_team === guestState.id_team ?
-                        <MatchMatchupSingleCreateAdmin hostState={hostState} guestState={guestState}
-                                                       setHostState={setHostState} setGuestState={setGuestState}
-                        /> :
-                        <MatchMatchupMultipleCreateAdmin hostState={hostState} guestState={guestState}
-                                                         setHostState={setHostState} setGuestState={setGuestState}
-                        />
-                    }
-                    <Button variant="primary" >
-                        Potvrdit výběr hráčů
-                    </Button>
-                </div>
-                }
-            </div>
+            {matchupSelected ?
+                <MatchInteractiveForm hostState={hostState} guestState={guestState}
+                                      setHostState={setHostState} setGuestState={setGuestState}
+                                      hostName={getTeamName(true)} guestName={getTeamName(false)}
+                /> :
+                <MatchInteractiveSelect teamsState={teamsState} hostState={hostState} guestState={guestState}
+                                        setHostState={setHostState} setGuestState={setGuestState} setMatchupSelected={setMatchupSelected}
+                />
             }
         </div>
     );

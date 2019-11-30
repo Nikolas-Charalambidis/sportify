@@ -10,7 +10,7 @@ import * as Icons from "@fortawesome/free-solid-svg-icons";
 import {AddGoalSuspensionModal} from "../../base/AddGoalSuspensionModal";
 import {DeleteModal} from "../../../../../atoms/DeleteModal";
 
-export function MatchMatchupCreateAdmin({host, availablePlayers, setAvailablePlayers, state, setState }) {
+export function MatchMatchupCreateAdmin({interactive, host, availablePlayers, setAvailablePlayers, state, setState }) {
 
     const [showGoalModal, setShowGoalModal] = useState({ show: false });
     const closeGoalSuspensionModal = () => setShowGoalModal(false);
@@ -64,6 +64,7 @@ export function MatchMatchupCreateAdmin({host, availablePlayers, setAvailablePla
             filterable: false,
             Cell: row => (
                 <div>
+                    {!interactive &&
                     <Button variant="link" onClick={() => {
                         setNameState(row.original.name);
                         openGoalSuspensionModal(row.original.id_user);
@@ -71,6 +72,8 @@ export function MatchMatchupCreateAdmin({host, availablePlayers, setAvailablePla
                     }}>
                         <FontAwesomeIcon className="addIcon" icon={Icons.faPlus} size="1x"/>
                     </Button>
+                    }
+
                     <Button variant="link" onClick={() => {
                         setID(row.original.id_user);
                         handleShow();

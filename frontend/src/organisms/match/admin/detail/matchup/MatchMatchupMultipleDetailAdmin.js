@@ -6,8 +6,8 @@ import {MatchMatchupDetailAdmin} from "./MatchMatchupDetailAdmin";
 import {useGetMatchup} from "../../../../../api/matchClient_v1";
 
 export function MatchMatchupMultipleDetailAdmin({id_host, id_guest, id_match, fetchEventsHost, fetchEventsGuest}) {
-    const [stateAvailablePlayersHost, fetchAvailablePlayersHost] = useGetAvailablePlayers(id_host, id_match);
-    const [stateAvailablePlayersGuest, fetchAvailablePlayersGuest] = useGetAvailablePlayers(id_guest, id_match);
+    const [stateAvailablePlayersHost, fetchAvailablePlayersHost] = useGetAvailablePlayers(id_host, id_match, "active");
+    const [stateAvailablePlayersGuest, fetchAvailablePlayersGuest] = useGetAvailablePlayers(id_guest, id_match, "active");
 
     const [matchupStateHost, fetchMatchupHost] = useGetMatchup(id_match, 1);
     const [matchupStateGuest, fetchMatchupGuest] = useGetMatchup(id_match, 0);
