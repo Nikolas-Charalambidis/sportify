@@ -15,6 +15,8 @@ A web application Sportify, as a semestral work, manages teams, leagues, matches
 | `dev`* | [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=dev)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches)
 | `master` | [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/4IT445.svg?branch=master)](https://travis-ci.org/Nikolas-Charalambidis/4IT445/branches) 
 
+<sub>* `dev` was selected as the main branch</sub>
+
 ## Contributors
 
 | Contributor | GitHub account | Feature branch | Status analysis |
