@@ -45,7 +45,7 @@ matrix:
         sonarcloud:
           organization: "nikolas-charalambidis"
           token:
-            secure: "**************************" # encrypted value of your token
+            secure: "JaThZkmkCtocJs2jJTU2ZmhgPTtb/77zAqU9IZ6uVR4Dr0SXeO0YpW41jhjyevO7S1w0Fy4s8F4MyZH3gAsQ6yERELamPr39cawrzdxeoD4wrLxazrcF1EYKBw2IESlx84zwZ21IZs3U4NL/27Hdn9zei4kEE+oJTVZe/HiNwDxDqIKIkugdXZ83QsM7iY+9BdYKd28Jnkm+on/OVuKFyn6ZGVs15Flrzo5P++d4wVPTHo56yFp9eY4khrjOG/7LR+N6jgSo6eMHnGlJd9iX5EY1qv+sFDUf6/5HT/F0wwr/uUadIq/FgOm10+8jMaJwQ/2oZQskutuxBAwqXlVlKzfAp3fpP/c4ra/8y1PR0+kYYUyiwATF6lMo3PgUJ6sSUsCkOSZnh5/FQRwSrm6dhJY5Hut91yE2tkLiEkd5Gsbrlw8a7pMzPLhUTtOoXmfmjef6w912npg43kWecSGniKPWC3JGUvW9VjLB9Nbi/NiRuHHd5oGNqZdpcgNfEeNrV3kf28GYcaM3L6V1Ljr2QOhFnt28jmSu9DgsHCRXGBxdghaJhiJ6Wz1tzSzmBevAxvEr1YQlm7OMUCWAVNeXBgZYJ/yhb02aXHVeKDmUzgwFT5SBItpZVmJEn+B8QarnHROMziMU2VkfB0onkYetuX7Lw5+3dfhDkYtGotQgpTI="
       script:
         - sonar-scannerc
-      secure: "JaThZkmkCtocJs2jJTU2ZmhgPTtb/77zAqU9IZ6uVR4Dr0SXeO0YpW41jhjyevO7S1w0Fy4s8F4MyZH3gAsQ6yERELamPr39cawrzdxeoD4wrLxazrcF1EYKBw2IESlx84zwZ21IZs3U4NL/27Hdn9zei4kEE+oJTVZe/HiNwDxDqIKIkugdXZ83QsM7iY+9BdYKd28Jnkm+on/OVuKFyn6ZGVs15Flrzo5P++d4wVPTHo56yFp9eY4khrjOG/7LR+N6jgSo6eMHnGlJd9iX5EY1qv+sFDUf6/5HT/F0wwr/uUadIq/FgOm10+8jMaJwQ/2oZQskutuxBAwqXlVlKzfAp3fpP/c4ra/8y1PR0+kYYUyiwATF6lMo3PgUJ6sSUsCkOSZnh5/FQRwSrm6dhJY5Hut91yE2tkLiEkd5Gsbrlw8a7pMzPLhUTtOoXmfmjef6w912npg43kWecSGniKPWC3JGUvW9VjLB9Nbi/NiRuHHd5oGNqZdpcgNfEeNrV3kf28GYcaM3L6V1Ljr2QOhFnt28jmSu9DgsHCRXGBxdghaJhiJ6Wz1tzSzmBevAxvEr1YQlm7OMUCWAVNeXBgZYJ/yhb02aXHVeKDmUzgwFT5SBItpZVmJEn+B8QarnHROMziMU2VkfB0onkYetuX7Lw5+3dfhDkYtGotQgpTI="
+        -
