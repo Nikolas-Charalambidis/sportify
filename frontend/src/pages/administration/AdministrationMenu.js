@@ -23,7 +23,7 @@ export function AdministrationMenu() {
                     <AdministrationMenuCard title="Správa týmů" text="Správa, případné založení vlastního týmu umožňuje editovat údaje a zobrazovat soupisku hráčů." click="teams"/>
                 </Col>
             </Row>
-            <Row>
+            <Row className="mt-4">
                 <Col lg={6} md={6}>
                     <AdministrationMenuCard title="Vytvoření zápasu - form" text="Slouží pro vytvoření klasického zápasu, který se již odehral. Umožňuje přepsat výsledky a statistiky utkání." click="matches/createForm"/>
                 </Col>

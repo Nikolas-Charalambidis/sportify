@@ -29,7 +29,7 @@ export function MatchMatchupCreateAdmin({interactive, host, availablePlayers, se
     const [showPlayerModal, setShowPlayerModal] = useState(false);
     const handleClosePlayerModal = () => setShowPlayerModal(false);
     const handleShowPlayerModal = () => setShowPlayerModal(true);
-
+    console.log(interactive)
     const columnsMatchup = [
         {
             Header: "Hráč",
@@ -70,7 +70,7 @@ export function MatchMatchupCreateAdmin({interactive, host, availablePlayers, se
                         openGoalSuspensionModal(row.original.id_user);
 
                     }}>
-                        <FontAwesomeIcon className="addIcon" icon={Icons.faPlus} size="1x"/>
+                        {!interactive && <FontAwesomeIcon className="addIcon" icon={Icons.faPlus} size="1x"/>}
                     </Button>
                     }
 
@@ -145,7 +145,7 @@ export function MatchMatchupCreateAdmin({interactive, host, availablePlayers, se
             }
             {(!availablePlayers.isLoading && !availablePlayers.error && availablePlayers.players.length !== 0) &&
                 <div>
-                    <Button variant="primary" onClick={handleShowPlayerModal}>
+                    <Button variant="primary mb-3" onClick={handleShowPlayerModal}>
                         Vybrat hráče do sestavy
                     </Button>
                     <PlayerSelectModal type="create" show={showPlayerModal}
