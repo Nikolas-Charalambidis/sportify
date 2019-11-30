@@ -3,16 +3,33 @@ import { useEffect, useState} from "react";
 import {config} from '../config';
 import * as queryString from 'query-string';
 
-export function useGetAvailablePlayers(id_team, id_match, status) {
+export function useGetTeamPlayers(id_team) {
+    return useGetTeamPlayersFiltered(id_team, null, null);
+}
+
+export function useGetTeamPlayersByStatus(id_team, status) {
+    return useGetTeamPlayersFiltered(id_team, null, status);
+}
+
+export function useGetAvailableTeamPlayersForMatch(id_team, id_match) {
+    return useGetTeamPlayersFiltered(id_team, id_match, "active");
+}
+
+export function useGetTeamPlayersFiltered(id_team, id_match, status) {
     const api = useApi();
     const [state, setState] = useState({
         isLoading: true
     });
 
-    var queryParam;
+    var queryParamObject = {};
     if (status !== undefined && status !== null) {
-        queryParam = queryString.stringify({id_match: id_match, team_membership_status: status});
-    } else queryParam = queryString.stringify({id_match: id_match});
+        queryParamObject.team_membership_status = status;
+    }
+    if (id_match !== undefined && id_match !== null) {
+        queryParamObject.id_match = id_match;
+    }
+
+    const queryParam = queryString.stringify(queryParamObject);
 
     const fetchData = () => {
         api

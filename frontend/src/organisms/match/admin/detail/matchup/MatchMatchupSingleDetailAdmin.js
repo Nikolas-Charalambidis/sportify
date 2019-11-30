@@ -1,12 +1,12 @@
 import React from 'react';
-import {useGetAvailablePlayers} from "../../../../../api/teamMembershipClient_v1";
+import {useGetAvailableTeamPlayersForMatch} from "../../../../../api/teamMembershipClient_v1";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import {MatchMatchupDetailAdmin} from "./MatchMatchupDetailAdmin";
 import {useGetMatchup} from "../../../../../api/matchClient_v1";
 
 export function MatchMatchupSingleDetailAdmin({id_team, id_match, fetchEventsHost, fetchEventsGuest}) {
-    const [stateAvailablePlayers, fetchAvailablePlayers] = useGetAvailablePlayers(id_team, id_match, "active");
+    const [stateAvailablePlayers, fetchAvailablePlayers] = useGetAvailableTeamPlayersForMatch(id_team, id_match, "active");
 
     const [matchupStateHost, fetchMatchupHost] = useGetMatchup(id_match, 1);
     const [matchupStateGuest, fetchMatchupGuest] = useGetMatchup(id_match, 0);
