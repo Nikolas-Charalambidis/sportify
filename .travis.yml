@@ -2,6 +2,7 @@
 matrix:
   include:
     - language: python
+      name: "Docker"
       sudo: required
       services:
       - docker
@@ -14,6 +15,7 @@ matrix:
       - docker stop mysql_sportify
 
     - language: node_js
+      name: "Front-end"
       node_js:
         - 10
       cache:
@@ -26,6 +28,7 @@ matrix:
         - yarn build
 
     - language: node_js
+      name: "Back-end"
       node_js:
         - 10
       cache:
@@ -38,6 +41,7 @@ matrix:
         - yarn build
 
     - language: node_js
+      name: "SonarCloud analysis"
       dist: trusty
       node_js:
         - 10
