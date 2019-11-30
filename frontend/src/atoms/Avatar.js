@@ -9,10 +9,9 @@ export function Avatar({api, imageState, setImageState, type, id}) {
     const uploadAvatar = event => {
         let formData = new FormData();
         formData.append('file', event.currentTarget.files[0]);
-        formData.append('id', id);
         window.flash("Nahrávám avatara na server", 'info', 10000, null);
         api
-            .post(`${config.API_BASE_PATH}/${type}/avatar`, formData)
+            .post(`${config.API_BASE_PATH}/${type}/${id}/avatar`, formData)
             .then(({data}) => {
                 setImageState(data.url);
                 window.flash(data.msg, 'success');

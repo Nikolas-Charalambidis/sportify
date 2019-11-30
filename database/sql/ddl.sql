@@ -102,7 +102,7 @@ CREATE TABLE `events` (
     `id_assistance1` int,
     `id_assistance2` int,
     `minute` int,
-    `value` tinyint,
+    `value` int,
     `host` boolean NOT NULL
 );
 

@@ -1,0 +1,30 @@
+.interactiveStats {
+    .col {
+      padding-right: 0 !important;
+      margin-right: 15px !important;
+      padding-left: 0 !important;
+      margin-left: 15px !important;
+    }
+
+  .bgBlack {
+    background-color: black;
+    color: white;
+    padding:3px 10px;
+  }
+
+  button {
+    font-size: 22px !important;
+  }
+}
+
+@media (max-width: 578px) {
+  .interactiveStats {
+    .col {
+      flex-basis: auto !important;
+    }
+
+    .col:last-child {
+      margin-top: 25px;
+    }
+  }
+}
