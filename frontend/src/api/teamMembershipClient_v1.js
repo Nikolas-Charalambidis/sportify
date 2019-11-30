@@ -29,6 +29,6 @@ export function useGetAvailablePlayers(id_team, id_match, status) {
     useEffect( () => {
         fetchData();
 
-    }, [api, id_match, id_team]);
+    }, [api, id_match, id_team]); // eslint-disable-line
     return [state, fetchData];
 }
