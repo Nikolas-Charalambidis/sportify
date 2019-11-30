@@ -1,18 +1,19 @@
 import React, {useState} from 'react';
-import {Table} from "../../../../atoms/Table";
-import {CustomSelect} from "../../../../atoms/Select";
-import {useApi} from "../../../../hooks/useApi";
+import {Table} from "../../../../../atoms/Table";
+import {useApi} from "../../../../../hooks/useApi";
 import Image from "react-bootstrap/esm/Image";
-import loadingGif from "../../../../assets/images/loading.gif";
-import {Heading} from "../../../../atoms";
+import loadingGif from "../../../../../assets/images/loading.gif";
+import {Heading} from "../../../../../atoms";
 import Button from "react-bootstrap/Button";
-import {AddGoalSuspensionModal} from "../events/AddGoalSuspensionModal";
-import {addPlayer, deletePlayer, setGoalkeeper} from "../../../../api/matchupClient_v1";
-import {DeleteModal} from "../../../../atoms/DeleteModal";
+import {AddGoalSuspensionModal} from "../../base/AddGoalSuspensionModal";
+import {addPlayer, deletePlayer, setGoalkeeper} from "../../../../../api/matchupClient_v1";
+import {DeleteModal} from "../../../../../atoms/DeleteModal";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import * as Icons from "@fortawesome/free-solid-svg-icons"
+import {PlayerSelectModal} from "../../create/PlayerSelectModal";
+import {addEvent} from "../../../../../api/eventClient_v1";
 
-export function Matchup({id_team, id_match, host, availablePlayers, fetchAvailablePlayers, matchupState, fetchMatchup, fetchEvents}) {
+export function MatchMatchupDetailAdmin({id_team, id_match, host, availablePlayers, fetchAvailablePlayers, matchupState, fetchMatchup, fetchEvents}) {
     const api = useApi();
 
     const [showGoalModal, setShowGoalModal] = useState({ show: false });
@@ -26,6 +27,10 @@ export function Matchup({id_team, id_match, host, availablePlayers, fetchAvailab
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [ID, setID] = useState(null);
+
+    const [showPlayerModal, setShowPlayerModal] = useState(false);
+    const handleClosePlayerModal = () => setShowPlayerModal(false);
+    const handleShowPlayerModal = () => setShowPlayerModal(true);
 
     const columnsMatchup = [
         {
@@ -88,8 +93,8 @@ export function Matchup({id_team, id_match, host, availablePlayers, fetchAvailab
         }
     ];
 
-    const handleAddPlayer = async (id_user) => {
-        const result = await addPlayer(api, {id_team: id_team, id_match: id_match, id_user: id_user, host: host, goalkeeper: false});
+    const handleAddPlayers = async (players) => {
+        const result = await addPlayer(api, id_match, host, players);
         if(result) {
             fetchMatchup();
             fetchAvailablePlayers();
@@ -105,9 +110,15 @@ export function Matchup({id_team, id_match, host, availablePlayers, fetchAvailab
         }
     };
 
+    const handleAddEvent = async (values) => {
+        const result = await addEvent(api, values);
+        if(result) {
+            fetchEvents();
+        }
+    };
+
     return (
         <div>
-            <Heading size="lg" className="mt-5 h3MatchDetail text-left">Soupiska</Heading>
             {matchupState.isLoading &&  <div className="text-center"><Image src={loadingGif}/></div>}
             {(!matchupState.isLoading && matchupState.error) &&
             <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
@@ -121,23 +132,28 @@ export function Matchup({id_team, id_match, host, availablePlayers, fetchAvailab
                         <Heading size="xs" className="alert-warning pt-2 pb-2 mt-2 text-center">Nejsou dostupní žádní další hráči</Heading>
                     }
                     {(!availablePlayers.isLoading && !availablePlayers.error && availablePlayers.players.length !== 0) &&
-                        <CustomSelect name="id_type" label="Přidání hráče do sestavy"
-                                      options={availablePlayers.players}
-                                      getOptionLabel={option => `${option.name}`}
-                                      getOptionValue={option => `${option.id_user}`}
-                                      placeholder={host ? "Hráči host" : "Hráči guest"}
-                                      isSearchable={true}
-                                      isOptionDisabled={(option) => option.disabled === true}
-                                      onChange={options => handleAddPlayer(options.id_user)}
-                        />
+                        <div>
+                            <Button variant="primary" onClick={handleShowPlayerModal}>
+                                Vybrat hráče do sestavy
+                            </Button>
+                            <PlayerSelectModal type="edit" show={showPlayerModal}
+                                                handleClose={handleClosePlayerModal}
+                                                players={availablePlayers.players}
+                                                handleAddPlayers={handleAddPlayers}
+                            />
+                        </div>
                     }
+
                     <Table className="defaultCursor" columns={columnsMatchup} data={matchupState.matchup}/>
+
                     <AddGoalSuspensionModal params={showGoalModal} handleClose={closeGoalSuspensionModal} matchup={matchupState.matchup}
-                                 id_team={id_team} id_match={id_match} host={host} fetchEvents={fetchEvents}
+                                            id_team={id_team} id_match={id_match} host={host} fetchEvents={fetchEvents}
+                                            handleAddEvent={handleAddEvent}
                     />
                     <DeleteModal key="players" show={show} heading="Delete hráče ze zápasu"
                                  text="Opravdu si přejete odstranit hráče ze zápasu a tím i všechny eventy, na které je navázán?"
                                  handleClose={handleClose} deleteFunction={handleDeletePlayer} idItem={ID}/>
+
                 </div>
             }
         </div>

@@ -1,36 +1,27 @@
 import React, {useState} from 'react';
-import {Breadcrumb} from 'react-bootstrap';
-import {NavLink as Link} from "react-router-dom";
 import Timer from "react-compound-timer";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as Icons from "@fortawesome/free-solid-svg-icons";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import moment from "moment";
-import {Heading} from "../../../atoms";
-import {MatchDetailScore} from "../../../organisms/match/public/MatchDetailScore";
+import {Heading} from "../../../../../atoms";
+import {MatchDetailScore} from "../../../public/MatchDetailScore";
 import NumericInput from 'react-numeric-input';
 import Button from "react-bootstrap/Button";
 
-export function MatchInteractiveEditForm() {
+export function MatchInteractiveForm({hostName, guestName, hostState, guestState, setHostState, setGuestState}) {
     const [play, setPlay] = useState(true);
 
     return (
         <div>
-            <Breadcrumb>
-                <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
-                <li className="breadcrumb-item"><Link to="/administration">Administrace</Link></li>
-                <li className="breadcrumb-item"><span className="active">Interaktivní zápas</span></li>
-            </Breadcrumb>
-
             <Row className="mt-5 mb-2">
                 <Col className="text-center">
                     <Heading size="md">{moment().local().format("DD. MM. YYYY HH:mm")}</Heading>
                 </Col>
             </Row>
 
-            <MatchDetailScore hostGoals={2} hostName="Hokejisti pro srandu a žízeň" guestGoals={3}
-                              guestName="The rural jurors"/>
+            <MatchDetailScore hostGoals={2} hostName={hostName} guestGoals={3} guestName={guestName}/>
 
             <Timer initialTime={3599999}
                    direction="backward"
@@ -67,7 +58,7 @@ export function MatchInteractiveEditForm() {
             <Row className="mt-5 interactiveStats">
                 <Col className="bg-white">
                     <Heading size="lg">
-                        Hokejisti pro srandu a žízeň
+                        {hostName}
                         <hr/>
                     </Heading>
 
@@ -103,7 +94,7 @@ export function MatchInteractiveEditForm() {
 
                 <Col className="bg-white">
                     <Heading size="lg">
-                        The rural jurors
+                        {guestName}
                     </Heading>
                 </Col>
             </Row>

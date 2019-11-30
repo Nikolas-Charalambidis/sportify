@@ -14,10 +14,10 @@ export async function setGoalkeeper(api, id_matchup, goalkeeper) {
     return result;
 }
 
-export async function addPlayer(api, values) {
+export async function addPlayer(api, id_match, host, values) {
     let result = false;
     await api
-        .post(`${config.API_BASE_PATH}/matchups`, values)
+        .post(`${config.API_BASE_PATH}/matchups/bulk`, {id_match: id_match, host: host, matchups: values})
         .then(({data}) => {
             window.flash(data.msg, 'success');
             result = true;

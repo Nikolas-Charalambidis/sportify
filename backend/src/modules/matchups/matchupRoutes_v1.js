@@ -93,8 +93,8 @@ router.post('/', async (req, res, next) => {
  */
 router.post('/bulk', async (req, res, next) => {
 	try {
-		const { matchups, id_match } = req.body;
-		await new MatchupService(req).addPlayersToMatchup(matchups, id_match);
+		const { matchups, id_match, host } = req.body;
+		await new MatchupService(req).addPlayersToMatchup(matchups, id_match, host);
 		res.status(201).json({ error: false, msg: 'Hráči byli přidáni do sestavy'});
 	} catch(e) {
 		next(e);

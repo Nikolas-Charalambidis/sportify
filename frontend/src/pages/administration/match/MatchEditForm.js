@@ -7,8 +7,6 @@ import {deleteMatch, useGetMatch} from "../../../api/matchClient_v1";
 import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../assets/images/loading.gif";
 import {useApi} from "../../../hooks/useApi";
-import {MatchDetailSingleAdmin} from "../../../organisms/match/admin/MatchDetailSingleAdmin";
-import {MatchDetailMultipleAdmin} from "../../../organisms/match/admin/MatchDetailMultipleAdmin";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import moment from "moment";
@@ -16,6 +14,7 @@ import {useGetTeam} from "../../../api/teamClient_v1";
 import {DeleteModal} from "../../../atoms/DeleteModal";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as Icons from "@fortawesome/free-solid-svg-icons";
+import {MatchDetailAdmin} from "../../../organisms/match/admin/detail/MatchDetailAdmin";
 
 export function MatchEditForm() {
     const history = useHistory();
@@ -96,10 +95,8 @@ export function MatchEditForm() {
                                  text="Opravdu si přejete odstranit zápas a sním i všechny zázanmy o hráčích a eventech?"
                                  handleClose={handleClose} deleteFunction={handleDeleteMatch} idItem={ID}/>
 
-                    {stateMatch.match.host_name === stateMatch.match.guest_name ?
-                        <MatchDetailSingleAdmin id_match={id_match} data={stateMatch.match}/> :
-                        <MatchDetailMultipleAdmin id_match={id_match} data={stateMatch.match}/>
-                    }
+                    <MatchDetailAdmin id_match={id_match} data={stateMatch.match}/> :
+
                 </div>
             }
         </div>
