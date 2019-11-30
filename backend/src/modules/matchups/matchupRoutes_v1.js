@@ -108,7 +108,7 @@ router.post('/bulk', async (req, res, next) => {
  *     tags:
  *       - Matchups
  *     name: Matchups
- *     summary: Delete user from matchup by MatchMatchupDetailAdmin ID
+ *     summary: Delete user from matchup by Matchup ID
  *     parameters:
  *       - in: path
  *         name: id_matchup
@@ -147,7 +147,7 @@ router.delete('/:id_matchup/:id_user', async (req, res, next) => {
  *     tags:
  *       - Matchups
  *     name: Set goalkeeper
- *     summary: Change goalkeeper state by MatchMatchupDetailAdmin ID
+ *     summary: Change goalkeeper state by Matchup ID
  *     parameters:
  *       - in: path
  *         name: id_matchup
@@ -168,7 +168,7 @@ router.delete('/:id_matchup/:id_user', async (req, res, next) => {
  *       400:
  *         description: Invalid request
  *       404:
- *         description: Player not found in MatchMatchupDetailAdmin
+ *         description: Player not found in Matchup
  *       500:
  *         description: Unexpected error
  */
