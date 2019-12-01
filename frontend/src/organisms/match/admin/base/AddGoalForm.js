@@ -12,7 +12,6 @@ export function AddGoalForm({id_user, handleClose, addEvent, matchup, id_team, i
                     id_user: id_user,
                     type: "goal",
                     id_team: id_team,
-                    id_match: id_match,
                     id_assistance1: null,
                     id_assistance2: null,
                     minute: '',
@@ -21,7 +20,7 @@ export function AddGoalForm({id_user, handleClose, addEvent, matchup, id_team, i
                 }}
                 onSubmit={values => {
                     handleClose();
-                    addEvent(values);
+                    addEvent({...values, id_match: id_match});
                 }}
             >{({handleSubmit, setFieldValue, errors}) => (
                 <Form noValidate onSubmit={handleSubmit}>

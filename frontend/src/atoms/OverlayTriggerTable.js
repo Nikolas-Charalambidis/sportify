@@ -14,7 +14,7 @@ export function OverlayTriggerTable({header, message, placement, icon, ...props}
         <div>
             <OverlayTrigger
                 placement={placement}
-                overlay={renderTooltip(message)}
+                overlay={renderTooltip()}
             >
                 <span>{header} <FontAwesomeIcon icon={icon} className="ml-2" size="1x"/></span>
             </OverlayTrigger>

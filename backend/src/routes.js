@@ -8,6 +8,7 @@ import teamMembershipRoutes_v1 from './modules/teamMemberships/teamMembershipRou
 import matchRoutes_v1 from './modules/matches/matchRoutes_v1';
 import eventRoutes_v1 from './modules/events/eventRoutes_v1';
 import matchupRoutes_v1 from './modules/matchups/matchupRoutes_v1';
+import competitionRoutes_v1 from './modules/competitions/competitionRoutes_v1';
 
 const router = Router();
 
@@ -33,6 +34,9 @@ router.use('/api/v1/events', eventRoutes_v1);
 console.log("[initialized] eventRoutes_v1              /api/v1/events");
 
 router.use('/api/v1/matchups', matchupRoutes_v1);
-console.log("[initialized] matchupRoutes_v1              /api/v1/matchup");
+console.log("[initialized] matchupRoutes_v1            /api/v1/matchup");
+
+router.use('/api/v1/competitions', competitionRoutes_v1);
+console.log("[initialized] competitionRoutes_v1        /api/v1/competitions");
 
 export default router;

@@ -22,20 +22,49 @@ export default class TeamMembershipService {
 		}
 	}
 
-	async getAvailablePlayers(id_team, id_match) {
-		const team_id = Number(id_team);
-		const match_id = Number(id_match);
-		teamMembershipValidation.validateAvailablePlayersData(id_team, id_match);
-		return this.dbConnection.query(
-			`SELECT u.id_user, CONCAT(u.name, ' ', u.surname) AS name 
-			 FROM team_membership AS t
-			 JOIN users AS u ON u.id_user=t.id_user
-			 WHERE t.id_team=?
-			 AND t.status='active'
-			 AND t.id_user NOT IN (
-			 	SELECT id_user FROM matchups WHERE id_team=? AND id_match=?
-			 )`
-			, [team_id, team_id, match_id]
+	async filteredTeamMemberships(id_team, id_user, id_match, team_membership_status) {
+		const {team, user, match, status} = teamMembershipValidation.validateTeamMembershipsData(id_team, id_user, id_match, team_membership_status);
+
+		var where = '';
+		var values = [];
+		if (status !== undefined) {
+			where += ' AND t.status=?';
+			values.push(status);
+		}
+
+		if (user !== undefined) {
+			where += ' AND t.id_user=?';
+			values.push(user);
+		}
+
+		if (id_match === undefined) {
+			return this.dbConnection.query(
+				`SELECT *, CONCAT(u.name, ' ', u.surname) AS name FROM team_membership AS t 
+				 JOIN positions p on t.id_position = p.id_position
+				 JOIN users u on t.id_user = u.id_user WHERE t.id_team = ?` + where
+				, [team, ...values]
+			);
+		} else return this.dbConnection.query(
+			`SELECT *, CONCAT(u.name, ' ', u.surname) AS name FROM team_membership AS t 
+				 JOIN positions p on t.id_position = p.id_position
+				 JOIN users u on t.id_user = u.id_user 
+				 WHERE t.id_team = ? 
+				 AND t.id_user NOT IN(
+			 		SELECT id_user FROM matchups WHERE id_team=? AND id_match=?)` + where
+			, [team, team, match, ...values]
 		);
+	}
+
+	async updateStatus(id_team, id_user, team_membership_status) {
+		// eslint-disable-next-line no-unused-vars
+		const {team, user, status} = teamMembershipValidation.validateTeamMembershipsData(id_team, id_user, undefined, team_membership_status);
+
+		const result = await this.dbConnection.query(
+			`UPDATE team_membership SET status=? WHERE id_team=? AND id_user=?`,
+			[status, team, user]
+		);
+		if (result.affectedRows === 0) {
+			throw {status: 404, msg: 'Hráč nebo tým nebyl nalezen'};
+		}
 	}
 }

@@ -71,3 +71,25 @@ export function useGetTeamPositions() {
     return [state];
 }
 
+export function useGetCompetitionTypes() {
+    const api = useApi();
+    const [state, setState] = useState({
+        isLoading: true
+    });
+    useEffect(() => {
+        async function fetchData() {
+            await api
+                .get(`${config.API_BASE_PATH}/others/competitionTypes`)
+                .then(({data}) => {
+                    const {types} = data;
+                    setState({isLoading: false, error: false, types: types});
+                })
+                .catch(() => {
+                    setState({isLoading: false, error: true, types: null});
+                });
+        }
+
+        fetchData().then();
+    }, [api]);
+    return [state];
+}

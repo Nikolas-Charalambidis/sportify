@@ -34,7 +34,7 @@ export function TeamDetail() {
 
                 <Tabs className="mb-3" fill defaultActiveKey="squad" id="teamTabs">
                     <Tab eventKey="squad" title="Sestava">
-                        <TeamSquad/>
+                        <TeamSquad status="active"/>
                     </Tab>
                     <Tab eventKey="competition" title="Soutěže">
                         <TeamCompetitions/>

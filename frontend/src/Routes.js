@@ -23,6 +23,8 @@ import { MatchEditForm } from './pages/administration/match/MatchEditForm';
 import { UserDetail } from './pages/public/user/UserDetail';
 import { MatchCreateForm } from './pages/administration/match/MatchCreateForm';
 import {MatchDetail} from "./pages/public/match/MatchDetail";
+import {MatchCreateInteractive} from "./pages/administration/match/MatchCreateInteractive";
+import {CompetitionList} from "./pages/public/competition/CompetitionList";
 
 export function Routes() {
 	return (
@@ -37,7 +39,6 @@ export function Routes() {
 
 			<Route path="/leagues" exact component={Leagues}/>
             <Route path="/matches" exact component={Matches} />
-            <Route path="/matches/match-create-form" exact component={MatchCreateForm} />
 			<Route path="/statistics" exact component={Statistics} />
 			<Route path="/aboutus" exact component={AboutUs}/>
 			<Route path="/contact" exact component={Contact}/>
@@ -46,11 +47,16 @@ export function Routes() {
 			<Route path="/teams" exact component={TeamList} />
 			<Route path="/users/:id_user" exact component={UserDetail} />
 
+			<Route path="/competitions" exact component={CompetitionList} />
+
 			<Route path="/administration" exact component={AdministrationMenu} />
             <Route path="/administration/profile" exact component={UserProfile} />
 			<Route path="/administration/teams/:id_team" exact component={TeamDetailAdmin} />
             <Route path="/administration/teams" exact component={TeamListAdmin} />
+
 			<Route path="/administration/teams/:id_team/matches/:id_match" exact component={MatchEditForm} />
+			<Route path="/administration/matches/createForm" exact component={MatchCreateForm} />
+			<Route path="/administration/matches/createInteractive" exact component={MatchCreateInteractive} />
 
 			<Route path="*" component={Page404}/>
 		</Switch>

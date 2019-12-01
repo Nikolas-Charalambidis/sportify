@@ -2,7 +2,7 @@ import {config} from "../config";
 
 export async function setGoalkeeper(api, id_matchup, goalkeeper) {
     let result = false;
-    await api.patch(`${config.API_BASE_PATH}/matchups/setGoalkeeper`, {id_matchup: id_matchup, goalkeeper: !goalkeeper})
+    await api.patch(`${config.API_BASE_PATH}/matchups/${id_matchup}/goalkeeper`, {goalkeeper: !goalkeeper})
         .then(({data}) => {
             window.flash(data.msg, 'success');
             result = true;
@@ -14,10 +14,10 @@ export async function setGoalkeeper(api, id_matchup, goalkeeper) {
     return result;
 }
 
-export async function addPlayer(api, values) {
+export async function addPlayer(api, id_match, host, values) {
     let result = false;
     await api
-        .post(`${config.API_BASE_PATH}/matchups`, values)
+        .post(`${config.API_BASE_PATH}/matchups/bulk`, {id_match: id_match, host: host, matchups: values})
         .then(({data}) => {
             window.flash(data.msg, 'success');
             result = true;

@@ -4,8 +4,34 @@ export const validateNewMemberData = (id_team, id_user, position, status) => {
 	}
 };
 
-export const validateAvailablePlayersData = (id_team, id_match) => {
-	if(!id_team || !id_match){
-		throw {status: 400, msg: 'Chybějící nebo nevalidní data pro získání dostupných hráčů pro zápas'};
+export const validateTeamMembershipsData = (id_team, id_user, id_match, team_membership_status) => {
+
+	const team = Number(id_team);
+	if (!team) {
+		throw {status: 400, msg: 'Chybějící nebo nevalidní tým'};
 	}
+
+	var user;
+	if (id_user !== undefined) {
+		user = Number(id_user);
+		if (!user) {
+			throw {status: 400, msg: 'Nevalidní uživatel'};
+		}
+	}
+
+	var match;
+	if (id_match !== undefined) {
+		match = Number(id_match);
+		if (!match) {
+			throw {status: 400, msg: 'Nevalidní zápas'};
+		}
+	}
+
+	const status = team_membership_status;
+	const validStatus = status === undefined || ['active', 'inactive', 'pending', 'declined'].includes(status);
+	if (!validStatus) {
+		throw {status: 400, msg: 'Nevalidní stav'};
+	}
+
+	return {team, user, match, status};
 };

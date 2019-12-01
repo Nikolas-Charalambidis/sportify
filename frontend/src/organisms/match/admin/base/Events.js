@@ -11,7 +11,7 @@ import {DeleteModal} from "../../../../atoms/DeleteModal";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as Icons from "@fortawesome/free-solid-svg-icons";
 
-export function Events({eventsState, fetchEvents}) {
+export function Events({type, eventsState, fetchEvents}) {
     const api = useApi();
 
     const [show, setShow] = useState(false);
@@ -19,11 +19,24 @@ export function Events({eventsState, fetchEvents}) {
     const handleShow = () => setShow(true);
     const [ID, setID] = useState(null);
 
-    const handleDeleteEvent = async (id_event) => {
-        const result = await deleteEvent(api, id_event);
-        if(result) {
-            fetchEvents();
+    const handleDeleteEvent = async (id) => {
+        if(type === "edit"){
+            const result = await deleteEvent(api, id);
+            if(result) {
+                fetchEvents();
+            }
         }
+        if(type === "create"){
+            const {id_team, matchups, events, shots} = eventsState;
+            fetchEvents({
+                id_team: id_team,
+                shots: shots,
+                matchups: matchups,
+                events: events.filter(item => item.id_user !== id),
+            })
+            window.flash("Event byl úspěšně odstraněn", "success")
+        }
+
     };
 
     const columnsEvents = [
@@ -99,10 +112,15 @@ export function Events({eventsState, fetchEvents}) {
         {
             Header: 'Akce',
             accessor: "id_event",
-            filterable:false,
+            filterable: false,
             Cell: row => (
                 <Button variant="link" onClick={() => {
-                    setID(row.original.id_event);
+                    if(type === "edit"){
+                        setID(row.original.id_event);
+                    }
+                    if(type === "create"){
+                        setID(row.original.id_user);
+                    }
                     handleShow();
                 }}>
                     <FontAwesomeIcon className="removeIcon" icon={Icons.faTrashAlt} size="1x"/>
@@ -113,7 +131,6 @@ export function Events({eventsState, fetchEvents}) {
 
     return (
         <div>
-            <Heading size="lg" className="mt-5 h3MatchDetail text-left">Události</Heading>
             {eventsState.isLoading &&  <div className="text-center"><Image src={loadingGif}/></div>}
             {(!eventsState.isLoading && eventsState.error) &&
             <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}

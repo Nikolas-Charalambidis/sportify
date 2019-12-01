@@ -103,6 +103,5 @@ export function TeamList() {
                 }}/>
             )}
         </div>
-
     );
 }

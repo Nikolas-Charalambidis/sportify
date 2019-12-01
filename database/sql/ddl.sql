@@ -33,7 +33,13 @@ CREATE TABLE `teams` (
     `avatar_public_id` varchar(255),
     `active` boolean not null
 );
+
 CREATE TABLE `team_types` (
+     `id_type` int PRIMARY KEY AUTO_INCREMENT,
+     `type` varchar(255) NOT NULL
+);
+
+CREATE TABLE `competition_types` (
      `id_type` int PRIMARY KEY AUTO_INCREMENT,
      `type` varchar(255) NOT NULL
 );
@@ -43,6 +49,8 @@ CREATE TABLE `competitions` (
     `name` varchar(255) UNIQUE NOT NULL,
     `id_leader` int NOT NULL,
     `id_sport` int NOT NULL,
+    `id_type` int NOT NULL,
+    `city` varchar(255) NOT NULL,
     `start_date` date NOT NULL,
     `end_date` date NOT NULL,
     `avatar_url` varchar(512),
@@ -94,7 +102,7 @@ CREATE TABLE `events` (
     `id_assistance1` int,
     `id_assistance2` int,
     `minute` int,
-    `value` tinyint,
+    `value` int,
     `host` boolean NOT NULL
 );
 
@@ -142,6 +150,7 @@ ALTER TABLE `tokens` ADD FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`);
 
 ALTER TABLE `competitions` ADD FOREIGN KEY (`id_leader`) REFERENCES `users` (`id_user`);
 ALTER TABLE `competitions` ADD FOREIGN KEY (`id_sport`) REFERENCES `sports` (`id_sport`);
+ALTER TABLE `competitions` ADD FOREIGN KEY (`id_type`) REFERENCES `competition_types` (`id_type`);
 
 ALTER TABLE `competition_membership` ADD FOREIGN KEY (`id_competition`) REFERENCES `competitions` (`id_competition`);
 ALTER TABLE `competition_membership` ADD FOREIGN KEY (`id_team`) REFERENCES `teams` (`id_team`);
@@ -765,12 +774,15 @@ INSERT INTO `team_membership` (`id_team_membership`, `id_team`, `id_user`, `stat
     (35, 5, 35, 'active', 2),
     (36, 5, 36, 'active', 3);
 
+-- COMPETITION TYPES
+INSERT INTO `competition_types` (`id_type`, `type`) VALUES (1, 'Amaterský spolek'), (2, 'Liga');
+
 -- CONPETITIONS
-INSERT INTO `competitions` (`id_competition`, `name`, `id_leader`, `id_sport`, `start_date`, `end_date`) VALUES
-    (1, 'Hokejová liga 19-20', 1, 1, '2019-09-01', '2020-04-01'),
-    (2, 'Florbalová liga', 1, 2, '2017-06-20', '2018-11-20'),
-    (3, 'Hokejbalová liga', 1, 3, '2019-09-01', '2020-04-01'),
-    (4, 'Hokejová liga 18-19', 1, 1, '2018-09-01', '2019-04-01');
+INSERT INTO `competitions` (`id_competition`, `name`, `id_leader`, `id_sport`, `id_type`, `city`, `start_date`, `end_date`) VALUES
+    (1, 'Hokejová liga 19-20', 1, 1, 1, 'Praha', '2019-09-01', '2020-04-01'),
+    (2, 'Florbalová liga', 1, 2, 2, 'Brno', '2017-06-20', '2018-11-20'),
+    (3, 'Hokejbalová liga', 1, 3, 2, 'Plzeň', '2019-09-01', '2020-04-01'),
+    (4, 'Hokejová liga 18-19', 1, 1, 1, 'Ostrava', '2018-09-01', '2019-04-01');
 
 -- CONPETITION MEMBERSHIP
 INSERT INTO `competition_membership` (`id_competition_membership`, `id_competition`, `id_team`, `status`) VALUES

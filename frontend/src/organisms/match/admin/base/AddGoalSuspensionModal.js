@@ -1,17 +1,14 @@
 import React from 'react';
 import {Modal, Tab, Tabs} from "react-bootstrap";
 import {Heading} from "../../../../atoms";
-import {useApi} from "../../../../hooks/useApi";
 import * as yup from "yup";
 import {AddGoalForm} from "./AddGoalForm";
 import {AddSuspensionForm} from "./AddSuspensionForm";
-import {addEvent} from "../../../../api/eventClient_v1";
 
 const schema = yup.object().shape({
     id_user: yup.number().integer().required(),
     type: yup.string().required(),
     id_team: yup.number().integer().required(),
-    id_match: yup.number().integer().required(),
     id_assistance1: yup.number().integer().nullable(),
     id_assistance2: yup.number().integer().nullable(),
     minute: yup.number().integer().min(1).max(60).required(),
@@ -19,16 +16,8 @@ const schema = yup.object().shape({
     host: yup.number().required(),
 });
 
-export function AddGoalSuspensionModal({params, handleClose, fetchEvents, matchup, id_team, id_match, host}) {
+export function AddGoalSuspensionModal({params, handleClose, matchup, id_team, id_match, host, handleAddEvent}) {
     const {show, id_user} = params;
-    const api = useApi();
-
-    const handleAddEvent = async (values) => {
-        const result = await addEvent(api, values);
-        if(result) {
-            fetchEvents();
-        }
-    };
 
     return (
         <Modal show={show} onHide={handleClose}>
