@@ -33,8 +33,8 @@ export function AddGoalSuspensionModal({ params, handleClose, matchup, id_team, 
                         id_team={id_team} id_match={id_match} host={host} schema={schema} selectPlayerManually={selectPlayerManually} />
                 </Tab>
                 <Tab eventKey="suspension" title="Přidat trest">
-                    <AddSuspensionForm id_user={id_user} handleClose={handleClose} addEvent={handleAddEvent}
-                        id_team={id_team} id_match={id_match} host={host} schema={schema} />
+                    <AddSuspensionForm id_user={id_user} handleClose={handleClose} matchup={matchup} addEvent={handleAddEvent}
+                        id_team={id_team} id_match={id_match} host={host} schema={schema} selectPlayerManually={selectPlayerManually} />
                 </Tab>
             </Tabs>
         </Modal>
