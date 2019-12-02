@@ -1,6 +1,7 @@
 import {useApi} from "../hooks/useApi";
 import {useCallback, useEffect, useRef, useState} from "react";
-import {config} from '../config';
+import { config } from '../config';
+import moment from "moment";
 
 export function useGetMatch(id_match) {
     const api = useApi();
@@ -155,4 +156,22 @@ export function useGetAllEvents(id_match) {
         fetchData().then();
     }, [api, id_match]);
     return [state];
+}
+
+export function useCreateMatch(hostState, guestState, history) {
+    const api = useApi();
+    const today = moment().local().format("DD. MM. YYYY HH:mm");
+
+    api
+        .post(`${config.API_BASE_PATH}/matches`, { id_competition: 1, id_host: hostState.id_team, id_guest: guestState.id_team, date: today })
+        .then(({ data }) => {
+            //const { id_team } = data;
+            window.flash(data.msg, 'success');
+            history.replace(`/administration`);
+        })
+        .catch(({ response }) => {
+            const { data } = response;
+            window.flash(data.msg, 'danger');
+            return data;
+        });
 }
