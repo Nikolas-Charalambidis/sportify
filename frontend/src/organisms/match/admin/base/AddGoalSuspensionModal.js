@@ -17,7 +17,7 @@ const schema = yup.object().shape({
 });
 
 export function AddGoalSuspensionModal({ params, handleClose, matchup, id_team, id_match, host, handleAddEvent }) {
-    const { show, id_user, selectPlayerManually, defaultTab } = params;
+    const { show, id_user} = params;
 
     return (
         <Modal show={show} onHide={handleClose}>
@@ -27,14 +27,14 @@ export function AddGoalSuspensionModal({ params, handleClose, matchup, id_team, 
                 </Modal.Title>
             </Modal.Header>
 
-            <Tabs className="mb-3" fill defaultActiveKey={defaultTab ? defaultTab : "goal"} id="teamTabs">
+            <Tabs className="mb-3" fill defaultActiveKey="goal" id="teamTabs">
                 <Tab eventKey="goal" title="Přidat gól">
                     <AddGoalForm id_user={id_user} handleClose={handleClose} matchup={matchup} addEvent={handleAddEvent}
-                        id_team={id_team} id_match={id_match} host={host} schema={schema} selectPlayerManually={selectPlayerManually} />
+                        id_team={id_team} id_match={id_match} host={host} schema={schema} />
                 </Tab>
                 <Tab eventKey="suspension" title="Přidat trest">
                     <AddSuspensionForm id_user={id_user} handleClose={handleClose} matchup={matchup} addEvent={handleAddEvent}
-                        id_team={id_team} id_match={id_match} host={host} schema={schema} selectPlayerManually={selectPlayerManually} />
+                        id_team={id_team} id_match={id_match} host={host} schema={schema}  />
                 </Tab>
             </Tabs>
         </Modal>

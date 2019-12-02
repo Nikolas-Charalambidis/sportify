@@ -5,7 +5,8 @@ import { Formik } from "formik";
 import { CustomSelect } from "../../../../atoms/Select";
 import { suspensionTypesList } from "../../../../enums/enums";
 
-export function AddSuspensionForm({ id_user, handleClose, addEvent, matchup, id_team, id_match, host, schema, selectPlayerManually }) {
+export function AddSuspensionForm({ id_user, handleClose, addEvent, matchup, id_team, id_match, host, schema, interactive }) {
+
     return (
         <Formik
             validationSchema={schema}
@@ -28,11 +29,13 @@ export function AddSuspensionForm({ id_user, handleClose, addEvent, matchup, id_
             <Form noValidate onSubmit={handleSubmit}>
 
                 <Modal.Body>
-                    <Field label="Minuta" name="minute" type="number"
-                        message="Vyplňte prosím minutu, kdy byl trest udělen v rozmezí 1-60"
-                        isInvalid={!!errors.minute} />
+                    {!interactive && (
+                        <Field label="Minuta" name="minute" type="number"
+                            message="Vyplňte prosím minutu, kdy byl trest udělen v rozmezí 1-60"
+                            isInvalid={!!errors.minute} />
+                    )}
 
-                    {selectPlayerManually && (
+                    {interactive && (
                         <CustomSelect name="id_user" label="Hráč"
                             options={matchup}
                             getOptionLabel={option => `${option.name}`}
