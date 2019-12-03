@@ -1,27 +1,42 @@
 import React, {useState} from 'react';
 import "react-table/react-table.css";
 import {useHistory} from 'react-router-dom';
-import {useGetTeamMembership} from "../../../api/teamClient_v1";
-import {useParams} from "react-router-dom";
 import {Heading} from "../../../atoms";
 import {Table} from "../../../atoms/Table";
 import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../assets/images/loading.gif";
 import {useGetTeamPositions} from "../../../api/othersClient_v1";
+import {changePlayerStatus} from "../../../api/teamMembershipClient_v1";
 import Button from "react-bootstrap/Button";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as Icons from "@fortawesome/free-solid-svg-icons";
+import {useApi} from "../../../hooks/useApi";
+import {DeleteModal} from "../../../atoms/DeleteModal";
 
-export function TeamSquad({status, admin}) {
-    let {id_team} = useParams();
-    const [state] = useGetTeamMembership(id_team, status);
+
+
+export function TeamSquad({status, admin, playersState, fetchActivePlayersState, fetchInactivePlayersState, fetchPlayersPendingState, fetchPlayersDeclinedState}) {
+    const api = useApi();
+
     const [positionsState] = useGetTeamPositions();
-
     const [show, setShow] = useState(false);
-    //const handleClose = () => setShow(false);
+    const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [ID, setID] = useState(null);
-    console.log(show, ID);
+
+    const handleUpdatePlayers = async () => {
+        const result = await changePlayerStatus(api, ID.id_team, ID.id_user, ID.status);
+        if(result) {
+            fetchActivePlayersState();
+            fetchInactivePlayersState();
+            fetchPlayersPendingState();
+            fetchPlayersDeclinedState();
+
+        }
+    };
+
+
+    
 
     let history = useHistory();
     const columns = [
@@ -64,25 +79,53 @@ export function TeamSquad({status, admin}) {
             filterable: false,
             show: !!(admin),
             Cell: row => {
-                if(status === "active"){
+                if (status === "active"){
                     return (
                         <div>
-                            <Button variant="link" onClick={() => {
-                                setID({id_matchup: row.original.id_matchup, id_user: row.original.id_user});
+                            <Button variant="link" onClick={ () => {
+                                setID({id_team: row.original.id_team, id_user: row.original.id_user, status: "inactive"});
                                 handleShow();
                             }}>
                                 <FontAwesomeIcon className="removeIcon" icon={Icons.faTrashAlt} size="1x"/>
                             </Button>
                         </div>
                     )
-                } else {
+                } else if (status === "inactive") {
                     return (
                         <div>
-                            <Button variant="link" onClick={() => {
-                                setID({id_matchup: row.original.id_matchup, id_user: row.original.id_user});
+                            <Button variant="link" onClick={ () => {
+                                setID({id_team: row.original.id_team, id_user: row.original.id_user, status: "active"});
                                 handleShow();
                             }}>
                                 <FontAwesomeIcon className="addIcon" icon={Icons.faPlus} size="1x"/>
+                            </Button>
+                        </div>
+                    )
+                } else if (status === "pending") {
+                    return (
+                        <div>
+                            <Button variant="primary" onClick={() => {
+                                setID({id_team: row.original.id_team, id_user: row.original.id_user, status: "active"});
+                                handleShow();
+                            }}>
+                                Schválit
+                            </Button>
+                            <Button variant="danger" onClick={ () => {
+                                setID({id_team: row.original.id_team, id_user: row.original.id_user, status: "declined"});
+                                handleShow();
+                            }}>
+                                Zamítnout
+                            </Button>
+                        </div>
+                    )
+                } else if (status === "declined") {
+                    return (
+                        <div>
+                            <Button variant="primary" onClick={() => {
+                                setID({id_team: row.original.id_team, id_user: row.original.id_user, status: "pending"});
+                                handleShow();
+                            }}>
+                                Schválit
                             </Button>
                         </div>
                     )
@@ -97,20 +140,25 @@ export function TeamSquad({status, admin}) {
             history.push("/users/" + row._original.id_user);
         }
     }
-
+    
     return (
         <div>
-            {(state.isLoading || positionsState.isLoading) &&
+            {(playersState.isLoading || positionsState.isLoading) &&
             <div className="text-center"><Image src={loadingGif}/></div>}
             {(
-                (!state.isLoading && state.error) ||
+                (!playersState.isLoading && playersState.error) ||
                 (!positionsState.isLoading && positionsState.error)) &&
             <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
             {(
-                (!state.isLoading && !state.error) &&
+                (!playersState.isLoading && !playersState.error) &&
                 (!positionsState.isLoading && !positionsState.error)) &&
-            <Table className="defaultCursor" columns={columns} data={state.players}/>
+            <Table className="defaultCursor" columns={columns} data={playersState.players}/>
+
+
             }
+            <DeleteModal key="players" show={show} heading="Delete hráče ze zápasu"
+                         text="Opravdu si přejete odstranit hráče ze zápasu a tím i všechny eventy, na které je navázán?"
+                         handleClose={handleClose} deleteFunction={handleUpdatePlayers} idItem={ID}/>
         </div>
     );
 }
