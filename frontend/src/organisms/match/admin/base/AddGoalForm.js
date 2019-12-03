@@ -4,7 +4,8 @@ import {Field} from "../../../../atoms";
 import {Formik} from "formik";
 import {CustomSelect} from "../../../../atoms/Select";
 
-export function AddGoalForm({id_user, handleClose, addEvent, matchup, id_team, id_match, host, schema}) {
+export function AddGoalForm({ id_user, handleClose, addEvent, matchup, id_team, id_match, host, schema, interactive, timerState }) {  
+
     return (
              <Formik
                 validationSchema={schema}
@@ -14,7 +15,7 @@ export function AddGoalForm({id_user, handleClose, addEvent, matchup, id_team, i
                     id_team: id_team,
                     id_assistance1: null,
                     id_assistance2: null,
-                    minute: '',
+                    minute: interactive ? Math.trunc(timerState / 1000 / 60) : '',
                     value: null,
                     host: host
                 }}
@@ -26,9 +27,21 @@ export function AddGoalForm({id_user, handleClose, addEvent, matchup, id_team, i
                 <Form noValidate onSubmit={handleSubmit}>
 
                     <Modal.Body>
-                        <Field label="Minuta" name="minute" type="number"
-                               message="Vyplňte prosím minutu, kdy byl gól střelen v rozmezí 1-60"
-                               isInvalid={!!errors.minute}/>
+                        {!interactive && (
+                            <Field label="Minuta" name="minute" type="number"
+                                   message="Vyplňte prosím minutu, kdy byl gól střelen v rozmezí 1-60"
+                                isInvalid={!!errors.minute} />
+                        )}
+
+                        {interactive && (
+                            <CustomSelect name="id_user" label="Střelec"
+                                options={matchup}
+                                getOptionLabel={option => `${option.name}`}
+                                getOptionValue={option => `${option.id_user}`}
+                                isSearchable={true}
+                                onChange={options => setFieldValue("id_user", options.id_user)}
+                            />
+                        )}
 
                         <CustomSelect name="id_assistance1" label="Asistence 1"
                                       options={matchup}

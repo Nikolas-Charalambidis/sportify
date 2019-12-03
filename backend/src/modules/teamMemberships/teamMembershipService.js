@@ -22,7 +22,7 @@ export default class TeamMembershipService {
 		}
 	}
 
-	async filteredTeamMemberships(id_team, id_user,  id_match, team_membership_status) {
+	async filteredTeamMemberships(id_team, id_user, id_match, team_membership_status) {
 		const {team, user, match, status} = teamMembershipValidation.validateTeamMembershipsData(id_team, id_user, id_match, team_membership_status);
 
 		var where = '';
