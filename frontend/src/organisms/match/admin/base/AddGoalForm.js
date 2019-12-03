@@ -4,7 +4,8 @@ import {Field} from "../../../../atoms";
 import {Formik} from "formik";
 import {CustomSelect} from "../../../../atoms/Select";
 
-export function AddGoalForm({ id_user, handleClose, addEvent, matchup, id_team, id_match, host, schema, interactive }) {
+export function AddGoalForm({ id_user, handleClose, addEvent, matchup, id_team, id_match, host, schema, interactive, timerState }) {  
+
     return (
              <Formik
                 validationSchema={schema}
@@ -14,7 +15,7 @@ export function AddGoalForm({ id_user, handleClose, addEvent, matchup, id_team, 
                     id_team: id_team,
                     id_assistance1: null,
                     id_assistance2: null,
-                    minute: '',
+                    minute: interactive ? Math.trunc(timerState / 1000 / 60) : '',
                     value: null,
                     host: host
                 }}

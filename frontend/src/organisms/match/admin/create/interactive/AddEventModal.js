@@ -16,11 +16,8 @@ const schema = yup.object().shape({
     host: yup.number().required(),
 });
 
-export function AddEventModal({ params, handleClose, matchup, id_team, id_match, host, handleAddEvent }) {
+export function AddEventModal({ params, handleClose, matchup, id_team, id_match, host, handleAddEvent, timerState }) {
     const { show, id_user, type } = params;
-
-
-
 
     return (
         <Modal show={show} onHide={handleClose}>
@@ -32,13 +29,13 @@ export function AddEventModal({ params, handleClose, matchup, id_team, id_match,
 
             {type === "goal" &&
                 <AddGoalForm id_user={id_user} handleClose={handleClose} matchup={matchup} addEvent={handleAddEvent}
-                             id_team={id_team} id_match={id_match} host={host} schema={schema} interactive={true}
-                              />
+                    id_team={id_team} id_match={id_match} host={host} schema={schema} interactive={true}
+                    timerState={timerState} />
             }
             {type === "suspension" &&
                 <AddSuspensionForm id_user={id_user} handleClose={handleClose} matchup={matchup} addEvent={handleAddEvent}
-                                   id_team={id_team} id_match={id_match} host={host} schema={schema} interactive={true}
-                                    />
+                    id_team={id_team} id_match={id_match} host={host} schema={schema} interactive={true}
+                />
             }
         </Modal>
     );
