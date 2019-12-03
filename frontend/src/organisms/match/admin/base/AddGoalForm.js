@@ -4,7 +4,7 @@ import {Field} from "../../../../atoms";
 import {Formik} from "formik";
 import {CustomSelect} from "../../../../atoms/Select";
 
-export function AddGoalForm({ id_user, handleClose, addEvent, matchup, id_team, id_match, host, schema, selectPlayerManually }) {
+export function AddGoalForm({ id_user, handleClose, addEvent, matchup, id_team, id_match, host, schema, interactive }) {
     return (
              <Formik
                 validationSchema={schema}
@@ -26,11 +26,13 @@ export function AddGoalForm({ id_user, handleClose, addEvent, matchup, id_team, 
                 <Form noValidate onSubmit={handleSubmit}>
 
                     <Modal.Body>
-                        <Field label="Minuta" name="minute" type="number"
-                               message="Vyplňte prosím minutu, kdy byl gól střelen v rozmezí 1-60"
-                            isInvalid={!!errors.minute} />
+                        {!interactive && (
+                            <Field label="Minuta" name="minute" type="number"
+                                   message="Vyplňte prosím minutu, kdy byl gól střelen v rozmezí 1-60"
+                                isInvalid={!!errors.minute} />
+                        )}
 
-                        {selectPlayerManually && (
+                        {interactive && (
                             <CustomSelect name="id_user" label="Střelec"
                                 options={matchup}
                                 getOptionLabel={option => `${option.name}`}
