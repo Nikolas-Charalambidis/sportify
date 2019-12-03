@@ -1,5 +1,5 @@
 import {useApi} from "../hooks/useApi";
-import { useEffect, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import {config} from '../config';
 import * as queryString from 'query-string';
 
@@ -31,7 +31,13 @@ export function useGetTeamPlayersFiltered(id_team, id_match, status) {
 
     const queryParam = queryString.stringify(queryParamObject);
 
-    const fetchData = () => {
+    const argsRef = useRef({ id_team, queryParam, api });
+    useEffect(() => {
+        argsRef.current = ({ id_team, queryParam, api });
+    }, [id_team, queryParam, api]);
+
+    const fetchData = useCallback(() => {
+        const {id_team, queryParam, api} = argsRef.current;
         api
             .get(`${config.API_BASE_PATH}/teamMembership/team/${id_team}?` + queryParam)
             .then(({data}) => {
@@ -41,11 +47,26 @@ export function useGetTeamPlayersFiltered(id_team, id_match, status) {
             .catch(() => {
                 setState({isLoading: false, error: true, players: null});
             });
-    };
+    }, []);
 
     useEffect( () => {
         fetchData();
 
     }, [api, id_match, id_team]); // eslint-disable-line
     return [state, fetchData];
+}
+
+    export async function changePlayerStatus(api, id_team, id_user, status) {
+    let result = false;
+    await api
+        .patch(`${config.API_BASE_PATH}/teamMembership/team/${id_team}/user/${id_user}`, {status: status})
+        .then(({data}) => {
+            window.flash(data.msg, 'success');
+            result = true;
+        })
+        .catch(({response}) => {
+            const {data} = response;
+            window.flash(data.msg, 'danger');
+        });
+    return result;
 }
