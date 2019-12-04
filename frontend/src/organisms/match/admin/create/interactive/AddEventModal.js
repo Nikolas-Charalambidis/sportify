@@ -34,8 +34,8 @@ export function AddEventModal({ params, handleClose, matchup, id_team, id_match,
             }
             {type === "suspension" &&
                 <AddSuspensionForm id_user={id_user} handleClose={handleClose} matchup={matchup} addEvent={handleAddEvent}
-                    id_team={id_team} id_match={id_match} host={host} schema={schema} interactive={true}
-                />
+                id_team={id_team} id_match={id_match} host={host} schema={schema} interactive={true}
+                timerState={timerState} />
             }
         </Modal>
     );
