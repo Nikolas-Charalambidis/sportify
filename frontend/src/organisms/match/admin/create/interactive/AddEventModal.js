@@ -7,10 +7,13 @@ import { AddSuspensionForm } from "./../../base/AddSuspensionForm";
 
 const schema = yup.object().shape({
     id_user: yup.number().integer().required(),
+    name: yup.string(),
     type: yup.string().required(),
     id_team: yup.number().integer().required(),
     id_assistance1: yup.number().integer().nullable(),
+    name_assistance1: yup.string(),
     id_assistance2: yup.number().integer().nullable(),
+    name_assistance2: yup.string(),
     minute: yup.number().integer().min(1).max(60).required(),
     value: yup.number().nullable(),
     host: yup.number().required(),
@@ -34,8 +37,8 @@ export function AddEventModal({ params, handleClose, matchup, id_team, id_match,
             }
             {type === "suspension" &&
                 <AddSuspensionForm id_user={id_user} handleClose={handleClose} matchup={matchup} addEvent={handleAddEvent}
-                    id_team={id_team} id_match={id_match} host={host} schema={schema} interactive={true}
-                />
+                id_team={id_team} id_match={id_match} host={host} schema={schema} interactive={true}
+                timerState={timerState} />
             }
         </Modal>
     );

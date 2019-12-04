@@ -10,10 +10,14 @@ import { MatchDetailScore } from "../../../public/MatchDetailScore";
 import Button from "react-bootstrap/Button";
 import { MatchInteractiveTeamTab } from "./MatchInteractiveTeamTab";
 import { Events } from "../../base/Events";
-// import { useCreateMatch } from "../../../../../api/matchClient_v1";
+//import { useCreateMatch } from "../../../../../api/matchClient_v1";
 
 export function MatchInteractiveForm({ hostName, guestName, hostState, guestState, setHostState, setGuestState }) {
     const [play, setPlay] = useState(true);
+
+    const handleCreateMatch = () => {
+        //useCreateMatch(hostState, guestState);
+    };
 
     return (
         <Timer initialTime={3599999}
@@ -29,7 +33,7 @@ export function MatchInteractiveForm({ hostName, guestName, hostState, guestStat
                     </Col>
                 </Row>
 
-                <MatchDetailScore hostGoals={2} hostName={hostName} guestGoals={3} guestName={guestName} />
+                <MatchDetailScore hostGoals={hostState.events.filter(g => g.type === "goal").length} hostName={hostName} guestGoals={guestState.events.filter(g => g.type === "goal").length} guestName={guestName} />
 
                 <React.Fragment>
                     <div className="mt-4">
@@ -59,23 +63,23 @@ export function MatchInteractiveForm({ hostName, guestName, hostState, guestStat
                 {() => getTime() - 3600000 / 1000 / 60}
                 <Row className="mt-5 interactiveStats">
                     <Col className="bg-white">
-                        <MatchInteractiveTeamTab teamName={hostName} teamState={hostState} teamSetState={setHostState}
-                            setPlay={setPlay} timerState={getTime()} />
+                            <MatchInteractiveTeamTab teamName={hostName} teamState={hostState} teamSetState={setHostState}
+                                setPlay={setPlay} timerState={getTime()} pauseMatchOnEvent={pause}/>
                     </Col>
 
                     <Col className="bg-white">
                         <MatchInteractiveTeamTab teamName={guestName} teamState={guestState} teamSetState={setGuestState}
-                            setPlay={setPlay} timerState={getTime()}/>
+                            setPlay={setPlay} timerState={getTime()} />
                     </Col>
                 </Row>
 
-                    <Heading size="lg" className="mt-5 h3MatchDetail text-left">Události domácí</Heading>
-                    <Events type="create" eventsState={hostState} fetchEvents={setHostState} />
+                <Heading size="lg" className="mt-5 h3MatchDetail text-left">Události domácí</Heading>
+                <Events type="create" eventsState={hostState} fetchEvents={setHostState} />
 
-                    <Heading size="lg" className="mt-5 h3MatchDetail text-left">Události hosté</Heading>
-                    <Events type="create" eventsState={guestState} fetchEvents={setGuestState} />
+                <Heading size="lg" className="mt-5 h3MatchDetail text-left">Události hosté</Heading>
+                <Events type="create" eventsState={guestState} fetchEvents={setGuestState} />
 
-                <Button variant="primary" onClick={() => console.log(hostState, guestState)}>
+                <Button variant="primary" onClick={handleCreateMatch}>
                     Vytvořit zápas
                 </Button>
             </div>

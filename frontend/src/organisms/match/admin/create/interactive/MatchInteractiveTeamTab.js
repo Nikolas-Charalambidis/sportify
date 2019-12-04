@@ -7,7 +7,7 @@ import React, {useState} from "react";
 import {AddEventModal} from "./AddEventModal";
 
 
-export function MatchInteractiveTeamTab({teamName, teamState, teamSetState, setPlay, timerState}) {
+export function MatchInteractiveTeamTab({ teamName, teamState, teamSetState, setPlay, timerState, pauseMatchOnEvent}) {
     const handleAddEvent = (values) => {
         const { id_team, matchups, events, shots } = teamState;
         teamSetState({
@@ -58,11 +58,12 @@ export function MatchInteractiveTeamTab({teamName, teamState, teamSetState, setP
             </div>
 
             <Heading className="text-center mt-5" size="sm">
-                Počet gólů <span className="bgBlack">2</span>
+                Počet gólů <span className="bgBlack">{teamState.events.filter(g => g.type === "goal").length}</span>
             </Heading>
             <div className="text-center">
                 <Button variant="primary" onClick={() => {
                     setPlay(false);
+                    pauseMatchOnEvent();
                     openModal("goal");
                 }}>
                     Přidat gól
@@ -70,11 +71,12 @@ export function MatchInteractiveTeamTab({teamName, teamState, teamSetState, setP
             </div>
 
             <Heading className="text-center mt-5" size="sm">
-                Trestných minut <span className="bgBlack">15</span>
+                Trestných minut <span className="bgBlack">{teamState.events.filter(g => g.type.includes("suspension")).length}</span>
             </Heading>
             <div className="text-center mb-4">
                 <Button variant="primary" onClick={() => {
                     setPlay(false);
+                    pauseMatchOnEvent();
                     openModal("suspension");
                 }}>
                     Přidat trest
