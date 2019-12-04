@@ -11,10 +11,13 @@ export function AddGoalForm({ id_user, handleClose, addEvent, matchup, id_team, 
                 validationSchema={schema}
                 initialValues={{
                     id_user: id_user,
+                    name: '',
                     type: "goal",
                     id_team: id_team,
                     id_assistance1: null,
+                    name_assistance1: '',
                     id_assistance2: null,
+                    name_assistance2: '',
                     minute: interactive ? Math.trunc(timerState / 1000 / 60) : '',
                     value: null,
                     host: host
@@ -39,23 +42,32 @@ export function AddGoalForm({ id_user, handleClose, addEvent, matchup, id_team, 
                                 getOptionLabel={option => `${option.name}`}
                                 getOptionValue={option => `${option.id_user}`}
                                 isSearchable={true}
-                                onChange={options => setFieldValue("id_user", options.id_user)}
+                                onChange={options => {
+                                    setFieldValue("id_user", options.id_user);
+                                    setFieldValue("name", options.name);
+                                }}
                             />
                         )}
 
                         <CustomSelect name="id_assistance1" label="Asistence 1"
-                                      options={matchup}
-                                      getOptionLabel={option => `${option.name}`}
-                                      getOptionValue={option => `${option.id_user}`}
-                                      isSearchable={true}
-                                      onChange={options => setFieldValue("id_assistance1", options.id_user)}
+                            options={matchup}
+                            getOptionLabel={option => `${option.name}`}
+                            getOptionValue={option => `${option.id_user}`}
+                            isSearchable={true}
+                            onChange={options => {
+                                setFieldValue("id_assistance1", options.id_user);
+                                setFieldValue("name_assistance1", options.name);
+                            }}
                         />
                         <CustomSelect name="id_assistance2" label="Asistence 2"
-                                      options={matchup}
-                                      getOptionLabel={option => `${option.name}`}
-                                      getOptionValue={option => `${option.id_user}`}
-                                      isSearchable={true}
-                                      onChange={options => setFieldValue("id_assistance2", options.id_user)}
+                            options={matchup}
+                            getOptionLabel={option => `${option.name}`}
+                            getOptionValue={option => `${option.id_user}`}
+                            isSearchable={true}
+                            onChange={options => {
+                                setFieldValue("id_assistance2", options.id_user);
+                                setFieldValue("name_assistance2", options.name);
+                            }}
                         />
                     </Modal.Body>
 

@@ -12,6 +12,7 @@ export function AddSuspensionForm({ id_user, handleClose, addEvent, matchup, id_
             validationSchema={schema}
             initialValues={{
                 id_user: id_user,
+                name: '',
                 type: suspensionTypesList[0].id,
                 id_team: id_team,
                 id_match: id_match,
@@ -41,7 +42,10 @@ export function AddSuspensionForm({ id_user, handleClose, addEvent, matchup, id_
                             getOptionLabel={option => `${option.name}`}
                             getOptionValue={option => `${option.id_user}`}
                             isSearchable={true}
-                            onChange={options => setFieldValue("id_user", options.id_user)}
+                            onChange={options => {
+                                setFieldValue("id_user", options.id_user);
+                                setFieldValue("name", options.name);
+                            }}
                         />
                     )}
 

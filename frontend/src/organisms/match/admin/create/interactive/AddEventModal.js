@@ -7,10 +7,13 @@ import { AddSuspensionForm } from "./../../base/AddSuspensionForm";
 
 const schema = yup.object().shape({
     id_user: yup.number().integer().required(),
+    name: yup.string(),
     type: yup.string().required(),
     id_team: yup.number().integer().required(),
     id_assistance1: yup.number().integer().nullable(),
+    name_assistance1: yup.string(),
     id_assistance2: yup.number().integer().nullable(),
+    name_assistance2: yup.string(),
     minute: yup.number().integer().min(1).max(60).required(),
     value: yup.number().nullable(),
     host: yup.number().required(),
