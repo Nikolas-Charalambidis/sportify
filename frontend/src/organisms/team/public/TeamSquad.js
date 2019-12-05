@@ -11,7 +11,7 @@ import Button from "react-bootstrap/Button";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as Icons from "@fortawesome/free-solid-svg-icons";
 import {useApi} from "../../../hooks/useApi";
-import {DeleteModal} from "../../../atoms/DeleteModal";
+import {UpdateStateModal} from "../../../atoms/UpdateStateModal";
 
 
 
@@ -23,6 +23,7 @@ export function TeamSquad({status, admin, playersState, fetchActivePlayersState,
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [ID, setID] = useState(null);
+    const [buttonID, setButtonID] = useState(null);
 
     const handleUpdatePlayers = async () => {
         const result = await changePlayerStatus(api, ID.id_team, ID.id_user, ID.status);
@@ -106,12 +107,14 @@ export function TeamSquad({status, admin, playersState, fetchActivePlayersState,
                         <div>
                             <Button variant="primary" onClick={() => {
                                 setID({id_team: row.original.id_team, id_user: row.original.id_user, status: "active"});
+                                setButtonID("active");
                                 handleShow();
                             }}>
                                 Schválit
                             </Button>
                             <Button variant="danger" onClick={ () => {
                                 setID({id_team: row.original.id_team, id_user: row.original.id_user, status: "declined"});
+                                setButtonID("declined");
                                 handleShow();
                             }}>
                                 Zamítnout
@@ -156,9 +159,9 @@ export function TeamSquad({status, admin, playersState, fetchActivePlayersState,
 
 
             }
-            <DeleteModal key="players" show={show} heading="Delete hráče ze zápasu"
+            <UpdateStateModal key="players" show={show} heading="Delete hráče ze zápasu"
                          text="Opravdu si přejete odstranit hráče ze zápasu a tím i všechny eventy, na které je navázán?"
-                         handleClose={handleClose} deleteFunction={handleUpdatePlayers} idItem={ID}/>
+                         handleClose={handleClose} deleteFunction={handleUpdatePlayers} idItem={ID} status={status} idButton={buttonID}/>
         </div>
     );
 }
