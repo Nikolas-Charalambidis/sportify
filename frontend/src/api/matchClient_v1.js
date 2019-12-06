@@ -158,20 +158,40 @@ export function useGetAllEvents(id_match) {
     return [state];
 }
 
-export function useCreateMatch(hostState, guestState, history) {
+export function useCreateMatch() {
     const api = useApi();
-    const today = moment().local().format("DD. MM. YYYY HH:mm");
 
-    api
-        .post(`${config.API_BASE_PATH}/matches`, { id_competition: 1, id_host: hostState.id_team, id_guest: guestState.id_team, date: today })
-        .then(({ data }) => {
-            //const { id_team } = data;
-            window.flash(data.msg, 'success');
-            history.replace(`/administration`);
-        })
-        .catch(({ response }) => {
-            const { data } = response;
-            window.flash(data.msg, 'danger');
-            return data;
-        });
+    return useCallback(function createMatch(hostState, guestState, history) {
+        const today = moment().local().format("YYYY-MM-DD");
+        const events = hostState.events.concat(guestState.events);
+
+        api
+            .post(`${config.API_BASE_PATH}/matches`, { id_competition: 2, id_host: hostState.id_team, id_guest: guestState.id_team, date: today })
+            .then(({ data }) => {
+                const { id_match } = data;
+
+                events.forEach(function (item) {
+                    item.id_match = id_match;
+                });
+                //TODO: add events
+                /*api
+                    .post(`${config.API_BASE_PATH}/events/bulk`, { id_match: id_match, events: events })
+                    .then(({ data }) => {
+                        window.flash(data.msg, 'success');
+                    })
+                    .catch(({ response }) => {
+                        const { data } = response;
+                        console.log(data);
+                        window.flash(data.msg, 'danger');
+                        return data;
+                    });
+                /*window.flash(data.msg, 'success');
+                history.replace(`/administration`);*/
+            })
+            .catch(({ response }) => {
+                const { data } = response;
+                window.flash(data.msg, 'danger');
+                return data;
+            });
+    })
 }
