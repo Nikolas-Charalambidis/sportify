@@ -74,7 +74,7 @@ router.get('/team/:id_team', async (req, res, next) => {
  *       - name: id_user
  *         in: path
  *         description: User ID
- *         required: false
+ *         required: true
  *         schema:
  *           type: integer
  *       - name: body
