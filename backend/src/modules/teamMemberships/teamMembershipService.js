@@ -23,7 +23,8 @@ export default class TeamMembershipService {
 	}
 
 	async filteredTeamMemberships(id_team, id_user, id_match, team_membership_status) {
-		const {team, user, match, status} = teamMembershipValidation.validateTeamMembershipsData(id_team, id_user, id_match, team_membership_status);
+		const {team, user, match, status} = teamMembershipValidation
+			.validateTeamMembershipsData(id_team, id_user, id_match, team_membership_status, undefined);
 
 		var where = '';
 		var values = [];
@@ -55,14 +56,30 @@ export default class TeamMembershipService {
 		);
 	}
 
-	async updateStatus(id_team, id_user, team_membership_status) {
+	async updateTeamMembership(id_team, id_user, team_membership_status, id_position) {
 		// eslint-disable-next-line no-unused-vars
-		const {team, user, status} = teamMembershipValidation.validateTeamMembershipsData(id_team, id_user, undefined, team_membership_status);
+		const {team, user, status, position} = teamMembershipValidation.validateTeamMembershipsData(id_team, id_user, undefined, team_membership_status, id_position);
 
+		var values = [];
+		var set = '';
+		if (status !== undefined && position === undefined) {
+			set = 'SET status=?';
+			values.push(status);
+		} else if (status === undefined && position !== undefined) {
+			set = 'SET id_position=?';
+			values.push(position);
+		} else if (status !== undefined && position !== undefined) {
+			set = 'SET id_position=?, status=?';
+			values.push(position);
+			values.push(status);
+		} else {
+			throw {status: 500, msg: 'Either status or id_position must be specified.'};
+		}
 		const result = await this.dbConnection.query(
-			`UPDATE team_membership SET status=? WHERE id_team=? AND id_user=?`,
-			[status, team, user]
+			`UPDATE team_membership ` + set + ` WHERE id_team=? AND id_user=?`,
+			[...values, team, user]
 		);
+
 		if (result.affectedRows === 0) {
 			throw {status: 404, msg: 'Hráč nebo tým nebyl nalezen'};
 		}
