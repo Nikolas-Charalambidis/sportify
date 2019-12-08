@@ -30,7 +30,6 @@ export default class TeamMembershipService {
 		} else {
 			throw {status: 500, msg: 'Tento hráč je již v týmu'};
 		}
-
 	}
 
 	async filteredTeamMemberships(id_team, id_user, id_match, team_membership_status) {
@@ -93,6 +92,20 @@ export default class TeamMembershipService {
 
 		if (result.affectedRows === 0) {
 			throw {status: 404, msg: 'Hráč nebo tým nebyl nalezen'};
+		}
+	}
+
+	async removeMember(id_team, id_user) {
+		const team = Number(id_team);
+		const user = Number(id_user);
+		teamMembershipValidation.validateRemoveMemberData(team, user);
+
+		let result = await this.dbConnection.query(
+			`DELETE FROM team_membership WHERE id_team=? AND id_user=?`,
+			[team, user]
+		);
+		if (result.affectedRows === 0) {
+			throw {status: 404, msg: 'Nepodařilo se nalézt patřičný záznam v databázi'};
 		}
 	}
 }

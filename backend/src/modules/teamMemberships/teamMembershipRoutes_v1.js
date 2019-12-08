@@ -163,6 +163,45 @@ router.post('/team/:id_team/user/:id_user', async (req, res, next) => {
 });
 
 /**
+ * @swagger
+ * /teamMembership/team/{id_team}/user/{id_user}:
+ *   delete:
+ *     tags:
+ *       - TeamMembership
+ *     name: Removes user from a team
+ *     summary: Removes user from a team
+ *     parameters:
+ *       - name: id_team
+ *         in: path
+ *         description: Team ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - name: id_user
+ *         in: path
+ *         description: User ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: User removed
+ *       400:
+ *         description: Invalid request
+ *       500:
+ *         description: Unexpected error
+ */
+router.delete('/team/:id_team/user/:id_user', async (req, res, next) => {
+	try {
+		const { id_team, id_user } = req.params;
+		await new TeamService(req).removeMember(id_team, id_user);
+		res.status(200).json({ error: false, msg: 'Hráč byl odebrán z týmu'});
+	} catch(e) {
+		next(e);
+	}
+});
+
+/**
  * TeamMembership object Swagger definition
  *
  * @swagger

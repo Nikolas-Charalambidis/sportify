@@ -7,6 +7,12 @@ export const validateNewMemberData = (id_team, id_user, position, status) => {
 	}
 };
 
+export const validateRemoveMemberData = (id_team, id_user) => {
+	if (!id_team || !id_user) {
+		throw {status: 400, msg: 'Chybějící data pro odstranění člena z týmu'};
+	}
+};
+
 export const validateTeamMembershipsData = (id_team, id_user, id_match, team_membership_status, id_position) => {
 
 	const team = Number(id_team);
