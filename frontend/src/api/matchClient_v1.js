@@ -178,9 +178,6 @@ export function useCreateMatch() {
                     item.id_match = id_match;
                 });
                 
-
-
-                
                 matchupHost.forEach(function (item) {
                     item.id_match = id_match;
                     item.id_team = hostState.id_team;
@@ -197,22 +194,6 @@ export function useCreateMatch() {
 
                 addPlayer(api, id_match, true, matchupHost);
                 addPlayer(api, id_match, false, matchupGuest);
-
-                //TODO: add events
-
-                /*api
-                    .post(`${config.API_BASE_PATH}/events/bulk`, { id_match: id_match, events: events })
-                    .then(({ data }) => {
-                        window.flash(data.msg, 'success');
-                    })
-                    .catch(({ response }) => {
-                        const { data } = response;
-                        //console.log(data);
-                        window.flash(data.msg, 'danger');
-                        return data;
-                    });
-                /*window.flash(data.msg, 'success');
-                history.replace(`/administration`);*/
             })
             .catch(({ response }) => {
                 const { data } = response;
