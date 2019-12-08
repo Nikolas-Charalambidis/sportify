@@ -1,11 +1,16 @@
 import React from "react";
 import {Button, Modal} from "react-bootstrap";
 
-export function UpdateStateModal ({show, handleClose, deleteFunction, idItem, status, idButton}) {
+export function UpdateStateModal ({show, handleClose, updateFunction, deleteFunction, idItem, status, idButton}) {
 
-    const deleteItem = () => {
+    const updateItem = () => {
         handleClose();
-        deleteFunction(idItem);
+        if (idButton === "remove") {
+            deleteFunction(idItem);
+        } else {
+            updateFunction(idItem);
+        }
+
     };
     return (
         <Modal show={show}>
@@ -19,10 +24,11 @@ export function UpdateStateModal ({show, handleClose, deleteFunction, idItem, st
             </Modal.Body>
 
             <Modal.Footer>
-                {status === "active" && <Button variant="danger" type="button" onClick={deleteItem}>Odstranit</Button>}
-                {status === "inactive" && <Button variant="primary" type="button" onClick={deleteItem}>Přidat</Button>}
-                {((status === "pending" && idButton === "active") || status === "declined")  && <Button variant="primary" type="button" onClick={deleteItem}>Schválit</Button>}
-                {(status === "pending" && idButton === "declined") && <Button variant="danger" type="button" onClick={deleteItem}>Zamítnout</Button>}
+                {status === "active" && <Button variant="danger" type="button" onClick={updateItem}>Odstranit</Button>}
+                {status === "inactive" && <Button variant="primary" type="button" onClick={updateItem}>Přidat</Button>}
+                {(status === "pending" && idButton === "active")  && <Button variant="primary" type="button" onClick={updateItem}>Schválit</Button>}
+                {(status === "pending" && idButton === "declined") && <Button variant="danger" type="button" onClick={updateItem}>Zamítnout</Button>}
+                {status === "declined" && <Button variant="danger" type="button" onClick={updateItem}>Odstranit</Button>}
                 <Button variant="secondary" type="button" onClick={handleClose}>
                     Zrušit
                 </Button>

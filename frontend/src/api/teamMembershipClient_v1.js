@@ -85,3 +85,18 @@ export async function addNewMember(api, id_team, id_user, id_position, status) {
         });
     return result;
 }
+
+export async function deleteMember(api, id_team, id_user) {
+    let result = false;
+    await api
+        .delete(`${config.API_BASE_PATH}/teamMembership/team/${id_team}/user/${id_user}`)
+        .then(({data}) => {
+            window.flash(data.msg, 'success');
+            result = true;
+        })
+        .catch(({response}) => {
+            const {data} = response;
+            window.flash(data.msg, 'danger');
+        });
+    return result;
+}
