@@ -159,9 +159,8 @@ export function TeamSquad({status, admin, playersState, fetchActivePlayersState,
 
 
             }
-            <UpdateStateModal key="players" show={show} heading="Delete hráče ze zápasu"
-                         text="Opravdu si přejete odstranit hráče ze zápasu a tím i všechny eventy, na které je navázán?"
-                         handleClose={handleClose} deleteFunction={handleUpdatePlayers} idItem={ID} status={status} idButton={buttonID}/>
+            <UpdateStateModal key="players" show={show} handleClose={handleClose}
+                              deleteFunction={handleUpdatePlayers} idItem={ID} status={status} idButton={buttonID}/>
         </div>
     );
 }

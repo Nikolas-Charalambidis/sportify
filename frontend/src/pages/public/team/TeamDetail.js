@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {NavLink as Link, useParams} from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 import {Heading} from '../../../atoms';
@@ -10,12 +10,16 @@ import {TeamStatistics} from "../../../organisms/team/public/TeamStatistics";
 import loadingGif from "../../../assets/images/loading.gif";
 import {TeamData} from "../../../organisms/team/public/TeamData";
 import {MatchList} from "../../../organisms/match/MatchList";
-import {changePlayerStatus, useGetTeamPlayers, useGetTeamPlayersByStatus} from "../../../api/teamMembershipClient_v1";
+import {useGetTeamPlayers, useGetTeamPlayersByStatus} from "../../../api/teamMembershipClient_v1";
 import {useAuth} from "../../../utils/auth";
-import {useApi} from "../../../hooks/useApi";
+import {TeamRequestModal} from "../../../atoms/TeamRequestModal";
+import {useGetTeamPositions} from "../../../api/othersClient_v1";
 
 export function TeamDetail() {
-    const api = useApi();
+
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     const {user} = useAuth();
     let {id_team} = useParams();
@@ -23,8 +27,8 @@ export function TeamDetail() {
     const [matchesState] = useGetTeamMatches(id_team);
     const [playersState] = useGetTeamPlayersByStatus(id_team, "active");
     const [allTeamPlayers] = useGetTeamPlayers(id_team);
-    console.log("PS", allTeamPlayers);
-    console.log("user", user.id_user);
+    const [positions] = useGetTeamPositions();
+    const [positionsState, setPositionsState] = useState({id_positions: null});
 
 
     return (
@@ -44,7 +48,7 @@ export function TeamDetail() {
                 <TeamData state={state} />
                 {user ? (<Row>
                     <Col className="mb-4 mt-lg-0" lg={{span: 5, offset: 4}} md={{span: 8, offset: 2}} sm={{span: 10, offset: 1}} xs={{span: 11, offset: 1}}>
-                        <Button variant="primary" onClick={async () => {
+                        <Button variant="primary" onClick={ () => {
                             const [membership] = allTeamPlayers.players.filter((objectsInArray) => {
                                     (objectsInArray.id_user === user.id_user && objectsInArray.status === "active")
                                     && window.flash("Již jste zařazen na jako aktivní hráč na soupisce tohoto týmu", "info");
@@ -57,14 +61,14 @@ export function TeamDetail() {
                                     return (objectsInArray.id_user === user.id_user);
                                 }
                             );
-                            console.log("mem", membership);
-                            (membership === undefined) && await changePlayerStatus(api, id_team, user.id_user, "pending");
-
+                            (membership === undefined) && handleShow();
                         }}>
                             Odeslat žádost o zařazení do týmu
                         </Button>
                     </Col>
                 </Row>) : null }
+
+                <TeamRequestModal show={show} handleClose={handleClose} positions={positions.positions} positionsState={positionsState} setPositionsState={setPositionsState}/>
 
                 <Tabs className="mb-3" fill defaultActiveKey="squad" id="teamTabs">
                     <Tab eventKey="squad" title="Sestava">
