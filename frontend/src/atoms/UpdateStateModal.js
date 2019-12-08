@@ -15,7 +15,7 @@ export function UpdateStateModal ({show, handleClose, deleteFunction, idItem, st
                 {status === "inactive" && <p>Opravdu si přejete přidat hráče na soupisku aktivních hráčů?</p>}
                 {(status === "pending" && idButton === "active") && <p>Opravdu si přejete schválit žádost hráče a zařadit ho na soupisku?</p>}
                 {(status === "pending" && idButton === "declined") && <p>Opravdu si přejete zamítnou žádost hráče o zařazení na soupisku?</p>}
-                {status === "declined" && <p>Opravdu si přejete zařadit hráče na seznam žádostí o zařazení do týmu?</p>}
+                {status === "declined" && <p>Opravdu si přejete zařadit hráče odstranit ze seznamu zamítnutých žádostí?</p>}
             </Modal.Body>
 
             <Modal.Footer>
