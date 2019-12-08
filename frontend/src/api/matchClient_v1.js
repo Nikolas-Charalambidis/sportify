@@ -2,6 +2,7 @@ import {useApi} from "../hooks/useApi";
 import {useCallback, useEffect, useRef, useState} from "react";
 import { config } from '../config';
 import moment from "moment";
+import { addPlayer } from "./matchupClient_v1";
 
 export function useGetMatch(id_match) {
     const api = useApi();
@@ -161,19 +162,44 @@ export function useGetAllEvents(id_match) {
 export function useCreateMatch() {
     const api = useApi();
 
-    return useCallback(function createMatch(hostState, guestState, history) {
-        const today = moment().local().format("YYYY-MM-DD");
-        const events = hostState.events.concat(guestState.events);
+    return useCallback(async function createMatch(hostState, guestState, history) {
 
-        api
-            .post(`${config.API_BASE_PATH}/matches`, { id_competition: 2, id_host: hostState.id_team, id_guest: guestState.id_team, date: today })
+        const today = moment().local().format("YYYY-MM-DD");
+        const events = hostState.events;
+        const matchupHost = hostState.matchups;
+        const matchupGuest = guestState.matchups;
+
+        await api
+            .post(`${config.API_BASE_PATH}/matches`, { id_competition: 1, id_host: hostState.id_team, id_guest: guestState.id_team, date: today })
             .then(({ data }) => {
                 const { id_match } = data;
 
                 events.forEach(function (item) {
                     item.id_match = id_match;
                 });
+                
+
+
+                
+                matchupHost.forEach(function (item) {
+                    item.id_match = id_match;
+                    item.id_team = hostState.id_team;
+                    item.host = true;
+                });
+                
+                matchupGuest.forEach(function (item) {
+                    item.id_match = id_match;
+                    item.id_team = guestState.id_team;
+                    item.host = false;
+                });
+
+                console.log(matchupHost, matchupGuest);
+
+                addPlayer(api, id_match, true, matchupHost);
+                addPlayer(api, id_match, false, matchupGuest);
+
                 //TODO: add events
+
                 /*api
                     .post(`${config.API_BASE_PATH}/events/bulk`, { id_match: id_match, events: events })
                     .then(({ data }) => {
@@ -181,7 +207,7 @@ export function useCreateMatch() {
                     })
                     .catch(({ response }) => {
                         const { data } = response;
-                        console.log(data);
+                        //console.log(data);
                         window.flash(data.msg, 'danger');
                         return data;
                     });
@@ -195,3 +221,4 @@ export function useCreateMatch() {
             });
     })
 }
+
