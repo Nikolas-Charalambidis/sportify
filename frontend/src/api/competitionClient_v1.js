@@ -104,6 +104,6 @@ export function useGetCompetitionsTeams(id_competition) {
         }
 
         fetchData().then();
-    }, [api]);
+    }, [api, id_competition]);
     return [state];
 }

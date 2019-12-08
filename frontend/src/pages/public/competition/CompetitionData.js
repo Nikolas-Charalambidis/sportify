@@ -1,4 +1,4 @@
-import {Col, Image, Row} from "react-bootstrap";
+import {Col, Row} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {NavLink as Link} from "react-router-dom";
 import {Heading} from "../../../atoms";
