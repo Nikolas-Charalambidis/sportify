@@ -28,7 +28,7 @@ export function TeamDetail() {
     const [playersState] = useGetTeamPlayersByStatus(id_team, "active");
     const [allTeamPlayers] = useGetTeamPlayers(id_team);
     const [positions] = useGetTeamPositions();
-    const [positionsState, setPositionsState] = useState({id_positions: null});
+    const [positionsState, setPositionsState] = useState({id_position: null});
 
 
     return (
@@ -68,7 +68,8 @@ export function TeamDetail() {
                     </Col>
                 </Row>) : null }
 
-                <TeamRequestModal show={show} handleClose={handleClose} positions={positions.positions} positionsState={positionsState} setPositionsState={setPositionsState}/>
+                <TeamRequestModal show={show} handleClose={handleClose} positions={positions.positions} positionsState={positionsState}
+                                  setPositionsState={setPositionsState} id_user={user.id_user} id_team={id_team}/>
 
                 <Tabs className="mb-3" fill defaultActiveKey="squad" id="teamTabs">
                     <Tab eventKey="squad" title="Sestava">

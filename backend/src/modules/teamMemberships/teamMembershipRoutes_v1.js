@@ -156,7 +156,7 @@ router.post('/team/:id_team/user/:id_user', async (req, res, next) => {
         const { id_team, id_user } = req.params;
         const { status, id_position } = req.body;
         await new TeamService(req).addNewMember(id_team, id_user, id_position, status);
-        res.status(200).json({ error: false, msg: 'Hráč byl přidán to týmu'});
+        res.status(200).json({ error: false, msg: 'Žádost o přidání do týmu byla uspěšně odeslána'});
     } catch(e) {
         next(e);
     }
