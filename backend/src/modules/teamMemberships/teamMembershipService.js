@@ -12,14 +12,25 @@ export default class TeamMembershipService {
 		const user = Number(id_user);
 		const position = Number(id_position);
 		teamMembershipValidation.validateNewMemberData(team, user, position, status);
-		const result = await this.dbConnection.query(
-			`INSERT INTO team_membership (id_team_membership, id_team, id_user, status, id_position) 
-			 VALUES (NULL, ?, ?, ?, ?)`,
-			[team, user, status, position]
+
+		const existing = await this.dbConnection.query(
+				`SELECT * FROM team_membership WHERE id_team=? AND id_user=?`,
+			[team, user]
 		);
-		if (result.affectedRows === 0) {
-			throw {status: 500, msg: 'Vytvoření nového člena se nezdařilo'};
+
+		if (existing.length === 0) {
+			const result = await this.dbConnection.query(
+					`INSERT INTO team_membership (id_team_membership, id_team, id_user, status, id_position) 
+				 VALUES (NULL, ?, ?, ?, ?)`,
+				[team, user, status, position]
+			);
+			if (result.affectedRows === 0) {
+				throw {status: 500, msg: 'Vytvoření nového člena se nezdařilo'};
+			}
+		} else {
+			throw {status: 500, msg: 'Tento hráč je již v týmu'};
 		}
+
 	}
 
 	async filteredTeamMemberships(id_team, id_user, id_match, team_membership_status) {
@@ -68,7 +79,7 @@ export default class TeamMembershipService {
 		} else if (status === undefined && position !== undefined) {
 			set = 'SET id_position=?';
 			values.push(position);
-		} else if (status !== undefined && position !== undefined) {
+		} else if (status !== undefined && position != undefined) {
 			set = 'SET id_position=?, status=?';
 			values.push(position);
 			values.push(status);
