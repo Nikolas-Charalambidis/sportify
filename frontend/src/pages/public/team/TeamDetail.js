@@ -65,11 +65,13 @@ export function TeamDetail() {
                         }}>
                             Odeslat žádost o zařazení do týmu
                         </Button>
+
+                        <TeamRequestModal show={show} handleClose={handleClose} positions={positions.positions} positionsState={positionsState}
+                                          setPositionsState={setPositionsState} id_user={user.id_user} id_team={id_team}/>
+
                     </Col>
                 </Row>) : null }
 
-                <TeamRequestModal show={show} handleClose={handleClose} positions={positions.positions} positionsState={positionsState}
-                                  setPositionsState={setPositionsState} id_user={user.id_user} id_team={id_team}/>
 
                 <Tabs className="mb-3" fill defaultActiveKey="squad" id="teamTabs">
                     <Tab eventKey="squad" title="Sestava">
