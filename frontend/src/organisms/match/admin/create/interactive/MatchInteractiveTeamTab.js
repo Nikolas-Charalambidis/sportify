@@ -34,6 +34,33 @@ export function MatchInteractiveTeamTab({ teamName, teamState, teamSetState, set
         });
     };
 
+    function getSuspensionMinutes() {
+        let minutes = 0;
+
+        teamState.events.forEach(function (item) {
+            const suspensionMinute = getSuspensionType(item.type);
+            minutes += suspensionMinute;
+        });
+
+        return minutes;
+    }
+
+    function getSuspensionType(type) {
+        switch (type) {
+            case "suspension_2":
+                return 2;
+            case "suspension_2_2":
+                return 4;
+            case "suspension_5":
+                return 5;
+            case "suspension_pp":
+                return 10;
+            case "suspension_pp_end":
+                return 20;
+            default: return 0;
+        }
+    }
+
     return (
         <div>
             <Heading size="lg">
@@ -71,7 +98,7 @@ export function MatchInteractiveTeamTab({ teamName, teamState, teamSetState, set
             </div>
 
             <Heading className="text-center mt-5" size="sm">
-                Trestných minut <span className="bgBlack">{teamState.events.filter(g => g.type.includes("suspension")).length}</span>
+                Trestných minut <span className="bgBlack">{getSuspensionMinutes()}</span>
             </Heading>
             <div className="text-center mb-4">
                 <Button variant="primary" onClick={() => {
