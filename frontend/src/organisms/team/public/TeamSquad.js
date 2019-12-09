@@ -131,12 +131,12 @@ export function TeamSquad({status, admin, playersState, fetchActivePlayersState,
                 } else if (status === "declined") {
                     return (
                         <div>
-                            <Button variant="primary" onClick={() => {
+                            <Button variant="link" onClick={() => {
                                 setID({id_team: row.original.id_team, id_user: row.original.id_user});
                                 setButtonID("remove");
                                 handleShow();
                             }}>
-                                Schválit
+                                <FontAwesomeIcon className="removeIcon" icon={Icons.faTrashAlt} size="1x"/>
                             </Button>
                         </div>
                     )
