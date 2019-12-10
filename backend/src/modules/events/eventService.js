@@ -40,11 +40,13 @@ export default class EventService {
 				data.host
 			]);
 		});
-
+		console.log("validated");
 		const result = await this.dbConnection.batch(
 			`INSERT INTO events (type, id_team, id_match, id_user, id_assistance1, id_assistance2, minute, value, host)
-			 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, array
+		 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, array
 		);
+
+		console.log("inserted");
 		if(result.affectedRows !== values.length) {
 			throw {status: 500, msg: 'Nepodařilo se uložit všechny eventy'};
 		}
