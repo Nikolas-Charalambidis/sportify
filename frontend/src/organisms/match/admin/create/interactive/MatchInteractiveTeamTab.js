@@ -1,10 +1,11 @@
 import {Heading} from "../../../../../atoms";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as Icons from "@fortawesome/free-solid-svg-icons";
-import NumericInput from "react-numeric-input";
 import Button from "react-bootstrap/Button";
 import React, {useState} from "react";
 import {AddEventModal} from "./AddEventModal";
+import Col from "react-bootstrap/esm/Col";
+import Row from "react-bootstrap/Row";
 
 
 export function MatchInteractiveTeamTab({ teamName, teamState, teamSetState, setPlay, timerState, pauseMatchOnEvent}) {
@@ -16,9 +17,23 @@ export function MatchInteractiveTeamTab({ teamName, teamState, teamSetState, set
             events: [...events, values],
             shots: shots
         });
-        window.flash("Event byl úspěšně přidán", "success")
+        window.flash("Event byl úspěšně přidán", "success");
         closeModal();
         setPlay(true);
+    };
+
+    const handleChangeShots = (x) => {
+        const { id_team, matchups, events, shots } = teamState;
+        const newShots = shots + x;
+        if(newShots >= 0) {
+            teamSetState({
+                id_team: id_team,
+                matchups: matchups,
+                events: events,
+                shots: newShots
+            });
+            window.flash("Počet střel byl změněn", "success");
+        }
     };
 
     const [showModal, setShowModal] = useState(false);
@@ -26,6 +41,7 @@ export function MatchInteractiveTeamTab({ teamName, teamState, teamSetState, set
         setShowModal(false);
         setPlay(true);
     };
+
     const openModal = (type) => {
         setPlay(false);
         setShowModal({
@@ -72,16 +88,21 @@ export function MatchInteractiveTeamTab({ teamName, teamState, teamSetState, set
                 <FontAwesomeIcon className="ml-2" icon={Icons.faMeteor} size="1x"/>
             </Heading>
             <div className="plusMinusDiv mb-2">
-                <NumericInput
-                    className="form-control"
-                    value={teamState.shots}
-                    min={0}
-                    max={100}
-                    step={1}
-                    precision={0}
-                    mobile
-                    strict
-                />
+                <Row>
+                    <Col lg={3} md={3} sm={3} xs={3} />
+                    <Col lg={2} md={2} sm={2} xs={2} >
+                        <Button variant="link" onClick={() => handleChangeShots(-1)}>
+                            <FontAwesomeIcon className="addIcon" icon={Icons.faMinusSquare} size="3x"/>
+                        </Button>
+                    </Col>
+                    <Col lg={2} md={2} sm={2} xs={2} >{teamState.shots}</Col>
+                    <Col lg={2} md={2} sm={2} xs={2} >
+                        <Button variant="link" onClick={() => handleChangeShots(1)}>
+                            <FontAwesomeIcon className="addIcon" icon={Icons.faPlusSquare} size="3x"/>
+                        </Button>
+                   </Col>
+                    <Col lg={3} md={3} sm={3} xs={3} />
+                </Row>
             </div>
 
             <Heading className="text-center mt-5" size="sm">
