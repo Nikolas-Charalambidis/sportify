@@ -24,6 +24,7 @@ export function MatchCreateParent({interactive}) {
     });
 
     const handleCreateMatch = async () => {
+        console.log("handle function");
         validateForm();
         if(formState){
             setHostState({...hostState, host: true});
@@ -65,8 +66,8 @@ export function MatchCreateParent({interactive}) {
     return (
         <div>
             {interactive ?
-                <MatchCreateInteractiveComponent params={params} handleMatchCreate={handleCreateMatch}/> :
-                <MatchCreateFormComponent params={params} handleMatchCreate={handleCreateMatch}/>
+                <MatchCreateInteractiveComponent params={params} handleCreateMatch={handleCreateMatch}/> :
+                <MatchCreateFormComponent params={params} handleCreateMatch={handleCreateMatch}/>
             }
         </div>
     );
