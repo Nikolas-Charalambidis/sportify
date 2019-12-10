@@ -15,6 +15,21 @@ export async function addEvent(api, values) {
     return result;
 }
 
+export async function addEvents(api, id_match, values) {
+    let result = false;
+    await api
+        .post(`${config.API_BASE_PATH}/events/bulk`, {id_match: id_match, events: values})
+        .then(({data}) => {
+            window.flash(data.msg, 'success');
+            result = true;
+        })
+        .catch(({ response }) => {
+            const {data} = response;
+            window.flash(data.msg, 'danger');
+        });
+    return result;
+}
+
 export async function deleteEvent(api, id_event) {
     let result = false;
     await api

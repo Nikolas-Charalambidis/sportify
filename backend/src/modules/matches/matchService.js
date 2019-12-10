@@ -16,17 +16,11 @@ export default class MatchService {
 			m.date FROM matches AS m;`);
 	}
 
-	async addNewMatch(id_competition, id_host, id_guest, date) {
-		const host_id = Number(id_host);
-		const guest_id = Number(id_guest);
-		let competition_id = id_competition;
-		if(id_competition){
-			competition_id = Number(id_competition);
-		}
-		matchValidations.validateCreateMatchData(competition_id, host_id, guest_id, date);
+	async addNewMatch(values) {
+		const data = matchValidations.validateCreateMatchData(values);
 		const result = await this.dbConnection.query(
 			`INSERT INTO matches (id_match, id_competition, id_host, id_guest, date) VALUES (NULL, ?, ?, ?, ?)`,
-			[competition_id, host_id, guest_id, date]
+			[data.id_competition, data.id_host, data.id_guest, data.date]
 		);
 		if (result.affectedRows === 0) {
 			throw {status: 500, msg: 'Vytvoření nového uživatele selhalo'};

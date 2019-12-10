@@ -856,34 +856,7 @@ INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1
     (19, 5, 3, null, 'shot', null, null, null, 0, true),
     (20, 5, 1, null, 'shot', null, null, null, 0, false);
 
--- --- MATCHES TABLE TRIGGERS BLOCK START
-DELIMITER //
-CREATE TRIGGER TR_MATCHES_AFTER_INSERT AFTER INSERT ON matches FOR EACH ROW
-BEGIN
-    DECLARE count_host_records int(11);
-    DECLARE count_guest_records int(11);
 
-    SELECT COUNT(1) INTO count_host_records FROM events AS e
-    WHERE e.id_match = new.id_match
-      AND e.type = 'shot'
-      AND e.host = true;
-
-    SELECT COUNT(1) INTO count_guest_records FROM events AS e
-    WHERE e.id_match = new.id_match
-      AND e.type = 'shot'
-      AND e.host = true;
-
-    IF (count_host_records = 0) THEN
-        INSERT INTO events (id_event, id_match, id_team, type, value, host) VALUES
-        (NULL, new.id_match, new.id_host, 'shot', 0, true);
-    END IF;
-
-    IF (count_host_records = 0) THEN
-        INSERT INTO events (id_event, id_match, id_team, type, value, host) VALUES
-        (NULL, new.id_match, new.id_guest, 'shot', 0, false);
-    END IF;
-END; //
-DELIMITER ;
 -- --- MATCHES TABLE TRIGGERS BLOCK END
 
 
