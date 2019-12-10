@@ -10,7 +10,7 @@ import {CompetitionsTeams} from "./CompetitionsTeams";
 export function CompetitionDetail() {
     let {id_competition} = useParams();
     const [state] = useGetCompetitionDetail(id_competition);
-    console.log(state)
+
     return (
         <div>
             {state.isLoading && <div className="text-center"><Image src={loadingGif}/></div>}
