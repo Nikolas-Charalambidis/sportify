@@ -10,13 +10,9 @@ import { MatchDetailScore } from "../../../public/MatchDetailScore";
 import Button from "react-bootstrap/Button";
 import { MatchInteractiveTeamTab } from "./MatchInteractiveTeamTab";
 import { Events } from "../../base/Events";
-import { useCreateMatch } from "../../../../../api/matchClient_v1";
-import { useHistory } from 'react-router-dom';
 
-export function MatchInteractiveForm({ hostName, guestName, hostState, guestState, setHostState, setGuestState }) {
+export function MatchInteractiveForm({ hostName, guestName, hostState, guestState, setHostState, setGuestState, handleCreateMatch }) {
     const [play, setPlay] = useState(true);
-    const createMatchCallback = useCreateMatch();
-    let history = useHistory();
 
     return (
         <Timer initialTime={3599999}
@@ -78,8 +74,8 @@ export function MatchInteractiveForm({ hostName, guestName, hostState, guestStat
                 <Heading size="lg" className="mt-5 h3MatchDetail text-left">Události hosté</Heading>
                 <Events type="create" eventsState={guestState} fetchEvents={setGuestState} />
 
-                <Button variant="primary" onClick={() => createMatchCallback(hostState, guestState, history)}>
-                    Vytvořit zápas
+                <Button variant="primary" onClick={handleCreateMatch}>
+                        Vytvořit zápas
                 </Button>
             </div>
         )}

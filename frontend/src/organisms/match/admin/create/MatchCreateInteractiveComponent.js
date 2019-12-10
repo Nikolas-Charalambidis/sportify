@@ -6,11 +6,11 @@ import {NavLink as Link} from "react-router-dom";
 import {MatchInteractiveSelect} from "../../../../organisms/match/admin/create/interactive/MatchInteractiveSelect";
 import {useGetTeams} from "../../../../api/teamClient_v1";
 
-export function MatchCreateInteractiveComponent(params, handleCreateMatch) {
+export function MatchCreateInteractiveComponent({ params, handleCreateMatch }) {
     const [matchupSelected, setMatchupSelected] = useState(false);
     const [teamsState] = useGetTeams();
-    const {hostState, setHostState, guestState, setGuestState} = params;
-
+    const { hostState, setHostState, guestState, setGuestState } = params;
+    
     const getTeamName = (host) => {
         let team = null;
         if(host) {
@@ -32,11 +32,11 @@ export function MatchCreateInteractiveComponent(params, handleCreateMatch) {
             <Heading>Vytvoření zápasu</Heading>
             {matchupSelected ?
                 <MatchInteractiveForm hostState={hostState} guestState={guestState}
-                                      setHostState={setHostState} setGuestState={setGuestState}
-                                      hostName={getTeamName(true)} guestName={getTeamName(false)}
+                    setHostState={setHostState} setGuestState={setGuestState}
+                    hostName={getTeamName(true)} guestName={getTeamName(false)} handleCreateMatch={handleCreateMatch}
                 /> :
                 <MatchInteractiveSelect teamsState={teamsState} hostState={hostState} guestState={guestState}
-                                        setHostState={setHostState} setGuestState={setGuestState} setMatchupSelected={setMatchupSelected}
+                    setHostState={setHostState} setGuestState={setGuestState} setMatchupSelected={setMatchupSelected}
                 />
             }
         </div>

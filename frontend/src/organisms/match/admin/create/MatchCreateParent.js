@@ -4,12 +4,12 @@ import {addPlayer} from "../../../../api/matchupClient_v1";
 import {useApi} from "../../../../hooks/useApi";
 import {addEvents} from "../../../../api/eventClient_v1";
 import {MatchCreateFormComponent} from "./MatchCreateFormComponent";
-import {MatchCreateInteractiveComponent} from "./MatchCreateInteractiveComponent";
+import { MatchCreateInteractiveComponent } from "./MatchCreateInteractiveComponent";
+import { useHistory } from 'react-router-dom';
 
 export function MatchCreateParent({interactive}) {
     const api = useApi();
 
-    const [formState, setFormState] = useState(false);
     const [hostState, setHostState] = useState({
         id_team: null,
         matchups: [],
@@ -23,16 +23,17 @@ export function MatchCreateParent({interactive}) {
         shots: 0
     });
 
+    let history = useHistory();
+
     const handleCreateMatch = async () => {
-        console.log("handle function");
-        validateForm();
-        if(formState){
-            setHostState({...hostState, host: true});
-            setGuestState({...guestState, host: false});
+
+        if (validateForm()) {
+            setHostState({ ...hostState, host: true });
+            setGuestState({ ...guestState, host: false });
             const id_match = await createMatch(api, hostState, guestState);
-            if(id_match) {
-                const result_host_matchup = await addPlayer(api, id_match, true, hostState.matchups.map(item => ({...item, id_team: hostState.id_team})));
-                const result_guest_matchup = await addPlayer(api, id_match, false, guestState.matchups.map(item => ({...item, id_team: guestState.id_team})));
+            if (id_match) {
+                const result_host_matchup = await addPlayer(api, id_match, true, hostState.matchups.map(item => ({ ...item, id_team: hostState.id_team })));
+                const result_guest_matchup = await addPlayer(api, id_match, false, guestState.matchups.map(item => ({ ...item, id_team: guestState.id_team })));
 
                 const result_host_events = await addEvents(api, id_match, [
                     ...hostState.events, { id_user: null, type: "shot", id_team: hostState.id_team, id_assistance1: null, id_assistance2: null, minute: null, value: hostState.shots, host: true }
@@ -41,8 +42,11 @@ export function MatchCreateParent({interactive}) {
                     ...guestState.events, { id_user: null, type: "shot", id_team: guestState.id_team, id_assistance1: null, id_assistance2: null, minute: null, value: guestState.shots, host: false }
                 ]);
                 console.log(result_host_matchup, result_guest_matchup, result_host_events, result_guest_events);
-                if(!result_host_matchup || !result_guest_matchup || !result_host_events || !result_guest_events) {
-
+                if (!result_host_matchup || !result_guest_matchup || !result_host_events || !result_guest_events) {
+                    window.flash("Neočekávaná chyba", "danger");
+                } else {
+                    window.flash("Zápas byl vytvořen", "success");
+                    history.replace(`/administration`);
                 }
             }
         }
@@ -50,9 +54,10 @@ export function MatchCreateParent({interactive}) {
 
     const validateForm = () => {
         if(hostState.matchups.length > 0 && guestState.matchups.length > 0){
-            setFormState(true);
+            return true;
         } else {
             window.flash("Nemůžete odeslat formulář s prázdnou soupiskou", "danger")
+            return false;
         }
     };
 
