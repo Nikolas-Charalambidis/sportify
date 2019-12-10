@@ -3,7 +3,6 @@ import { Route, Switch } from 'react-router-dom';
 
 import { HomePage } from './pages/public/HomePage';
 import { TeamList } from './pages/public/team/TeamList';
-import { Leagues } from './pages/public/Leagues';
 import { Matches } from './pages/public/Matches';
 import { Statistics } from './pages/public/Statistics';
 import { AboutUs } from './pages/public/AboutUs';
@@ -25,6 +24,7 @@ import { MatchCreateForm } from './pages/administration/match/MatchCreateForm';
 import {MatchDetail} from "./pages/public/match/MatchDetail";
 import {MatchCreateInteractive} from "./pages/administration/match/MatchCreateInteractive";
 import {CompetitionList} from "./pages/public/competition/CompetitionList";
+import {CompetitionDetail} from "./pages/public/competition/CompetitionDetail";
 
 export function Routes() {
 	return (
@@ -37,7 +37,6 @@ export function Routes() {
 			<Route path="/resendToken/:id_token/:type" exact component={ResendToken} />
 			<Route path="/confirmEmail/:id_user/:hash" exact component={ConfirmEmail} />
 
-			<Route path="/leagues" exact component={Leagues}/>
             <Route path="/matches" exact component={Matches} />
 			<Route path="/statistics" exact component={Statistics} />
 			<Route path="/aboutus" exact component={AboutUs}/>
@@ -48,6 +47,7 @@ export function Routes() {
 			<Route path="/users/:id_user" exact component={UserDetail} />
 
 			<Route path="/competitions" exact component={CompetitionList} />
+			<Route path="/competitions/:id_competition" exact component={CompetitionDetail} />
 
 			<Route path="/administration" exact component={AdministrationMenu} />
             <Route path="/administration/profile" exact component={UserProfile} />
