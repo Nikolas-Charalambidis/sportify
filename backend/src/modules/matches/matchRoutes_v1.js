@@ -40,8 +40,7 @@ const router = Router();
  */
 router.post('/', async (req, res, next) => {
 	try {
-		const { id_competition, id_host, id_guest, date } = req.body;
-		const id_match = await new MatchService(req).addNewMatch(id_competition, id_host, id_guest, date);
+		const id_match = await new MatchService(req).addNewMatch(req.body);
 		res.status(201).json({ error: false, msg: 'Nový zápas byl úspěšně vytvořen', id_match: id_match});
 	} catch(e) {
 		next(e);

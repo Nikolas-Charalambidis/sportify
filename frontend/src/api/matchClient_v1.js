@@ -159,6 +159,23 @@ export function useGetAllEvents(id_match) {
     return [state];
 }
 
+export async function createMatch(api, hostState, guestState) {
+    const today = moment().local().format("YYYY-MM-DD");
+
+    let result = false;
+    await api
+        .post(`${config.API_BASE_PATH}/matches`, {id_competition: null, id_host: hostState.id_team, id_guest: guestState.id_team, date: today })
+        .then(({ data }) => {
+            result = data.id_match;
+        })
+        .catch(({ response }) => {
+            const { data } = response;
+            window.flash(data.msg, 'danger');
+        });
+    return result;
+}
+
+
 export function useCreateMatch() {
     const api = useApi();
 

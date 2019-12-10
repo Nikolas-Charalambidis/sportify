@@ -8,6 +8,7 @@ const schema = yup.object().shape({
 });
 
 export function ShotsChildCreateAdmin({state, setState}) {
+
     return (
         <Formik
             validationSchema={schema}
@@ -22,11 +23,11 @@ export function ShotsChildCreateAdmin({state, setState}) {
                     events: events,
                     shots: values.value
                 });
+                window.flash('Počet střel byl změněn', 'success');
             }}
         >{({handleSubmit, errors}) => (
             <ShotsForm handleSubmit={handleSubmit} errors={errors}/>
         )}
         </Formik>
-
     );
 }
