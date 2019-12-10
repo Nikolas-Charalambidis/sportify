@@ -8,18 +8,11 @@ export default class MatchupService {
 		this.dbConnection = req[DB_CONNECTION_KEY];
 	}
 
-	async addPlayersToMatchup(values, id_match) {
-		const array = [];
-		values.map(item => {
-			const data = matchupValidations.validateAddPlayerData(item, id_match);
-			array.push([
-				data.id_match,
-				data.goalkeeper,
-				data.id_team,
-				data.id_user,
-				data.host
-			]);
-		});
+	async addPlayersToMatchup(values, id_match, host) {
+
+		const array = values
+			.map(item => matchupValidations.validateAddPlayerData(item, id_match, host))
+			.map(data => [data.id_match, data.goalkeeper, data.id_team, data.id_user, data.host]);
 
 		const result = await this.dbConnection.batch(
 			`INSERT INTO matchups (id_match, goalkeeper, id_team, id_user, host)

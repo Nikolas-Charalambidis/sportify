@@ -8,6 +8,9 @@ export const validateChangeShotsData = (id_event, value) => {
 	if(!id_event || !value){
 		throw {status: 400, msg: 'Chybějící nebo chybná data'};
 	}
+	if (value < 0) {
+		throw {status: 400, msg: 'Počet střel nemůže být menší než 0'};
+	}
 };
 
 export const validateAddEventsData = (values, id_match) => {

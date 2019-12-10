@@ -8,7 +8,7 @@ const router = Router();
  * /matches:
  *   post:
  *     tags:
- *       - AdminMatches
+ *       - Matches
  *     name: Create Match
  *     summary: Create new Match
  *     consumes: application/json
@@ -40,8 +40,7 @@ const router = Router();
  */
 router.post('/', async (req, res, next) => {
 	try {
-		const { id_competition, id_host, id_guest, date } = req.body;
-		const id_match = await new MatchService(req).addNewMatch(id_competition, id_host, id_guest, date);
+		const id_match = await new MatchService(req).addNewMatch(req.body);
 		res.status(201).json({ error: false, msg: 'Nový zápas byl úspěšně vytvořen', id_match: id_match});
 	} catch(e) {
 		next(e);
@@ -53,7 +52,7 @@ router.post('/', async (req, res, next) => {
  * /matches:
  *   get:
  *     tags:
- *       - AdminMatches
+ *       - Matches
  *     name: Match
  *     summary: Get all matches
  *     responses:
@@ -74,7 +73,7 @@ router.get('/', async (req, res, next) => {
  * /matches/{id_match}:
  *   get:
  *     tags:
- *       - AdminMatches
+ *       - Matches
  *     name: Match
  *     summary: Get a match by ID
  *     parameters:
@@ -109,7 +108,7 @@ router.get('/:id_match', async (req, res, next) => {
  * /matches/{id_match}/matchup/{host}:
  *   get:
  *     tags:
- *       - AdminMatches
+ *       - Matches
  *     name: Match
  *     summary: Get matchups by match ID
  *     parameters:
@@ -149,8 +148,8 @@ router.get('/:id_match/matchup/:host', async (req, res, next) => {
  * /matches/{id_match}/events/{host}:
  *   get:
  *     tags:
- *       - AdminMatches
- *     name: AdminMatches
+ *       - Matches
+ *     name: Match
  *     summary: Get shots by match ID
  *     parameters:
  *       - name: id_match
@@ -189,8 +188,8 @@ router.get('/:id_match/events/:host', async (req, res, next) => {
  * /matches/{id_match}/events:
  *   get:
  *     tags:
- *       - AdminMatches
- *     name: AdminMatches
+ *       - Matches
+ *     name: Match
  *     summary: Get shots by match ID
  *     parameters:
  *       - name: id_match
@@ -224,8 +223,8 @@ router.get('/:id_match/events', async (req, res, next) => {
  * /matches/{id_match}/events:
  *   get:
  *     tags:
- *       - AdminMatches
- *     name: AdminMatches
+ *       - Matches
+ *     name: Match
  *     summary: Get events by match ID
  *     parameters:
  *       - name: id_match
@@ -259,8 +258,8 @@ router.get('/:id_match/shots/:host', async (req, res, next) => {
  * /matches/{id_match}:
  *   delete:
  *     tags:
- *       - AdminMatches
- *     name: AdminMatches
+ *       - Matches
+ *     name: Match
  *     summary: Delete match by match ID
  *     parameters:
  *       - in: path

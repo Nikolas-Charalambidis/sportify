@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import TeamService from './teamService';
 import dotenv from "dotenv";
-import TeamMembershipService from "../teamMembership/teamMembershipService";
+import TeamMembershipService from "../teamMemberships/teamMembershipService";
 const multipart = require("connect-multiparty");
 const multipartMiddleware = multipart();
 
@@ -21,17 +21,17 @@ const router = Router();
  *     parameters:
  *       - name: id_team
  *         in: path
- *         description: TeamAdminPage ID
+ *         description: Team ID
  *         required: true
  *         schema:
  *           type: integer
  *     responses:
  *       200:
- *         description: TeamAdminPage found
+ *         description: Team found
  *       400:
  *         description: Invalid request
  *       404:
- *         description: TeamAdminPage not found
+ *         description: Team not found
  */
 
 router.get('/:id_team', async (req, res, next) => {
@@ -46,12 +46,25 @@ router.get('/:id_team', async (req, res, next) => {
 
 /**
  * @swagger
- * /teams/avatar:
- *   get:
+ * /teams/{id_team}/avatar:
+ *   post:
  *     tags:
  *       - Teams
  *     name: Login
  *     summary: Upload team avatar
+ *     consumes:
+ *       - multipart/form-data
+ *     parameters:
+ *       - name: id_team
+ *         in: path
+ *         description: Team ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: formData
+ *         name: file
+ *         type: file
+ *         description: The file to upload.
  *     responses:
  *       201:
  *         description: Avatar uploaded
@@ -62,9 +75,9 @@ router.get('/:id_team', async (req, res, next) => {
  *       500:
  *         description: Upload failed
  */
-router.post('/avatar', multipartMiddleware, async(req, res, next) => {
+router.post('/:id_team/avatar', multipartMiddleware, async(req, res, next) => {
 	try {
-		const { id } = req.body;
+		const { id_team } = req.params;
 		const params = {
 			folder: `sportify/${env.CLOUDINARY_FOLDER}/teams`,
 			allowedFormats: ['jpg', 'jpeg', 'png'],
@@ -73,7 +86,7 @@ router.post('/avatar', multipartMiddleware, async(req, res, next) => {
 				{width: 200, height: 200,crop: "scale"}
 			]
 		};
-		const url = await new TeamService(req).uploadAvatar(req.files.file.path, params, id);
+		const url = await new TeamService(req).uploadAvatar(req.files.file.path, params, id_team);
 		res.status(201).json({ error: false, msg: 'Nahrání avatara proběhlo úspěšně', url: url});
 	} catch (e) {
 		next(e);
@@ -82,7 +95,7 @@ router.post('/avatar', multipartMiddleware, async(req, res, next) => {
 
 /**
  * @swagger
- * /teams/avatar/{id_team}:
+ * /teams/{id_team}/avatar:
  *   get:
  *     tags:
  *       - Teams
@@ -103,7 +116,7 @@ router.post('/avatar', multipartMiddleware, async(req, res, next) => {
  *       404:
  *         description: Team not found
  */
-router.get('/avatar/:id_team', multipartMiddleware, async(req, res, next) => {
+router.get('/:id_team/avatar', multipartMiddleware, async(req, res, next) => {
 	try {
 		const { id_user } = req.params;
 		const url = await new TeamService(req).getAvatar(id_user);
@@ -144,7 +157,7 @@ router.get('/avatar/:id_team', multipartMiddleware, async(req, res, next) => {
  *               type: integer
  *     responses:
  *       200:
- *         description: TeamAdminPage data has been changed
+ *         description: Team data has been changed
  *       400:
  *         description: Invalid request
  *       500:
@@ -192,10 +205,10 @@ router.get('/', async (req, res, next) => {
  *         name: body
  *         required: true
  *         schema:
- *           $ref: "#/definitions/TeamAdminPage"
+ *           $ref: "#/definitions/Team"
  *     responses:
  *       201:
- *         description: TeamAdminPage added
+ *         description: Team added
  *       400:
  *         description: Invalid request
  */
@@ -226,7 +239,7 @@ router.post('/', async (req, res, next) => {
  *     parameters:
  *       - name: id_team
  *         in: path
- *         description: TeamAdminPage ID
+ *         description: Team ID
  *         required: true
  *         schema:
  *           type: integer
@@ -260,7 +273,7 @@ router.get('/:id_team/players', async (req, res, next) => {
  *     parameters:
  *       - name: id_team
  *         in: path
- *         description: TeamAdminPage ID
+ *         description: Team ID
  *         required: true
  *         schema:
  *           type: integer
@@ -387,7 +400,7 @@ router.delete('/:id_team', async(req, res, next) => {
  *   get:
  *     tags:
  *       - Teams
- *     name: AdminMatches
+ *     name: Teams
  *     summary: Get all matches by team ID
  *     consumes: application/json
  *     produces: application/json
@@ -416,11 +429,11 @@ router.get('/:id_team/matches', async (req, res, next) => {
 
 
 /**
- * User object Swagger definition
+ * Team object Swagger definition
  *
  * @swagger
  * definitions:
- *   TeamAdminPage:
+ *   Team:
  *     properties:
  *       id_team:
  *         type: integer

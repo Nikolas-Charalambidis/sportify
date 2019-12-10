@@ -1,5 +1,5 @@
-export const validateAddPlayerData = (values, id_match) => {
-	let { goalkeeper, id_team, id_user, host } = values;
+export const validateAddPlayerData = (values, id_match, host) => {
+	let { goalkeeper, id_team, id_user } = values;
 	id_match = Number(id_match);
 	id_team = Number(id_team);
 	id_user = Number(id_user);
@@ -7,11 +7,13 @@ export const validateAddPlayerData = (values, id_match) => {
 	if(
 		!id_team ||
 		!id_user ||
-		!goalkeeper === undefined ||
-		!host === undefined ||
+		host === undefined ||
 		!id_match
 	){
 		throw {status: 400, msg: 'Chybějící nebo chybná data'};
+	}
+	if	(goalkeeper === undefined){
+		goalkeeper = false;
 	}
 	return { goalkeeper, id_team, id_user, host, id_match };
 };

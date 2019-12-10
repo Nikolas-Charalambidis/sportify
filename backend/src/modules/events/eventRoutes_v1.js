@@ -41,7 +41,7 @@ router.delete('/:id_event', async (req, res, next) => {
 
 /**
  * @swagger
- * /events/shots:
+ * /events/{id_event}/shots:
  *   patch:
  *     tags:
  *       - Events
@@ -50,14 +50,17 @@ router.delete('/:id_event', async (req, res, next) => {
  *     consumes: application/json
  *     produces: application/json
  *     parameters:
+ *       - name: id_event
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
  *       - in: body
  *         name: body
  *         required: true
  *         schema:
  *           type: object
  *           properties:
- *             id_event:
- *               type: integer
  *             value:
  *               type: integer
  *     responses:
@@ -70,9 +73,10 @@ router.delete('/:id_event', async (req, res, next) => {
  *       500:
  *         description: Unexpected error
  */
-router.patch('/shots', async (req, res, next) => {
+router.patch('/:id_event/shots', async (req, res, next) => {
 	try {
-		const { id_event, value } = req.body;
+		const { id_event } = req.params;
+		const { value } = req.body;
 		await new EventService(req).changeShots(id_event, value);
 		res.status(200).json({ error: false, msg: 'Počet střel byl úspěšně změněn'});
 	} catch(e) {
@@ -186,6 +190,7 @@ router.post('/', async (req, res, next) => {
 router.post('/bulk', async (req, res, next) => {
 	try {
 		const {events, id_match} = req.body;
+		console.log("values inside route", {events, id_match});
 		await new EventService(req).addEvents(events, id_match);
 		res.status(201).json({ error: false, msg: 'Eventy byly úspěšně přidány'});
 	} catch(e) {
