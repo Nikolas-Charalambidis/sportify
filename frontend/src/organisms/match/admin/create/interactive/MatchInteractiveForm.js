@@ -58,8 +58,8 @@ export function MatchInteractiveForm({ hostName, guestName, hostState, guestStat
                 {() => getTime() - 3600000 / 1000 / 60}
                 <Row className="mt-5 interactiveStats">
                     <Col className="bg-white">
-                            <MatchInteractiveTeamTab teamName={hostName} teamState={hostState} teamSetState={setHostState}
-                                setPlay={setPlay} timerState={getTime()} pauseMatchOnEvent={pause}/>
+                        <MatchInteractiveTeamTab teamName={hostName} teamState={hostState} teamSetState={setHostState}
+                            setPlay={setPlay} timerState={getTime()} pauseMatchOnEvent={pause}/>
                     </Col>
 
                     <Col className="bg-white">
