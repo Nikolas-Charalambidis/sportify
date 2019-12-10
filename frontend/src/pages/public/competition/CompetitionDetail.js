@@ -28,10 +28,10 @@ export function CompetitionDetail() {
                 <CompetitionData state={state} />
 
                 <Tabs className="mb-3" fill defaultActiveKey="squad" id="competitionTabs">
-                    <Tab eventKey="squad" title="tymy">
+                    <Tab eventKey="squad" title="Týmy">
                         <CompetitionsTeams/>
                     </Tab>
-                    <Tab eventKey="competition" title="vysledky">
+                    <Tab eventKey="competition" title="Výsledky">
                     </Tab>
                 </Tabs>
             </div>
