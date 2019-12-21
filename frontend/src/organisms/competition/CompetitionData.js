@@ -1,9 +1,9 @@
 import {Col, Row} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {NavLink as Link} from "react-router-dom";
-import {Heading} from "../../../atoms";
+import {Heading} from "../../atoms";
 import React from "react";
-import { formatDate } from "../../../utils/date"
+import { formatDate } from "../../utils/date"
 
 export function CompetitionData({state}) {
 

@@ -1,8 +1,8 @@
 import {useHistory, useParams} from "react-router";
-import {Heading} from "../../../atoms";
-import {Table} from "../../../atoms/Table";
+import {Heading} from "../../atoms";
+import {Table} from "../../atoms/Table";
 import React from "react";
-import {useGetCompetitionsTeams} from "../../../api/competitionClient_v1";
+import {useGetCompetitionsTeams} from "../../api/competitionClient_v1";
 
 export function CompetitionsTeams() {
     let {id_competition} = useParams();
