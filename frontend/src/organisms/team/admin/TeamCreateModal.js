@@ -4,7 +4,7 @@ import {Field} from "../../../atoms";
 import React from "react";
 import {Heading} from '../../../atoms';
 import * as yup from "yup";
-import {CreateTeam} from "../../../api/teamClient_v1";
+import {createTeam} from "../../../api/teamClient_v1";
 
 import {useGetSports, useGetTeamPositions, useGetTeamTypes} from "../../../api/othersClient_v1";
 import {useHistory} from "react-router";
@@ -49,7 +49,7 @@ export function TeamCreateModal({api, id_user, show, handleClose}) {
                         id_type: typesState.types[0].id_type,
                         id_position: positionsState.positions[0].id_position}}
                     onSubmit={values => {
-                        CreateTeam(history, api, id_user, values);
+                        createTeam(history, api, id_user, values);
                     }}
                 >{({handleSubmit, setFieldValue, errors}) => (
                     <Form noValidate onSubmit={handleSubmit}>

@@ -5,7 +5,9 @@ import {config} from '../config';
 export function useGetTeams() {
     const api = useApi();
     const [state, setState] = useState({
-        isLoading: true
+        isLoading: true,
+        error: false,
+        teams_data: undefined
     });
     useEffect(() => {
         async function fetchData() {
@@ -16,19 +18,9 @@ export function useGetTeams() {
                     setState({isLoading: false, error: false, teams_data: teams});
                 })
                 .catch(( { response } ) => {
-                    const {data, status} = response;
+                    const {data} = response;
                     setState({isLoading: false, error: true, teams_data: null});
-                    switch (status) {
-                        case 400:
-                            window.flash(data.msg, 'danger');
-                            break;
-                        case 500:
-                            window.flash(data.msg, 'danger');
-                            break;
-                        default:
-                            window.flash("Neočekávaná chyba", 'danger');
-                            break;
-                    }
+                    window.flash(data.msg, 'danger');
                 });
         }
 
@@ -40,7 +32,9 @@ export function useGetTeams() {
 export function useGetTeam(id_team) {
     const api = useApi();
     const [state, setState] = useState({
-        isLoading: true
+        isLoading: true,
+        error: false,
+        team_data: undefined
     });
     useEffect(() => {
         async function fetchData() {
@@ -58,19 +52,9 @@ export function useGetTeam(id_team) {
 
                 })
                 .catch(( { response } ) => {
-                    const {data, status} = response;
+                    const {data} = response;
                     setState({isLoading: false, error: true, team_data: null});
-                    switch (status) {
-                        case 400:
-                            window.flash(data.msg, 'danger');
-                            break;
-                        case 500:
-                            window.flash(data.msg, 'danger');
-                            break;
-                        default:
-                            window.flash("Neočekávaná chyba", 'danger');
-                            break;
-                    }
+                    window.flash(data.msg, 'danger');
                 });
         }
 
@@ -82,7 +66,9 @@ export function useGetTeam(id_team) {
 export function useGetMembers(id_team) {
     const api = useApi();
     const [state, setState] = useState({
-        isLoading: true
+        isLoading: true,
+        error: false,
+        players: undefined
     });
     useEffect(() => {
         async function fetchData() {
@@ -107,7 +93,9 @@ export function useGetMembers(id_team) {
 export function useGetTeamMembership(id_team, status) {
     const api = useApi();
     const [state, setState] = useState({
-        isLoading: true
+        isLoading: true,
+        error: false,
+        players: undefined
     });
     useEffect(() => {
         async function fetchData() {
@@ -132,7 +120,9 @@ export function useGetTeamMembership(id_team, status) {
 export function useGetCompetitions(id_team) {
     const api = useApi();
     const [state, setState] = useState({
-        isLoading: true
+        isLoading: true,
+        error: false,
+        team_data: undefined
     });
     useEffect(() => {
         async function fetchData() {
@@ -194,7 +184,9 @@ export function ChangeSetActive(api, id_team, active, setStatus, setActivationBu
 export function useGetTeamCompetition(id_team) {
     const api = useApi();
     const [state, setState] = useState({
-        isLoading: true
+        isLoading: true,
+        error: false,
+        team_data: undefined
     });
     useEffect( () => {
         async function fetchData() {
@@ -205,19 +197,9 @@ export function useGetTeamCompetition(id_team) {
                     setState({ isLoading: false, error: false, team_data: team });
                 })
                 .catch(( { response } ) => {
-                    const { data, status} = response;
+                    const {data} = response;
                     setState({ isLoading: false, error: true, team_data: null });
-                    switch (status) {
-                        case 400:
-                            window.flash(data.msg, 'danger');
-                            break;
-                        case 500:
-                            window.flash(data.msg, 'danger');
-                            break;
-                        default:
-                            window.flash("Neočekávaná chyba", 'danger');
-                            break;
-                    }
+                    window.flash(data.msg, 'danger');
                 });
         }
         fetchData().then();
@@ -228,7 +210,9 @@ export function useGetTeamCompetition(id_team) {
 export function useGetTeamMatches(id_team) {
     const api = useApi();
     const [state, setState] = useState({
-        isLoading: true
+        isLoading: true,
+        error: false,
+        team_data: undefined
     });
     useEffect( () => {
         async function fetchData() {
@@ -239,19 +223,9 @@ export function useGetTeamMatches(id_team) {
                     setState({ isLoading: false, error: false, team_data: matches });
                 })
                 .catch(( { response } ) => {
-                    const { data, status} = response;
+                    const { data} = response;
                     setState({ isLoading: false, error: true, team_data: null });
-                    switch (status) {
-                        case 400:
-                            window.flash(data.msg, 'danger');
-                            break;
-                        case 500:
-                            window.flash(data.msg, 'danger');
-                            break;
-                        default:
-                            window.flash("Neočekávaná chyba", 'danger');
-                            break;
-                    }
+                    window.flash(data.msg, 'danger');
                 });
         }
         fetchData().then();
@@ -262,7 +236,9 @@ export function useGetTeamMatches(id_team) {
 export function useGetTeamStatistics(id_team) {
     const api = useApi();
     const [state, setState] = useState({
-        isLoading: true
+        isLoading: true,
+        error: false,
+        team: undefined
     });
     useEffect( () => {
         async function fetchData() {
@@ -273,19 +249,9 @@ export function useGetTeamStatistics(id_team) {
                     setState({ isLoading: false, error: false, team: team_data });
                 })
                 .catch(( { response } ) => {
-                    const { data, status} = response;
+                    const {data} = response;
                     setState({ isLoading: false, error: true, team: null });
-                    switch (status) {
-                        case 400:
-                            window.flash(data.msg, 'danger');
-                            break;
-                        case 500:
-                            window.flash(data.msg, 'danger');
-                            break;
-                        default:
-                            window.flash("Neočekávaná chyba", 'danger');
-                            break;
-                    }
+                    window.flash(data.msg, 'danger');
                 });
         }
         fetchData().then();
@@ -293,7 +259,7 @@ export function useGetTeamStatistics(id_team) {
     return [state];
 }
 
-export function CreateTeam(history, api, id_user, values) {
+export function createTeam(history, api, id_user, values) {
     const {name, id_sport, id_type, id_position} = values;
     api
         .post(`${config.API_BASE_PATH}/teams`, {id_leader: id_user, name: name, id_sport: id_sport, id_type: id_type, id_position: id_position})
