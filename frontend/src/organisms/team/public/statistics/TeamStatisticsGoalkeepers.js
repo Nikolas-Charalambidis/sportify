@@ -2,12 +2,12 @@ import React from 'react';
 import {useParams} from "react-router-dom";
 import {useHistory} from 'react-router-dom';
 import {useGetTeamStatistics} from "../../../../api/teamClient_v1";
-import {Heading} from "../../../../atoms";
-import {Table} from "../../../../atoms/Table";
+import {Heading} from "../../../../basicComponents";
+import {Table} from "../../../../basicComponents/Table";
 import loadingGif from "../../../../assets/images/loading.gif";
 import Image from "react-bootstrap/esm/Image";
 import * as Icons from "@fortawesome/free-solid-svg-icons"
-import {OverlayTriggerTable} from "../../../../atoms/OverlayTriggerTable";
+import {OverlayTriggerTable} from "../../../../basicComponents/OverlayTriggerTable";
 
 function getGoalkeepers(state, filterBy) {
     let competitionId = null;

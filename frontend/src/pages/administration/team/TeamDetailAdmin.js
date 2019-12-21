@@ -9,7 +9,7 @@ import {useAuth} from "../../../utils/auth";
 import {MatchList} from "../../../organisms/match/MatchList";
 import {TeamSquad} from "../../../organisms/team/public/TeamSquad";
 import {useGetTeamPlayersByStatus} from "../../../api/teamMembershipClient_v1";
-import {Heading} from "../../../atoms";
+import {Heading} from "../../../basicComponents";
 
 
 export function TeamDetailAdmin() {

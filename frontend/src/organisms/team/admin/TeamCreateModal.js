@@ -1,15 +1,15 @@
 import {Button, Form, Modal} from "react-bootstrap";
 import {Formik} from "formik";
-import {Field} from "../../../atoms";
+import {Field} from "../../../basicComponents";
 import React from "react";
-import {Heading} from '../../../atoms';
+import {Heading} from '../../../basicComponents';
 import * as yup from "yup";
 import {createTeam} from "../../../api/teamClient_v1";
 
 import {useGetSports, useGetTeamPositions, useGetTeamTypes} from "../../../api/othersClient_v1";
 import {useHistory} from "react-router";
 import * as Icons from "@fortawesome/free-solid-svg-icons";
-import {CustomSelect} from "../../../atoms/Select";
+import {CustomSelect} from "../../../basicComponents/Select";
 
 const tooltipTeamType = {
     icon: Icons.faInfo,

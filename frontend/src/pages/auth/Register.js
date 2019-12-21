@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Heading} from '../../atoms';
+import {Heading} from '../../basicComponents';
 import {Form, Button, Row, Col, Breadcrumb} from "react-bootstrap";
 import {useHistory} from "react-router";
 import {useAuth} from "../../utils/auth";
@@ -8,8 +8,8 @@ import {useApi} from "../../hooks/useApi";
 import {config} from '../../config';
 import * as yup from "yup";
 import {Formik} from "formik";
-import {Field} from "../../atoms/Field";
-import {AccountAdvantages} from "../../atoms/AccountAdvantages";
+import {Field} from "../../basicComponents/Field";
+import {AccountAdvantages} from "../../basicComponents/AccountAdvantages";
 import {NavLink as Link} from "react-router-dom";
 
 const schema = yup.object().shape({

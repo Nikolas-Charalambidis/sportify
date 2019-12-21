@@ -1,7 +1,7 @@
 import React from 'react';
 import {NavLink as Link, useParams} from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
-import {Heading} from '../../../atoms';
+import {Heading} from '../../../basicComponents';
 import {Breadcrumb, Image, Tabs, Tab} from 'react-bootstrap';
 import {useGetCompetitionDetail} from "../../../api/competitionClient_v1";
 import loadingGif from "../../../assets/images/loading.gif";

@@ -1,6 +1,6 @@
 import {useHistory, useParams} from "react-router";
-import {Heading} from "../../atoms";
-import {Table} from "../../atoms/Table";
+import {Heading} from "../../basicComponents";
+import {Table} from "../../basicComponents/Table";
 import React from "react";
 import {useGetCompetitionsTeams} from "../../api/competitionClient_v1";
 

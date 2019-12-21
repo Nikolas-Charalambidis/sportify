@@ -1,6 +1,6 @@
 import React from "react";
 import {Button, Modal} from "react-bootstrap";
-import {CustomSelect} from "../atoms/Select";
+import {CustomSelect} from ".//Select";
 import {addNewMember} from "../api/teamMembershipClient_v1";
 import {useApi} from "../hooks/useApi";
 

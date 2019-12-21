@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heading } from '../../../../atoms';
+import { Heading } from '../../../../basicComponents';
 import { Breadcrumb, Button } from 'react-bootstrap';
 import {MatchTeamSelect} from "../../../../organisms/match/admin/create/MatchTeamSelect";
 import {ShotsParent} from "../../../../organisms/match/admin/base/ShotsParent";

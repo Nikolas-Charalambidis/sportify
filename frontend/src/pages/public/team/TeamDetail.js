@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {NavLink as Link, useParams} from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
-import {Heading} from '../../../atoms';
+import {Heading} from '../../../basicComponents';
 import {Breadcrumb, Image, Tabs, Tab, Row, Button, Col} from 'react-bootstrap';
 import {TeamSquad} from "../../../organisms/team/public/TeamSquad";
 import {useGetTeam, useGetTeamMatches} from "../../../api/teamClient_v1";
@@ -12,7 +12,7 @@ import {TeamData} from "../../../organisms/team/public/TeamData";
 import {MatchList} from "../../../organisms/match/MatchList";
 import {useGetTeamPlayers, useGetTeamPlayersByStatus} from "../../../api/teamMembershipClient_v1";
 import {useAuth} from "../../../utils/auth";
-import {TeamRequestModal} from "../../../atoms/TeamRequestModal";
+import {TeamRequestModal} from "../../../basicComponents/TeamRequestModal";
 import {useGetTeamPositions} from "../../../api/othersClient_v1";
 
 export function TeamDetail() {

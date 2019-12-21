@@ -1,4 +1,4 @@
-import {Heading} from "../../../../../atoms";
+import {Heading} from "../../../../../basicComponents";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as Icons from "@fortawesome/free-solid-svg-icons";
 import Button from "react-bootstrap/Button";
