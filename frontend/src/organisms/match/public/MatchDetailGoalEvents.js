@@ -2,7 +2,7 @@ import React from 'react';
 import {useGetAllEvents} from "../../../api/matchClient_v1";
 import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../assets/images/loading.gif";
-import {Heading} from "../../../atoms";
+import {Heading} from "../../../basicComponents";
 
 function getGoals(events, period) {
     if (!events.isLoading) {

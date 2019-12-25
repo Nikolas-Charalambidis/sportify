@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Heading} from '../../atoms';
+import {Heading} from '../../basicComponents';
 
 export function HomePage() {
     return (

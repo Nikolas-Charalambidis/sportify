@@ -5,7 +5,7 @@ import * as Icons from "@fortawesome/free-solid-svg-icons";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import moment from "moment";
-import { Heading } from "../../../../../atoms";
+import { Heading } from "../../../../../basicComponents";
 import { MatchDetailScore } from "../../../public/MatchDetailScore";
 import Button from "react-bootstrap/Button";
 import { MatchInteractiveTeamTab } from "./MatchInteractiveTeamTab";

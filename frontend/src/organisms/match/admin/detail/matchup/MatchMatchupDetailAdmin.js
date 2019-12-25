@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
-import {Table} from "../../../../../atoms/Table";
+import {Table} from "../../../../../basicComponents/Table";
 import {useApi} from "../../../../../hooks/useApi";
 import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../../../assets/images/loading.gif";
-import {Heading} from "../../../../../atoms";
+import {Heading} from "../../../../../basicComponents";
 import Button from "react-bootstrap/Button";
 import {AddGoalSuspensionModal} from "../../base/AddGoalSuspensionModal";
 import {addPlayer, deletePlayer, setGoalkeeper} from "../../../../../api/matchupClient_v1";
-import {DeleteModal} from "../../../../../atoms/DeleteModal";
+import {DeleteModal} from "../../../../../basicComponents/DeleteModal";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import * as Icons from "@fortawesome/free-solid-svg-icons"
 import {PlayerSelectModal} from "../../create/PlayerSelectModal";

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Breadcrumb} from "react-bootstrap";
-import {Heading} from "../../../../atoms";
+import {Heading} from "../../../../basicComponents";
 import {MatchInteractiveForm} from "../../../../organisms/match/admin/create/interactive/MatchInteractiveForm";
 import {NavLink as Link} from "react-router-dom";
 import {MatchInteractiveSelect} from "../../../../organisms/match/admin/create/interactive/MatchInteractiveSelect";

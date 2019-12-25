@@ -1,5 +1,5 @@
 import React from 'react';
-import {Heading} from '../../atoms';
+import {Heading} from '../../basicComponents';
 import {Breadcrumb} from 'react-bootstrap';
 import {NavLink as Link} from "react-router-dom";
 import {AdministrationMenuCard} from '../../organisms/administration/AdministrationMenuCard';

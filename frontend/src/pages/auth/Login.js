@@ -3,14 +3,14 @@ import React, {useState} from 'react';
 import {NavLink as Link} from "react-router-dom";
 import {Row, Col, Form, Button, Breadcrumb, Modal} from "react-bootstrap";
 import {config} from '../../config';
-import {Heading} from '../../atoms';
+import {Heading} from '../../basicComponents';
 import {useApi} from '../../hooks/useApi';
 import {useAuth} from '../../utils/auth';
 import {useHistory} from "react-router";
 import {Formik} from "formik";
-import {Field} from "../../atoms/Field";
+import {Field} from "../../basicComponents/Field";
 import * as yup from "yup";
-import {AccountAdvantages} from "../../atoms/AccountAdvantages";
+import {AccountAdvantages} from "../../basicComponents/AccountAdvantages";
 
 const schemaLogin = yup.object().shape({
     email: yup.string().email().required(),

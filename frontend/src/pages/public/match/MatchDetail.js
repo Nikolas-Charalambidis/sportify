@@ -2,7 +2,7 @@ import React from 'react';
 import {NavLink as Link, useParams} from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 
-import {Heading} from '../../../atoms';
+import {Heading} from '../../../basicComponents';
 import {Breadcrumb, Image} from 'react-bootstrap';
 import loadingGif from "../../../assets/images/loading.gif";
 import {useGetMatch} from "../../../api/matchClient_v1";

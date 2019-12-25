@@ -1,12 +1,12 @@
 import React from 'react';
 import {NavLink as Link, useParams} from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
-import {Heading} from '../../../atoms';
+import {Heading} from '../../../basicComponents';
 import {Breadcrumb, Image, Tabs, Tab} from 'react-bootstrap';
 import {useGetCompetitionDetail} from "../../../api/competitionClient_v1";
 import loadingGif from "../../../assets/images/loading.gif";
-import {CompetitionData} from "./CompetitionData";
-import {CompetitionsTeams} from "./CompetitionsTeams";
+import {CompetitionData} from "../../../organisms/competition/CompetitionData";
+import {CompetitionsTeams} from "../../../organisms/competition/CompetitionsTeams";
 export function CompetitionDetail() {
     let {id_competition} = useParams();
     const [state] = useGetCompetitionDetail(id_competition);
