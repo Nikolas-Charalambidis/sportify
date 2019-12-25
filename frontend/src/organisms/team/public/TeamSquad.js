@@ -32,7 +32,6 @@ export function TeamSquad({status, admin, playersState, fetchActivePlayersState,
             fetchInactivePlayersState();
             fetchPlayersPendingState();
             fetchPlayersDeclinedState();
-
         }
     };
 
@@ -42,9 +41,6 @@ export function TeamSquad({status, admin, playersState, fetchActivePlayersState,
             fetchPlayersDeclinedState();
         }
     };
-
-
-    
 
     let history = useHistory();
     const columns = [
