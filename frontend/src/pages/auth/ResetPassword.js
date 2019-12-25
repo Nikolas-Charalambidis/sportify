@@ -48,7 +48,7 @@ export function ResetPassword() {
     }
     return (
         <div>
-                <Breadcrumb>
+            <Breadcrumb>
                 <Breadcrumb.Item href="/">Domů</Breadcrumb.Item>
                 <Breadcrumb.Item active>Obnova hesla</Breadcrumb.Item>
             </Breadcrumb>

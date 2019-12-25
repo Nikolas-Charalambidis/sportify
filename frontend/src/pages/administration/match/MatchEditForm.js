@@ -48,6 +48,10 @@ export function MatchEditForm() {
         }
     };
 
+    if(stateMatch.isLoading) {
+        return <div className="text-center"><Image src={loadingGif}/></div>;
+    }
+
     return (
         <div>
             <Breadcrumb>

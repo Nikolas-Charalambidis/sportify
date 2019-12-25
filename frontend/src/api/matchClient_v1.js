@@ -180,18 +180,3 @@ export async function createMatch(api, hostState, guestState) {
         });
     return result;
 }
-
-export async function addEvent(api, id_match, events) {
-    let result = false;
-    await api
-        .post(`${config.API_BASE_PATH}/events/bulk`, { id_match: id_match, events: events })
-        .then(({ data }) => {
-            window.flash(data.msg, 'success');
-        })
-        .catch(({ response }) => {
-            const { data } = response;
-            window.flash(data.msg, 'danger');
-            return data;
-        });
-    return result;
-}

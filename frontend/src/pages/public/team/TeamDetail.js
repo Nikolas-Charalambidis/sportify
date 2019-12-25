@@ -14,6 +14,7 @@ import {useGetTeamPlayers, useGetTeamPlayersByStatus} from "../../../api/teamMem
 import {useAuth} from "../../../utils/auth";
 import {TeamRequestModal} from "../../../basicComponents/TeamRequestModal";
 import {useGetTeamPositions} from "../../../api/othersClient_v1";
+import {UnexpectedError} from "../../../basicComponents/UnexpectedError";
 
 export function TeamDetail() {
 
@@ -30,13 +31,17 @@ export function TeamDetail() {
     const [positions] = useGetTeamPositions();
     const [positionsState, setPositionsState] = useState({id_position: null});
 
+    if(state.isLoading) {
+        return <div className="text-center"><Image src={loadingGif}/></div>;
+    }
+
+    if(!state.isLoading && state.error) {
+        return <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>;
+    }
 
     return (
         <div>
-            {state.isLoading && <div className="text-center"><Image src={loadingGif}/></div>}
-            {(!state.isLoading && state.error) &&
-            <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
-            {(!state.isLoading && !state.error) &&
+            {(!state.isLoading && !state.error) ?
             <div>
                 <Breadcrumb>
                     <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
@@ -88,6 +93,7 @@ export function TeamDetail() {
                     </Tab>
                 </Tabs>
             </div>
+            : <UnexpectedError/>
             }
         </div>
     );
