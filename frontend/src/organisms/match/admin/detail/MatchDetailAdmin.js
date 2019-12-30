@@ -2,10 +2,10 @@ import React from 'react';
 import {Heading} from "../../../../basicComponents";
 import {useGetEvents, useGetShots} from "../../../../api/matchClient_v1";
 import {Events} from "../base/Events";
-import {MatchDetailHeaderAdmin} from "./MatchDetailHeaderAdmin";
 import {ShotsParent} from "../base/ShotsParent";
 import {MatchMatchupSingleDetailAdmin} from "./matchup/MatchMatchupSingleDetailAdmin";
 import {MatchMatchupMultipleDetailAdmin} from "./matchup/MatchMatchupMultipleDetailAdmin";
+import {MatchDetailScore} from "../../public/MatchDetailScore";
 
 export function MatchDetailAdmin({id_match, data}) {
     const [eventsStateHost, fetchEventsHost] = useGetEvents(id_match, 1);
@@ -16,7 +16,10 @@ export function MatchDetailAdmin({id_match, data}) {
 
     return (
         <div>
-            <MatchDetailHeaderAdmin hostName={data.host_name} guestName={data.guest_name} />
+            <MatchDetailScore hostName={data.host_name}
+                                    guestName={data.guest_name}
+                                    guestGoals={data.goals_guest}
+                                    hostGoals={data.goals_host}/>
 
             <Heading size="lg" className="mt-5 h3MatchDetail text-left">Soupiska</Heading>
             {data.id_host === data.id_guest ?

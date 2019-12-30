@@ -29,7 +29,7 @@ export function MatchMatchupCreateAdmin({interactive, host, availablePlayers, se
     const [showPlayerModal, setShowPlayerModal] = useState(false);
     const handleClosePlayerModal = () => setShowPlayerModal(false);
     const handleShowPlayerModal = () => setShowPlayerModal(true);
-
+    console.log(interactive)
     const columnsMatchup = [
         {
             Header: "Hráč",
@@ -70,7 +70,7 @@ export function MatchMatchupCreateAdmin({interactive, host, availablePlayers, se
                         openGoalSuspensionModal(row.original.id_user);
 
                     }}>
-                        <FontAwesomeIcon className="addIcon" icon={Icons.faPlus} size="1x"/>
+                        {!interactive && <FontAwesomeIcon className="addIcon" icon={Icons.faPlus} size="1x"/>}
                     </Button>
                     }
 
@@ -135,7 +135,7 @@ export function MatchMatchupCreateAdmin({interactive, host, availablePlayers, se
     };
 
     return (
-        <div>
+        <div className="mb-4">
             {availablePlayers.isLoading &&  <div className="text-center"><Image src={loadingGif}/></div>}
             {(!availablePlayers.isLoading && availablePlayers.error) &&
                 <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>
@@ -145,7 +145,7 @@ export function MatchMatchupCreateAdmin({interactive, host, availablePlayers, se
             }
             {(!availablePlayers.isLoading && !availablePlayers.error && availablePlayers.players.length !== 0) &&
                 <div>
-                    <Button variant="primary" onClick={handleShowPlayerModal}>
+                    <Button variant="primary mb-3" onClick={handleShowPlayerModal}>
                         Vybrat hráče do sestavy
                     </Button>
                     <PlayerSelectModal type="create" show={showPlayerModal}

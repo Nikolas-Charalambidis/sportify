@@ -41,8 +41,8 @@ router.get('/', async (req, res) => {
  */
 router.get('/:id_competition', async (req, res) => {
 	const { id_competition } = req.params;
-	const competitions = await new CompetitionService(req).getCompetition(id_competition);
-	await res.status(200).json({ error: false, msg: 'OK', competitions: competitions});
+	const competition = await new CompetitionService(req).getCompetition(id_competition);
+	await res.status(200).json({ error: false, msg: 'OK', competition: competition});
 });
 
 /**

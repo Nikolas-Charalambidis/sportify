@@ -31,7 +31,7 @@ export function MatchInteractiveSelect({teamsState, hostState, guestState, setHo
                                                          setHostState={setHostState} setGuestState={setGuestState}
                         />
                     }
-                    <Button variant="primary" onClick={() => {
+                    <Button className="float-right" variant="primary" onClick={() => {
                         if(hostState.matchups.length > 0 && guestState.matchups.length > 0){
                             handleShow();
                         } else {
