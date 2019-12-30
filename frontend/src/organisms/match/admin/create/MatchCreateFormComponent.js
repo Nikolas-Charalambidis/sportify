@@ -7,6 +7,7 @@ import {Events} from "../../../../organisms/match/admin/base/Events";
 import {MatchMatchupSingleCreateAdmin} from "../../../../organisms/match/admin/create/matchup/MatchMatchupSingleCreateAdmin";
 import {MatchMatchupMultipleCreateAdmin} from "../../../../organisms/match/admin/create/matchup/MatchMatchupMultipleCreateAdmin";
 import {useGetTeams} from "../../../../api/teamClient_v1";
+import {NavLink as Link} from "react-router-dom";
 
 export function MatchCreateFormComponent({params, handleCreateMatch}) {
     const {hostState, setHostState, guestState, setGuestState} = params;
@@ -15,8 +16,9 @@ export function MatchCreateFormComponent({params, handleCreateMatch}) {
     return (
     <div>
         <Breadcrumb>
-        <Breadcrumb.Item href="/">Domů</Breadcrumb.Item>
-        <Breadcrumb.Item active>Nový zápas</Breadcrumb.Item>
+            <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
+            <li className="breadcrumb-item"><Link to="/administration">Administrace</Link></li>
+            <li className="breadcrumb-item"><span className="active">Nový zápas</span></li>
         </Breadcrumb>
 
         <Heading>Vytvoření zápasu</Heading>
@@ -52,7 +54,7 @@ export function MatchCreateFormComponent({params, handleCreateMatch}) {
                         <Heading size="lg" className="mt-5 h3MatchDetail text-left">Události hosté</Heading>
                         <Events type="create" eventsState={guestState} fetchEvents={setGuestState} />
 
-                        <Button variant="primary" onClick={handleCreateMatch}>
+                        <Button className="float-right mt-3" variant="primary" onClick={handleCreateMatch}>
                             Vytvořit zápas
                         </Button>
                     </div>

@@ -135,7 +135,7 @@ export function MatchMatchupCreateAdmin({interactive, host, availablePlayers, se
     };
 
     return (
-        <div>
+        <div className="mb-4">
             {availablePlayers.isLoading &&  <div className="text-center"><Image src={loadingGif}/></div>}
             {(!availablePlayers.isLoading && availablePlayers.error) &&
                 <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>
