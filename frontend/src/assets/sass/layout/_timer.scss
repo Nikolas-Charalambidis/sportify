@@ -11,7 +11,7 @@
 
   .column {
     display: inline-block;
-    width: 45%;
+    width: 35%;
 
     .timer {
       font-family: Proxima, Arial, sans-serif;
@@ -38,6 +38,10 @@
 @media (max-width: 1200px) {
   .clock .column:first-child {
     margin-right: 16px;
+  }
+
+  .clock .column {
+    width: 45%;
   }
 }
 
