@@ -5,7 +5,9 @@ import {config} from '../config';
 export function useGetSports() {
     const api = useApi();
     const [state, setState] = useState({
-        isLoading: true
+        isLoading: true,
+        error: false,
+        sports: undefined
     });
     useEffect(() => {
         async function fetchData() {
@@ -28,7 +30,9 @@ export function useGetSports() {
 export function useGetTeamTypes() {
     const api = useApi();
     const [state, setState] = useState({
-        isLoading: true
+        isLoading: true,
+        error: false,
+        types: undefined
     });
     useEffect(() => {
         async function fetchData() {
@@ -51,7 +55,9 @@ export function useGetTeamTypes() {
 export function useGetTeamPositions() {
     const api = useApi();
     const [state, setState] = useState({
-        isLoading: true
+        isLoading: true,
+        error: false,
+        positions: undefined
     });
     useEffect(() => {
         async function fetchData() {
@@ -74,7 +80,9 @@ export function useGetTeamPositions() {
 export function useGetCompetitionTypes() {
     const api = useApi();
     const [state, setState] = useState({
-        isLoading: true
+        isLoading: true,
+        error: false,
+        types: undefined
     });
     useEffect(() => {
         async function fetchData() {

@@ -1,10 +1,10 @@
 import {Button, Form, Modal} from "react-bootstrap";
 import {Formik} from "formik";
 import {ChangePassword} from "../../../api/userClient_v1";
-import {Field} from "../../../atoms";
+import {Field} from "../../../basicComponents";
 import React from "react";
 import * as yup from "yup";
-import {Heading} from '../../../atoms';
+import {Heading} from '../../../basicComponents';
 
 export function UserChangePasswordModal({ api, id_user, show, handleClose }){
     const schemaChangePassword = yup.object().shape({

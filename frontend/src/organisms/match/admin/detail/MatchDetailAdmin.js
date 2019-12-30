@@ -1,5 +1,5 @@
 import React from 'react';
-import {Heading} from "../../../../atoms";
+import {Heading} from "../../../../basicComponents";
 import {useGetEvents, useGetShots} from "../../../../api/matchClient_v1";
 import {Events} from "../base/Events";
 import {MatchDetailHeaderAdmin} from "./MatchDetailHeaderAdmin";

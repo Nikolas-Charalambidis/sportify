@@ -1,23 +1,24 @@
 import React from 'react';
 import { Button, Form, Modal } from "react-bootstrap";
-import { Field } from "../../../../atoms";
+import { Field } from "../../../../basicComponents";
 import { Formik } from "formik";
-import { CustomSelect } from "../../../../atoms/Select";
+import { CustomSelect } from "../../../../basicComponents/Select";
 import { suspensionTypesList } from "../../../../enums/enums";
 
-export function AddSuspensionForm({ id_user, handleClose, addEvent, matchup, id_team, id_match, host, schema, interactive }) {
+export function AddSuspensionForm({ id_user, handleClose, addEvent, matchup, id_team, id_match, host, schema, interactive, timerState }) {
 
     return (
         <Formik
             validationSchema={schema}
             initialValues={{
                 id_user: id_user,
+                name: '',
                 type: suspensionTypesList[0].id,
                 id_team: id_team,
                 id_match: id_match,
                 id_assistance1: null,
                 id_assistance2: null,
-                minute: '',
+                minute: interactive ? Math.trunc(timerState / 1000 / 60) : '',
                 value: null,
                 host: host
             }}
@@ -41,7 +42,10 @@ export function AddSuspensionForm({ id_user, handleClose, addEvent, matchup, id_
                             getOptionLabel={option => `${option.name}`}
                             getOptionValue={option => `${option.id_user}`}
                             isSearchable={true}
-                            onChange={options => setFieldValue("id_user", options.id_user)}
+                            onChange={options => {
+                                setFieldValue("id_user", options.id_user);
+                                setFieldValue("name", options.name);
+                            }}
                         />
                     )}
 

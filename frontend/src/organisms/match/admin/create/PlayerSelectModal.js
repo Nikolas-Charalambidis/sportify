@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { equals } from 'ramda';
-import { Heading } from '../../../../atoms';
-import { Table } from '../../../../atoms/Table';
+import { Heading } from '../../../../basicComponents';
+import { Table } from '../../../../basicComponents/Table';
 
 export function PlayerSelectModal({ show, handleClose, players, handleAddPlayers, type }) {
   const [selectedPlayers, setSelectedPlayers] = useState([]);

@@ -64,6 +64,61 @@ router.get('/team/:id_team', async (req, res, next) => {
  *       - TeamMembership
  *     name: Updates user status of a team
  *     summary: Get all players from a team
+ *     consumes: application/json
+ *     produces: application/json
+ *     parameters:
+ *       - name: id_team
+ *         in: path
+ *         description: Team ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - name: id_user
+ *         in: path
+ *         description: User ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - name: body
+ *         in: body
+ *         required: false
+ *         schema:
+ *           type: object
+ *           properties:
+ *             status:
+ *               type: string
+ *               enum: [active, inactive, declined, pending]
+ *             id_position:
+ *               type: integer
+ *     responses:
+ *       200:
+ *         description: User updated
+ *       400:
+ *         description: Invalid request
+ *       500:
+ *         description: Unexpected error
+ */
+router.patch('/team/:id_team/user/:id_user', async (req, res, next) => {
+    try {
+        const { id_team, id_user } = req.params;
+        const { status, id_position } = req.body;
+        await new TeamService(req).updateTeamMembership(id_team, id_user, status, id_position);
+        res.status(200).json({ error: false, msg: 'Stav nebo pozice hráče byl změněn'});
+    } catch(e) {
+        next(e);
+    }
+});
+
+/**
+ * @swagger
+ * /teamMembership/team/{id_team}/user/{id_user}:
+ *   post:
+ *     tags:
+ *       - TeamMembership
+ *     name: Add user status or position of a team
+ *     summary: Add user status or position of a team
+ *     consumes: application/json
+ *     produces: application/json
  *     parameters:
  *       - name: id_team
  *         in: path
@@ -79,30 +134,71 @@ router.get('/team/:id_team', async (req, res, next) => {
  *           type: integer
  *       - name: body
  *         in: body
- *         required: true
+ *         required: false
  *         schema:
  *           type: object
  *           properties:
  *             status:
  *               type: string
  *               enum: [active, inactive, declined, pending]
+ *             id_position:
+ *               type: integer
  *     responses:
- *       200:
- *         description: User updated
+ *       201:
+ *         description: User created
  *       400:
  *         description: Invalid request
  *       500:
  *         description: Unexpected error
  */
-router.patch('/team/:id_team/user/:id_user', async (req, res, next) => {
+router.post('/team/:id_team/user/:id_user', async (req, res, next) => {
     try {
         const { id_team, id_user } = req.params;
-        const { status } = req.body;
-        await new TeamService(req).updateStatus(id_team, id_user, status);
-        res.status(200).json({ error: false, msg: 'Stav hráče byl změněn'});
+        const { status, id_position } = req.body;
+        await new TeamService(req).addNewMember(id_team, id_user, id_position, status);
+        res.status(200).json({ error: false, msg: 'Žádost o přidání do týmu byla uspěšně odeslána'});
     } catch(e) {
         next(e);
     }
+});
+
+/**
+ * @swagger
+ * /teamMembership/team/{id_team}/user/{id_user}:
+ *   delete:
+ *     tags:
+ *       - TeamMembership
+ *     name: Removes user from a team
+ *     summary: Removes user from a team
+ *     parameters:
+ *       - name: id_team
+ *         in: path
+ *         description: Team ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - name: id_user
+ *         in: path
+ *         description: User ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: User removed
+ *       400:
+ *         description: Invalid request
+ *       500:
+ *         description: Unexpected error
+ */
+router.delete('/team/:id_team/user/:id_user', async (req, res, next) => {
+	try {
+		const { id_team, id_user } = req.params;
+		await new TeamService(req).removeMember(id_team, id_user);
+		res.status(200).json({ error: false, msg: 'Hráč byl odebrán z týmu'});
+	} catch(e) {
+		next(e);
+	}
 });
 
 /**

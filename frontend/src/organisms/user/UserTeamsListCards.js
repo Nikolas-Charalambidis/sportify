@@ -1,6 +1,6 @@
 import React from 'react';
-import {Heading} from '../../atoms';
-import {CardTemplate} from '../../atoms/CardTemplate';
+import {Heading} from '../../basicComponents';
+import {CardTemplate} from '../../basicComponents/CardTemplate';
 import {Row, Image} from 'react-bootstrap';
 import {useParams} from "react-router-dom";
 import {mapSportToIcon} from '../../utils/mapper';

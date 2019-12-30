@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Heading} from "../../../../../atoms";
+import {Heading} from "../../../../../basicComponents";
 import Button from "react-bootstrap/Button";
 import {MatchTeamSelect} from "../MatchTeamSelect";
 import {MatchMatchupSingleCreateAdmin} from "../matchup/MatchMatchupSingleCreateAdmin";

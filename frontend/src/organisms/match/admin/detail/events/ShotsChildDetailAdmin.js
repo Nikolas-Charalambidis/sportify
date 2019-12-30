@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../../../assets/images/loading.gif";
-import {Heading} from "../../../../../atoms";
+import {Heading} from "../../../../../basicComponents";
 import {Formik} from "formik";
 import * as yup from "yup";
 import {changeShots} from "../../../../../api/eventClient_v1";

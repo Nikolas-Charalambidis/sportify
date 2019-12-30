@@ -6,7 +6,9 @@ import moment from "moment";
 export function useGetMatch(id_match) {
     const api = useApi();
     const [state, setState] = useState({
-        isLoading: true
+        isLoading: true,
+        error: false,
+        match: undefined
     });
     useEffect( () => {
         async function fetchData() {
@@ -31,7 +33,8 @@ export function useGetEvents(id_match, host) {
     const api = useApi();
     const [state, setState] = useState({
         isLoading: true,
-        error: false
+        error: false,
+        events: undefined
     });
 
     const argsRef = useRef({ id_match, host, api });
@@ -49,7 +52,7 @@ export function useGetEvents(id_match, host) {
                 setState({isLoading: false, error: false, events: events});
             })
             .catch(() => {
-                setState({isLoading: false, error: true, match: null});
+                setState({isLoading: false, error: true, events: null});
             })
     }, []);
 
@@ -64,7 +67,8 @@ export function useGetMatchup(id_match, host) {
     const api = useApi();
     const [state, setState] = useState({
         isLoading: true,
-        error: false
+        error: false,
+        matchup: undefined
     });
 
     const argsRef = useRef({ id_match, host, api });
@@ -97,7 +101,8 @@ export function useGetShots(id_match, host) {
     const api = useApi();
     const [state, setState] = useState({
         isLoading: true,
-        error: false
+        error: false,
+        events: undefined
     });
 
     useEffect( () => {
@@ -137,7 +142,9 @@ export async function deleteMatch(api, id_match) {
 export function useGetAllEvents(id_match) {
     const api = useApi();
     const [state, setState] = useState({
-        isLoading: true
+        isLoading: true,
+        error: false,
+        events: undefined
     });
     useEffect( () => {
         async function fetchData() {
@@ -158,20 +165,18 @@ export function useGetAllEvents(id_match) {
     return [state];
 }
 
-export function useCreateMatch(hostState, guestState, history) {
-    const api = useApi();
-    const today = moment().local().format("DD. MM. YYYY HH:mm");
+export async function createMatch(api, hostState, guestState) {
+    const today = moment().local().format("YYYY-MM-DD");
 
-    api
-        .post(`${config.API_BASE_PATH}/matches`, { id_competition: 1, id_host: hostState.id_team, id_guest: guestState.id_team, date: today })
+    let result = false;
+    await api
+        .post(`${config.API_BASE_PATH}/matches`, {id_competition: null, id_host: hostState.id_team, id_guest: guestState.id_team, date: today })
         .then(({ data }) => {
-            //const { id_team } = data;
-            window.flash(data.msg, 'success');
-            history.replace(`/administration`);
+            result = data.id_match;
         })
         .catch(({ response }) => {
             const { data } = response;
             window.flash(data.msg, 'danger');
-            return data;
         });
+    return result;
 }

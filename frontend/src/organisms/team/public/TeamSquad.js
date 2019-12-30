@@ -1,17 +1,17 @@
 import React, {useState} from 'react';
 import "react-table/react-table.css";
 import {useHistory} from 'react-router-dom';
-import {Heading} from "../../../atoms";
-import {Table} from "../../../atoms/Table";
+import {Heading} from "../../../basicComponents";
+import {Table} from "../../../basicComponents/Table";
 import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../assets/images/loading.gif";
 import {useGetTeamPositions} from "../../../api/othersClient_v1";
-import {changePlayerStatus} from "../../../api/teamMembershipClient_v1";
+import {changePlayerStatus, deleteMember} from "../../../api/teamMembershipClient_v1";
 import Button from "react-bootstrap/Button";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as Icons from "@fortawesome/free-solid-svg-icons";
 import {useApi} from "../../../hooks/useApi";
-import {DeleteModal} from "../../../atoms/DeleteModal";
+import {UpdateStateModal} from "../../../basicComponents/UpdateStateModal";
 
 
 
@@ -23,6 +23,7 @@ export function TeamSquad({status, admin, playersState, fetchActivePlayersState,
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [ID, setID] = useState(null);
+    const [buttonID, setButtonID] = useState(null);
 
     const handleUpdatePlayers = async () => {
         const result = await changePlayerStatus(api, ID.id_team, ID.id_user, ID.status);
@@ -31,12 +32,15 @@ export function TeamSquad({status, admin, playersState, fetchActivePlayersState,
             fetchInactivePlayersState();
             fetchPlayersPendingState();
             fetchPlayersDeclinedState();
-
         }
     };
 
-
-    
+    const handleDeletePlayers = async () => {
+        const result = await deleteMember(api, ID.id_team, ID.id_user);
+        if(result) {
+            fetchPlayersDeclinedState();
+        }
+    };
 
     let history = useHistory();
     const columns = [
@@ -106,12 +110,14 @@ export function TeamSquad({status, admin, playersState, fetchActivePlayersState,
                         <div>
                             <Button variant="primary" onClick={() => {
                                 setID({id_team: row.original.id_team, id_user: row.original.id_user, status: "active"});
+                                setButtonID("active");
                                 handleShow();
                             }}>
                                 Schválit
                             </Button>
                             <Button variant="danger" onClick={ () => {
                                 setID({id_team: row.original.id_team, id_user: row.original.id_user, status: "declined"});
+                                setButtonID("declined");
                                 handleShow();
                             }}>
                                 Zamítnout
@@ -121,11 +127,12 @@ export function TeamSquad({status, admin, playersState, fetchActivePlayersState,
                 } else if (status === "declined") {
                     return (
                         <div>
-                            <Button variant="primary" onClick={() => {
-                                setID({id_team: row.original.id_team, id_user: row.original.id_user, status: "pending"});
+                            <Button variant="link" onClick={() => {
+                                setID({id_team: row.original.id_team, id_user: row.original.id_user});
+                                setButtonID("remove");
                                 handleShow();
                             }}>
-                                Schválit
+                                <FontAwesomeIcon className="removeIcon" icon={Icons.faTrashAlt} size="1x"/>
                             </Button>
                         </div>
                     )
@@ -156,9 +163,8 @@ export function TeamSquad({status, admin, playersState, fetchActivePlayersState,
 
 
             }
-            <DeleteModal key="players" show={show} heading="Delete hráče ze zápasu"
-                         text="Opravdu si přejete odstranit hráče ze zápasu a tím i všechny eventy, na které je navázán?"
-                         handleClose={handleClose} deleteFunction={handleUpdatePlayers} idItem={ID}/>
+            <UpdateStateModal key="players" show={show} handleClose={handleClose}
+                              updateFunction={handleUpdatePlayers} deleteFunction={handleDeletePlayers} idItem={ID} status={status} idButton={buttonID}/>
         </div>
     );
 }
