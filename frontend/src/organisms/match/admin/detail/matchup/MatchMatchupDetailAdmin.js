@@ -133,7 +133,7 @@ export function MatchMatchupDetailAdmin({id_team, id_match, host, availablePlaye
                     }
                     {(!availablePlayers.isLoading && !availablePlayers.error && availablePlayers.players.length !== 0) &&
                         <div>
-                            <Button variant="primary" onClick={handleShowPlayerModal}>
+                            <Button variant="primary mb-3" onClick={handleShowPlayerModal}>
                                 Vybrat hráče do sestavy
                             </Button>
                             <PlayerSelectModal type="edit" show={showPlayerModal}

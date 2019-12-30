@@ -41,9 +41,8 @@ export function useGetCompetitionDetail(id_competition) {
             await api
                 .get(`${config.API_BASE_PATH}/competitions/${id_competition}`)
                 .then(({data}) => {
-                    const {competitions} = data;
-                    setState({isLoading: false, error: false, competition_data: competitions});
-
+                    const {competition} = data;
+                    setState({isLoading: false, error: false, competition_data: competition});
                 })
                 .catch(( { response } ) => {
                     const {data} = response;

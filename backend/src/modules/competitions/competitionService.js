@@ -26,16 +26,21 @@ export default class CompetitionService {
 		const competition = Number(id_competition);
 		competitionValidations.validateCompetitionId(competition);
 
-		return await this.dbConnection.query(
+		const result = await this.dbConnection.query(
 			`SELECT c.id_competition, c.name, s.sport, c.city, ct.type, c.start_date, c.end_date, COUNT(cm.id_competition_membership) as teams_count
 				FROM competitions as c 
 				JOIN sports as s ON c.id_sport=s.id_sport
 				JOIN competition_types as ct ON c.id_type=ct.id_type
 				LEFT JOIN competition_membership as cm ON cm.id_competition=c.id_competition
-				WHERE c.id_competition=?
-				GROUP BY c.id_competition`
+				WHERE c.id_competition=?`
 			, competition
 		);
+
+		if (result.length === 0) {
+			throw {status: 404, msg: 'Soutěž nebyla nalezena v databázi'};
+		}
+
+		return result[0];
 	}
 
 	async getCompetitionTeams(id_competition) {

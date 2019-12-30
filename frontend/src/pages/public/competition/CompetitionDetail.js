@@ -6,7 +6,10 @@ import {Breadcrumb, Image, Tabs, Tab} from 'react-bootstrap';
 import {useGetCompetitionDetail} from "../../../api/competitionClient_v1";
 import loadingGif from "../../../assets/images/loading.gif";
 import {CompetitionData} from "../../../organisms/competition/CompetitionData";
-import {CompetitionsTeams} from "../../../organisms/competition/CompetitionsTeams";
+import {CompetitionTeams} from "../../../organisms/competition/CompetitionTeams";
+import {CompetitionResults} from "../../../organisms/competition/CompetitionResults";
+import {CompetitionStatistics} from "../../../organisms/competition/CompetitionStatistics";
+
 export function CompetitionDetail() {
     let {id_competition} = useParams();
     const [state] = useGetCompetitionDetail(id_competition);
@@ -21,17 +24,21 @@ export function CompetitionDetail() {
                 <Breadcrumb>
                     <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
                     <li className="breadcrumb-item"><Link to="/competitions">Soutěže</Link></li>
-                    <li className="breadcrumb-item"><span className="active">{state.competition_data[0].id_competition}</span></li>
+                    <li className="breadcrumb-item"><span className="active">{state.competition_data.name}</span></li>
                 </Breadcrumb>
-                <Heading className="mt-4 mb-5">{state.competition_data[0].name}</Heading>
+                <Heading className="mt-4 mb-5">{state.competition_data.name}</Heading>
 
                 <CompetitionData state={state} />
 
                 <Tabs className="mb-3" fill defaultActiveKey="squad" id="competitionTabs">
-                    <Tab eventKey="squad" title="tymy">
-                        <CompetitionsTeams/>
+                    <Tab eventKey="squad" title="Týmy">
+                        <CompetitionTeams/>
                     </Tab>
-                    <Tab eventKey="competition" title="vysledky">
+                    <Tab eventKey="competition" title="Výsledky zápasů">
+                        <CompetitionResults/>
+                    </Tab>
+                    <Tab eventKey="statistics" title="Statistiky">
+                        <CompetitionStatistics/>
                     </Tab>
                 </Tabs>
             </div>
