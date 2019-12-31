@@ -70,4 +70,34 @@ router.get('/:id_competition/teams', async (req, res) => {
 	await res.status(200).json({ error: false, msg: 'OK', competitions: competitions});
 });
 
+/**
+ * @swagger
+ * /competitions/{id_competition}/statistics/{is_goalkeeper}:
+ *   get:
+ *     tags:
+ *       - Competitions
+ *     name: Competition teams
+ *     summary: Get competition teams by id_competition
+ *     produces: application/json
+ *     parameters:
+ *       - name: id_competition
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - name: is_goalkeeper
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: boolean
+ *     responses:
+ *       200:
+ *         description: All competitions returned
+ */
+router.get('/:id_competition/statistics/:is_goalkeeper', async (req, res) => {
+	const { id_competition, is_goalkeeper } = req.params;
+	const statistics = await new CompetitionService(req).getCompetitionStatistics(id_competition, is_goalkeeper);
+	await res.status(200).json({ error: false, msg: 'OK', statistics: statistics});
+});
+
 export default router;
