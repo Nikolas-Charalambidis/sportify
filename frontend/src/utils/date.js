@@ -11,5 +11,5 @@ export function formatDate(date) {
 	if (typeof date === 'string') {
 		date = parseISO(date);
 	}
-	return format(date, 'd.M.yyyy');
+	return format(date, 'd. M. yyyy');
 }
