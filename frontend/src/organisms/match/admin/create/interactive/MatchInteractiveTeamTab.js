@@ -79,7 +79,7 @@ export function MatchInteractiveTeamTab({ teamName, teamState, teamSetState, set
 
     return (
         <div>
-            <Heading className="d-none d-sm-block d-md-none" size="lg">
+            <Heading className="d-block d-md-none d-lg-none" size="lg">
                 {teamName}
                 <hr/>
             </Heading>

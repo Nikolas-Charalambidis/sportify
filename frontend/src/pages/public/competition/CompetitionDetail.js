@@ -8,7 +8,8 @@ import loadingGif from "../../../assets/images/loading.gif";
 import {CompetitionData} from "../../../organisms/competition/CompetitionData";
 import {CompetitionTeams} from "../../../organisms/competition/CompetitionTeams";
 import {CompetitionResults} from "../../../organisms/competition/CompetitionResults";
-import {CompetitionStatistics} from "../../../organisms/competition/CompetitionStatistics";
+import {CompetitionStatisticsPlayers} from "../../../organisms/competition/statistics/CompetitionStatisticsPlayers";
+import {CompetitionStatisticsGoalkeepers} from "../../../organisms/competition/statistics/CompetitionStatisticsGoalkeepers";
 
 export function CompetitionDetail() {
     let {id_competition} = useParams();
@@ -38,7 +39,11 @@ export function CompetitionDetail() {
                         <CompetitionResults/>
                     </Tab>
                     <Tab eventKey="statistics" title="Statistiky">
-                        <CompetitionStatistics/>
+                        <Heading className="mt-4" size="lg">Hráči</Heading>
+                        <CompetitionStatisticsPlayers isGoalKeeper={0}/>
+
+                        <Heading className="mt-4" size="lg">Brankáři</Heading>
+                        <CompetitionStatisticsGoalkeepers isGoalKeeper={1}/>
                     </Tab>
                 </Tabs>
             </div>

@@ -29,6 +29,33 @@ export function useGetMatch(id_match) {
     return [state];
 }
 
+export function useGetCompetitionMatches(id_competition) {
+    const api = useApi();
+    const [state, setState] = useState({
+        isLoading: true,
+        error: false,
+        matches_data: undefined
+    });
+    useEffect(() => {
+        async function fetchData() {
+            await api
+                .get(`${config.API_BASE_PATH}/matches/${id_competition}/competition`)
+                .then(({data}) => {
+                    const {matches} = data;
+                    setState({isLoading: false, error: false, matches: matches});
+                })
+                .catch(( { response } ) => {
+                    const {data} = response;
+                    setState({isLoading: false, error: true, matches: null});
+                    window.flash(data.msg, 'danger');
+                });
+        }
+
+        fetchData().then();
+    }, [api, id_competition]);
+    return [state];
+}
+
 export function useGetEvents(id_match, host) {
     const api = useApi();
     const [state, setState] = useState({

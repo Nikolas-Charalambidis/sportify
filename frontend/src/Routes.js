@@ -43,6 +43,7 @@ export function Routes() {
 			<Route path="/contact" exact component={Contact}/>
 			<Route path="/teams/:id_team" exact component={TeamDetail} />
 			<Route path="/teams/:id_team/matches/:id_match" exact component={MatchDetail} />
+			<Route path="/matches/:id_match" exact component={MatchDetail} />
 			<Route path="/teams" exact component={TeamList} />
 			<Route path="/users/:id_user" exact component={UserDetail} />
 

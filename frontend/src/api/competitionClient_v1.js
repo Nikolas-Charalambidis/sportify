@@ -82,3 +82,30 @@ export function useGetCompetitionsTeams(id_competition) {
     }, [api, id_competition]);
     return [state];
 }
+
+export function useGetCompetitionsStatistics(id_competition, is_goalkeeper) {
+    const api = useApi();
+    const [state, setState] = useState({
+        isLoading: true,
+        error: false,
+        competitions_statistics: undefined
+    });
+    useEffect(() => {
+        async function fetchData() {
+            await api
+                .get(`${config.API_BASE_PATH}/competitions/${id_competition}/statistics/${is_goalkeeper}`)
+                .then(({data}) => {
+                    const {statistics} = data;
+                    setState({isLoading: false, error: false, statistics: statistics});
+                })
+                .catch(( { response } ) => {
+                    const {data} = response;
+                    setState({isLoading: false, error: true, statistics: null});
+                    window.flash(data.msg, 'danger');
+                });
+        }
+
+        fetchData().then();
+    }, [api, id_competition, is_goalkeeper]);
+    return [state];
+}

@@ -1,17 +1,10 @@
 .clock {
   text-align: center;
-  position: fixed;
-  right: 8px;
-  top: 68px;
-  z-index: 1000;
-
-  .column:first-child {
-    margin-right: 30px;
-  }
+  margin-bottom: 10px;
 
   .column {
     display: inline-block;
-    width: 35%;
+    width: 10%;
 
     .timer {
       font-family: Proxima, Arial, sans-serif;
@@ -41,13 +34,35 @@
   }
 
   .clock .column {
-    width: 45%;
+    width: 10%;
+  }
+}
+
+@media (max-width: 993px) {
+  .clock .column {
+    width: 14%;
+  }
+}
+
+@media (max-width: 768px) {
+  .clock .column {
+    width: 20%;
+  }
+}
+
+@media (max-width: 500px) {
+  .clock .column {
+    width: 30%;
   }
 }
 
 @media (max-width: 400px) {
   .clock .column:first-child {
     margin-right: 15px;
+  }
+
+  .clock .column {
+    width: 45%;
   }
 }
 
