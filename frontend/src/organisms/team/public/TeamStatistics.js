@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Heading} from "../../../atoms";
+import {Heading} from "../../../basicComponents";
 import {TeamStatisticsGoalkeepers} from "./statistics/TeamStatisticsGoalkeepers";
 import {TeamStatisticsPlayers} from "./statistics/TeamStatisticsPlayers";
 import {useGetTeamCompetition} from "../../../api/teamClient_v1";

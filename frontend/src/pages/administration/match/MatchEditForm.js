@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Heading} from '../../../atoms/';
+import {Heading} from '../../../basicComponents/';
 import {Breadcrumb, Button} from "react-bootstrap";
 import {NavLink as Link, useHistory, useParams} from "react-router-dom";
 import {useAuth} from "../../../utils/auth";
@@ -11,7 +11,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import moment from "moment";
 import {useGetTeam} from "../../../api/teamClient_v1";
-import {DeleteModal} from "../../../atoms/DeleteModal";
+import {DeleteModal} from "../../../basicComponents/DeleteModal";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as Icons from "@fortawesome/free-solid-svg-icons";
 import {MatchDetailAdmin} from "../../../organisms/match/admin/detail/MatchDetailAdmin";
@@ -47,6 +47,10 @@ export function MatchEditForm() {
             history.replace(`/administration/teams/${id.id_team}`);
         }
     };
+
+    if(stateMatch.isLoading) {
+        return <div className="text-center"><Image src={loadingGif}/></div>;
+    }
 
     return (
         <div>

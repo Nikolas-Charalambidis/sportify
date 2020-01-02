@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
 import {NavLink as Link, useHistory} from 'react-router-dom';
-import {Heading} from '../../../atoms';
+import {Heading} from '../../../basicComponents';
 import {Breadcrumb, Button} from "react-bootstrap";
 import "react-table/react-table.css";
 import {useGetUserOwnedTeams} from "../../../api/userClient_v1";
 import {useAuth} from "../../../utils/auth";
 import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../assets/images/loading.gif";
-import {Table} from "../../../atoms/Table";
+import {Table} from "../../../basicComponents/Table";
 import {TeamCreateModal} from "../../../organisms/team/admin/TeamCreateModal";
 import {useApi} from "../../../hooks/useApi";
 

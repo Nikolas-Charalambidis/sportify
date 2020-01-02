@@ -1,12 +1,12 @@
 import React from 'react';
 import {NavLink as Link, useHistory} from 'react-router-dom';
-import {Heading} from '../../../atoms';
+import {Heading} from '../../../basicComponents';
 import {Breadcrumb} from "react-bootstrap";
 import {useGetTeams} from "../../../api/teamClient_v1";
 import "react-table/react-table.css";
 import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../assets/images/loading.gif";
-import {Table} from "../../../atoms/Table";
+import {Table} from "../../../basicComponents/Table";
 import {useGetSports, useGetTeamTypes} from "../../../api/othersClient_v1";
 
 export function TeamList() {

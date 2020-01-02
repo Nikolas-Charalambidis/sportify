@@ -1,5 +1,5 @@
 import React from 'react';
-import {Heading} from '../../../atoms';
+import {Heading} from '../../../basicComponents';
 import {Breadcrumb, Row, Col, Image} from 'react-bootstrap';
 import {useParams} from "react-router-dom";
 import {useGetUser} from '../../../api/userClient_v1';

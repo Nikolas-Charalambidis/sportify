@@ -1,10 +1,10 @@
 import {Formik} from "formik";
 import {ChangeData} from "../../../api/userClient_v1";
 import {Button, Col, Form, Row} from "react-bootstrap";
-import {Field} from "../../../atoms";
+import {Field} from "../../../basicComponents";
 import React from "react";
 import * as yup from "yup";
-import {Avatar} from "../../../atoms/Avatar";
+import {Avatar} from "../../../basicComponents/Avatar";
 import defaultLogoAvatar from "../../../assets/images/default_avatar.svg";
 import {useState} from "react";
 

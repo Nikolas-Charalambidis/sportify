@@ -1,14 +1,14 @@
 import React from 'react';
-import {Heading} from '../../atoms';
+import {Heading} from '../../basicComponents';
 import {Row, Col, Form, Button, Breadcrumb} from "react-bootstrap";
-import {Footer} from "../../atoms/Footer";
+import {Footer} from "../../basicComponents/Footer";
 import {useApi} from '../../hooks/useApi';
 import {useAuth} from '../../utils/auth';
 import {useHistory} from "react-router";
 import {config} from '../../config';
 import {Formik} from "formik";
 import * as yup from "yup";
-import {Field} from "../../atoms/Field";
+import {Field} from "../../basicComponents/Field";
 import { useParams } from 'react-router-dom';
 
 const schema = yup.object().shape({
@@ -48,7 +48,7 @@ export function ResetPassword() {
     }
     return (
         <div>
-                <Breadcrumb>
+            <Breadcrumb>
                 <Breadcrumb.Item href="/">Domů</Breadcrumb.Item>
                 <Breadcrumb.Item active>Obnova hesla</Breadcrumb.Item>
             </Breadcrumb>
