@@ -26,6 +26,7 @@
 		"mariadb": "^2.1.2",
 		"multer": "^1.4.2",
 		"multer-storage-cloudinary": "^2.2.1",
+		"serialize-javascript": "2.1.1",
 		"swagger-jsdoc": "^3.4.0",
 		"swagger-ui-express": "^4.1.2"
 	},

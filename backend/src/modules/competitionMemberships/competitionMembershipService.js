@@ -7,6 +7,15 @@ export default class CompetitionMembershipService {
 		this.dbConnection = req[DB_CONNECTION_KEY];
 	}
 
+	async filteredCompetitionMemberships(id_team) {
+		const team = Number(id_team);
+
+		return await this.dbConnection.query(
+			`SELECT * FROM competition_membership WHERE id_team=?`,
+			[team]
+		);
+	}
+
 	async addNewTeam(id_competition, id_team, status) {
 		const competition = Number(id_competition);
 		const team = Number(id_team);
