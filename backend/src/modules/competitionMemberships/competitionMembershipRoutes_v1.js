@@ -5,6 +5,39 @@ const router = Router();
 
 /**
  * @swagger
+ * /competitionMembership:
+ *   get:
+ *     tags:
+ *       - CompetitionMembership
+ *     name: Competition membership by team
+ *     summary: Competition membership by team
+ *     parameters:
+ *       - name: id_team
+ *         in: query
+ *         description: Team ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Players returned
+ *       400:
+ *         description: Invalid request
+ *       500:
+ *         description: Unexpected error
+ */
+router.get('/', async (req, res, next) => {
+	try {
+		const { id_team } = req.query;
+		const competition_memberships = await new CompetitionService(req).filteredCompetitionMemberships(id_team);
+		res.status(200).json({ error: false, msg: 'OK', competition_memberships: competition_memberships});
+	} catch(e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
  * /competitionMembership/competition/{id_competition}/team/{id_team}:
  *   patch:
  *     tags:
