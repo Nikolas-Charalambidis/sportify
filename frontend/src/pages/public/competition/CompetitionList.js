@@ -134,7 +134,7 @@ export function CompetitionList() {
                 <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
                 <li className="breadcrumb-item"><span className="active">Soutěže</span></li>
             </Breadcrumb>
-            <Heading>Přehled sotěží</Heading>
+            <Heading>Přehled soutěží</Heading>
 
             {(state.isLoading || sportsState.isLoading || typesState.isLoading) &&
             <div className="text-center"><Image src={loadingGif}/></div>}
