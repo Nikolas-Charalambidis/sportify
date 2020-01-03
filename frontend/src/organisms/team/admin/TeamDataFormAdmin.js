@@ -1,13 +1,13 @@
 import {Formik} from "formik";
 import {Button, Col, Form, Row} from "react-bootstrap";
-import {Field, Heading} from "../../../atoms";
+import {Field, Heading} from "../../../basicComponents";
 import React from "react";
 import * as yup from "yup";
-import {Avatar} from "../../../atoms/Avatar";
+import {Avatar} from "../../../basicComponents/Avatar";
 import defaultTeamAvatar from "../../../assets/images/default_team_avatar.svg";
 import {useState} from "react";
 import {ChangeTeamData, ChangeSetActive} from "../../../api/teamClient_v1";
-import {CustomSelect} from "../../../atoms/Select";
+import {CustomSelect} from "../../../basicComponents/Select";
 import {useGetSports, useGetTeamTypes} from "../../../api/othersClient_v1";
 import {useApi} from "../../../hooks/useApi";
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import {Button, Form, Modal} from "react-bootstrap";
-import {Field} from "../../../../atoms";
+import {Field} from "../../../../basicComponents";
 import {Formik} from "formik";
-import {CustomSelect} from "../../../../atoms/Select";
+import {CustomSelect} from "../../../../basicComponents/Select";
 
 export function AddGoalForm({ id_user, handleClose, addEvent, matchup, id_team, id_match, host, schema, interactive, timerState }) {  
 

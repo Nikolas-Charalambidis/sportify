@@ -2,7 +2,7 @@ import React from 'react';
 import { Col, Form, Row } from 'react-bootstrap';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import { CustomSelect } from '../../../../atoms/Select';
+import { CustomSelect } from '../../../../basicComponents/Select';
 
 const schema = yup.object().shape({
     id_team_home: yup.string().required(),

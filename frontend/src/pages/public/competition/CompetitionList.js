@@ -1,12 +1,12 @@
 import React from 'react';
 import {NavLink as Link, useHistory} from 'react-router-dom';
-import {Heading} from '../../../atoms';
+import {Heading} from '../../../basicComponents';
 import {Breadcrumb} from "react-bootstrap";
 import "react-table/react-table.css";
 import {useGetCompetitions} from "../../../api/competitionClient_v1";
 import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../assets/images/loading.gif";
-import {Table} from "../../../atoms/Table";
+import {Table} from "../../../basicComponents/Table";
 import {useGetCompetitionTypes, useGetSports} from "../../../api/othersClient_v1";
 
 function getUniqueCities(state) {

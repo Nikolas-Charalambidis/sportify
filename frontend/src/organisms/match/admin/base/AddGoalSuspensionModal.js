@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Tab, Tabs } from "react-bootstrap";
-import { Heading } from "../../../../atoms";
+import { Heading } from "../../../../basicComponents";
 import * as yup from "yup";
 import { AddGoalForm } from "./AddGoalForm";
 import { AddSuspensionForm } from "./AddSuspensionForm";

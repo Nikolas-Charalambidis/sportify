@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import "react-table/react-table.css";
 import {useHistory} from 'react-router-dom';
-import {Heading} from "../../../atoms";
-import {Table} from "../../../atoms/Table";
+import {Heading} from "../../../basicComponents";
+import {Table} from "../../../basicComponents/Table";
 import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../assets/images/loading.gif";
 import {useGetTeamPositions} from "../../../api/othersClient_v1";
@@ -11,7 +11,7 @@ import Button from "react-bootstrap/Button";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as Icons from "@fortawesome/free-solid-svg-icons";
 import {useApi} from "../../../hooks/useApi";
-import {UpdateStateModal} from "../../../atoms/UpdateStateModal";
+import {UpdateStateModal} from "../../../basicComponents/UpdateStateModal";
 
 
 
@@ -32,7 +32,6 @@ export function TeamSquad({status, admin, playersState, fetchActivePlayersState,
             fetchInactivePlayersState();
             fetchPlayersPendingState();
             fetchPlayersDeclinedState();
-
         }
     };
 
@@ -42,9 +41,6 @@ export function TeamSquad({status, admin, playersState, fetchActivePlayersState,
             fetchPlayersDeclinedState();
         }
     };
-
-
-    
 
     let history = useHistory();
     const columns = [

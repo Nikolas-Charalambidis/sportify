@@ -145,7 +145,7 @@ router.patch('/team/:id_team/user/:id_user', async (req, res, next) => {
  *               type: integer
  *     responses:
  *       201:
- *         description: User created
+ *         description: User membership created
  *       400:
  *         description: Invalid request
  *       500:
@@ -156,7 +156,7 @@ router.post('/team/:id_team/user/:id_user', async (req, res, next) => {
         const { id_team, id_user } = req.params;
         const { status, id_position } = req.body;
         await new TeamService(req).addNewMember(id_team, id_user, id_position, status);
-        res.status(200).json({ error: false, msg: 'Žádost o přidání do týmu byla uspěšně odeslána'});
+        res.status(200).json({ error: false, msg: 'Nové členství v týmu bylo vytvořeno'});
     } catch(e) {
         next(e);
     }
@@ -185,7 +185,7 @@ router.post('/team/:id_team/user/:id_user', async (req, res, next) => {
  *           type: integer
  *     responses:
  *       200:
- *         description: User removed
+ *         description: User membership removed
  *       400:
  *         description: Invalid request
  *       500:

@@ -1,8 +1,8 @@
 import React from 'react';
 import {useParams} from "react-router-dom";
 import {useGetTeamCompetition} from "../../../api/teamClient_v1";
-import {Heading} from "../../../atoms";
-import {Table} from "../../../atoms/Table";
+import {Heading} from "../../../basicComponents";
+import {Table} from "../../../basicComponents/Table";
 import moment from "moment";
 
 export function TeamCompetitions() {

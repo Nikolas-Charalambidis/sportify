@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {NavLink as Link, useParams} from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
-import {Heading} from '../../../atoms';
+import {Heading} from '../../../basicComponents';
 import {Breadcrumb, Image, Tabs, Tab, Row, Button, Col} from 'react-bootstrap';
 import {TeamSquad} from "../../../organisms/team/public/TeamSquad";
 import {useGetTeam, useGetTeamMatches} from "../../../api/teamClient_v1";
@@ -12,8 +12,9 @@ import {TeamData} from "../../../organisms/team/public/TeamData";
 import {MatchList} from "../../../organisms/match/MatchList";
 import {useGetTeamPlayers, useGetTeamPlayersByStatus} from "../../../api/teamMembershipClient_v1";
 import {useAuth} from "../../../utils/auth";
-import {TeamRequestModal} from "../../../atoms/TeamRequestModal";
+import {TeamRequestModal} from "../../../basicComponents/TeamRequestModal";
 import {useGetTeamPositions} from "../../../api/othersClient_v1";
+import {UnexpectedError} from "../../../basicComponents/UnexpectedError";
 
 export function TeamDetail() {
 
@@ -30,13 +31,17 @@ export function TeamDetail() {
     const [positions] = useGetTeamPositions();
     const [positionsState, setPositionsState] = useState({id_position: null});
 
+    if(state.isLoading) {
+        return <div className="text-center"><Image src={loadingGif}/></div>;
+    }
+
+    if(!state.isLoading && state.error) {
+        return <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>;
+    }
 
     return (
         <div>
-            {state.isLoading && <div className="text-center"><Image src={loadingGif}/></div>}
-            {(!state.isLoading && state.error) &&
-            <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
-            {(!state.isLoading && !state.error) &&
+            {(!state.isLoading && !state.error) ?
             <div>
                 <Breadcrumb>
                     <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
@@ -88,6 +93,7 @@ export function TeamDetail() {
                     </Tab>
                 </Tabs>
             </div>
+            : <UnexpectedError/>
             }
         </div>
     );

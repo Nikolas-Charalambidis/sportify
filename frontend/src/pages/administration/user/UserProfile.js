@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import {Heading} from '../../../atoms';
-import {CardTemplate} from '../../../atoms/CardTemplate';
+import {Heading} from '../../../basicComponents';
+import {CardTemplate} from '../../../basicComponents/CardTemplate';
 import {Row, Breadcrumb} from 'react-bootstrap';
 import {useHistory} from 'react-router';
 import {useAuth} from '../../../utils/auth';

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Field} from "../../../../atoms";
+import {Field} from "../../../../basicComponents";
 import {Form} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 

@@ -7,10 +7,9 @@ import {useGetMembers, useGetTeamMatches} from "../../../api/teamClient_v1";
 import {TeamDataFormAdmin} from "../../../organisms/team/admin/TeamDataFormAdmin";
 import {useAuth} from "../../../utils/auth";
 import {MatchList} from "../../../organisms/match/MatchList";
-import {TeamSquad} from "../../../organisms/team/public/TeamSquad";
-import {useGetTeamPlayersByStatus} from "../../../api/teamMembershipClient_v1";
-import {Heading} from "../../../atoms";
-
+import {Heading} from "../../../basicComponents";
+import {TeamSquadAdmin} from "../../../organisms/team/admin/TeamSquadAdmin";
+import {UnexpectedError} from "../../../basicComponents/UnexpectedError";
 
 export function TeamDetailAdmin() {
     const history = useHistory();
@@ -22,11 +21,6 @@ export function TeamDetailAdmin() {
     let {id_team} = useParams();
     const [state] = useGetTeam(id_team);
 
-    const [playersActiveState, fetchPlayersActiveState] = useGetTeamPlayersByStatus(id_team, "active");
-    const [playersInactiveState, fetchPlayersInactiveState] = useGetTeamPlayersByStatus(id_team, "inactive");
-    const [playersPendingState, fetchPlayersPendingState] = useGetTeamPlayersByStatus(id_team, "pending");
-    const [playersDeclinedState, fetchPlayersDeclinedState] = useGetTeamPlayersByStatus(id_team, "declined");
-
     if(!state.isLoading && !state.error) {
         if(user.id_user !== state.team_data.id_leader){
             window.flash("Na tuto stránku má přístup pouze vedoucí zobrazovaného týmu!", "danger");
@@ -37,12 +31,17 @@ export function TeamDetailAdmin() {
     const [membersState] = useGetMembers(id_team);
     const [matchesState] = useGetTeamMatches(id_team);
 
+    if(state.isLoading || membersState.isLoading) {
+        return <div>Načítám data...</div>;
+    }
+
+    if((!state.isLoading && state.error) || (!membersState.isLoading && membersState.error)) {
+        return <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>;
+    }
+
     return (
         <div>
-            {(state.isLoading || membersState.isLoading) && <div>Načítám data...</div>}
-            {((!state.isLoading && state.error) || (!membersState.isLoading && membersState.error)) &&
-            <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
-            {((!state.isLoading && !state.error) && (!membersState.isLoading && !membersState.error)) &&
+            {((!state.isLoading && !state.error) && (!membersState.isLoading && !membersState.error)) ?
                 <div>
                     <Breadcrumb>
                         <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
@@ -55,35 +54,14 @@ export function TeamDetailAdmin() {
 
                     <Tabs className="mb-3" fill defaultActiveKey="squad" id="teamTabs">
                         <Tab eventKey="squad" title="Sestava">
-                            <TeamSquad status="active" admin={true} playersState={playersActiveState}
-                                       fetchActivePlayersState={fetchPlayersActiveState}
-                                       fetchInactivePlayersState={fetchPlayersInactiveState}
-                                       fetchPlayersPendingState={fetchPlayersPendingState}
-                                       fetchPlayersDeclinedState={fetchPlayersDeclinedState}/>
-                            <h2 className="mt-4">Neaktivní hráči</h2>
-                            <TeamSquad status="inactive" admin={true} playersState={playersInactiveState}
-                                       fetchActivePlayersState={fetchPlayersActiveState}
-                                       fetchInactivePlayersState={fetchPlayersInactiveState}
-                                       fetchPlayersPendingState={fetchPlayersPendingState}
-                                       fetchPlayersDeclinedState={fetchPlayersDeclinedState} />
-                            <h2 className="mt-4">Žádosti o členství</h2>
-                            <TeamSquad status="pending" admin={true} playersState={playersPendingState}
-                                       fetchActivePlayersState={fetchPlayersActiveState}
-                                       fetchInactivePlayersState={fetchPlayersInactiveState}
-                                       fetchPlayersPendingState={fetchPlayersPendingState}
-                                       fetchPlayersDeclinedState={fetchPlayersDeclinedState}/>
-                            <h2 className="mt-4">Zámítnuté žádosti</h2>
-                            <TeamSquad status="declined" admin={true} playersState={playersDeclinedState}
-                                       fetchActivePlayersState={fetchPlayersActiveState}
-                                       fetchInactivePlayersState={fetchPlayersInactiveState}
-                                       fetchPlayersPendingState={fetchPlayersPendingState}
-                                       fetchPlayersDeclinedState={fetchPlayersDeclinedState}/>
+                            <TeamSquadAdmin id_team={id_team} />
                         </Tab>
                         <Tab eventKey="matches" title="Zápasy">
                             <MatchList matchesState={matchesState} admin={true} id_team={id_team} />
                         </Tab>
                     </Tabs>
                 </div>
+                : <UnexpectedError />
             }
         </div>
     );
