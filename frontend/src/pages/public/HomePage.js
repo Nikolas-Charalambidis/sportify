@@ -1,5 +1,6 @@
 import React from 'react';
 import {CarouselItems} from "../../organisms/homepage/CarouselItems";
+import {Services} from "../../organisms/homepage/Services";
 
 export function HomePage() {
     return (
@@ -7,6 +8,7 @@ export function HomePage() {
             <div id="main-slider">
                 <CarouselItems/>
             </div>
+            <Services/>
         </div>
     );
 }
