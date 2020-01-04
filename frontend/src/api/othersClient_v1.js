@@ -101,3 +101,28 @@ export function useGetCompetitionTypes() {
     }, [api]);
     return [state];
 }
+
+export function useGetStatistics() {
+    const api = useApi();
+    const [state, setState] = useState({
+        isLoading: true,
+        error: false,
+        statistics: undefined
+    });
+    useEffect(() => {
+        async function fetchData() {
+            await api
+                .get(`${config.API_BASE_PATH}/others/statistics`)
+                .then(({data}) => {
+                    const {statistics} = data;
+                    setState({isLoading: false, error: false, statistics: statistics});
+                })
+                .catch(() => {
+                    setState({isLoading: false, error: true, statistics: null});
+                });
+        }
+
+        fetchData().then();
+    }, [api]);
+    return [state];
+}

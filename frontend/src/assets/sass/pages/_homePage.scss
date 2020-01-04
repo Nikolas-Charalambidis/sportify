@@ -57,3 +57,31 @@
   background-color: black;
   padding: 4px 10px;
 }
+
+#stats {
+  padding-top: 60px;
+  padding-bottom: 60px;
+  background-color: black;
+  position: relative;
+  overflow: hidden;
+  display: block;
+  color: #f5f5f5;
+
+  .counter {
+    font-size: 45px !important;
+    margin-bottom: 20px !important;
+    text-align: center;
+    font-weight: bold !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .counterName {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    line-height: 1.2;
+    text-transform: uppercase;
+    margin-top: -20px;
+  }
+}
