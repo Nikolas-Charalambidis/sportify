@@ -1,6 +1,7 @@
 import {useApi} from "../hooks/useApi";
 import {useEffect, useState} from "react";
 import {config} from '../config';
+import * as queryString from 'query-string';
 
 export function useGetCompetitions() {
     const api = useApi();
@@ -92,8 +93,13 @@ export function useGetCompetitionsStatistics(id_competition, is_goalkeeper) {
     });
     useEffect(() => {
         async function fetchData() {
+            let queryParamObject = {
+                is_goalkeeper: is_goalkeeper
+            };
+            const queryParam = queryString.stringify(queryParamObject);
+
             await api
-                .get(`${config.API_BASE_PATH}/competitions/${id_competition}/statistics/${is_goalkeeper}`)
+                .get(`${config.API_BASE_PATH}/competitions/${id_competition}/statistics?` + queryParam)
                 .then(({data}) => {
                     const {statistics} = data;
                     setState({isLoading: false, error: false, statistics: statistics});
