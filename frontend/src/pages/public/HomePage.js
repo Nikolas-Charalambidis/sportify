@@ -1,11 +1,12 @@
 import React from 'react';
-
-import {Heading} from '../../basicComponents';
+import {CarouselItems} from "../../organisms/homepage/CarouselItems";
 
 export function HomePage() {
     return (
         <div>
-            <Heading>Sportify</Heading>
+            <div id="main-slider">
+                <CarouselItems/>
+            </div>
         </div>
     );
 }
