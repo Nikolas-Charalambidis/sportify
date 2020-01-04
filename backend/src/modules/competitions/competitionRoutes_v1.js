@@ -94,8 +94,9 @@ router.get('/:id_competition/teams', async (req, res) => {
  *       200:
  *         description: All competitions returned
  */
-router.get('/:id_competition/statistics/:is_goalkeeper', async (req, res) => {
-	const { id_competition, is_goalkeeper } = req.params;
+router.get('/:id_competition/statistics', async (req, res) => {
+	const { id_competition } = req.params;
+	const { is_goalkeeper } = req.query;
 	const statistics = await new CompetitionService(req).getCompetitionStatistics(id_competition, is_goalkeeper);
 	await res.status(200).json({ error: false, msg: 'OK', statistics: statistics});
 });
