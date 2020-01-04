@@ -85,3 +85,16 @@
     margin-top: -20px;
   }
 }
+
+#about-us {
+  .main-title {
+    text-transform: uppercase;
+    letter-spacing: 6px;
+    font-family: Lato, sans-serif;
+    font-weight: 700;
+  }
+
+  p {
+    font-size: 20px;
+  }
+}
