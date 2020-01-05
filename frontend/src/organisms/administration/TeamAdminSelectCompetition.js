@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
-import {useParams} from "react-router-dom";
-import {Heading} from "../../atoms"
-import {CustomSelect} from "../../atoms/Select";
+import {Heading} from "../../basicComponents";
+import {CustomSelect} from "../../basicComponents/Select";
 import {useGetCompetitions} from "../../api/competitionClient_v1";
 
 export function TeamAdminSelectCompetition() {

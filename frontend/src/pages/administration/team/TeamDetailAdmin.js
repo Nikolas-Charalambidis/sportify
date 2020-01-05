@@ -11,9 +11,6 @@ import {MatchList} from "../../../organisms/match/MatchList";
 import {Heading} from "../../../basicComponents";
 import {TeamSquadAdmin} from "../../../organisms/team/admin/TeamSquadAdmin";
 import {UnexpectedError} from "../../../basicComponents/UnexpectedError";
-import {TeamSquad} from "../../../organisms/team/public/TeamSquad";
-import {useGetTeamPlayersByStatus} from "../../../api/teamMembershipClient_v1";
-import {Heading} from "../../../atoms";
 import {TeamAdminSelectCompetition} from "../../../organisms/administration/TeamAdminSelectCompetition";
 
 
