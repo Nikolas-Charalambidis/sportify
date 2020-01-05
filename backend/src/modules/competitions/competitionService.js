@@ -12,14 +12,28 @@ export default class CompetitionService {
 		this.dbConnection = req[DB_CONNECTION_KEY];
 	}
 
-	async allCompetitions() {
+	async allCompetitions(id_sport, id_type) {
+		const {sport, type} = competitionValidations.validateFilteredCompetitionData(id_sport, id_type);
+
+		var where = '';
+		var values = [];
+		if (sport !== undefined) {
+			where += ' AND c.id_sport=?';
+			values.push(sport);
+		}
+
+		if (type !== undefined) {
+			where += ' AND c.id_type=?';
+			values.push(type);
+		}
+
 		return this.dbConnection.query(
 			`SELECT c.id_competition, c.name, s.sport, c.city, ct.type, c.start_date, c.end_date, COUNT(cm.id_competition_membership) as teams_count
 				FROM competitions as c 
 				JOIN sports as s ON c.id_sport=s.id_sport
 				JOIN competition_types as ct ON c.id_type=ct.id_type
-				LEFT JOIN competition_membership as cm ON cm.id_competition=c.id_competition
-				GROUP BY c.id_competition`
+				LEFT JOIN competition_membership as cm ON cm.id_competition=c.id_competition WHERE 1=1 ` + where + ` GROUP BY c.id_competition`,
+			[...values]
 		);
 	}
 

@@ -11,12 +11,26 @@ const router = Router();
  *       - Competitions
  *     name: Competitions
  *     summary: Get all competitions
+ *     parameters:
+ *      - name: id_sport
+ *        in: query
+ *        description: Filter by a certain sport
+ *        required: false
+ *        schema:
+ *          type: integer
+ *      - name: id_type
+ *        in: query
+ *        description: Filter by a certain competition type
+ *        required: false
+ *        schema:
+ *          type: integer
  *     responses:
  *       200:
  *         description: All competitions returned
  */
 router.get('/', async (req, res) => {
-	const competitions = await new CompetitionService(req).allCompetitions();
+	const { id_sport, id_type } = req.query;
+	const competitions = await new CompetitionService(req).allCompetitions( id_sport, id_type );
 	await res.status(200).json({ error: false, msg: 'OK', competitions: competitions});
 });
 
