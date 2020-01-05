@@ -6,7 +6,7 @@ import {useGetCompetitions} from "../../api/competitionClient_v1";
 export function TeamAdminSelectCompetition() {
 
     const [competitions] = useGetCompetitions();
-    const [competitionState, setCompetitionState] = useState({id_competition: null});
+    const [setCompetitionState] = useState({id_competition: null});
     console.log(competitions);
 
     return (
