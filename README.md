@@ -34,15 +34,17 @@ A web application Sportify, as a semestral work, manages teams, leagues, matches
 - API documentation: [Swagger](http://localhost:3001/docs/v1)
 - Other documents (read only): [Google Drive](https://drive.google.com/drive/folders/1HR7KYamV8zcGRj8VAkLtMEJI15myPq_-?usp=sharing)  
 
-## How to run locally
+## How to run locally (links to the master branch)
 
-- Database: see at `/database/README.md`
-- Backend: see at `/backend/README.md`
-- Frontend: see at `/frontend/README.md`
+To develop Backend, the Database and Backend is needed. To run Frontend, all of the components must run.
+
+- Database: see at [`/database/README.md`](https://github.com/Nikolas-Charalambidis/4IT445/blob/master/database/README.md), port `3306`.
+- Backend: see at[ `/backend/README.md`](https://github.com/Nikolas-Charalambidis/4IT445/blob/master/backend/README.md), port `3001`.
+- Frontend: see at [`/frontend/README.md`](https://github.com/Nikolas-Charalambidis/4IT445/blob/master/frontend/README.md), port `3000`.
 
 ## Contribution
 
-Read [**CONTRIBUTING.md**](https://github.com/Nikolas-Charalambidis/4IT445/blob/master/CONTRIBUTING.md) (link to the master branch).
+Read [`CONTRIBUTING.md`](https://github.com/Nikolas-Charalambidis/4IT445/blob/master/CONTRIBUTING.md) (link to the master branch).
 
 ## Nice to have, better CI and improvements
 
