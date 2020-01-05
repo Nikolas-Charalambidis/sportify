@@ -5,11 +5,14 @@ import {NavLink as Link, useHistory, useParams} from "react-router-dom";
 import {useGetTeam} from "../../../api/teamClient_v1";
 import {useGetMembers, useGetTeamMatches} from "../../../api/teamClient_v1";
 import {TeamDataFormAdmin} from "../../../organisms/team/admin/TeamDataFormAdmin";
+import {TeamCompetitions} from "../../../organisms/team/public/TeamCompetitions";
 import {useAuth} from "../../../utils/auth";
 import {MatchList} from "../../../organisms/match/MatchList";
 import {Heading} from "../../../basicComponents";
 import {TeamSquadAdmin} from "../../../organisms/team/admin/TeamSquadAdmin";
 import {UnexpectedError} from "../../../basicComponents/UnexpectedError";
+import {TeamAdminSelectCompetition} from "../../../organisms/administration/TeamAdminSelectCompetition";
+
 
 export function TeamDetailAdmin() {
     const history = useHistory();
@@ -58,6 +61,12 @@ export function TeamDetailAdmin() {
                         </Tab>
                         <Tab eventKey="matches" title="Zápasy">
                             <MatchList matchesState={matchesState} admin={true} id_team={id_team} />
+                        </Tab>
+                        <Tab eventKey="competitions" title="Soutěže">
+                            <h2 className="mt-4">Přihlášené soutěže</h2>
+                            <TeamCompetitions/>
+                            <h2 className="mt-4">Odeslání přihlášky do soutěže</h2>
+                            <TeamAdminSelectCompetition/>
                         </Tab>
                     </Tabs>
                 </div>
