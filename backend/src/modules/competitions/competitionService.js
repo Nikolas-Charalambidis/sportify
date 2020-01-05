@@ -80,6 +80,17 @@ export default class CompetitionService {
 		const competition = Number(id_competition);
 		competitionValidations.validateChangeCompetition(competition, name, leader, city);
 
+		const teams = await this.dbConnection.query('SELECT * FROM competition_membership WHERE id_competition = ?', [competition]);
+
+		const foundLeader = await this.dbConnection.query(
+			'SELECT * FROM competition_membership as cm JOIN team_membership tm on cm.id_team = tm.id_team WHERE cm.id_competition = ? AND tm.id_user = ?',
+			[competition, leader]
+		);
+		// If there is at least one team in the competition, the leader must be from that team. Any user can be a leader if the competition is empty.
+		if (teams.length !== 0 && foundLeader.length === 0) {
+			throw {status: 500, msg: 'Vybraný vedoucí soutěže musí být členem týmu v soutěži'};
+		}
+
 		const result = await this.dbConnection.query(
 			'UPDATE competitions SET name=?, id_leader=?, city=? WHERE id_competition=?',
 			[name, leader, city, competition]
