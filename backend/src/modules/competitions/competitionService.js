@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import {DB_CONNECTION_KEY} from '../../libs/connection';
 import * as competitionValidations from './competitionValidations';
+import {parseISO} from "date-fns";
 
 dotenv.config();
 dotenv.config({path: '.env'});
@@ -53,6 +54,39 @@ export default class CompetitionService {
 				WHERE cm.id_competition=?;`
 			, competition
 		);
+	}
+
+	async addNewCompetition(name, id_leader, id_sport, id_type, city, start_date, end_date) {
+		const leader = Number(id_leader);
+		const sport = Number(id_sport);
+		const type = Number(id_sport);
+
+		const start = parseISO(start_date);
+		const end = parseISO(end_date);
+
+		competitionValidations.validateNewCompetition(name, leader, sport, type, city, start, end);
+
+		const result = await this.dbConnection.query(
+			`INSERT INTO competitions (id_competition, name, id_leader, id_sport, id_type, city, start_date, end_date) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)`,
+			[name, leader, sport, type, city, start, end]
+		);
+		if (result.affectedRows === 0) {
+			throw {status: 500, msg: 'Vytvoření nové soutěže selhalo'};
+		}
+	}
+
+	async changeCompetition(id_competition, name, id_leader, city) {
+		const leader = Number(id_leader);
+		const competition = Number(id_competition);
+		competitionValidations.validateChangeCompetition(competition, name, leader, city);
+
+		const result = await this.dbConnection.query(
+			'UPDATE competitions SET name=?, id_leader=?, city=? WHERE id_competition=?',
+			[name, leader, city, competition]
+		);
+		if (result.affectedRows === 0) {
+			throw {status: 400, msg: 'Změna soutěžních údajů se nezdařila'};
+		}
 	}
 
 	async getCompetitionStatistics(id_competition, is_goalkeeper) {
