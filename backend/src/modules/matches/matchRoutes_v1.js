@@ -105,6 +105,41 @@ router.get('/:id_match', async (req, res, next) => {
 
 /**
  * @swagger
+ * /matches/{id_competition}/competition:
+ *   get:
+ *     tags:
+ *       - Matches
+ *     name: Match
+ *     summary: Get a match by competition ID
+ *     parameters:
+ *       - name: id_competition
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Match found
+ *       400:
+ *         description: Invalid request
+ *       404:
+ *         description: Match not found
+ *       500:
+ *         description: Unexpected error
+ */
+
+router.get('/:id_competition/competition', async (req, res, next) => {
+	try {
+		const { id_competition } = req.params;
+		const matches = await new MatchService(req).findMatchesByCompetitionId(id_competition);
+		res.status(200).json({ error: false, msg: 'OK', matches: matches});
+	} catch(e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
  * /matches/{id_match}/matchup/{host}:
  *   get:
  *     tags:

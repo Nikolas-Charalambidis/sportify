@@ -1,14 +1,14 @@
 import React, {useState} from 'react';
-import {Table} from "../../../../../atoms/Table";
+import {Table} from "../../../../../basicComponents/Table";
 import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../../../assets/images/loading.gif";
-import {Heading} from "../../../../../atoms";
+import {Heading} from "../../../../../basicComponents";
 import Button from "react-bootstrap/Button";
 import {PlayerSelectModal} from "../../create/PlayerSelectModal";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as Icons from "@fortawesome/free-solid-svg-icons";
 import {AddGoalSuspensionModal} from "../../base/AddGoalSuspensionModal";
-import {DeleteModal} from "../../../../../atoms/DeleteModal";
+import {DeleteModal} from "../../../../../basicComponents/DeleteModal";
 
 export function MatchMatchupCreateAdmin({interactive, host, availablePlayers, setAvailablePlayers, state, setState }) {
 
@@ -29,7 +29,7 @@ export function MatchMatchupCreateAdmin({interactive, host, availablePlayers, se
     const [showPlayerModal, setShowPlayerModal] = useState(false);
     const handleClosePlayerModal = () => setShowPlayerModal(false);
     const handleShowPlayerModal = () => setShowPlayerModal(true);
-
+    console.log(interactive)
     const columnsMatchup = [
         {
             Header: "Hráč",
@@ -70,7 +70,7 @@ export function MatchMatchupCreateAdmin({interactive, host, availablePlayers, se
                         openGoalSuspensionModal(row.original.id_user);
 
                     }}>
-                        <FontAwesomeIcon className="addIcon" icon={Icons.faPlus} size="1x"/>
+                        {!interactive && <FontAwesomeIcon className="addIcon" icon={Icons.faPlus} size="1x"/>}
                     </Button>
                     }
 
@@ -135,7 +135,7 @@ export function MatchMatchupCreateAdmin({interactive, host, availablePlayers, se
     };
 
     return (
-        <div>
+        <div className="mb-4">
             {availablePlayers.isLoading &&  <div className="text-center"><Image src={loadingGif}/></div>}
             {(!availablePlayers.isLoading && availablePlayers.error) &&
                 <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>
@@ -145,7 +145,7 @@ export function MatchMatchupCreateAdmin({interactive, host, availablePlayers, se
             }
             {(!availablePlayers.isLoading && !availablePlayers.error && availablePlayers.players.length !== 0) &&
                 <div>
-                    <Button variant="primary" onClick={handleShowPlayerModal}>
+                    <Button variant="primary mb-3" onClick={handleShowPlayerModal}>
                         Vybrat hráče do sestavy
                     </Button>
                     <PlayerSelectModal type="create" show={showPlayerModal}

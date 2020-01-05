@@ -5,7 +5,9 @@ import {config} from '../config';
 export function useGetSports() {
     const api = useApi();
     const [state, setState] = useState({
-        isLoading: true
+        isLoading: true,
+        error: false,
+        sports: undefined
     });
     useEffect(() => {
         async function fetchData() {
@@ -28,7 +30,9 @@ export function useGetSports() {
 export function useGetTeamTypes() {
     const api = useApi();
     const [state, setState] = useState({
-        isLoading: true
+        isLoading: true,
+        error: false,
+        types: undefined
     });
     useEffect(() => {
         async function fetchData() {
@@ -51,7 +55,9 @@ export function useGetTeamTypes() {
 export function useGetTeamPositions() {
     const api = useApi();
     const [state, setState] = useState({
-        isLoading: true
+        isLoading: true,
+        error: false,
+        positions: undefined
     });
     useEffect(() => {
         async function fetchData() {
@@ -74,7 +80,9 @@ export function useGetTeamPositions() {
 export function useGetCompetitionTypes() {
     const api = useApi();
     const [state, setState] = useState({
-        isLoading: true
+        isLoading: true,
+        error: false,
+        types: undefined
     });
     useEffect(() => {
         async function fetchData() {
@@ -86,6 +94,31 @@ export function useGetCompetitionTypes() {
                 })
                 .catch(() => {
                     setState({isLoading: false, error: true, types: null});
+                });
+        }
+
+        fetchData().then();
+    }, [api]);
+    return [state];
+}
+
+export function useGetStatistics() {
+    const api = useApi();
+    const [state, setState] = useState({
+        isLoading: true,
+        error: false,
+        statistics: undefined
+    });
+    useEffect(() => {
+        async function fetchData() {
+            await api
+                .get(`${config.API_BASE_PATH}/others/statistics`)
+                .then(({data}) => {
+                    const {statistics} = data;
+                    setState({isLoading: false, error: false, statistics: statistics});
+                })
+                .catch(() => {
+                    setState({isLoading: false, error: true, statistics: null});
                 });
         }
 

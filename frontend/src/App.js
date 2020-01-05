@@ -1,14 +1,14 @@
 import React from 'react';
 import {BrowserRouter} from 'react-router-dom';
 
-import {MainSection, ScrollToTop} from './atoms/'
-import {Flash} from './atoms/Flash';
+import {MainSection, ScrollToTop} from './basicComponents/'
+import {Flash} from './basicComponents/Flash';
 import {ApiProvider} from './hooks/useApi';
 import {AuthProvider} from './utils/auth';
 import {Routes} from './Routes';
 import Event from './utils/event';
-import {Footer} from "./atoms/Footer";
-import {TopNavigation} from "./atoms/TopNavigation";
+import {Footer} from "./basicComponents/Footer";
+import {TopNavigation} from "./basicComponents/TopNavigation";
 
 function AllProviders({children}) {
 	return (

@@ -1,0 +1,108 @@
+.round {
+  margin-top: 0.6em;
+  font-size: 22px;
+  font-family: Proxima, Arial, sans-serif;
+  margin-bottom: 1.5em;
+
+  .round-date {
+    padding: 8px 14px;
+    background: #000000;
+    color: #fff;
+    font-weight: 400;
+    text-align: left;
+  }
+
+  .round-item {
+    background: #ebebeb;
+    border-bottom: 1px dashed #868c8e;
+    padding: 10px;
+
+    .match-result {
+      font-size: 1.13em;
+      width: 100%;
+      margin-bottom: 0.2em;
+      border-collapse: collapse;
+      border-spacing: 0;
+
+      tbody td {
+        line-height: 1.4em;
+      }
+
+      td {
+        background: transparent !important;
+        padding: 10px 14px;
+      }
+
+      .team-home {
+        width: 42%;
+        font-size: 24px;
+        font-family: Proxima, Arial, sans-serif;
+        font-weight: bold;
+        text-align: right;
+
+        span {
+          background-position: right center;
+          padding-right: 25px;
+        }
+      }
+
+      .match-score {
+        color: #b50000;
+        text-align: center;
+        font-size: 30px;
+        font-weight: bold;
+        font-family: Proxima, Arial, sans-serif;
+      }
+
+      .team-away {
+        width: 42%;
+        font-size: 24px;
+        font-family: Proxima, Arial, sans-serif;
+        font-weight: bold;
+
+        span {
+          background-position: left center;
+          padding-left: 25px;
+        }
+      }
+    }
+
+    .match-details {
+      width: 100%;
+      font-size: 0.87em;
+      margin-bottom: 0.2em;
+      border-collapse: collapse;
+      border-spacing: 0;
+
+      tr {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        outline: 0;
+        font-size: 100%;
+        vertical-align: baseline;
+        background: transparent;
+
+        .w28p {
+          width: 28%;
+        }
+
+        td {
+          background: #fff !important;
+          border: 1px solid #ebebeb;
+          text-align: center;
+          line-height: 1.4em;
+          padding: 10px 14px;
+        }
+
+        .w100p {
+          width: 100%;
+        }
+
+        .w18p {
+          width: 18%;
+        }
+      }
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import {Heading} from "../../../../../atoms";
+import {Heading} from "../../../../../basicComponents";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as Icons from "@fortawesome/free-solid-svg-icons";
 import Button from "react-bootstrap/Button";
@@ -79,35 +79,34 @@ export function MatchInteractiveTeamTab({ teamName, teamState, teamSetState, set
 
     return (
         <div>
-            <Heading size="lg">
+            <Heading className="d-block d-md-none d-lg-none" size="lg">
                 {teamName}
                 <hr/>
             </Heading>
 
-            <Heading className="text-center" size="sm">Počet střel
+            <Heading className="text-center mt-3" size="sm">Počet střel
                 <FontAwesomeIcon className="ml-2" icon={Icons.faMeteor} size="1x"/>
             </Heading>
             <div className="plusMinusDiv mb-2">
                 <Row>
-                    <Col lg={3} md={3} sm={3} xs={3} />
-                    <Col lg={2} md={2} sm={2} xs={2} >
+                    <Col lg={{ span: 2, offset: 3 }} md={{ span: 2, offset: 3 }}  sm={{ span: 2, offset: 3 }}  xs={{ span: 2, offset: 3 }} >
                         <Button variant="link" onClick={() => handleChangeShots(-1)}>
-                            <FontAwesomeIcon className="addIcon" icon={Icons.faMinusSquare} size="3x"/>
+                            <FontAwesomeIcon className="addIcon" icon={Icons.faMinusSquare} size="4x"/>
                         </Button>
                     </Col>
-                    <Col lg={2} md={2} sm={2} xs={2} >{teamState.shots}</Col>
+                    <Col lg={2} md={2} sm={2} xs={2}>
+                        <Heading className="text-center mt-3 ml-2" size="sm">
+                            <span className="bgBlack">{teamState.shots}</span>
+                        </Heading>
+                    </Col>
                     <Col lg={2} md={2} sm={2} xs={2} >
                         <Button variant="link" onClick={() => handleChangeShots(1)}>
-                            <FontAwesomeIcon className="addIcon" icon={Icons.faPlusSquare} size="3x"/>
+                            <FontAwesomeIcon className="addIcon" icon={Icons.faPlusSquare} size="4x"/>
                         </Button>
                    </Col>
-                    <Col lg={3} md={3} sm={3} xs={3} />
                 </Row>
             </div>
 
-            <Heading className="text-center mt-5" size="sm">
-                Počet gólů <span className="bgBlack">{teamState.events.filter(g => g.type === "goal").length}</span>
-            </Heading>
             <div className="text-center">
                 <Button variant="primary" onClick={() => {
                     setPlay(false);
@@ -118,7 +117,7 @@ export function MatchInteractiveTeamTab({ teamName, teamState, teamSetState, set
                 </Button>
             </div>
 
-            <Heading className="text-center mt-5" size="sm">
+            <Heading className="text-center mt-4" size="sm">
                 Trestných minut <span className="bgBlack">{getSuspensionMinutes()}</span>
             </Heading>
             <div className="text-center mb-4">

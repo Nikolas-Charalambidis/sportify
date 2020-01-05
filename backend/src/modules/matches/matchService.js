@@ -1,5 +1,6 @@
 import { DB_CONNECTION_KEY } from '../../libs/connection';
 import * as matchValidations from "./matchValidations";
+import * as competitionValidations from "../competitions/competitionValidations";
 
 export default class MatchService {
 
@@ -47,6 +48,20 @@ export default class MatchService {
 			throw {status: 404, msg: 'Zápas nebyl nalezen v databázi'};
 		}
 		return result[0];
+	}
+
+	async findMatchesByCompetitionId(id_competition) {
+		const competitionId = Number(id_competition);
+		competitionValidations.validateCompetitionId(competitionId);
+		return await this.dbConnection.query(
+			`SELECT m.id_match, m.goals_guest, m.goals_host, guest.name AS guest_name, host.name AS host_name, m.date
+			 FROM matches AS m
+			 JOIN teams AS guest ON guest.id_team=m.id_guest
+			 JOIN teams AS host ON host.id_team=m.id_host
+			 WHERE id_competition=?
+			 ORDER BY m.date DESC`,
+			competitionId
+		);
 	}
 
 	async deleteMatch(id_match) {

@@ -26,16 +26,21 @@ export default class CompetitionService {
 		const competition = Number(id_competition);
 		competitionValidations.validateCompetitionId(competition);
 
-		return await this.dbConnection.query(
+		const result = await this.dbConnection.query(
 			`SELECT c.id_competition, c.name, s.sport, c.city, ct.type, c.start_date, c.end_date, COUNT(cm.id_competition_membership) as teams_count
 				FROM competitions as c 
 				JOIN sports as s ON c.id_sport=s.id_sport
 				JOIN competition_types as ct ON c.id_type=ct.id_type
 				LEFT JOIN competition_membership as cm ON cm.id_competition=c.id_competition
-				WHERE c.id_competition=?
-				GROUP BY c.id_competition`
+				WHERE c.id_competition=?`
 			, competition
 		);
+
+		if (result.length === 0) {
+			throw {status: 404, msg: 'Soutěž nebyla nalezena v databázi'};
+		}
+
+		return result[0];
 	}
 
 	async getCompetitionTeams(id_competition) {
@@ -48,5 +53,36 @@ export default class CompetitionService {
 				WHERE cm.id_competition=?;`
 			, competition
 		);
+	}
+
+	async getCompetitionStatistics(id_competition, is_goalkeeper) {
+		const competition = Number(id_competition);
+		competitionValidations.validateCompetitionId(competition);
+
+		return await this.dbConnection.query(`SELECT
+					ts.id_user,
+					CONCAT(u.name, ' ', u.surname) AS 'name_surname',
+					MAX(p.position) AS 'position',
+					MAX(p.is_goalkeeper) AS 'is_goalkeeper',
+					SUM(ts.field_matches) AS 'matches',
+					SUM(ts.field_goals) AS 'goals',
+					SUM(ts.field_assists) AS 'assists',
+					(SUM(ts.field_goals) + SUM(ts.field_assists)) AS 'field_points',
+					((SUM(ts.field_goals) + SUM(ts.field_assists))/SUM(ts.field_matches)) AS 'field_average_points',
+					SUM(ts.field_suspensions) AS 'suspensions',
+					SUM(ts.goalkeeper_matches) AS 'goalkeeper_matches',
+					SUM(ts.goalkeeper_minutes) AS 'goalkeeper_minutes',
+					SUM(ts.goalkeeper_goals) AS 'goalkeeper_goals',
+					SUM(ts.goalkeeper_zeros) AS 'goalkeeper_zeros',
+					(SUM(ts.goalkeeper_zeros)/SUM(ts.goalkeeper_matches)) AS 'goalkeeper_average_zeros',
+					SUM(ts.goalkeeper_shots) AS 'goalkeeper_shots',
+					CONCAT(100*(1 - SUM(ts.goalkeeper_goals)/SUM(ts.goalkeeper_shots)), ' %') AS 'goalkeeper_success_rate'
+						FROM team_statistics as ts
+						JOIN users AS u ON ts.id_user = u.id_user
+						JOIN team_membership tm on u.id_user = tm.id_user
+						JOIN positions AS p on tm.id_position = p.id_position
+						WHERE ts.id_competition=? AND p.is_goalkeeper=?
+						GROUP BY ts.id_user`
+			,[competition, is_goalkeeper]);
 	}
 }
