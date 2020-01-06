@@ -1,13 +1,14 @@
 import React from 'react';
 import {NavLink as Link, useHistory} from 'react-router-dom';
 import {Heading} from '../../../basicComponents';
-import {Breadcrumb} from "react-bootstrap";
+import { Breadcrumb, Button } from 'react-bootstrap';
 import "react-table/react-table.css";
 import {useGetCompetitions} from "../../../api/competitionClient_v1";
 import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../assets/images/loading.gif";
 import {Table} from "../../../basicComponents/Table";
-import {useGetCompetitionTypes, useGetSports} from "../../../api/othersClient_v1";
+import { useGetCompetitionTypes, useGetSports } from "../../../api/othersClient_v1";
+import { useAuth } from '../../../utils/auth';
 
 function getUniqueCities(state) {
     const uniqueCities = [];
@@ -24,6 +25,7 @@ function getUniqueCities(state) {
 export function CompetitionList() {
     let history = useHistory();
 
+    const { user } = useAuth();
     const [state] = useGetCompetitions();
     const [sportsState] = useGetSports();
     const [typesState] = useGetCompetitionTypes();
@@ -34,6 +36,10 @@ export function CompetitionList() {
         if (row) {
             history.push("/competitions/" + row.original.id_competition);
         }
+    }
+
+    function onCreateCompetition() {
+        history.push("/administration/competition/create");
     }
 
     const columns = [
@@ -128,7 +134,7 @@ export function CompetitionList() {
                 <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
                 <li className="breadcrumb-item"><span className="active">Soutěže</span></li>
             </Breadcrumb>
-            <Heading>Přehled sotěží</Heading>
+            <Heading>Přehled soutěží</Heading>
 
             {(state.isLoading || sportsState.isLoading || typesState.isLoading) &&
             <div className="text-center"><Image src={loadingGif}/></div>}
@@ -141,8 +147,12 @@ export function CompetitionList() {
                             handleClick(rowInfo);
                         }
                     }
-                }}/>
+                }} />                
             )}
+
+            {user &&
+                <Button className="float-right mt-3" variant="primary" onClick={onCreateCompetition}>Vytvořit soutěž</Button>
+            }
         </div>
     );
 }
