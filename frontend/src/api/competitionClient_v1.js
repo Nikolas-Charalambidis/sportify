@@ -115,3 +115,17 @@ export function useGetCompetitionsStatistics(id_competition, is_goalkeeper) {
     }, [api, id_competition, is_goalkeeper]);
     return [state];
 }
+
+export function createCompetition(name, id_leader, id_sport, id_type, city, start_date, end_date, api, history) {
+    api
+        .post(`${config.API_BASE_PATH}/competitions`, { name: name, id_leader: id_leader, id_sport: id_sport, id_type: id_type, city: city, start_date: start_date, end_date: end_date })
+        .then(({ data }) => {
+            window.flash(data.msg, 'success');
+            history.replace(`/competitions`);
+        })
+        .catch(({ response }) => {
+            const { data } = response;
+            window.flash(data.msg, 'danger');
+            return data;
+        });
+}
