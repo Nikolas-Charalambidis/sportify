@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import {DB_CONNECTION_KEY} from '../../libs/connection';
 import * as competitionValidations from './competitionValidations';
+import {parseISO} from "date-fns";
 
 dotenv.config();
 dotenv.config({path: '.env'});
@@ -11,14 +12,28 @@ export default class CompetitionService {
 		this.dbConnection = req[DB_CONNECTION_KEY];
 	}
 
-	async allCompetitions() {
+	async allCompetitions(id_sport, id_type) {
+		const {sport, type} = competitionValidations.validateFilteredCompetitionData(id_sport, id_type);
+
+		var where = '';
+		var values = [];
+		if (sport !== undefined) {
+			where += ' AND c.id_sport=?';
+			values.push(sport);
+		}
+
+		if (type !== undefined) {
+			where += ' AND c.id_type=?';
+			values.push(type);
+		}
+
 		return this.dbConnection.query(
 			`SELECT c.id_competition, c.name, s.sport, c.city, ct.type, c.start_date, c.end_date, COUNT(cm.id_competition_membership) as teams_count
 				FROM competitions as c 
 				JOIN sports as s ON c.id_sport=s.id_sport
 				JOIN competition_types as ct ON c.id_type=ct.id_type
-				LEFT JOIN competition_membership as cm ON cm.id_competition=c.id_competition
-				GROUP BY c.id_competition`
+				LEFT JOIN competition_membership as cm ON cm.id_competition=c.id_competition WHERE 1=1 ` + where + ` GROUP BY c.id_competition`,
+			[...values]
 		);
 	}
 
@@ -53,6 +68,50 @@ export default class CompetitionService {
 				WHERE cm.id_competition=?;`
 			, competition
 		);
+	}
+
+	async addNewCompetition(name, id_leader, id_sport, id_type, city, start_date, end_date) {
+		const leader = Number(id_leader);
+		const sport = Number(id_sport);
+		const type = Number(id_sport);
+
+		const start = parseISO(start_date);
+		const end = parseISO(end_date);
+
+		competitionValidations.validateNewCompetition(name, leader, sport, type, city, start, end);
+
+		const result = await this.dbConnection.query(
+			`INSERT INTO competitions (id_competition, name, id_leader, id_sport, id_type, city, start_date, end_date) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)`,
+			[name, leader, sport, type, city, start, end]
+		);
+		if (result.affectedRows === 0) {
+			throw {status: 500, msg: 'Vytvoření nové soutěže selhalo'};
+		}
+	}
+
+	async changeCompetition(id_competition, name, id_leader, city) {
+		const leader = Number(id_leader);
+		const competition = Number(id_competition);
+		competitionValidations.validateChangeCompetition(competition, name, leader, city);
+
+		const teams = await this.dbConnection.query('SELECT * FROM competition_membership WHERE id_competition = ?', [competition]);
+
+		const foundLeader = await this.dbConnection.query(
+			'SELECT * FROM competition_membership as cm JOIN team_membership tm on cm.id_team = tm.id_team WHERE cm.id_competition = ? AND tm.id_user = ?',
+			[competition, leader]
+		);
+		// If there is at least one team in the competition, the leader must be from that team. Any user can be a leader if the competition is empty.
+		if (teams.length !== 0 && foundLeader.length === 0) {
+			throw {status: 500, msg: 'Vybraný vedoucí soutěže musí být členem týmu v soutěži'};
+		}
+
+		const result = await this.dbConnection.query(
+			'UPDATE competitions SET name=?, id_leader=?, city=? WHERE id_competition=?',
+			[name, leader, city, competition]
+		);
+		if (result.affectedRows === 0) {
+			throw {status: 400, msg: 'Změna soutěžních údajů se nezdařila'};
+		}
 	}
 
 	async getCompetitionStatistics(id_competition, is_goalkeeper) {
