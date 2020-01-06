@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink as Link, useHistory } from 'react-router-dom';
+import { NavLink as Link } from 'react-router-dom';
 import { Heading } from '../../../basicComponents';
 import { Field } from "../../../basicComponents";
 import { CustomSelect } from "../../../basicComponents/Select";
@@ -9,7 +9,6 @@ import * as yup from "yup";
 import { useGetSports } from "../../../api/othersClient_v1";
 
 export function CompetitionCreate() {
-    let history = useHistory();
 
     const [sportsState] = useGetSports();
 
