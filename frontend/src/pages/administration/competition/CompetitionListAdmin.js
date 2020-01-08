@@ -66,7 +66,7 @@ export function CompetitionListAdmin() {
             {!state.isLoading && state.error &&
             <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
             {!state.isLoading && !state.error && (
-                <Table columns={columns} data={state.teams} filterable={false} showPagination={false}
+                <Table columns={columns} data={state.competition} filterable={false} showPagination={false}
                        getTdProps={(state, rowInfo) => {
                            return {
                                onClick: () => {

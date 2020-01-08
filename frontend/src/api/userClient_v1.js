@@ -111,7 +111,7 @@ export function useGetUserOwnedCompetitions(id_user) {
     const [state, setState] = useState({
         isLoading: true,
         error: false,
-        teams: undefined
+        competition: undefined
     });
     useEffect( () => {
         async function fetchData() {
@@ -119,11 +119,11 @@ export function useGetUserOwnedCompetitions(id_user) {
                 .get(`${config.API_BASE_PATH}/users/${id_user}/competition`)
                 .then(({ data }) => {
                     const { user } = data;
-                    setState({ isLoading: false, error: false, teams: user });
+                    setState({ isLoading: false, error: false, competition: user });
                 })
                 .catch(( { response } ) => {
                     const { data } = response;
-                    setState({ isLoading: false, error: true, teams: null });
+                    setState({ isLoading: false, error: true, competition: null });
                     window.flash(data.msg, 'danger');
                 });
         }
