@@ -129,3 +129,17 @@ export function createCompetition(name, id_leader, id_sport, id_type, city, star
             return data;
         });
 }
+
+export function editCompetition(id_competition, name, id_leader, city, api, history) {
+    api
+        .post(`${config.API_BASE_PATH}/competitions/${id_competition}`, { name: name, id_leader: id_leader, city: city })
+        .then(({ data }) => {
+            window.flash(data.msg, 'success');
+            history.replace(`/competitions`);
+        })
+        .catch(({ response }) => {
+            const { data } = response;
+            window.flash(data.msg, 'danger');
+            return data;
+        });
+}

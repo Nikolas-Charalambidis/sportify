@@ -18,6 +18,7 @@ export function CompetitionCreate() {
     const api = useApi();
     const { user } = useAuth();
     const [sportsState] = useGetSports();
+    const sports = sportsState.sports;
     let history = useHistory();
 
     const schemaCreateTeam = yup.object().shape({
@@ -50,11 +51,10 @@ export function CompetitionCreate() {
                         city: '',
                         startDate: '',
                         endDate: '',
-                        id_sport: sportsState.sports[0].id_sport,
+                        id_sport: sports[0].id_sport,
                         id_type: competitionType[0].id_type,
                     }}
                     onSubmit={values => {
-                        console.log("submit");
                         createCompetition(values.name, user.id_user, values.id_sport, values.id_type, values.city, values.startDate, values.endDate, api, history);
                     }}
                 >{({ handleSubmit, setFieldValue, values, errors }) => (
@@ -73,10 +73,10 @@ export function CompetitionCreate() {
                             <Row>
                                 <Col md={6} sm={6} xs={6} className="mt-sm-0 mt-3">
                                     <CustomSelect label="Sport" name="id_sport"
-                                        options={sportsState.sports}
+                                        options={sports}
                                         getOptionLabel={option => `${option.sport}`}
                                         getOptionValue={option => `${option.id_sport}`}
-                                        placeholder={sportsState.sports[0].sport}
+                                        placeholder={sports[0].sport}
                                         onChange={option => setFieldValue("id_sport", `${option.id_sport}`)}
                                         isSearchable={true}
                                     />
@@ -105,7 +105,7 @@ export function CompetitionCreate() {
                             </Row>                           
 
                         </div>
-                        <Button variant="primary" type="submit" onClick={() => console.log(errors)}>Vytvořit soutěž</Button>
+                        <Button variant="primary" type="submit">Vytvořit soutěž</Button>
                     </Form>
                 )}
                 </Formik>

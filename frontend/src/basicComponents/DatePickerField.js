@@ -7,7 +7,7 @@ import cs from 'date-fns/locale/cs';
 
 registerLocale('cs', cs);
 
-export function DatePickerField({ label, date, name, setFieldValue, message, isInvalid }) {
+export function DatePickerField({ label, date, name, setFieldValue, message, isInvalid, disabled = false }) {
 
     const errorMessage = {
         fontSize: '80%',
@@ -25,6 +25,7 @@ export function DatePickerField({ label, date, name, setFieldValue, message, isI
                 className="form-control"
                 name={name}
                 onChange={date => setFieldValue(name, date)}
+                disabled={disabled}
             />
             {isInvalid &&
                 <div style={errorMessage}>
