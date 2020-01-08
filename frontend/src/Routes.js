@@ -26,6 +26,7 @@ import {MatchCreateInteractive} from "./pages/administration/match/MatchCreateIn
 import {CompetitionList} from "./pages/public/competition/CompetitionList";
 import { CompetitionDetail } from "./pages/public/competition/CompetitionDetail";
 import { CompetitionCreate } from "./pages/administration/competition/CompetitionCreate";
+import { CompetitionListAdmin } from "./pages/administration/competition/CompetitionListAdmin";
 
 export function Routes() {
 	return (
@@ -60,6 +61,7 @@ export function Routes() {
 			<Route path="/administration/matches/createForm" exact component={MatchCreateForm} />
             <Route path="/administration/matches/createInteractive" exact component={MatchCreateInteractive} />
 
+			<Route path="/administration/competition" exact component={CompetitionListAdmin} />
             <Route path="/administration/competition/create" exact component={CompetitionCreate} />
 
 			<Route path="*" component={Page404}/>

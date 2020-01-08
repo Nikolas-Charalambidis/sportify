@@ -31,6 +31,11 @@ export function AdministrationMenu() {
                     <AdministrationMenuCard title="Nový interaktivní zápas" text="Slouží pro vytvoření interaktivního zápasu, který je možné real time upravovat při daném utkání." click="matches/createInteractive"/>
                 </Col>
             </Row>
+            <Row className="mb-4">
+                <Col lg={6} md={6}>
+                    <AdministrationMenuCard title="Správa soutěží" text="Správa, případné založení vlastní soutěže umožňuje editovat údaje o soutěži" click="competition"/>
+                </Col>
+            </Row>
         </div>
     );
 }
