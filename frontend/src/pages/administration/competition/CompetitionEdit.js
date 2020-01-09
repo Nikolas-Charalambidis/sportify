@@ -25,16 +25,29 @@ function getSport(competition, sports) {
 
 function getCompetitionType(competition, competitionType) {
     if (competition) {
-        //todo
+        //todo, waiting for BE
     }
 };
 
-export function CompetitionEdit() {    
+function canEdit(competition, user, history) {
+    if (competition && user) {
+        if (competition.id_leader === user.id_user) {
+            return true;
+        } else {
+            history.replace(`/`);
+            return false;
+        }
+    }
+
+};
+
+export function CompetitionEdit() {
     let { id_competition } = useParams();
     const [competitionState] = useGetCompetitionDetail(id_competition);
     const competition = competitionState.competition_data;
 
     const { user } = useAuth();
+
     const [sportsState] = useGetSports();
     const sports = sportsState.sports;
     const competitionSport = getSport(competition, sports);
@@ -43,7 +56,7 @@ export function CompetitionEdit() {
 
     const api = useApi();
     let history = useHistory();
-    
+
     const schemaCreateTeam = yup.object().shape({
         name: yup.string().required(),
         city: yup.string().required(),
@@ -57,84 +70,90 @@ export function CompetitionEdit() {
     ];
 
     return (
-        <div>            
+        <div>
             {sportsState.isLoading && competitionState.isLoading && <div> Načítám data...</div>}
-            {(!sportsState.isLoading && sportsState.error) || (!competitionState.isLoading && competitionState.error) && <div>Data se nepodařilo načíst</div>}
+            {((!sportsState.isLoading && sportsState.error) || (!competitionState.isLoading && competitionState.error)) && <div>Data se nepodařilo načíst</div>}
             {(!sportsState.isLoading && !sportsState.error) && (!competitionState.isLoading && !competitionState.error) &&
                 <div>
-                <Breadcrumb>
-                    <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
-                    <li className="breadcrumb-item"><Link to="/competitions">Soutěže</Link></li>
-                    <li className="breadcrumb-item"><span className="active">{competition.name}</span></li>
-                </Breadcrumb>
-                <Heading>{competition.name}</Heading>
+                    {canEdit(competition, user, history) &&
+                        <div>
+                            <Breadcrumb>
+                                <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
+                                <li className="breadcrumb-item"><Link to="/competitions">Soutěže</Link></li>
+                                <li className="breadcrumb-item"><span className="active">{competition.name}</span></li>
+                            </Breadcrumb>
+                            <Heading>{competition.name}</Heading>
 
-                    <Formik
-                        validationSchema={schemaCreateTeam}
-                        initialValues={{
-                            name: competition.name,
-                            city: competition.city,
-                            startDate: new Date(competition.start_date),
-                            endDate: new Date(competition.end_date),
-                            id_sport: competitionSport.id_sport,
-                            id_type: competitionType[0].id_type,
-                        }}
-                        onSubmit={values => {
-                            editCompetition(competition.id_competition, values.name, user.id_user, values.city, api, history);
-                        }}
-                    >{({ handleSubmit, setFieldValue, values, errors }) => (
-                        <Form noValidate onSubmit={handleSubmit}>
-                            <div>
-                                <Row>
-                                    <Col md={6} sm={6} xs={6} className="mt-sm-0 mt-3">
-                                        <Field label="Název soutěže" name="name" type="text" message="Vyplňte prosím název soutěže" isInvalid={!!errors.name} />
-                                    </Col>
+                            <Formik
+                                validationSchema={schemaCreateTeam}
+                                initialValues={{
+                                    name: competition.name,
+                                    city: competition.city,
+                                    startDate: new Date(competition.start_date),
+                                    endDate: new Date(competition.end_date),
+                                    id_sport: competitionSport.id_sport,
+                                    id_type: competitionType[0].id_type,
+                                }}
+                                onSubmit={values => {
+                                    editCompetition(competition.id_competition, values.name, user.id_user, values.city, api, history);
+                                }}
+                            >{({ handleSubmit, setFieldValue, values, errors }) => (
+                                <Form noValidate onSubmit={handleSubmit}>
+                                    <div>
+                                        <Row>
+                                            <Col md={6} sm={6} xs={6} className="mt-sm-0 mt-3">
+                                                <Field label="Název soutěže" name="name" type="text" message="Vyplňte prosím název soutěže" isInvalid={!!errors.name} />
+                                            </Col>
 
-                                    <Col md={6} sm={6} xs={6} className="mt-sm-0 mt-3">
-                                        <Field label="Město" name="city" type="text" message="Vyplňte prosím město" isInvalid={!!errors.name} />
-                                    </Col>
-                                </Row>
+                                            <Col md={6} sm={6} xs={6} className="mt-sm-0 mt-3">
+                                                <Field label="Město" name="city" type="text" message="Vyplňte prosím město" isInvalid={!!errors.name} />
+                                            </Col>
+                                        </Row>
 
-                                <Row>
-                                    <Col md={6} sm={6} xs={6} className="mt-sm-0 mt-3">
-                                        <CustomSelect label="Sport" name="id_sport"
-                                            options={sports}
-                                            getOptionLabel={option => `${option.sport}`}
-                                            getOptionValue={option => `${option.id_sport}`}
-                                            placeholder={competitionSport.sport}
-                                            onChange={option => setFieldValue("id_sport", `${option.id_sport}`)}
-                                            isSearchable={true}
-                                            isDisabled={true}
-                                        />
-                                    </Col>
+                                        <Row>
+                                            <Col md={6} sm={6} xs={6} className="mt-sm-0 mt-3">
+                                                <CustomSelect label="Sport" name="id_sport"
+                                                    options={sports}
+                                                    getOptionLabel={option => `${option.sport}`}
+                                                    getOptionValue={option => `${option.id_sport}`}
+                                                    placeholder={competitionSport.sport}
+                                                    onChange={option => setFieldValue("id_sport", `${option.id_sport}`)}
+                                                    isSearchable={true}
+                                                    isDisabled={true}
+                                                />
+                                            </Col>
 
-                                    <Col md={6} sm={6} xs={6} className="mt-sm-0 mt-3">
-                                        <CustomSelect label="Typ soutěže" name="id_type"
-                                            options={competitionType}
-                                            getOptionLabel={option => `${option.type}`}
-                                            getOptionValue={option => `${option.id_type}`}
-                                            placeholder={competitionType[0].type}
-                                            onChange={option => setFieldValue("id_type", `${option.id_type}`)}
-                                            isSearchable={true}
-                                        />
-                                    </Col>
-                                </Row>
+                                            <Col md={6} sm={6} xs={6} className="mt-sm-0 mt-3">
+                                                <CustomSelect label="Typ soutěže" name="id_type"
+                                                    options={competitionType}
+                                                    getOptionLabel={option => `${option.type}`}
+                                                    getOptionValue={option => `${option.id_type}`}
+                                                    placeholder={competitionType[0].type}
+                                                    onChange={option => setFieldValue("id_type", `${option.id_type}`)}
+                                                    isSearchable={true}
+                                                />
+                                            </Col>
+                                        </Row>
 
-                                <Row>
-                                    <Col md={3} sm={3} xs={3} className="mt-sm-0 mt-3">
-                                        <DatePickerField label="Zahájení soutěže" name="startDate" date={values.startDate} setFieldValue={setFieldValue} message="Vyplňte prosím datum zahájení" isInvalid={errors.startDate} disabled={true} />
-                                    </Col>
-                                    <Col md={3} sm={3} xs={3} className="mt-sm-0 mt-3">
-                                        <DatePickerField label="Konec soutěže" name="endDate" date={values.endDate} setFieldValue={setFieldValue} message="Vyplňte prosím datum konce" isInvalid={errors.endDate} disabled={true} />
+                                        <Row>
+                                            <Col md={3} sm={3} xs={3} className="mt-sm-0 mt-3">
+                                                <DatePickerField label="Zahájení soutěže" name="startDate" date={values.startDate} setFieldValue={setFieldValue} message="Vyplňte prosím datum zahájení" isInvalid={errors.startDate} disabled={true} />
+                                            </Col>
+                                            <Col md={3} sm={3} xs={3} className="mt-sm-0 mt-3">
+                                                <DatePickerField label="Konec soutěže" name="endDate" date={values.endDate} setFieldValue={setFieldValue} message="Vyplňte prosím datum konce" isInvalid={errors.endDate} disabled={true} />
 
-                                    </Col>
-                                </Row>
+                                            </Col>
+                                        </Row>
 
-                            </div>
-                            <Button variant="primary" type="submit">Uložit</Button>
-                        </Form>
-                    )}
-                    </Formik>
+                                </div>
+                                <Button variant="danger" onClick={() => console.log("dodělat, chybí endpoint")}>Smazat</Button>
+                                <Button variant="primary" type="submit">Uložit</Button>
+                                    
+                                </Form>
+                            )}
+                            </Formik>
+                        </div>
+                    }
                 </div>
             }
         </div>
