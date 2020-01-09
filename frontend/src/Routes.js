@@ -70,7 +70,7 @@ export function Routes() {
 
             <Route path="/administration/competitions" exact render={() => (checkAuth(<CompetitionListAdmin />))} />
             <Route path="/administration/competitions/create" exact render={() => (checkAuth(<CompetitionCreate />))} />
-            <Route path="/administration/competition/edit/:id_competition" exact render={() => (checkAuth(<CompetitionEdit />))} />
+            <Route path="/administration/competitions/edit/:id_competition" exact render={() => (checkAuth(<CompetitionEdit />))} />
 
             <Route path="*" component={Page404} />
         </Switch>

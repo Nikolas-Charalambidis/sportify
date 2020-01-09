@@ -36,7 +36,7 @@ export function CompetitionListAdmin() {
 
     function handleClick(row) {
         if (row) {
-            history.push("competitions/" + row.original.id_competition);
+            history.push("competitions/edit/" + row.original.id_competition);
         }
     }
 
