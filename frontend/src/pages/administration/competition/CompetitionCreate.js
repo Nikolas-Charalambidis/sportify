@@ -12,13 +12,12 @@ import { useApi } from "../../../hooks/useApi";
 import { useAuth } from '../../../utils/auth';
 import { useHistory } from "react-router";
 import { Col, Row } from "react-bootstrap";
-import {CompetitionCreateBreadcrumbs} from "../../../organisms/breadcrumbs/CompetitionCreateBreadcrumbs";
+import { CompetitionCreateBreadcrumbs } from "../../../organisms/breadcrumbs/CompetitionCreateBreadcrumbs";
 
 export function CompetitionCreate() {
+
     const api = useApi();
     const { user } = useAuth();
-
-export function CompetitionCreate() {
 
     const [sportsState] = useGetSports();
     const sports = sportsState.sports;
@@ -65,7 +64,7 @@ export function CompetitionCreate() {
                                 </Col>
 
                                 <Col md={6} sm={6} xs={6} className="mt-sm-0 mt-3">
-                                    <Field label="Město" name="city" type="text" message="Vyplňte prosím město" isInvalid={!!errors.name} />     
+                                    <Field label="Město" name="city" type="text" message="Vyplňte prosím město" isInvalid={!!errors.name} />
                                 </Col>
                             </Row>
 
@@ -95,13 +94,13 @@ export function CompetitionCreate() {
 
                             <Row>
                                 <Col md={3} sm={3} xs={3} className="mt-sm-0 mt-3">
-                                    <DatePickerField label="Zahájení soutěže" name="startDate" date={values.startDate} setFieldValue={setFieldValue} message="Vyplňte prosím datum zahájení" isInvalid={errors.startDate}/>                                    
+                                    <DatePickerField label="Zahájení soutěže" name="startDate" date={values.startDate} setFieldValue={setFieldValue} message="Vyplňte prosím datum zahájení" isInvalid={errors.startDate} />
                                 </Col>
                                 <Col md={3} sm={3} xs={3} className="mt-sm-0 mt-3">
                                     <DatePickerField label="Konec soutěže" name="endDate" date={values.endDate} setFieldValue={setFieldValue} message="Vyplňte prosím datum konce" isInvalid={errors.endDate} />
 
                                 </Col>
-                            </Row>                           
+                            </Row>
 
                         </div>
                         <Button variant="primary" type="submit">Vytvořit soutěž</Button>
