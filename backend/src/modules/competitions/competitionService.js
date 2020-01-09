@@ -28,7 +28,7 @@ export default class CompetitionService {
 		}
 
 		return this.dbConnection.query(
-			`SELECT c.id_competition, c.name, s.sport, c.city, ct.type, c.start_date, c.end_date, COUNT(cm.id_competition_membership) as teams_count
+			`SELECT c.id_leader, c.id_competition, c.name, s.sport, c.city, ct.type, c.start_date, c.end_date, COUNT(cm.id_competition_membership) as teams_count
 				FROM competitions as c 
 				JOIN sports as s ON c.id_sport=s.id_sport
 				JOIN competition_types as ct ON c.id_type=ct.id_type
@@ -42,7 +42,7 @@ export default class CompetitionService {
 		competitionValidations.validateCompetitionId(competition);
 
 		const result = await this.dbConnection.query(
-			`SELECT c.id_competition, c.name, s.sport, c.city, ct.type, c.start_date, c.end_date, COUNT(cm.id_competition_membership) as teams_count
+			`SELECT c.id_leader, c.id_competition, c.name, s.sport, c.city, ct.type, c.start_date, c.end_date, COUNT(cm.id_competition_membership) as teams_count
 				FROM competitions as c 
 				JOIN sports as s ON c.id_sport=s.id_sport
 				JOIN competition_types as ct ON c.id_type=ct.id_type
