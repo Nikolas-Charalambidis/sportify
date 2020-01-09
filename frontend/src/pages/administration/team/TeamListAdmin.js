@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import {NavLink as Link, useHistory} from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 import {Heading} from '../../../basicComponents';
-import {Breadcrumb, Button} from "react-bootstrap";
+import {Button} from "react-bootstrap";
 import "react-table/react-table.css";
 import {useGetUserOwnedTeams} from "../../../api/userClient_v1";
 import {useAuth} from "../../../utils/auth";
@@ -10,15 +10,14 @@ import loadingGif from "../../../assets/images/loading.gif";
 import {Table} from "../../../basicComponents/Table";
 import {TeamCreateModal} from "../../../organisms/team/admin/TeamCreateModal";
 import {useApi} from "../../../hooks/useApi";
+import {TeamListAdminBreadcrumbs} from "../../../organisms/breadcrumbs/TeamListAdminBreadcrumbs";
 
 export function TeamListAdmin() {
+    const api = useApi();
     const history = useHistory();
     const {user} = useAuth();
-    if (!user) {
-        history.replace('/');
-    }
+
     const [state] = useGetUserOwnedTeams(user.id_user);
-    const api = useApi();
 
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -47,12 +46,7 @@ export function TeamListAdmin() {
 
     return (
         <div>
-            <Breadcrumb>
-                <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
-                <li className="breadcrumb-item"><Link to="/administration">Administrace</Link></li>
-                <li className="breadcrumb-item"><span className="active">Moje týmy</span></li>
-            </Breadcrumb>
-
+            <TeamListAdminBreadcrumbs />
             <Heading>Moje týmy</Heading>
             <div className="text-right">
                 <Button variant="primary mb-3 pull-right" onClick={handleShow}>

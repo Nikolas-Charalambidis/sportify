@@ -4,10 +4,8 @@ import {CustomSelect} from ".//Select";
 import {addNewMember} from "../api/teamMembershipClient_v1";
 import {useApi} from "../hooks/useApi";
 
-
 export function TeamRequestModal ({show, handleClose, positions, positionsState, setPositionsState, id_team, id_user}) {
-
-const api = useApi();
+    const api = useApi();
 
     return (
         <Modal show={show}>

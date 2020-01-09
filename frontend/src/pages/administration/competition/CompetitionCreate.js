@@ -1,15 +1,14 @@
 import React from "react";
-import { NavLink as Link } from 'react-router-dom';
 import { Heading } from '../../../basicComponents';
 import { Field } from "../../../basicComponents";
 import { CustomSelect } from "../../../basicComponents/Select";
-import { Breadcrumb, Form, Button } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useGetSports } from "../../../api/othersClient_v1";
+import {CompetitionCreateBreadcrumbs} from "../../../organisms/breadcrumbs/CompetitionCreateBreadcrumbs";
 
 export function CompetitionCreate() {
-
     const [sportsState] = useGetSports();
 
     const schemaCreateTeam = yup.object().shape({
@@ -18,11 +17,7 @@ export function CompetitionCreate() {
 
     return (
         <div>
-            <Breadcrumb>
-                <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
-                <li className="breadcrumb-item"><Link to="/competitions">Soutěže</Link></li>
-                <li className="breadcrumb-item"><span className="active">Nová soutěž</span></li>
-            </Breadcrumb>
+            <CompetitionCreateBreadcrumbs />
             <Heading>Nová soutěž</Heading>
             {sportsState.isLoading && <div>Načítám data...</div>}
             {(!sportsState.isLoading && sportsState.error) && <div>Data se nepodařilo načíst</div>}

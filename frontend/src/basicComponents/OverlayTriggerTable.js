@@ -1,5 +1,4 @@
 import React from 'react';
-
 import {OverlayTrigger} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Tooltip from "react-bootstrap/Tooltip";

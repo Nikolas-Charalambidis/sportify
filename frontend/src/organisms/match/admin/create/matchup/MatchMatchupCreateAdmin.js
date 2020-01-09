@@ -29,7 +29,6 @@ export function MatchMatchupCreateAdmin({interactive, host, availablePlayers, se
     const [showPlayerModal, setShowPlayerModal] = useState(false);
     const handleClosePlayerModal = () => setShowPlayerModal(false);
     const handleShowPlayerModal = () => setShowPlayerModal(true);
-    console.log(interactive)
     const columnsMatchup = [
         {
             Header: "Hráč",
