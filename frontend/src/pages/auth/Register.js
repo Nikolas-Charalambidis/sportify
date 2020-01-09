@@ -1,15 +1,14 @@
 import React from 'react';
 import {Heading} from '../../basicComponents';
-import {Row, Col, Breadcrumb} from "react-bootstrap";
+import {Row, Col} from "react-bootstrap";
 import {useHistory} from "react-router";
-import {useAuth} from "../../utils/auth";
 import {useApi} from "../../hooks/useApi";
 import {config} from '../../config';
 import * as yup from "yup";
 import {Formik} from "formik";
 import {AccountAdvantages} from "../../basicComponents/AccountAdvantages";
-import {NavLink as Link} from "react-router-dom";
 import {RegisterForm} from "../../organisms/auth/RegisterForm";
+import {RegisterBreadcrumbs} from "../../organisms/breadcrumbs/RegisterBreadcrumbs";
 
 const schema = yup.object().shape({
     name: yup.string().required(),
@@ -22,12 +21,7 @@ const schema = yup.object().shape({
 
 export function Register() {
     const history = useHistory();
-    const {user} = useAuth();
     const api = useApi();
-
-    if (user) {
-        history.replace('/');
-    }
 
     const register = (values) => {
         const {name, surname, email, password1, password2} = values;
@@ -45,10 +39,8 @@ export function Register() {
 
     return (
         <div>
-            <Breadcrumb>
-                <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
-                <li className="breadcrumb-item"><span className="active">Registrace</span></li>
-            </Breadcrumb>
+            <RegisterBreadcrumbs />
+
             <Heading className="mt-4">Registrace</Heading>
             <Row>
                 <Col lg={{span: 8, offset: 2}}>

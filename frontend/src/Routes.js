@@ -1,12 +1,9 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 
 import { HomePage } from './pages/public/HomePage';
 import { TeamList } from './pages/public/team/TeamList';
-import { Matches } from './pages/public/Matches';
 import { Statistics } from './pages/public/Statistics';
-import { AboutUs } from './pages/public/AboutUs';
-import { Contact } from './pages/public/Contact';
 import { Page404 } from './pages/error/Page404';
 import { Login } from './pages/auth/Login';
 import { Register } from './pages/auth/Register';
@@ -27,22 +24,32 @@ import {CompetitionList} from "./pages/public/competition/CompetitionList";
 import { CompetitionDetail } from "./pages/public/competition/CompetitionDetail";
 import { CompetitionCreate } from "./pages/administration/competition/CompetitionCreate";
 import { CompetitionEdit } from './pages/administration/competition/CompetitionEdit';
+import { CompetitionListAdmin } from "./pages/administration/competition/CompetitionListAdmin";
+import {useAuth} from "./utils/auth";
 
 export function Routes() {
+	const {user} = useAuth();
+
+	const checkAuth = (component, shouldBeLogged) => {
+		shouldBeLogged = !!(shouldBeLogged || shouldBeLogged === undefined);
+		if (!!user === shouldBeLogged) {
+			return component;
+		} else {
+			return <Redirect to="/"/>;
+		}
+	};
+
 	return (
 		<Switch>
             <Route path="/" exact component={HomePage} />
 
-            <Route path="/login" exact component={Login} />
-            <Route path="/register" exact component={Register} />
-			<Route path="/resetPassword/:id_user/:hash" exact component={ResetPassword} />
-			<Route path="/resendToken/:id_token/:type" exact component={ResendToken} />
-			<Route path="/confirmEmail/:id_user/:hash" exact component={ConfirmEmail} />
+            <Route path="/login" exact render={() => (checkAuth(<Login/>, false))} />
+            <Route path="/register" exact render={() => (checkAuth(<Register/>, false))} />
+			<Route path="/resetPassword/:id_user/:hash" exact render={() => (checkAuth(<ResetPassword/>, false))} />
+			<Route path="/resendToken/:id_token/:type" exact render={() => (checkAuth(<ResendToken/>, false))} />
+			<Route path="/confirmEmail/:id_user/:hash" exact render={() => (checkAuth(<ConfirmEmail/>, false))} />
 
-            <Route path="/matches" exact component={Matches} />
 			<Route path="/statistics" exact component={Statistics} />
-			<Route path="/aboutus" exact component={AboutUs}/>
-			<Route path="/contact" exact component={Contact}/>
 			<Route path="/teams/:id_team" exact component={TeamDetail} />
 			<Route path="/teams/:id_team/matches/:id_match" exact component={MatchDetail} />
 			<Route path="/matches/:id_match" exact component={MatchDetail} />
@@ -52,18 +59,19 @@ export function Routes() {
 			<Route path="/competitions" exact component={CompetitionList} />
 			<Route path="/competitions/:id_competition" exact component={CompetitionDetail} />
 
-			<Route path="/administration" exact component={AdministrationMenu} />
-            <Route path="/administration/profile" exact component={UserProfile} />
-			<Route path="/administration/teams/:id_team" exact component={TeamDetailAdmin} />
-            <Route path="/administration/teams" exact component={TeamListAdmin} />
+			<Route path="/administration" exact render={() => (checkAuth(<AdministrationMenu/>))}/>
+      <Route path="/administration/profile" exact render={() => (checkAuth(<UserProfile/>))} />
+			<Route path="/administration/teams/:id_team" exact render={() => (checkAuth(<TeamDetailAdmin/>))} />
+      <Route path="/administration/teams"  exact render={() => (checkAuth(<TeamListAdmin/>))} />
 
-			<Route path="/administration/teams/:id_team/matches/:id_match" exact component={MatchEditForm} />
-			<Route path="/administration/matches/createForm" exact component={MatchCreateForm} />
-            <Route path="/administration/matches/createInteractive" exact component={MatchCreateInteractive} />
+			<Route path="/administration/teams/:id_team/matches/:id_match" exact render={() => (checkAuth(<MatchEditForm/>))} />
+			<Route path="/administration/matches/createForm" exact render={() => (checkAuth(<MatchCreateForm/>))} />
+      <Route path="/administration/matches/createInteractive" exact render={() => (checkAuth(<MatchCreateInteractive/>))} />
 
-            <Route path="/administration/competition/create" exact component={CompetitionCreate} />
-            <Route path="/administration/competition/edit/:id_competition" exact component={CompetitionEdit} />
-
+			<Route path="/administration/competitions" exact render={() => (checkAuth(<CompetitionListAdmin/>))} />
+      <Route path="/administration/competitions/create" exact render={() => (checkAuth(<CompetitionCreate/>))} />
+      <Route path="/administration/competition/edit/:id_competition" exact component={CompetitionEdit} />  
+        
 			<Route path="*" component={Page404}/>
 		</Switch>
 	);

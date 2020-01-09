@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
-import {NavLink as Link} from "react-router-dom";
-import {Row, Col, Breadcrumb, Modal} from "react-bootstrap";
+import {Row, Col, Modal} from "react-bootstrap";
 import {config} from '../../config';
 import {Heading} from '../../basicComponents';
 import {useApi} from '../../hooks/useApi';
@@ -11,6 +10,7 @@ import * as yup from "yup";
 import {AccountAdvantages} from "../../basicComponents/AccountAdvantages";
 import {ResetPasswordForm} from "../../organisms/auth/ResetPasswordForm";
 import {LoginForm} from "../../organisms/auth/LoginForm";
+import {LoginBreadcrumbs} from "../../organisms/breadcrumbs/LoginBreadcrumbs";
 
 const schemaLogin = yup.object().shape({
     email: yup.string().email().required(),
@@ -25,11 +25,6 @@ export function Login() {
     const auth = useAuth();
     const api = useApi();
     const history = useHistory();
-    const {user} = auth;
-
-    if (user) {
-        history.replace('/');
-    }
 
 	const [show, setShow] = useState(false);
 	const handleClose = () => setShow(false);
@@ -42,7 +37,7 @@ export function Login() {
 			.then(({ data }) => {
 				const { token, user } = data;
 				auth.signin( {token, user} );
-				history.replace('/administration/profile');
+				history.replace('/administration');
 			})
 			.catch(( { response } ) => {
 				const { data } = response;
@@ -66,10 +61,7 @@ export function Login() {
 
     return (
         <div>
-            <Breadcrumb>
-                <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
-                <li className="breadcrumb-item"><span className="active">Přihlásit se</span></li>
-            </Breadcrumb>
+			<LoginBreadcrumbs />
             <Heading size="xl" className="mt-4">Přihlásit se</Heading>
             <Row>
                 <Col lg={{span: 8, offset: 2}}>

@@ -135,7 +135,6 @@ export function MatchList({matchesState, id_team, admin}) {
             {(!matchesState.isLoading && !matchesState.error) &&
                 <Table columns={columns} data={matchesState.team_data} getTdProps={(state, rowInfo) => {
                     return {
-
                         onClick: () => {
                             handleClick(rowInfo);
                         }

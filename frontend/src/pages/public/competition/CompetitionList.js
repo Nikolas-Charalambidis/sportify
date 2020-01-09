@@ -1,14 +1,14 @@
 import React from 'react';
-import {NavLink as Link, useHistory} from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 import {Heading} from '../../../basicComponents';
-import { Breadcrumb, Button } from 'react-bootstrap';
 import "react-table/react-table.css";
 import {useGetCompetitions} from "../../../api/competitionClient_v1";
 import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../assets/images/loading.gif";
 import {Table} from "../../../basicComponents/Table";
 import { useGetCompetitionTypes, useGetSports } from "../../../api/othersClient_v1";
-import { useAuth } from '../../../utils/auth';
+import {CompetitionListBreadcrumbs} from "../../../organisms/breadcrumbs/CompetitionListBreadcrumbs";
+import {UnexpectedError} from "../../../basicComponents/UnexpectedError";
 
 function getUniqueCities(state) {
     const uniqueCities = [];
@@ -25,7 +25,6 @@ function getUniqueCities(state) {
 export function CompetitionList() {
     let history = useHistory();
 
-    const { user } = useAuth();
     const [state] = useGetCompetitions();
     const [sportsState] = useGetSports();
     const [typesState] = useGetCompetitionTypes();
@@ -36,10 +35,6 @@ export function CompetitionList() {
         if (row) {
             history.push("/competitions/" + row.original.id_competition);
         }
-    }
-
-    function onCreateCompetition() {
-        history.push("/administration/competition/create");
     }
 
     const columns = [
@@ -128,30 +123,31 @@ export function CompetitionList() {
         }
     ];
 
+    if(state.isLoading || sportsState.isLoading || typesState.isLoading) {
+        return <div className="text-center"><Image src={loadingGif}/></div>;
+    }
+
+    if((!sportsState.isLoading && sportsState.error) || (!typesState.isLoading && typesState.error) || (!state.isLoading && state.error)) {
+        return (
+            <div>
+                <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>
+            </div>
+        );
+    }
+
     return (
         <div>
-            <Breadcrumb>
-                <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
-                <li className="breadcrumb-item"><span className="active">Soutěže</span></li>
-            </Breadcrumb>
+            <CompetitionListBreadcrumbs />
             <Heading>Přehled soutěží</Heading>
-
-            {(state.isLoading || sportsState.isLoading || typesState.isLoading) &&
-            <div className="text-center"><Image src={loadingGif}/></div>}
-            {((!sportsState.isLoading && sportsState.error) || (!typesState.isLoading && typesState.error) || (!state.isLoading && state.error)) &&
-            <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
-            {((!sportsState.isLoading && !sportsState.error) && (!typesState.isLoading && !typesState.error) && (!state.isLoading && !state.error)) && (
+            {((!sportsState.isLoading && !sportsState.error) && (!typesState.isLoading && !typesState.error) && (!state.isLoading && !state.error)) ?
                 <Table columns={columns} data={state.competitions} getTdProps={(state, rowInfo) => {
                     return {
                         onClick: () => {
                             handleClick(rowInfo);
                         }
                     }
-                }} />                
-            )}
-
-            {user &&
-                <Button className="float-right mt-3" variant="primary" onClick={onCreateCompetition}>Vytvořit soutěž</Button>
+                }} />
+                : <UnexpectedError/>
             }
         </div>
     );

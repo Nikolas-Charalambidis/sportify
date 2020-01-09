@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Heading} from '../../../basicComponents/';
-import {Breadcrumb, Button} from "react-bootstrap";
-import {NavLink as Link, useHistory, useParams} from "react-router-dom";
+import {Button} from "react-bootstrap";
+import {useHistory, useParams} from "react-router-dom";
 import {useAuth} from "../../../utils/auth";
 import {deleteMatch, useGetMatch} from "../../../api/matchClient_v1";
 import Image from "react-bootstrap/esm/Image";
@@ -15,25 +15,23 @@ import {DeleteModal} from "../../../basicComponents/DeleteModal";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as Icons from "@fortawesome/free-solid-svg-icons";
 import {MatchDetailAdmin} from "../../../organisms/match/admin/detail/MatchDetailAdmin";
+import {MatchEditFormBreadcrumbs} from "../../../organisms/breadcrumbs/MatchEditFormBreadcrumbs";
 
 export function MatchEditForm() {
     const history = useHistory();
     const {user} = useAuth();
-    if (!user) {
-        history.replace('/');
-    }
+    const api = useApi();
+
     let {id_team, id_match} = useParams();
     const [state] = useGetTeam(id_team);
 
     if(!state.isLoading && !state.error) {
         if(user.id_user !== state.team_data.id_leader){
-            window.flash("Na tuto stránku má přístup pouze vedoucí týmu jež odehrál zápas!", "danger");
-            history.replace('/');
+            window.flash("Na tuto stránku mají přístup pouze vedoucí týmů, jež se zúčastnily zápasu", "danger");
+            history.replace('/administration/teams/' + id_team);
         }
     }
     const [stateMatch] = useGetMatch(id_match);
-
-    const api = useApi();
 
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -49,30 +47,26 @@ export function MatchEditForm() {
     };
 
     if(stateMatch.isLoading) {
-        return <div className="text-center"><Image src={loadingGif}/></div>;
+        return (
+            <div>
+                <MatchEditFormBreadcrumbs id_team={id_team}/>
+                <div className="text-center"><Image src={loadingGif}/></div>
+            </div>
+        );
+    }
+
+    if(!stateMatch.isLoading && stateMatch.error) {
+        return (
+            <div>
+                <MatchEditFormBreadcrumbs id_team={id_team}/>
+                <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>
+            </div>
+        );
     }
 
     return (
         <div>
-            <Breadcrumb>
-                <li className="breadcrumb-item">
-                    <Link to="/">Domů</Link>
-                </li>
-                <li className="breadcrumb-item">
-                    <Link to="/administration">Administrace</Link>
-                </li>
-                <li className="breadcrumb-item">
-                    <Link to="/administration/teams">Týmy</Link>
-                </li>
-                <li className="breadcrumb-item">
-                    <Link to={'/administration/teams/' + id_team } >Detail týmu</Link>
-                </li>
-                <li className="breadcrumb-item"><span className="active">Detail Zápasu</span></li>
-            </Breadcrumb>
-
-            {stateMatch.isLoading && <div className="text-center"><Image src={loadingGif}/></div>}
-            {(!stateMatch.isLoading && stateMatch.error) &&
-                <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
+            <MatchEditFormBreadcrumbs id_team={id_team}/>
             {(!stateMatch.isLoading && !stateMatch.error) &&
                 <div className="container page match">
                     <Row>
@@ -93,7 +87,6 @@ export function MatchEditForm() {
                             </Heading>
                         </Col>
                     </Row>
-
 
                     <DeleteModal key="match" show={show} heading="Delete zápasu"
                                  text="Opravdu si přejete odstranit zápas a sním i všechny zázanmy o hráčích a eventech?"

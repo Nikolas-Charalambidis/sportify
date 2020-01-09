@@ -1,36 +1,32 @@
-import React, {useState} from 'react';
-import {useHistory} from 'react-router-dom';
+import React from 'react';
+import {NavLink as Link, useHistory} from 'react-router-dom';
 import {Heading} from '../../../basicComponents';
-import {Button} from "react-bootstrap";
+import {Breadcrumb, Button} from "react-bootstrap";
 import "react-table/react-table.css";
-import {useGetUserOwnedTeams} from "../../../api/userClient_v1";
+import {useGetUserOwnedCompetitions} from "../../../api/userClient_v1";
 import {useAuth} from "../../../utils/auth";
 import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../assets/images/loading.gif";
 import {Table} from "../../../basicComponents/Table";
-import {TeamCreateModal} from "../../../organisms/team/admin/TeamCreateModal";
-import {useApi} from "../../../hooks/useApi";
-import {TeamListAdminBreadcrumbs} from "../../../organisms/breadcrumbs/TeamListAdminBreadcrumbs";
 
-export function TeamListAdmin() {
-    const api = useApi();
+export function CompetitionListAdmin() {
     const history = useHistory();
     const {user} = useAuth();
 
-    const [state] = useGetUserOwnedTeams(user.id_user);
-
-    const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const [state] = useGetUserOwnedCompetitions(user.id_user);
 
     const columns = [
         {
-            Header: 'Název týmu',
+            Header: 'Název soutěže',
             accessor: 'name',
         },
         {
             Header: 'Sport',
             accessor: 'sport',
+        },
+        {
+            Header: 'Město',
+            accessor: 'city',
         },
         {
             Header: 'Typ',
@@ -40,17 +36,22 @@ export function TeamListAdmin() {
 
     function handleClick(row) {
         if (row) {
-            history.push("teams/" + row.original.id_team);
+            history.push("competitions/" + row.original.id_competition);
         }
     }
 
     return (
         <div>
-            <TeamListAdminBreadcrumbs />
-            <Heading>Moje týmy</Heading>
+            <Breadcrumb>
+                <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
+                <li className="breadcrumb-item"><Link to="/administration">Administrace</Link></li>
+                <li className="breadcrumb-item"><span className="active">Moje soutěže</span></li>
+            </Breadcrumb>
+
+            <Heading>Moje soutěže</Heading>
             <div className="text-right">
-                <Button variant="primary mb-3 pull-right" onClick={handleShow}>
-                    <span>Vytvořit tým</span>
+                <Button variant="primary mb-3 pull-right" onClick={() => history.push("/administration/competitions/create")}>
+                    <span>Vytvořit soutěž</span>
                 </Button>
             </div>
 
@@ -58,7 +59,7 @@ export function TeamListAdmin() {
             {!state.isLoading && state.error &&
             <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
             {!state.isLoading && !state.error && (
-                <Table columns={columns} data={state.teams} filterable={false} showPagination={false}
+                <Table columns={columns} data={state.competition} filterable={false} showPagination={false}
                        getTdProps={(state, rowInfo) => {
                            return {
                                onClick: () => {
@@ -67,8 +68,6 @@ export function TeamListAdmin() {
                            }
                        }}/>
             )}
-
-            <TeamCreateModal show={show} id_user={user.id_user} api={api} handleClose={handleClose}/>
         </div>
     );
 }

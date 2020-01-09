@@ -7,7 +7,6 @@ export function TeamAdminSelectCompetition() {
 
     const [competitions] = useGetCompetitions();
     const [setCompetitionState] = useState({id_competition: null});
-    console.log(competitions);
 
     return (
         <div>

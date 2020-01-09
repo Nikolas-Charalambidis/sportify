@@ -1,7 +1,7 @@
 import React from 'react';
-import {Breadcrumb, Tab, Tabs} from 'react-bootstrap';
+import {Tab, Tabs} from 'react-bootstrap';
 import 'moment/locale/cs';
-import {NavLink as Link, useHistory, useParams} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 import {useGetTeam} from "../../../api/teamClient_v1";
 import {useGetMembers, useGetTeamMatches} from "../../../api/teamClient_v1";
 import {TeamDataFormAdmin} from "../../../organisms/team/admin/TeamDataFormAdmin";
@@ -12,22 +12,19 @@ import {Heading} from "../../../basicComponents";
 import {TeamSquadAdmin} from "../../../organisms/team/admin/TeamSquadAdmin";
 import {UnexpectedError} from "../../../basicComponents/UnexpectedError";
 import {TeamAdminSelectCompetition} from "../../../organisms/administration/TeamAdminSelectCompetition";
-
+import {TeamDetailAdminBreadcrumbs} from "../../../organisms/breadcrumbs/TeamDetailAdminBreadcrumbs";
 
 export function TeamDetailAdmin() {
     const history = useHistory();
     const {user} = useAuth();
-    if (!user) {
-        window.flash("Na tuto stránku mají přístup jen přihlášení uživatelé!", "danger");
-        history.replace('/');
-    }
+
     let {id_team} = useParams();
     const [state] = useGetTeam(id_team);
 
     if(!state.isLoading && !state.error) {
         if(user.id_user !== state.team_data.id_leader){
             window.flash("Na tuto stránku má přístup pouze vedoucí zobrazovaného týmu!", "danger");
-            history.replace('/');
+            history.replace('/administration/teams');
         }
     }
 
@@ -46,13 +43,7 @@ export function TeamDetailAdmin() {
         <div>
             {((!state.isLoading && !state.error) && (!membersState.isLoading && !membersState.error)) ?
                 <div>
-                    <Breadcrumb>
-                        <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
-                        <li className="breadcrumb-item"><Link to="/administration">Administrace</Link></li>
-                        <li className="breadcrumb-item"><Link to="/administration/teams">Moje týmy</Link></li>
-                        <li className="breadcrumb-item"><span className="active">{state.team_data.name}</span></li>
-                    </Breadcrumb>
-
+                    <TeamDetailAdminBreadcrumbs teamName={state.team_data.name} />
                     <TeamDataFormAdmin team_data={state.team_data} membersState={membersState}/>
 
                     <Tabs className="mb-3" fill defaultActiveKey="squad" id="teamTabs">
@@ -64,7 +55,7 @@ export function TeamDetailAdmin() {
                         </Tab>
                         <Tab eventKey="competitions" title="Soutěže">
                             <h2 className="mt-4">Přihlášené soutěže</h2>
-                            <TeamCompetitions/>
+                            <TeamCompetitions admin={true}/>
                             <h2 className="mt-4">Odeslání přihlášky do soutěže</h2>
                             <TeamAdminSelectCompetition/>
                         </Tab>

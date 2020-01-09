@@ -1,10 +1,9 @@
 import React from "react";
-import { NavLink as Link } from 'react-router-dom';
 import { Heading } from '../../../basicComponents';
 import { Field } from "../../../basicComponents";
 import { DatePickerField } from "../../../basicComponents/DatePickerField"
 import { CustomSelect } from "../../../basicComponents/Select";
-import { Breadcrumb, Form, Button } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useGetSports } from "../../../api/othersClient_v1";
@@ -13,10 +12,14 @@ import { useApi } from "../../../hooks/useApi";
 import { useAuth } from '../../../utils/auth';
 import { useHistory } from "react-router";
 import { Col, Row } from "react-bootstrap";
+import {CompetitionCreateBreadcrumbs} from "../../../organisms/breadcrumbs/CompetitionCreateBreadcrumbs";
 
 export function CompetitionCreate() {
     const api = useApi();
     const { user } = useAuth();
+
+export function CompetitionCreate() {
+
     const [sportsState] = useGetSports();
     const sports = sportsState.sports;
     let history = useHistory();
@@ -35,11 +38,7 @@ export function CompetitionCreate() {
 
     return (
         <div>
-            <Breadcrumb>
-                <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
-                <li className="breadcrumb-item"><Link to="/competitions">Soutěže</Link></li>
-                <li className="breadcrumb-item"><span className="active">Nová soutěž</span></li>
-            </Breadcrumb>
+            <CompetitionCreateBreadcrumbs />
             <Heading>Nová soutěž</Heading>
             {sportsState.isLoading && <div>Načítám data...</div>}
             {(!sportsState.isLoading && sportsState.error) && <div>Data se nepodařilo načíst</div>}
