@@ -79,8 +79,9 @@ export function CompetitionEdit() {
                         <div>
                             <Breadcrumb>
                                 <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
+                                <li className="breadcrumb-item"><Link to="/administration">Administrace</Link></li>
                                 <li className="breadcrumb-item"><Link to="/competitions">Soutěže</Link></li>
-                                <li className="breadcrumb-item"><span className="active">{competition.name}</span></li>
+                                <li className="breadcrumb-item"><span className="active">Nová soutěž</span></li>
                             </Breadcrumb>
                             <Heading>{competition.name}</Heading>
 
@@ -145,10 +146,10 @@ export function CompetitionEdit() {
                                             </Col>
                                         </Row>
 
-                                </div>
-                                <Button variant="danger" onClick={() => console.log("dodělat, chybí endpoint")}>Smazat</Button>
-                                <Button variant="primary" type="submit">Uložit</Button>
-                                    
+                                    </div>
+                                    <Button variant="danger" onClick={() => console.log("dodělat, chybí endpoint")}>Smazat</Button>
+                                    <Button variant="primary" type="submit">Uložit</Button>
+
                                 </Form>
                             )}
                             </Formik>
