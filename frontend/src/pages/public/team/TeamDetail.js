@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
-import {NavLink as Link, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 import {Heading} from '../../../basicComponents';
-import {Breadcrumb, Image, Tabs, Tab, Row, Button, Col} from 'react-bootstrap';
+import {Image, Tabs, Tab, Row, Button, Col} from 'react-bootstrap';
 import {TeamSquad} from "../../../organisms/team/public/TeamSquad";
 import {useGetTeam, useGetTeamMatches} from "../../../api/teamClient_v1";
 import {TeamCompetitions} from "../../../organisms/team/public/TeamCompetitions";
@@ -15,15 +15,16 @@ import {useAuth} from "../../../utils/auth";
 import {TeamRequestModal} from "../../../basicComponents/TeamRequestModal";
 import {useGetTeamPositions} from "../../../api/othersClient_v1";
 import {UnexpectedError} from "../../../basicComponents/UnexpectedError";
+import {TeamDetailBreadcrumbs} from "../../../organisms/breadcrumbs/TeamDetailBreadcrumbs";
 
 export function TeamDetail() {
+    const {user} = useAuth();
+    let {id_team} = useParams();
 
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    const {user} = useAuth();
-    let {id_team} = useParams();
     const [state] = useGetTeam(id_team);
     const [matchesState] = useGetTeamMatches(id_team);
     const [playersState] = useGetTeamPlayersByStatus(id_team, "active");
@@ -36,18 +37,19 @@ export function TeamDetail() {
     }
 
     if(!state.isLoading && state.error) {
-        return <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>;
+        return (
+            <div>
+                <TeamDetailBreadcrumbs teamName={state.team_data.name} />
+                <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>
+            </div>
+        );
     }
 
     return (
         <div>
             {(!state.isLoading && !state.error) ?
             <div>
-                <Breadcrumb>
-                    <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
-                    <li className="breadcrumb-item"><Link to="/teams">Týmy</Link></li>
-                    <li className="breadcrumb-item"><span className="active">{state.team_data.name}</span></li>
-                </Breadcrumb>
+                <TeamDetailBreadcrumbs teamName={state.team_data.name} />
                 <Heading className="mt-4 mb-5">{state.team_data.name}</Heading>
 
                 <TeamData state={state} />
@@ -73,17 +75,15 @@ export function TeamDetail() {
 
                         <TeamRequestModal show={show} handleClose={handleClose} positions={positions.positions} positionsState={positionsState}
                                           setPositionsState={setPositionsState} id_user={user.id_user} id_team={id_team}/>
-
                     </Col>
                 </Row>) : null }
-
 
                 <Tabs className="mb-3" fill defaultActiveKey="squad" id="teamTabs">
                     <Tab eventKey="squad" title="Sestava">
                         <TeamSquad status="active" playersState={playersState}/>
                     </Tab>
                     <Tab eventKey="competition" title="Soutěže">
-                        <TeamCompetitions/>
+                        <TeamCompetitions admin={false}/>
                     </Tab>
                     <Tab eventKey="statistics" title="Statistiky">
                         <TeamStatistics/>

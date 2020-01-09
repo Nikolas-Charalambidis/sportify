@@ -12,13 +12,6 @@ import {Table} from "../../../basicComponents/Table";
 export function CompetitionListAdmin() {
     const history = useHistory();
     const {user} = useAuth();
-    if (!user) {
-        history.replace('/');
-    }
-
-    function onCreateCompetition() {
-        history.push("/administration/competition/create");
-    }
 
     const [state] = useGetUserOwnedCompetitions(user.id_user);
 
@@ -43,7 +36,7 @@ export function CompetitionListAdmin() {
 
     function handleClick(row) {
         if (row) {
-            history.push("competition/" + row.original.id_competition);
+            history.push("competitions/" + row.original.id_competition);
         }
     }
 
@@ -57,7 +50,7 @@ export function CompetitionListAdmin() {
 
             <Heading>Moje soutěže</Heading>
             <div className="text-right">
-                <Button variant="primary mb-3 pull-right" onClick={onCreateCompetition}>
+                <Button variant="primary mb-3 pull-right" onClick={() => history.push("/administration/competitions/create")}>
                     <span>Vytvořit soutěž</span>
                 </Button>
             </div>

@@ -1,27 +1,23 @@
 import React, {useState} from 'react';
 import {Heading} from '../../../basicComponents';
 import {CardTemplate} from '../../../basicComponents/CardTemplate';
-import {Row, Breadcrumb} from 'react-bootstrap';
-import {useHistory} from 'react-router';
+import {Row} from 'react-bootstrap';
 import {useAuth} from '../../../utils/auth';
 import {useApi} from '../../../hooks/useApi';
 import {mapSportToIcon} from '../../../utils/mapper';
 import {useGetUser, useGetUserTeams, useGetUserCompetition} from '../../../api/userClient_v1';
-import {NavLink as Link} from 'react-router-dom';
+
 import {UserChangePasswordModal} from '../../../organisms/user/admin/UserChangePasswordModal';
 import {UserDataFormAdmin} from '../../../organisms/user/admin/UserDataFormAdmin';
 import defaultTeamAvatar from "../../../assets/images/default_team_avatar.svg";
 import defaultCompetitionAvatar from "../../../assets/images/default_competition_avatar.jpg";
 import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../assets/images/loading.gif";
+import {UserProfileBreadcrumbs} from "../../../organisms/breadcrumbs/UserProfileBreadcrumbs";
 
 export function UserProfile() {
-    const history = useHistory();
     const {user} = useAuth();
     const api = useApi();
-    if (!user) {
-        history.replace('/');
-    }
 
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -29,22 +25,11 @@ export function UserProfile() {
 
     const [state] = useGetUser(user.id_user);
     const [teamState] = useGetUserTeams(user.id_user);
-
     const [competitionState] = useGetUserCompetition(user.id_user);
 
     return (
         <div>
-            <Breadcrumb>
-                <li className="breadcrumb-item">
-                    <Link to="/">Domů</Link>
-                </li>
-                <li className="breadcrumb-item">
-                    <Link to="/administration">Administrace</Link>
-                </li>
-                <li className="breadcrumb-item">
-                    <span className="active">Profil</span>
-                </li>
-            </Breadcrumb>
+            <UserProfileBreadcrumbs />
             <Heading className="pageHeading mt-4 mb-5">Uživatelský profil</Heading>
 
             {state.isLoading && <div className="text-center"><Image src={loadingGif}/></div>}
@@ -99,7 +84,7 @@ export function UserProfile() {
                                 {competitionState.user_data.map((anObjectMapped, index) => (
                                     <CardTemplate
                                         key={index}
-                                        redirect={`../leagues/${anObjectMapped.id_competition}`}
+                                        redirect={`../competitions/${anObjectMapped.id_competition}`}
                                         title={`${anObjectMapped.competition_name}`}
                                         subtitle={`Umístění: ${anObjectMapped.team_position}`}
                                         tooltipPictureHeader={`${anObjectMapped.sport}`}
