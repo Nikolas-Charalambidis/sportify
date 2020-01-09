@@ -3,7 +3,6 @@ import {Heading} from '../../basicComponents';
 import {Row, Col, Form, Button, Breadcrumb} from "react-bootstrap";
 import {Footer} from "../../basicComponents/Footer";
 import {useApi} from '../../hooks/useApi';
-import {useAuth} from '../../utils/auth';
 import {useHistory} from "react-router";
 import {config} from '../../config';
 import {Formik} from "formik";
@@ -17,15 +16,9 @@ const schema = yup.object().shape({
 });
 
 export function ResetPassword() {
-    const auth = useAuth();
     const params =  useParams();
     const api = useApi();
     const history = useHistory();
-    const { user } = auth;
-
-    if(user) {
-        history.replace('/');
-    }
 
     function resetPassword(values, params) {
         const { password1, password2 } = values;

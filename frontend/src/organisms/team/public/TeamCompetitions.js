@@ -1,14 +1,25 @@
 import React from 'react';
-import {useParams} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 import {useGetTeamCompetition} from "../../../api/teamClient_v1";
 import {Heading} from "../../../basicComponents";
 import {Table} from "../../../basicComponents/Table";
 import moment from "moment";
 
-export function TeamCompetitions() {
+export function TeamCompetitions({admin}) {
     let {id_team} = useParams();
-
+    const history = useHistory();
     const [state] = useGetTeamCompetition(id_team);
+
+    function handleClick(row) {
+        if (row) {
+            if(admin === true) {
+                history.push(`/administration/competitions/${row.original.id_competition}`);
+            } else {
+                history.push(`/competitions/${row.original.id_competition}`);
+            }
+        }
+    }
+
     const columns = [
         {
             Header: "Název soutěže",
@@ -47,7 +58,13 @@ export function TeamCompetitions() {
             {!state.isLoading && state.error &&
             <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
             {!state.isLoading && !state.error && (
-                <Table className="defaultCursor" columns={columns} data={state.team_data}/>
+                <Table className="defaultCursor" columns={columns} data={state.team_data} getTdProps={(state, rowInfo) => {
+                    return {
+                        onClick: () => {
+                            handleClick(rowInfo);
+                        }
+                    }
+                }}/>
             )}
         </div>
     );

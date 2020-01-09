@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-
 import {Navbar, Button} from "react-bootstrap";
 import {NavLink as Link} from "react-router-dom";
 import {withRouter} from 'react-router-dom';
@@ -8,7 +7,6 @@ import {useHistory} from "react-router";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import * as Icons from "@fortawesome/free-solid-svg-icons"
 
-
 function TopNavigationBase() {
     const {user, signout} = useAuth();
     const history = useHistory();
@@ -16,8 +14,6 @@ function TopNavigationBase() {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-
-
         <Navbar id="navigation" sticky="top" expand="md">
             <Link to="/">
                 <Navbar.Brand/>
@@ -56,10 +52,7 @@ function TopNavigationBase() {
                 <ul className="m-auto">
                     <li><Link className="nav-link" to="/teams" activeClassName="active" onClick={toggle}>Týmy</Link></li>
                     <li><Link className="nav-link" to="/competitions" activeClassName="active" onClick={toggle}>Soutěže</Link></li>
-                    <li><Link className="nav-link" to="/matches" activeClassName="active" onClick={toggle}>Zápasy</Link></li>
                     <li><Link className="nav-link" to="/statistics" activeClassName="active" onClick={toggle}>Statistiky</Link></li>
-                    <li><Link className="nav-link" to="/aboutus" activeClassName="active" onClick={toggle}>O nás</Link></li>
-                    <li><Link className="nav-link" to="/contact" activeClassName="active" onClick={toggle}>Kontakt</Link></li>
                 </ul>
 
                 <div className="signUp d-none d-md-inline-block">

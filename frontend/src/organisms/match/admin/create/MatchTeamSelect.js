@@ -57,6 +57,11 @@ export function MatchTeamSelect({teams, setHostState, setGuestState}) {
                         />
                     </Col>
                 </Row>
+                <Row>
+                    <Col sm={{ span: 12, offset: 0 }}>
+
+                    </Col>
+                </Row>
             </Form>
         )}
         </Formik>

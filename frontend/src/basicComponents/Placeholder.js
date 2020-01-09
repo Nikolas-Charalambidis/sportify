@@ -1,5 +1,4 @@
 import React from 'react'
-
 import {Heading} from './index'
 
 export function Placeholder({title, children}) {
