@@ -40,6 +40,8 @@ A web application Sportify, as a semestral work, manages teams, leagues, matches
 - Backend: see at `/backend/README.md`
 - Frontend: see at `/frontend/README.md`
 
+The requirements and installation are described in particular README files for infrastructure and each module separately.
+
 ## Contribution
 
 Read [**CONTRIBUTING.md**](https://github.com/Nikolas-Charalambidis/4IT445/blob/master/CONTRIBUTING.md) (link to the master branch).
