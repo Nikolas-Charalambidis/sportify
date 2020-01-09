@@ -12,7 +12,7 @@ In order to work with **Backend** properly, you have to run a MySQL database wit
 Don't forget to execute the initialization scripts(s) at the `\database\sql` directory to work with the data. Just keep on your mind we won't describe nor support this way since we :heartpulse: Docker and we think it's necessary for the developers to know this technology nowadays.
 
 ### Requirements 
- - Docker
+ - Docker `2.1.0.1` or newer
 
 ### Installation (using Docker)
 

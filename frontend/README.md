@@ -4,9 +4,14 @@ A web application Sportify, as a semestral work, manages teams, leagues, matches
 
 ## Frontend
 
-Make sure the **Database** and **Backend** is running.
-
   - The website is available at [`http://localhost:3000`](http://localhost:3000). 
+  
+### Requirements 
+ - Docker `2.1.0.1` or newer
+ - Running **Database**
+ - Running **Backend**
+ - Node.js `10.16.2`or newer
+ - Yarn `1.13.0` or newer
  
 ##### Dependencies
  
