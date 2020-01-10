@@ -10,18 +10,6 @@ import { useGetCompetitionTypes, useGetSports } from "../../../api/othersClient_
 import {CompetitionListBreadcrumbs} from "../../../organisms/breadcrumbs/CompetitionListBreadcrumbs";
 import {UnexpectedError} from "../../../basicComponents/UnexpectedError";
 
-function getUniqueCities(state) {
-    const uniqueCities = [];
-    if (!state.isLoading) {
-        state.competitions.forEach(competition => {
-            if (uniqueCities.indexOf(competition.city) === -1) {
-                uniqueCities.push(competition.city)
-            }
-        });
-    }
-    return uniqueCities;
-}
-
 export function CompetitionTeamJoinRequests() {
     let history = useHistory();
     let { id_competition } = useParams();
