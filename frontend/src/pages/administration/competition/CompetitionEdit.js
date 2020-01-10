@@ -4,7 +4,7 @@ import { Heading } from '../../../basicComponents';
 import { Field } from "../../../basicComponents";
 import { DatePickerField } from "../../../basicComponents/DatePickerField"
 import { CustomSelect } from "../../../basicComponents/Select";
-import { Breadcrumb, Form, Button } from 'react-bootstrap';
+import {Breadcrumb, Form, Button, Tab, Tabs} from 'react-bootstrap';
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useGetCompetitionDetail } from "../../../api/competitionClient_v1";
@@ -14,6 +14,8 @@ import { useApi } from "../../../hooks/useApi";
 import { useAuth } from '../../../utils/auth';
 import { useHistory } from "react-router";
 import { Col, Row } from "react-bootstrap";
+import {CompetitionTeams} from "../../../organisms/competition/CompetitionTeams";
+import {CompetitionTeamJoinRequests} from "./CompetitionTeamJoinRequests";
 
 function getSport(competition, sports) {
     if (competition && sports) {
@@ -153,6 +155,7 @@ export function CompetitionEdit() {
                                 </Form>
                             )}
                             </Formik>
+                                <CompetitionTeamJoinRequests/>
                         </div>
                     }
                 </div>
