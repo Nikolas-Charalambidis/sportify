@@ -30,6 +30,33 @@ export function useGetCompetitions() {
     return [state];
 }
 
+export function useGetCompetitionsPending(id_competition) {
+    const api = useApi();
+    const [state, setState] = useState({
+        isLoading: true,
+        error: false,
+        competitions: undefined
+    });
+    useEffect(() => {
+        async function fetchData() {
+            await api
+                .get(`${config.API_BASE_PATH}/competitions/${id_competition}/teams?competition_membership_status=pending`)
+                .then(({data}) => {
+                    const {competitions} = data;
+                    setState({isLoading: false, error: false, competitions: competitions});
+                })
+                .catch(( { response } ) => {
+                    const {data} = response;
+                    setState({isLoading: false, error: true, competitions: null});
+                    window.flash(data.msg, 'danger');
+                });
+        }
+
+        fetchData().then();
+    }, [api]);
+    return [state];
+}
+
 export function useGetCompetitionDetail(id_competition) {
     const api = useApi();
     const [state, setState] = useState({
