@@ -3,12 +3,12 @@ import {useHistory} from 'react-router-dom';
 import {Heading} from '../../../basicComponents';
 import "react-table/react-table.css";
 import {useGetCompetitions} from "../../../api/competitionClient_v1";
-import Image from "react-bootstrap/esm/Image";
-import loadingGif from "../../../assets/images/loading.gif";
 import {Table} from "../../../basicComponents/Table";
 import { useGetCompetitionTypes, useGetSports } from "../../../api/othersClient_v1";
 import {CompetitionListBreadcrumbs} from "../../../organisms/breadcrumbs/CompetitionListBreadcrumbs";
 import {UnexpectedError} from "../../../basicComponents/UnexpectedError";
+import {LoadingGif} from "../../../basicComponents/LoadingGif";
+import {DataLoadingError} from "../../../basicComponents/DataLoadingError";
 
 function getUniqueCities(state) {
     const uniqueCities = [];
@@ -123,22 +123,24 @@ export function CompetitionList() {
         }
     ];
 
+    const header = (
+        <div>
+            <CompetitionListBreadcrumbs />
+            <Heading>Přehled soutěží</Heading>
+        </div>
+    );
+
     if(state.isLoading || sportsState.isLoading || typesState.isLoading) {
-        return <div className="text-center"><Image src={loadingGif}/></div>;
+        return <LoadingGif header={header}/>;
     }
 
     if((!sportsState.isLoading && sportsState.error) || (!typesState.isLoading && typesState.error) || (!state.isLoading && state.error)) {
-        return (
-            <div>
-                <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>
-            </div>
-        );
+        return <DataLoadingError header={header}/>;
     }
 
     return (
         <div>
-            <CompetitionListBreadcrumbs />
-            <Heading>Přehled soutěží</Heading>
+            {header}
             {((!sportsState.isLoading && !sportsState.error) && (!typesState.isLoading && !typesState.error) && (!state.isLoading && !state.error)) ?
                 <Table columns={columns} data={state.competitions} getTdProps={(state, rowInfo) => {
                     return {
@@ -151,4 +153,5 @@ export function CompetitionList() {
             }
         </div>
     );
+
 }

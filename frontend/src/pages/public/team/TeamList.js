@@ -3,12 +3,12 @@ import {useHistory} from 'react-router-dom';
 import {Heading} from '../../../basicComponents';
 import {useGetTeams} from "../../../api/teamClient_v1";
 import "react-table/react-table.css";
-import Image from "react-bootstrap/esm/Image";
-import loadingGif from "../../../assets/images/loading.gif";
 import {Table} from "../../../basicComponents/Table";
 import {useGetSports, useGetTeamTypes} from "../../../api/othersClient_v1";
 import {TeamListBreadcrumbs} from "../../../organisms/breadcrumbs/TeamListBreadcrumbs";
 import {UnexpectedError} from "../../../basicComponents/UnexpectedError";
+import {LoadingGif} from "../../../basicComponents/LoadingGif";
+import {DataLoadingError} from "../../../basicComponents/DataLoadingError";
 
 export function TeamList() {
     const [state] = useGetTeams();
@@ -85,30 +85,24 @@ export function TeamList() {
         }
     ];
 
+    const header = (
+        <div>
+            <TeamListBreadcrumbs />
+            <Heading>Přehled týmů</Heading>
+        </div>
+    );
+
     if(state.isLoading || sportsState.isLoading || typesState.isLoading) {
-        return (
-            <div>
-                <TeamListBreadcrumbs />
-                <Heading>Přehled týmů</Heading>
-                <div className="text-center"><Image src={loadingGif}/></div>
-            </div>
-        );
+        return <LoadingGif header={header}/>;
     }
 
     if((!sportsState.isLoading && sportsState.error) || (!typesState.isLoading && typesState.error) || (!state.isLoading && state.error)) {
-        return (
-            <div>
-                <TeamListBreadcrumbs />
-                <Heading>Přehled týmů</Heading>
-                <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>
-            </div>
-        );
+        return <DataLoadingError header={header}/>;
     }
 
     return (
         <div>
-            <TeamListBreadcrumbs />
-            <Heading>Přehled týmů</Heading>
+            {header}
             {((!sportsState.isLoading && !sportsState.error) && (!typesState.isLoading && !typesState.error) && (!state.isLoading && !state.error)) ?
                 <Table columns={columns} data={state.teams_data} getTdProps={(state, rowInfo) => {
                     return {

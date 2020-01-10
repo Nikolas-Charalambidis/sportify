@@ -3,7 +3,6 @@ import {Field} from "../../basicComponents";
 import React from "react";
 import {NavLink as Link} from "react-router-dom";
 
-
 export function LoginForm({handleSubmit, errors, showResetPasswordModal}) {
 
     return (

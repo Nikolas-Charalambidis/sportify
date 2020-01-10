@@ -5,12 +5,13 @@ import {Button} from "react-bootstrap";
 import "react-table/react-table.css";
 import {useGetUserOwnedTeams} from "../../../api/userClient_v1";
 import {useAuth} from "../../../utils/auth";
-import Image from "react-bootstrap/esm/Image";
-import loadingGif from "../../../assets/images/loading.gif";
 import {Table} from "../../../basicComponents/Table";
 import {TeamCreateModal} from "../../../organisms/team/admin/TeamCreateModal";
 import {useApi} from "../../../hooks/useApi";
 import {TeamListAdminBreadcrumbs} from "../../../organisms/breadcrumbs/TeamListAdminBreadcrumbs";
+import {LoadingGif} from "../../../basicComponents/LoadingGif";
+import {DataLoadingError} from "../../../basicComponents/DataLoadingError";
+import {UnexpectedError} from "../../../basicComponents/UnexpectedError";
 
 export function TeamListAdmin() {
     const api = useApi();
@@ -44,7 +45,7 @@ export function TeamListAdmin() {
         }
     }
 
-    return (
+    const header = (
         <div>
             <TeamListAdminBreadcrumbs />
             <Heading>Moje týmy</Heading>
@@ -53,11 +54,24 @@ export function TeamListAdmin() {
                     <span>Vytvořit tým</span>
                 </Button>
             </div>
+        </div>
+    );
 
-            {state.isLoading && <div className="text-center"><Image src={loadingGif}/></div>}
-            {!state.isLoading && state.error &&
-            <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
-            {!state.isLoading && !state.error && (
+    if(state.isLoading) {
+        return <LoadingGif header={header}/>;
+    }
+
+    if(!state.isLoading && state.error) {
+        return <DataLoadingError header={header}/>;
+    }
+
+
+
+
+    return (
+        <div>
+            {header}
+            {!state.isLoading && !state.error ?
                 <Table columns={columns} data={state.teams} filterable={false} showPagination={false}
                        getTdProps={(state, rowInfo) => {
                            return {
@@ -65,8 +79,10 @@ export function TeamListAdmin() {
                                    handleClick(rowInfo);
                                }
                            }
-                       }}/>
-            )}
+                       }}
+                />
+                : <UnexpectedError/>
+            }
 
             <TeamCreateModal show={show} id_user={user.id_user} api={api} handleClose={handleClose}/>
         </div>

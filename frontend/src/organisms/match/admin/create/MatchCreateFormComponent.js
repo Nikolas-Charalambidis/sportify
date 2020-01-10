@@ -1,30 +1,31 @@
 import React from 'react';
 import { Heading } from '../../../../basicComponents';
-import { Breadcrumb, Button } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import {MatchTeamSelect} from "../../../../organisms/match/admin/create/MatchTeamSelect";
 import {ShotsParent} from "../../../../organisms/match/admin/base/ShotsParent";
 import {Events} from "../../../../organisms/match/admin/base/Events";
 import {MatchMatchupSingleCreateAdmin} from "../../../../organisms/match/admin/create/matchup/MatchMatchupSingleCreateAdmin";
 import {MatchMatchupMultipleCreateAdmin} from "../../../../organisms/match/admin/create/matchup/MatchMatchupMultipleCreateAdmin";
 import {useGetTeams} from "../../../../api/teamClient_v1";
-import {NavLink as Link} from "react-router-dom";
+import {LoadingGif} from "../../../../basicComponents/LoadingGif";
+import {DataLoadingError} from "../../../../basicComponents/DataLoadingError";
+import {UnexpectedError} from "../../../../basicComponents/UnexpectedError";
 
 export function MatchCreateFormComponent({params, handleCreateMatch}) {
     const {hostState, setHostState, guestState, setGuestState} = params;
     const [teamsState] = useGetTeams();
 
+    if(teamsState.isLoading) {
+        return <LoadingGif />;
+    }
+
+    if(!teamsState.isLoading && teamsState.error) {
+        return <DataLoadingError />;
+    }
+
     return (
     <div>
-        <Breadcrumb>
-            <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
-            <li className="breadcrumb-item"><Link to="/administration">Administrace</Link></li>
-            <li className="breadcrumb-item"><span className="active">Nový zápas</span></li>
-        </Breadcrumb>
-
-        <Heading>Vytvoření zápasu</Heading>
-        {teamsState.isLoading && <div>Načítám data...</div>}
-        {(!teamsState.isLoading && teamsState.error) && <div>Data se nepodařilo načíst</div>}
-        {(!teamsState.isLoading && !teamsState.error) &&
+        {(!teamsState.isLoading && !teamsState.error) ?
             <div>
                 <MatchTeamSelect teams={teamsState.teams_data}
                                  setHostState={setHostState} setGuestState={setGuestState} />
@@ -60,6 +61,7 @@ export function MatchCreateFormComponent({params, handleCreateMatch}) {
                     </div>
                 }
             </div>
+            : <UnexpectedError/>
         }
     </div>
     );

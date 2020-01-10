@@ -1,10 +1,10 @@
 import React from "react";
-import { NavLink as Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Heading } from '../../../basicComponents';
 import { Field } from "../../../basicComponents";
 import { DatePickerField } from "../../../basicComponents/DatePickerField"
 import { CustomSelect } from "../../../basicComponents/Select";
-import { Breadcrumb, Form, Button } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useGetCompetitionDetail } from "../../../api/competitionClient_v1";
@@ -14,6 +14,10 @@ import { useApi } from "../../../hooks/useApi";
 import { useAuth } from '../../../utils/auth';
 import { useHistory } from "react-router";
 import { Col, Row } from "react-bootstrap";
+import {LoadingGif} from "../../../basicComponents/LoadingGif";
+import {DataLoadingError} from "../../../basicComponents/DataLoadingError";
+import {CompetitionEditBreadcrumbs} from "../../../organisms/breadcrumbs/CompetitionEditBreadcrumbs";
+import {UnexpectedError} from "../../../basicComponents/UnexpectedError";
 
 function getSport(competition, sports) {
     if (competition && sports) {
@@ -21,13 +25,13 @@ function getSport(competition, sports) {
         const sport = sports.find(s => s.sport === competitionSport);
         return sport;
     }
-};
+}
 
 function getCompetitionType(competition, competitionType) {
     if (competition) {
         //todo, waiting for BE
     }
-};
+}
 
 function canEdit(competition, user, history) {
     if (competition && user) {
@@ -38,8 +42,7 @@ function canEdit(competition, user, history) {
             return false;
         }
     }
-
-};
+}
 
 export function CompetitionEdit() {
     let { id_competition } = useParams();
@@ -69,20 +72,27 @@ export function CompetitionEdit() {
         { id_type: 1, type: "Liga" },
     ];
 
+    const header = (
+        <div>
+            <CompetitionEditBreadcrumbs />
+        </div>
+    );
+
+    if(sportsState.isLoading && competitionState.isLoading) {
+        return <LoadingGif header={header}/>;
+    }
+
+    if((!sportsState.isLoading && sportsState.error) || (!competitionState.isLoading && competitionState.error)) {
+        return <DataLoadingError header={header}/>;
+    }
+
     return (
         <div>
-            {sportsState.isLoading && competitionState.isLoading && <div> Načítám data...</div>}
-            {((!sportsState.isLoading && sportsState.error) || (!competitionState.isLoading && competitionState.error)) && <div>Data se nepodařilo načíst</div>}
-            {(!sportsState.isLoading && !sportsState.error) && (!competitionState.isLoading && !competitionState.error) &&
+            {header}
+            {((!sportsState.isLoading && !sportsState.error) && (!competitionState.isLoading && !competitionState.error)) ?
                 <div>
                     {canEdit(competition, user, history) &&
                         <div>
-                            <Breadcrumb>
-                                <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
-                                <li className="breadcrumb-item"><Link to="/administration">Administrace</Link></li>
-                                <li className="breadcrumb-item"><Link to="/competitions">Soutěže</Link></li>
-                                <li className="breadcrumb-item"><span className="active">Nová soutěž</span></li>
-                            </Breadcrumb>
                             <Heading>{competition.name}</Heading>
 
                             <Formik
@@ -156,6 +166,7 @@ export function CompetitionEdit() {
                         </div>
                     }
                 </div>
+                : <UnexpectedError/>
             }
         </div>
     )
