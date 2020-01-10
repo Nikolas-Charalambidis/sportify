@@ -4,7 +4,7 @@ import { Heading } from '../../../basicComponents';
 import { Field } from "../../../basicComponents";
 import { DatePickerField } from "../../../basicComponents/DatePickerField"
 import { CustomSelect } from "../../../basicComponents/Select";
-import { Breadcrumb, Form, Button } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useGetCompetitionDetail } from "../../../api/competitionClient_v1";
@@ -18,7 +18,6 @@ import {LoadingGif} from "../../../basicComponents/LoadingGif";
 import {DataLoadingError} from "../../../basicComponents/DataLoadingError";
 import {CompetitionEditBreadcrumbs} from "../../../organisms/breadcrumbs/CompetitionEditBreadcrumbs";
 import {UnexpectedError} from "../../../basicComponents/UnexpectedError";
-import {CompetitionTeams} from "../../../organisms/competition/CompetitionTeams";
 import {CompetitionTeamJoinRequests} from "./CompetitionTeamJoinRequests";
 
 function getSport(competition, sports) {

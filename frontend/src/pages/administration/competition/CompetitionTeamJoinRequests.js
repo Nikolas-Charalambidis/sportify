@@ -29,8 +29,6 @@ export function CompetitionTeamJoinRequests() {
     const [sportsState] = useGetSports();
     const [typesState] = useGetCompetitionTypes();
 
-    const cities = getUniqueCities(state);
-
     function handleClick(row) {
         if (row) {
             history.push("/competitions/" + row.original.id_competition);

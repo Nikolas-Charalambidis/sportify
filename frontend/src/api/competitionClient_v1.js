@@ -1,5 +1,5 @@
 import {useApi} from "../hooks/useApi";
-import {useCallback, useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 import {config} from '../config';
 import * as queryString from 'query-string';
 
