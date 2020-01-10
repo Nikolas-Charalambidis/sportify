@@ -1,5 +1,5 @@
 import {useApi} from "../hooks/useApi";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import {config} from '../config';
 import * as queryString from 'query-string';
 
@@ -148,7 +148,7 @@ export async function changeTeamStatus(api, values , id_team, status) {
     let result = false;
     const{id_competition} = values;
     await api
-        .patch(`${config.API_BASE_PATH}/competitionMembership/competition/${id_competition}/team/${id_team}`, {status: status})
+        .post(`${config.API_BASE_PATH}/competitionMembership/competition/${id_competition}/team/${id_team}`, {status: status})
         .then(({data}) => {
             window.flash(data.msg, 'success');
             result = true;

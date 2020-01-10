@@ -6,11 +6,13 @@ import {Formik} from "formik";
 import {Button, Col, Form, Row} from "react-bootstrap";
 import {useParams} from "react-router";
 import {useApi} from "../../hooks/useApi";
+import {useGetTeamCompetition} from "../../api/teamClient_v1";
 
 export function TeamAdminSelectCompetition() {
 
     const [competitions] = useGetCompetitions();
     let {id_team} = useParams();
+    const [teamsCompetitions] = useGetTeamCompetition(id_team);
     const api = useApi();
     return (
         <div>
