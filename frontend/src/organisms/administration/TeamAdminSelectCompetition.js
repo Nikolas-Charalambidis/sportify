@@ -1,11 +1,9 @@
-import React, {useState} from 'react';
-import {Field, Heading} from "../../basicComponents";
+import React from 'react';
+import {Heading} from "../../basicComponents";
 import {CustomSelect} from "../../basicComponents/Select";
 import {changeTeamStatus, useGetCompetitions} from "../../api/competitionClient_v1";
 import {Formik} from "formik";
-import {ChangeSetActive, ChangeTeamData} from "../../api/teamClient_v1";
 import {Button, Col, Form, Row} from "react-bootstrap";
-import {Avatar} from "../../basicComponents/Avatar";
 import {useParams} from "react-router";
 import {useApi} from "../../hooks/useApi";
 
