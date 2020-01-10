@@ -58,10 +58,10 @@ export default class CompetitionService {
 		return result[0];
 	}
 
-	async getCompetitionTeams(id_competition, team_membership_status) {
+	async getCompetitionTeams(id_competition, competition_membership_status) {
 		const competition = Number(id_competition);
 		competitionValidations.validateCompetitionId(competition);
-		const {status} = competitionValidations.validateStatus(team_membership_status);
+		const {status} = competitionValidations.validateStatus(competition_membership_status);
 
 		var where = '';
 		var values = [];
