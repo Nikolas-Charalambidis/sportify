@@ -1,7 +1,5 @@
 import React, {useState} from 'react';
 import {Table} from "../../../../../basicComponents/Table";
-import Image from "react-bootstrap/esm/Image";
-import loadingGif from "../../../../../assets/images/loading.gif";
 import {Heading} from "../../../../../basicComponents";
 import Button from "react-bootstrap/Button";
 import {PlayerSelectModal} from "../../create/PlayerSelectModal";
@@ -9,6 +7,8 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as Icons from "@fortawesome/free-solid-svg-icons";
 import {AddGoalSuspensionModal} from "../../base/AddGoalSuspensionModal";
 import {DeleteModal} from "../../../../../basicComponents/DeleteModal";
+import {LoadingGif} from "../../../../../basicComponents/LoadingGif";
+import {DataLoadingError} from "../../../../../basicComponents/DataLoadingError";
 
 export function MatchMatchupCreateAdmin({interactive, host, availablePlayers, setAvailablePlayers, state, setState }) {
 
@@ -133,15 +133,20 @@ export function MatchMatchupCreateAdmin({interactive, host, availablePlayers, se
         window.flash("Event byl úspěšně přidán", "success")
     };
 
+    if(availablePlayers.isLoading) {
+        return <LoadingGif />;
+    }
+
+    if(!availablePlayers.isLoading && availablePlayers.error) {
+        return <DataLoadingError />;
+    }
+
+    if(!availablePlayers.isLoading && !availablePlayers.error && availablePlayers.players.length === 0) {
+        return <Heading size="xs" className="alert-warning pt-2 pb-2 mt-2 text-center">Nejsou dostupní žádní další hráči</Heading>;
+    }
+
     return (
         <div className="mb-4">
-            {availablePlayers.isLoading &&  <div className="text-center"><Image src={loadingGif}/></div>}
-            {(!availablePlayers.isLoading && availablePlayers.error) &&
-                <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>
-            }
-            {(!availablePlayers.isLoading && !availablePlayers.error && availablePlayers.players.length === 0) &&
-                <Heading size="xs" className="alert-warning pt-2 pb-2 mt-2 text-center">Nejsou dostupní žádní další hráči</Heading>
-            }
             {(!availablePlayers.isLoading && !availablePlayers.error && availablePlayers.players.length !== 0) &&
                 <div>
                     <Button variant="primary mb-3" onClick={handleShowPlayerModal}>

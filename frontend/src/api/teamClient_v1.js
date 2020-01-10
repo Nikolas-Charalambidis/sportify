@@ -42,12 +42,6 @@ export function useGetTeam(id_team) {
                 .get(`${config.API_BASE_PATH}/teams/${id_team}`)
                 .then(({data}) => {
                     const {team} = data;
-                    // if(id_user){
-                    //     let authorized = id_user === team.id_leader;
-                    //     setState({isLoading: false, error: false, team_data: team, authorized: authorized});
-                    // } else {
-                    //     setState({isLoading: false, error: false, team_data: team});
-                    // }
                     setState({isLoading: false, error: false, team_data: team});
 
                 })
@@ -81,60 +75,6 @@ export function useGetMembers(id_team) {
                 .catch(( { response } ) => {
                     const {data} = response;
                     setState({isLoading: false, error: true, players: null});
-                    window.flash(data.msg, 'danger');
-                });
-        }
-
-        fetchData().then();
-    }, [api, id_team]);
-    return [state];
-}
-
-export function useGetTeamMembership(id_team, status) {
-    const api = useApi();
-    const [state, setState] = useState({
-        isLoading: true,
-        error: false,
-        players: undefined
-    });
-    useEffect(() => {
-        async function fetchData() {
-            await api
-                .get(`${config.API_BASE_PATH}/teamMembership/team/${id_team}?team_membership_status=${status}`)
-                .then(({data}) => {
-                    const {players} = data;
-                    setState({isLoading: false, error: false, players: players});
-                })
-                .catch(( { response } ) => {
-                    const {data} = response;
-                    setState({isLoading: false, error: true, players: null});
-                    window.flash(data.msg, 'danger');
-                });
-        }
-
-        fetchData().then();
-    }, [api, id_team, status]);
-    return [state];
-}
-
-export function useGetCompetitions(id_team) {
-    const api = useApi();
-    const [state, setState] = useState({
-        isLoading: true,
-        error: false,
-        team_data: undefined
-    });
-    useEffect(() => {
-        async function fetchData() {
-            await api
-                .get(`${config.API_BASE_PATH}/teams/${id_team}/competitionMembership`)
-                .then(({data}) => {
-                    const {comps} = data;
-                    setState({isLoading: false, error: false, team_data: comps});
-                })
-                .catch(( { response } ) => {
-                    const {data} = response;
-                    setState({isLoading: false, error: true, team_data: null});
                     window.flash(data.msg, 'danger');
                 });
         }

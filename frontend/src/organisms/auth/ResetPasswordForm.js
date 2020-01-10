@@ -2,7 +2,6 @@ import {Button, Form, Modal} from "react-bootstrap";
 import {Field} from "../../basicComponents";
 import React from "react";
 
-
 export function ResetPasswordForm({handleSubmit, errors, closeResetPasswordModal}) {
 
     return (

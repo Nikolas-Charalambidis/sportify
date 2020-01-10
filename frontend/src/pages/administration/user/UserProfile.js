@@ -6,7 +6,6 @@ import {useAuth} from '../../../utils/auth';
 import {useApi} from '../../../hooks/useApi';
 import {mapSportToIcon} from '../../../utils/mapper';
 import {useGetUser, useGetUserTeams, useGetUserCompetition} from '../../../api/userClient_v1';
-
 import {UserChangePasswordModal} from '../../../organisms/user/admin/UserChangePasswordModal';
 import {UserDataFormAdmin} from '../../../organisms/user/admin/UserDataFormAdmin';
 import defaultTeamAvatar from "../../../assets/images/default_team_avatar.svg";
@@ -14,6 +13,8 @@ import defaultCompetitionAvatar from "../../../assets/images/default_competition
 import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../assets/images/loading.gif";
 import {UserProfileBreadcrumbs} from "../../../organisms/breadcrumbs/UserProfileBreadcrumbs";
+import {LoadingGif} from "../../../basicComponents/LoadingGif";
+import {DataLoadingError} from "../../../basicComponents/DataLoadingError";
 
 export function UserProfile() {
     const {user} = useAuth();
@@ -27,14 +28,24 @@ export function UserProfile() {
     const [teamState] = useGetUserTeams(user.id_user);
     const [competitionState] = useGetUserCompetition(user.id_user);
 
-    return (
+    const header = (
         <div>
             <UserProfileBreadcrumbs />
             <Heading className="pageHeading mt-4 mb-5">Uživatelský profil</Heading>
+        </div>
+    );
 
-            {state.isLoading && <div className="text-center"><Image src={loadingGif}/></div>}
-            {!state.isLoading && state.error &&
-            <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
+    if(state.isLoading) {
+        return <LoadingGif header={header}/>;
+    }
+
+    if(!state.isLoading && state.error) {
+        return <DataLoadingError header={header}/>;
+    }
+
+    return (
+        <div>
+            {header}
             {!state.isLoading && !state.error && (
                 <div>
                     <UserDataFormAdmin api={api} handleShow={handleShow} state={state}/>

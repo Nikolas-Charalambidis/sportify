@@ -4,7 +4,6 @@ import Col from "react-bootstrap/Col";
 import {ShotsChildDetailAdmin} from "../detail/events/ShotsChildDetailAdmin";
 import {ShotsChildCreateAdmin} from "../create/events/ShotsChildCreateAdmin";
 
-
 export function ShotsParent({type, params}) {
     return (
         <Row>

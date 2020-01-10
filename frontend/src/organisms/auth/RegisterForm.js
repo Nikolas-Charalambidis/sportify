@@ -2,7 +2,6 @@ import {Button, Col, Form, Row} from "react-bootstrap";
 import {Field} from "../../basicComponents";
 import React from "react";
 
-
 export function RegisterForm({handleSubmit, errors}) {
 
     return (

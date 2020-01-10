@@ -29,7 +29,7 @@ export function UserCompetitionsListCards() {
                         {competitionState.user_data.map((anObjectMapped, index) => (
                             <CardTemplate
                                 key={index}
-                                redirect={`../leagues/${anObjectMapped.id_competition}`}
+                                redirect={`../competitions/${anObjectMapped.id_competition}`}
                                 title={`${anObjectMapped.competition_name}`}
                                 subtitle={`Umístění: ${anObjectMapped.team_position}`}
                                 tooltipPictureHeader={`${anObjectMapped.sport}`}

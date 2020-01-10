@@ -2,9 +2,8 @@ import React from 'react';
 import {useParams} from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 import {Heading} from '../../../basicComponents';
-import {Image, Tabs, Tab} from 'react-bootstrap';
+import {Tabs, Tab} from 'react-bootstrap';
 import {useGetCompetitionDetail} from "../../../api/competitionClient_v1";
-import loadingGif from "../../../assets/images/loading.gif";
 import {CompetitionData} from "../../../organisms/competition/CompetitionData";
 import {CompetitionTeams} from "../../../organisms/competition/CompetitionTeams";
 import {CompetitionResults} from "../../../organisms/competition/CompetitionResults";
@@ -12,28 +11,32 @@ import {CompetitionStatisticsPlayers} from "../../../organisms/competition/stati
 import {CompetitionStatisticsGoalkeepers} from "../../../organisms/competition/statistics/CompetitionStatisticsGoalkeepers";
 import {CompetitionDetailBreadcrumbs} from "../../../organisms/breadcrumbs/CompetitionDetailBreadcrumbs";
 import {UnexpectedError} from "../../../basicComponents/UnexpectedError";
+import {LoadingGif} from "../../../basicComponents/LoadingGif";
+import {DataLoadingError} from "../../../basicComponents/DataLoadingError";
 
 export function CompetitionDetail() {
     let {id_competition} = useParams();
     const [state] = useGetCompetitionDetail(id_competition);
 
+    const header = (
+        <div>
+            <CompetitionDetailBreadcrumbs/>
+        </div>
+    );
+
     if(state.isLoading) {
-        return <div className="text-center"><Image src={loadingGif}/></div>;
+        return <LoadingGif header={header}/>;
     }
 
-    if(state.isLoading && state.error) {
-        return (
-            <div>
-                <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>
-            </div>
-        );
+    if(!state.isLoading && state.error) {
+        return <DataLoadingError header={header}/>;
     }
 
     return (
         <div>
+            {header}
             {(!state.isLoading && !state.error) ?
                 <div>
-                    <CompetitionDetailBreadcrumbs competitionName={state.competition_data.name} />
                     <Heading className="mt-4 mb-5">{state.competition_data.name}</Heading>
 
                     <CompetitionData state={state} />

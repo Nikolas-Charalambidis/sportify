@@ -2,8 +2,6 @@ import React from 'react';
 import {useParams} from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 import {Heading} from '../../../basicComponents';
-import {Image} from 'react-bootstrap';
-import loadingGif from "../../../assets/images/loading.gif";
 import {useGetMatch} from "../../../api/matchClient_v1";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
@@ -15,30 +13,32 @@ import Container from "react-bootstrap/Container";
 import {MatchDetailScore} from "../../../organisms/match/public/MatchDetailScore";
 import {MatchDetailBreadcrumbs} from "../../../organisms/breadcrumbs/MatchDetailBreadcrumbs";
 import {UnexpectedError} from "../../../basicComponents/UnexpectedError";
+import {LoadingGif} from "../../../basicComponents/LoadingGif";
+import {DataLoadingError} from "../../../basicComponents/DataLoadingError";
 
 export function MatchDetail() {
     let {id_team, id_match} = useParams();
     const [stateMatch] = useGetMatch(id_match);
 
+    const header = (
+        <div>
+            <MatchDetailBreadcrumbs idTeam={id_team} />
+        </div>
+    );
+
     if(stateMatch.isLoading) {
-        return <div className="text-center"><Image src={loadingGif}/></div>;
+        return <LoadingGif header={header}/>;
     }
 
     if(!stateMatch.isLoading && stateMatch.error) {
-        return (
-            <div>
-                <MatchDetailBreadcrumbs idTeam={id_team} />
-                <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>
-            </div>
-        );
+        return <DataLoadingError header={header}/>;
     }
 
     return (
         <div>
             {(!stateMatch.isLoading && !stateMatch.error) ?
                 <div>
-                    <MatchDetailBreadcrumbs idTeam={id_team} />
-
+                    {header}
                     <div className="container page match">
                         <Row>
                             <Col className="col-100 heading">

@@ -65,7 +65,5 @@ export function MatchTeamSelect({teams, setHostState, setGuestState}) {
             </Form>
         )}
         </Formik>
-
-
     );
 }
