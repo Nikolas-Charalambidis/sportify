@@ -1,18 +1,13 @@
-import React from 'react';
-import {Heading} from '../../basicComponents';
-import {CardTemplate} from '../../basicComponents/CardTemplate';
-import {Row} from 'react-bootstrap';
-import {useParams} from "react-router-dom";
-import {mapSportToIcon} from '../../utils/mapper';
-import {useGetUserTeams} from '../../api/userClient_v1';
-import defaultTeamAvatar from "../../assets/images/default_team_avatar.svg";
-import {LoadingGif} from "../../basicComponents/LoadingGif";
-import {DataLoadingError} from "../../basicComponents/DataLoadingError";
-import {UnexpectedError} from "../../basicComponents/UnexpectedError";
+import {Row} from "react-bootstrap";
+import {Heading} from "../../../basicComponents";
+import React from "react";
+import {CardTemplate} from "../../../basicComponents/CardTemplate";
+import {mapSportToIcon} from "../../../utils/mapper";
+import defaultTeamAvatar from "../../../assets/images/default_team_avatar.svg";
+import {LoadingGif} from "../../../basicComponents/LoadingGif";
+import {DataLoadingError} from "../../../basicComponents/DataLoadingError";
 
-export function UserTeamsListCards() {
-    let {id_user} = useParams();
-    const [teamState] = useGetUserTeams(id_user);
+export function UserTeamsAdmin({teamState}) {
 
     if(teamState.isLoading) {
         return <LoadingGif />;
@@ -25,14 +20,14 @@ export function UserTeamsListCards() {
     if(!teamState.isLoading && !teamState.error && teamState.user_data.length === 0) {
         return (
             <Heading size="xs" className="alert-info pt-2 pb-2 mt-2 text-center">
-                Zatím není členem žádného týmu
+                Zatím nejste členem žádného týmu
             </Heading>
         );
     }
 
     return (
         <div>
-            {(!teamState.isLoading && !teamState.error) ?
+            {!teamState.isLoading && !teamState.error ? (
                 <div>
                     <Row>
                         {teamState.user_data.map((anObjectMapped, index) => (
@@ -48,8 +43,7 @@ export function UserTeamsListCards() {
                         ))}
                     </Row>
                 </div>
-                : <UnexpectedError/>
-            }
+            ) : null}
         </div>
     );
 }

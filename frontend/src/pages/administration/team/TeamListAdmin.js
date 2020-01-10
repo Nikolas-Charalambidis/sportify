@@ -65,9 +65,6 @@ export function TeamListAdmin() {
         return <DataLoadingError header={header}/>;
     }
 
-
-
-
     return (
         <div>
             {header}
