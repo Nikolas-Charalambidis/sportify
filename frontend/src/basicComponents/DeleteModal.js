@@ -31,4 +31,4 @@ export function DeleteModal ({show, heading, text, handleClose, deleteFunction, 
             </Modal.Footer>
         </Modal>
     )
-};
+}

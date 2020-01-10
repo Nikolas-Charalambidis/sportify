@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import dotenv from "dotenv";
-import cloudinary from "./cloudinary_config";
+import cloudinary from "./cloudinary";
 
 dotenv.config();
 dotenv.config({path: '.env'});
@@ -10,8 +10,8 @@ export const hash = (toHash, rounds) => {
   return bcrypt.hashSync(toHash, rounds);
 };
 
-export const verifyHash = (toVerify, hash) => {
-  return !!bcrypt.compareSync(toVerify, hash);
+export const verifyHash = (toVerify, hashToVerify) => {
+  return !!bcrypt.compareSync(toVerify, hashToVerify);
 };
 
 export const genRandomIntInRange = (min, max) => {

@@ -12,4 +12,4 @@ export function CustomTooltip ({icon, size, text}) {
             <FontAwesomeIcon icon={icon} size={size}/>
         </OverlayTrigger>
     )
-};
+}
