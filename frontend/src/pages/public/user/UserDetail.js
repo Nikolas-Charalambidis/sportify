@@ -77,7 +77,10 @@ export function UserDetail() {
             }
 
             <div>
+                <h2 className="mt-4">Týmy ve kterých hraje</h2>
                 <UserTeamsListCards/>
+
+                <h2 className="mt-4">Soutěže ve kterých hraje</h2>
                 <UserCompetitionsListCards/>
             </div>
         </div>
