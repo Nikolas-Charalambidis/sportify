@@ -58,15 +58,23 @@ export default class CompetitionService {
 		return result[0];
 	}
 
-	async getCompetitionTeams(id_competition) {
+	async getCompetitionTeams(id_competition, team_membership_status) {
 		const competition = Number(id_competition);
 		competitionValidations.validateCompetitionId(competition);
+		const {status} = competitionValidations.validateStatus(team_membership_status);
+
+		var where = '';
+		var values = [];
+		if (status !== undefined) {
+			where += ' AND cm.status=?';
+			values.push(status);
+		}
 
 		return await this.dbConnection.query(
 			`SELECT cm.id_competition_membership, cm.id_competition, cm.id_team, cm.status, t.id_sport, t.name, t.id_leader, t.id_contact_person, t.active, t.avatar_public_id, t.avatar_url FROM competition_membership AS cm
 				JOIN teams t ON cm.id_team = t.id_team
-				WHERE cm.id_competition=?;`
-			, competition
+				WHERE cm.id_competition=?` + where + `;`
+			, [competition, ...values]
 		);
 	}
 
