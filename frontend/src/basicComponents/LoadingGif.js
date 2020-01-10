@@ -5,7 +5,7 @@ import loadingGif from "../assets/images/loading.gif";
 export function LoadingGif({header}) {
     return (
         <div>
-            {header && header}
+            {header}
             <div className="text-center"><Image src={loadingGif}/></div>
         </div>
     );

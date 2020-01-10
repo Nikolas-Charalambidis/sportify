@@ -140,11 +140,6 @@ label {
   }
 }
 
-.modal-title {
-  height: 1rem;
-  margin: auto;
-}
-
 .alert-labeled {
   padding: 0;
 
@@ -205,6 +200,8 @@ label {
 }
 
 .modal-title {
+  height: 1rem;
+  margin: auto;
   padding-bottom: 32px;
 
   h3 {
