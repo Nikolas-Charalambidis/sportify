@@ -135,7 +135,6 @@ export function editCompetition(id_competition, name, id_leader, city, api, hist
         .put(`${config.API_BASE_PATH}/competitions/${id_competition}`, { name: name, id_leader: id_leader, city: city })
         .then(({ data }) => {
             window.flash(data.msg, 'success');
-            history.replace(`/administration/competitions`);
         })
         .catch(({ response }) => {
             const { data } = response;

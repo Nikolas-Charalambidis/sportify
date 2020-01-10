@@ -7,7 +7,6 @@ import {AddEventModal} from "./AddEventModal";
 import Col from "react-bootstrap/esm/Col";
 import Row from "react-bootstrap/Row";
 
-
 export function MatchInteractiveTeamTab({ teamName, teamState, teamSetState, setPlay, timerState, pauseMatchOnEvent}) {
     const handleAddEvent = (values) => {
         const { id_team, matchups, events, shots } = teamState;

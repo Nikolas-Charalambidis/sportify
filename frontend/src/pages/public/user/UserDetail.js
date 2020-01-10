@@ -10,24 +10,34 @@ import {UserCompetitionsListCards} from "../../../organisms/user/UserCompetition
 import {UserTeamsListCards} from "../../../organisms/user/UserTeamsListCards";
 import {UserDetailBreadcrumbs} from "../../../organisms/breadcrumbs/UserDetailBreadcrumbs";
 import {UnexpectedError} from "../../../basicComponents/UnexpectedError";
-
-function getUser(state) {
-    if (state) {
-        return state.user_data;
-    }
-}
+import {LoadingGif} from "../../../basicComponents/LoadingGif";
+import {DataLoadingError} from "../../../basicComponents/DataLoadingError";
 
 export function UserDetail() {
     let {id_user} = useParams();
     const [state] = useGetUser(id_user);
-    const user = getUser(state);
+
+    const header = (
+        <div>
+            <UserDetailBreadcrumbs />
+            <Heading className="pageHeading mt-4 mb-5">Detail uživatele</Heading>
+        </div>
+    );
+
+    if(state.isLoading) {
+        return <LoadingGif header={header}/>;
+    }
+
+    if(!state.isLoading && state.error) {
+        return <DataLoadingError header={header}/>;
+    }
+
+    const user = state.user_data;
 
     return (
         <div>
-            <UserDetailBreadcrumbs user={user} />
-
-            <Heading className="pageHeading mt-4 mb-5">Profil uživatele</Heading>
-            {user ?
+            {header}
+            {(!state.isLoading && !state.error) ?
                 <Row className="mb-5 align-items-center h-100">
                     <Col lg={3} md={12} className="mb-4 mb-lg-0">
                         <div className="avatar-upload">
@@ -67,7 +77,10 @@ export function UserDetail() {
             }
 
             <div>
+                <h2 className="mt-4">Týmy ve kterých hraje</h2>
                 <UserTeamsListCards/>
+
+                <h2 className="mt-4">Soutěže ve kterých hraje</h2>
                 <UserCompetitionsListCards/>
             </div>
         </div>

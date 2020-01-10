@@ -1,5 +1,3 @@
-import {parseISO} from 'date-fns';
-
 export const validateCompetitionId = (id_competition) => {
 	if(!id_competition){
 		throw {status: 400, msg: 'Chybějící nebo chybné ID soutěže'};
@@ -50,4 +48,13 @@ export const validateFilteredCompetitionData = (id_sport, id_type) => {
 	}
 
 	return {sport, type};
+};
+
+export const validateStatus = (competition_membership_status) => {
+	const status = competition_membership_status;
+	const validStatus = status === undefined || ['active', 'inactive', 'pending', 'declined'].includes(status);
+	if (!validStatus) {
+		throw {status: 400, msg: 'Nevalidní stav'};
+	}
+	return { status };
 };

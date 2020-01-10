@@ -1,7 +1,5 @@
 import React, {useState} from 'react';
-import {Breadcrumb} from "react-bootstrap";
 import {MatchInteractiveForm} from "../../../../organisms/match/admin/create/interactive/MatchInteractiveForm";
-import {NavLink as Link} from "react-router-dom";
 import {MatchInteractiveSelect} from "../../../../organisms/match/admin/create/interactive/MatchInteractiveSelect";
 import {useGetTeams} from "../../../../api/teamClient_v1";
 
@@ -22,12 +20,6 @@ export function MatchCreateInteractiveComponent({ params, handleCreateMatch }) {
 
     return (
         <div>
-            <Breadcrumb>
-                <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
-                <li className="breadcrumb-item"><Link to="/administration">Administrace</Link></li>
-                <li className="breadcrumb-item"><span className="active">Interaktivní zápas</span></li>
-            </Breadcrumb>
-
             {matchupSelected ?
                 <MatchInteractiveForm hostState={hostState} guestState={guestState}
                     setHostState={setHostState} setGuestState={setGuestState}

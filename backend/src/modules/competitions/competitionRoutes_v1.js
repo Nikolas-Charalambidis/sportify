@@ -74,13 +74,20 @@ router.get('/:id_competition', async (req, res) => {
  *         required: true
  *         schema:
  *           type: integer
+ *       - name: competition_membership_status
+ *         in: query
+ *         description: Filter by a certain status
+ *         required: false
+ *         schema:
+ *           type: integer
  *     responses:
  *       200:
  *         description: All competitions returned
  */
 router.get('/:id_competition/teams', async (req, res) => {
 	const { id_competition } = req.params;
-	const competitions = await new CompetitionService(req).getCompetitionTeams(id_competition);
+	const { competition_membership_status } = req.query;
+	const competitions = await new CompetitionService(req).getCompetitionTeams(id_competition, competition_membership_status);
 	await res.status(200).json({ error: false, msg: 'OK', competitions: competitions});
 });
 

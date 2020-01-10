@@ -13,9 +13,11 @@ import { useAuth } from '../../../utils/auth';
 import { useHistory } from "react-router";
 import { Col, Row } from "react-bootstrap";
 import { CompetitionCreateBreadcrumbs } from "../../../organisms/breadcrumbs/CompetitionCreateBreadcrumbs";
+import {LoadingGif} from "../../../basicComponents/LoadingGif";
+import {DataLoadingError} from "../../../basicComponents/DataLoadingError";
+import {UnexpectedError} from "../../../basicComponents/UnexpectedError";
 
 export function CompetitionCreate() {
-
     const api = useApi();
     const { user } = useAuth();
 
@@ -35,13 +37,25 @@ export function CompetitionCreate() {
         { id_type: 1, type: "Liga" },
     ];
 
-    return (
+    const header = (
         <div>
             <CompetitionCreateBreadcrumbs />
             <Heading>Nová soutěž</Heading>
-            {sportsState.isLoading && <div>Načítám data...</div>}
-            {(!sportsState.isLoading && sportsState.error) && <div>Data se nepodařilo načíst</div>}
-            {(!sportsState.isLoading && !sportsState.error) &&
+        </div>
+    );
+
+    if(sportsState.isLoading) {
+        return <LoadingGif header={header}/>;
+    }
+
+    if(!sportsState.isLoading && sportsState.error) {
+        return <DataLoadingError header={header}/>;
+    }
+
+    return (
+        <div>
+            {header}
+            {(!sportsState.isLoading && !sportsState.error) ?
                 <Formik
                     validationSchema={schemaCreateTeam}
                     initialValues={{
@@ -107,6 +121,7 @@ export function CompetitionCreate() {
                     </Form>
                 )}
                 </Formik>
+                : <UnexpectedError/>
             }
         </div>
     )

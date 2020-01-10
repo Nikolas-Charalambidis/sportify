@@ -1,13 +1,15 @@
 import React from 'react';
-import {NavLink as Link, useHistory} from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 import {Heading} from '../../../basicComponents';
-import {Breadcrumb, Button} from "react-bootstrap";
+import {Button} from "react-bootstrap";
 import "react-table/react-table.css";
 import {useGetUserOwnedCompetitions} from "../../../api/userClient_v1";
 import {useAuth} from "../../../utils/auth";
-import Image from "react-bootstrap/esm/Image";
-import loadingGif from "../../../assets/images/loading.gif";
 import {Table} from "../../../basicComponents/Table";
+import {CompetitionListAdminBreadcrumbs} from "../../../organisms/breadcrumbs/CompetitionListAdminBreadcrumbs";
+import {LoadingGif} from "../../../basicComponents/LoadingGif";
+import {DataLoadingError} from "../../../basicComponents/DataLoadingError";
+import {UnexpectedError} from "../../../basicComponents/UnexpectedError";
 
 export function CompetitionListAdmin() {
     const history = useHistory();
@@ -40,25 +42,30 @@ export function CompetitionListAdmin() {
         }
     }
 
-    return (
+    const header = (
         <div>
-            <Breadcrumb>
-                <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
-                <li className="breadcrumb-item"><Link to="/administration">Administrace</Link></li>
-                <li className="breadcrumb-item"><span className="active">Moje soutěže</span></li>
-            </Breadcrumb>
-
+            <CompetitionListAdminBreadcrumbs/>
             <Heading>Moje soutěže</Heading>
             <div className="text-right">
                 <Button variant="primary mb-3 pull-right" onClick={() => history.push("/administration/competitions/create")}>
                     <span>Vytvořit soutěž</span>
                 </Button>
             </div>
+        </div>
+    );
 
-            {state.isLoading && <div className="text-center"><Image src={loadingGif}/></div>}
-            {!state.isLoading && state.error &&
-            <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
-            {!state.isLoading && !state.error && (
+    if(state.isLoading) {
+        return <LoadingGif header={header}/>;
+    }
+
+    if(!state.isLoading && state.error) {
+        return <DataLoadingError header={header}/>;
+    }
+
+    return (
+        <div>
+            {header}
+            {(!state.isLoading && !state.error) ?
                 <Table columns={columns} data={state.competition} filterable={false} showPagination={false}
                        getTdProps={(state, rowInfo) => {
                            return {
@@ -66,8 +73,10 @@ export function CompetitionListAdmin() {
                                    handleClick(rowInfo);
                                }
                            }
-                       }}/>
-            )}
+                       }}
+                />
+                : <UnexpectedError/>
+            }
         </div>
     );
 }

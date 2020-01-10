@@ -1,9 +1,11 @@
 import React from 'react';
 import {useHistory, useParams} from "react-router-dom";
 import {useGetTeamCompetition} from "../../../api/teamClient_v1";
-import {Heading} from "../../../basicComponents";
 import {Table} from "../../../basicComponents/Table";
 import moment from "moment";
+import {LoadingGif} from "../../../basicComponents/LoadingGif";
+import {DataLoadingError} from "../../../basicComponents/DataLoadingError";
+import {UnexpectedError} from "../../../basicComponents/UnexpectedError";
 
 export function TeamCompetitions({admin}) {
     let {id_team} = useParams();
@@ -13,7 +15,7 @@ export function TeamCompetitions({admin}) {
     function handleClick(row) {
         if (row) {
             if(admin === true) {
-                history.push(`/administration/competitions/${row.original.id_competition}`);
+                history.push(`/administration/competitions/edit/${row.original.id_competition}`);
             } else {
                 history.push(`/competitions/${row.original.id_competition}`);
             }
@@ -52,20 +54,27 @@ export function TeamCompetitions({admin}) {
         }
     ];
 
+    if(state.isLoading) {
+        return <LoadingGif />;
+    }
+
+    if(!state.isLoading && state.error) {
+        return <DataLoadingError />;
+    }
+
     return (
         <div>
-            {state.isLoading && <div>Načítám data...</div>}
-            {!state.isLoading && state.error &&
-            <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
-            {!state.isLoading && !state.error && (
+            {(!state.isLoading && !state.error) ?
                 <Table className="defaultCursor" columns={columns} data={state.team_data} getTdProps={(state, rowInfo) => {
-                    return {
-                        onClick: () => {
-                            handleClick(rowInfo);
+                        return {
+                            onClick: () => {
+                                handleClick(rowInfo);
+                            }
                         }
-                    }
-                }}/>
-            )}
+                    }}
+                />
+                : <UnexpectedError/>
+            }
         </div>
     );
 }

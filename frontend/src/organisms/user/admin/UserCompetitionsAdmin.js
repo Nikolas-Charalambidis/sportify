@@ -1,17 +1,13 @@
-import React from 'react';
-import {Heading} from '../../basicComponents';
-import {CardTemplate} from '../../basicComponents/CardTemplate';
-import {Row} from 'react-bootstrap';
-import {useParams} from "react-router-dom";
-import {mapSportToIcon} from '../../utils/mapper';
-import {useGetUserCompetition} from '../../api/userClient_v1';
-import defaultCompetitionAvatar from "../../assets/images/default_competition_avatar.jpg";
-import {LoadingGif} from "../../basicComponents/LoadingGif";
-import {DataLoadingError} from "../../basicComponents/DataLoadingError";
+import {Row} from "react-bootstrap";
+import { Heading} from "../../../basicComponents";
+import React from "react";
+import {CardTemplate} from "../../../basicComponents/CardTemplate";
+import {mapSportToIcon} from "../../../utils/mapper";
+import defaultCompetitionAvatar from "../../../assets/images/default_competition_avatar.jpg";
+import {LoadingGif} from "../../../basicComponents/LoadingGif";
+import {DataLoadingError} from "../../../basicComponents/DataLoadingError";
 
-export function UserCompetitionsListCards() {
-    let {id_user} = useParams();
-    const [competitionState] = useGetUserCompetition(id_user);
+export function UserCompetitionsAdmin({competitionState}) {
 
     if(competitionState.isLoading) {
         return <LoadingGif />;
@@ -31,7 +27,7 @@ export function UserCompetitionsListCards() {
 
     return (
         <div>
-            {!competitionState.isLoading && !competitionState.error ? (
+            {(!competitionState.isLoading && !competitionState.error) ? (
                 <div>
                     <Row>
                         {competitionState.user_data.map((anObjectMapped, index) => (
