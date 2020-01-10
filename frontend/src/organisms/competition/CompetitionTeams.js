@@ -1,8 +1,10 @@
 import {useHistory, useParams} from "react-router";
-import {Heading} from "../../basicComponents";
 import {Table} from "../../basicComponents/Table";
 import React from "react";
 import {useGetCompetitionsTeams} from "../../api/competitionClient_v1";
+import {LoadingGif} from "../../basicComponents/LoadingGif";
+import {DataLoadingError} from "../../basicComponents/DataLoadingError";
+import {UnexpectedError} from "../../basicComponents/UnexpectedError";
 
 function getRank(competitionData) {
     return (Number(competitionData.index) + 1).toString();
@@ -74,20 +76,27 @@ export function CompetitionTeams() {
         }
     }
 
+    if(state.isLoading) {
+        return <LoadingGif />;
+    }
+
+    if(!state.isLoading && state.error) {
+        return <DataLoadingError />;
+    }
+
     return (
         <div>
-            {state.isLoading && <div>Načítám data...</div>}
-            {!state.isLoading && state.error &&
-            <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
-            {!state.isLoading && !state.error && (
+            {(!state.isLoading && !state.error) ?
                 <Table className="defaultCursor" columns={columns} data={state.competitions_teams} getTdProps={(state, rowInfo) => {
-                    return {
-                        onClick: () => {
-                            handleClick(rowInfo);
+                        return {
+                            onClick: () => {
+                                handleClick(rowInfo);
+                            }
                         }
-                    }
-                }}/>
-            )}
+                    }}
+                />
+                : <UnexpectedError/>
+            }
         </div>
     );
 }

@@ -2,12 +2,12 @@ import React from 'react';
 import {useParams} from "react-router-dom";
 import {useHistory} from 'react-router-dom';
 import {useGetTeamStatistics} from "../../../../api/teamClient_v1";
-import {Heading} from "../../../../basicComponents";
 import {Table} from "../../../../basicComponents/Table";
-import loadingGif from "../../../../assets/images/loading.gif";
-import Image from "react-bootstrap/esm/Image";
 import * as Icons from "@fortawesome/free-solid-svg-icons"
 import {OverlayTriggerTable} from "../../../../basicComponents/OverlayTriggerTable";
+import {LoadingGif} from "../../../../basicComponents/LoadingGif";
+import {DataLoadingError} from "../../../../basicComponents/DataLoadingError";
+import {UnexpectedError} from "../../../../basicComponents/UnexpectedError";
 
 function getGoalkeepers(state, filterBy) {
     let competitionId = null;
@@ -90,21 +90,27 @@ export function TeamStatisticsGoalkeepers({filterBy}) {
         }
     ];
 
+    if(state.isLoading) {
+        return <LoadingGif />;
+    }
+
+    if(!state.isLoading && state.error) {
+        return <DataLoadingError />;
+    }
+
     return (
         <div>
-            {state.isLoading && <div className="text-center"><Image src={loadingGif}/></div>}
-            {!state.isLoading && state.error &&
-            <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
-            {!state.isLoading && !state.error && (
+            {(!state.isLoading && !state.error) ?
                 <Table data={goalkeepers} columns={columns}getTdProps={(state, rowInfo) => {
-                    return {
-                        onClick: () => {
-                            handleClick(rowInfo);
+                        return {
+                            onClick: () => {
+                                handleClick(rowInfo);
+                            }
                         }
-                    }
-                }}/>
-            )}
+                    }}
+                />
+                : <UnexpectedError/>
+            }
         </div>
     );
 }
-

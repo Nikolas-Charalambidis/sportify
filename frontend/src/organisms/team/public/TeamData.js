@@ -59,5 +59,4 @@ export function TeamData({state}) {
             </Col>
         </Row>
     )
-
 }

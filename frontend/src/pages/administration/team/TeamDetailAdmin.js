@@ -8,11 +8,12 @@ import {TeamDataFormAdmin} from "../../../organisms/team/admin/TeamDataFormAdmin
 import {TeamCompetitions} from "../../../organisms/team/public/TeamCompetitions";
 import {useAuth} from "../../../utils/auth";
 import {MatchList} from "../../../organisms/match/MatchList";
-import {Heading} from "../../../basicComponents";
 import {TeamSquadAdmin} from "../../../organisms/team/admin/TeamSquadAdmin";
 import {UnexpectedError} from "../../../basicComponents/UnexpectedError";
 import {TeamAdminSelectCompetition} from "../../../organisms/administration/TeamAdminSelectCompetition";
 import {TeamDetailAdminBreadcrumbs} from "../../../organisms/breadcrumbs/TeamDetailAdminBreadcrumbs";
+import {LoadingGif} from "../../../basicComponents/LoadingGif";
+import {DataLoadingError} from "../../../basicComponents/DataLoadingError";
 
 export function TeamDetailAdmin() {
     const history = useHistory();
@@ -21,6 +22,9 @@ export function TeamDetailAdmin() {
     let {id_team} = useParams();
     const [state] = useGetTeam(id_team);
 
+    const [membersState] = useGetMembers(id_team);
+    const [matchesState] = useGetTeamMatches(id_team);
+
     if(!state.isLoading && !state.error) {
         if(user.id_user !== state.team_data.id_leader){
             window.flash("Na tuto stránku má přístup pouze vedoucí zobrazovaného týmu!", "danger");
@@ -28,22 +32,21 @@ export function TeamDetailAdmin() {
         }
     }
 
-    const [membersState] = useGetMembers(id_team);
-    const [matchesState] = useGetTeamMatches(id_team);
+    const header = <TeamDetailAdminBreadcrumbs />;
 
     if(state.isLoading || membersState.isLoading) {
-        return <div>Načítám data...</div>;
+        return <LoadingGif header={header}/>;
     }
 
     if((!state.isLoading && state.error) || (!membersState.isLoading && membersState.error)) {
-        return <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>;
+        return <DataLoadingError header={header}/>;
     }
 
     return (
         <div>
+            {header}
             {((!state.isLoading && !state.error) && (!membersState.isLoading && !membersState.error)) ?
                 <div>
-                    <TeamDetailAdminBreadcrumbs teamName={state.team_data.name} />
                     <TeamDataFormAdmin team_data={state.team_data} membersState={membersState}/>
 
                     <Tabs className="mb-3" fill defaultActiveKey="squad" id="teamTabs">

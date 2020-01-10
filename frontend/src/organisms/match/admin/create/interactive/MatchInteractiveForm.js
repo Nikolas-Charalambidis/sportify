@@ -47,8 +47,6 @@ export function MatchInteractiveForm({ hostName, guestName, hostState, guestStat
 
                 <MatchDetailScore hostGoals={hostState.events.filter(g => g.type === "goal").length} hostName={hostName} guestGoals={guestState.events.filter(g => g.type === "goal").length} guestName={guestName} />
 
-
-
                 {() => getTime() - 3600000 / 1000 / 60}
                 <Row className="mt-3 interactiveStats">
                     <Col className="bg-white">
