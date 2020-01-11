@@ -93,7 +93,7 @@ router.get('/:id_competition/teams', async (req, res) => {
 
 /**
  * @swagger
- * /competitions/{id_competition}/statistics/{is_goalkeeper}:
+ * /competitions/{id_competition}/statistics:
  *   get:
  *     tags:
  *       - Competitions
@@ -107,8 +107,7 @@ router.get('/:id_competition/teams', async (req, res) => {
  *         schema:
  *           type: integer
  *       - name: is_goalkeeper
- *         in: path
- *         required: true
+ *         in: query
  *         schema:
  *           type: boolean
  *     responses:

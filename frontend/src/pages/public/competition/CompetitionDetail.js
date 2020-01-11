@@ -50,10 +50,10 @@ export function CompetitionDetail() {
                         </Tab>
                         <Tab eventKey="statistics" title="Statistiky">
                             <Heading className="mt-4" size="lg">Hráči</Heading>
-                            <CompetitionStatisticsPlayers isGoalKeeper={0}/>
+                            <CompetitionStatisticsPlayers isGoalKeeper={'false'}/>
 
                             <Heading className="mt-4" size="lg">Brankáři</Heading>
-                            <CompetitionStatisticsGoalkeepers isGoalKeeper={1}/>
+                            <CompetitionStatisticsGoalkeepers isGoalKeeper={'true'}/>
                         </Tab>
                     </Tabs>
                 </div>

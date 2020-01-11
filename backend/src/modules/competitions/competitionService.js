@@ -125,6 +125,14 @@ export default class CompetitionService {
 	async getCompetitionStatistics(id_competition, is_goalkeeper) {
 		const competition = Number(id_competition);
 		competitionValidations.validateCompetitionId(competition);
+		const { is_gk } = competitionValidations.validateIsGoalkeeper(is_goalkeeper);
+
+		var where = '';
+		var values = [];
+		if (is_gk !== undefined) {
+			where += ' AND p.is_goalkeeper=? ';
+			values.push(is_gk);
+		}
 
 		return await this.dbConnection.query(`SELECT
 					ts.id_user,
@@ -148,8 +156,8 @@ export default class CompetitionService {
 						JOIN users AS u ON ts.id_user = u.id_user
 						JOIN team_membership tm on u.id_user = tm.id_user
 						JOIN positions AS p on tm.id_position = p.id_position
-						WHERE ts.id_competition=? AND p.is_goalkeeper=?
-						GROUP BY ts.id_user`
-			,[competition, is_goalkeeper]);
+						WHERE ts.id_competition=? ` + where +
+						`GROUP BY ts.id_user`
+			,[competition, ...values]);
 	}
 }
