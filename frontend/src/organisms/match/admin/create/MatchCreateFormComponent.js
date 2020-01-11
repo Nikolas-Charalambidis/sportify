@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Heading } from '../../../../basicComponents';
 import { Button } from 'react-bootstrap';
 import {MatchTeamSelect} from "../../../../organisms/match/admin/create/MatchTeamSelect";
@@ -15,6 +15,8 @@ export function MatchCreateFormComponent({params, handleCreateMatch}) {
     const {hostState, setHostState, guestState, setGuestState} = params;
     const [teamsState] = useGetTeams();
 
+    const [display, setDisplay] = useState(false);
+
     if(teamsState.isLoading) {
         return <LoadingGif />;
     }
@@ -27,18 +29,21 @@ export function MatchCreateFormComponent({params, handleCreateMatch}) {
     <div>
         {(!teamsState.isLoading && !teamsState.error) ?
             <div>
-                <MatchTeamSelect teams={teamsState.teams_data}
+                <MatchTeamSelect teams={teamsState.teams_data} setDisplay={setDisplay}
                                  setHostState={setHostState} setGuestState={setGuestState} />
 
-                {(hostState.id_team && guestState.id_team) &&
+
+                {(hostState.id_team && guestState.id_team && display) &&
                     <div>
                         <Heading size="lg" className="mt-5 h3MatchDetail text-left">Soupiska</Heading>
                         {hostState.id_team === guestState.id_team ?
                             <MatchMatchupSingleCreateAdmin hostState={hostState} guestState={guestState}
                                                            setHostState={setHostState} setGuestState={setGuestState}
+                                                           intaractive={false}
                             /> :
                             <MatchMatchupMultipleCreateAdmin hostState={hostState} guestState={guestState}
                                                              setHostState={setHostState} setGuestState={setGuestState}
+                                                             intaractive={false}
                             />
                         }
                         <Heading size="lg" className="mt-5 h3MatchDetail text-left">Střely</Heading>

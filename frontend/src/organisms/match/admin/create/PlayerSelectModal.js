@@ -11,7 +11,6 @@ export function PlayerSelectModal({ show, handleClose, players, handleAddPlayers
       setSelectedPlayers([]);
   },[players]);
 
-
     function onCheckEdit(original) {
         if (
             selectedPlayers.map(player => equals(player.id_user, original.id_user)).includes(true)
@@ -47,6 +46,7 @@ export function PlayerSelectModal({ show, handleClose, players, handleAddPlayers
           id: 'checkbox',
           accessor: '',
           filterable: false,
+          sortable: false,
           width: 45,
           Cell: ({ original }) => (
               <input
@@ -71,8 +71,7 @@ export function PlayerSelectModal({ show, handleClose, players, handleAddPlayers
         {
           Header: 'Jméno',
           accessor: 'name',
-          filterMethod: (filter, row) =>
-              row[filter.id].toLowerCase().startsWith(filter.value.toLowerCase())
+          filterMethod: (filter, row) => row[filter.id].toLowerCase().startsWith(filter.value.toLowerCase())
         }
   ];
 
@@ -85,7 +84,13 @@ export function PlayerSelectModal({ show, handleClose, players, handleAddPlayers
             </Modal.Header>
 
             <Modal.Body>
-              <Table columns={columns} data={players} />
+              <Table columns={columns} data={players} getTdProps={(state, rowInfo) => {
+                  return {
+                      onClick: () => {
+                          onCheckEdit(rowInfo.original);
+                      }
+                  }
+              }}/>
             </Modal.Body>
 
 
