@@ -16,14 +16,14 @@ export function CompetitionTeams() {
     const [state] = useGetCompetitionTeamsStatistics(id_competition);
     const columns = [
         {
-            Header: "Poř.",
+            Header: "Pořadí",
             accessor: "rank",
             Cell: (competitionData) => getRank(competitionData),
             filterable: false,
             width: 50
         },
         {
-            Header: "Název tymu",
+            Header: "Název týmu",
             accessor: "name",
         },
         {
@@ -33,34 +33,34 @@ export function CompetitionTeams() {
             width: 100
         },
         {
-            Header: "Výhry",
+            Header: "V",
             accessor: "wins",
             filterable: false,
-            width: 100
+            width: 50
         },
         {
-            Header: "Výhry prodl.",
+            Header: "Vp",
             accessor: "wins_extension",
             filterable: false,
-            width: 100
+            width: 50
         },
         {
-            Header: "Remízy",
+            Header: "R",
             accessor: "draws",
             filterable: false,
-            width: 100
+            width: 50
         },
         {
-            Header: "Prohry",
+            Header: "Pp",
             accessor: "loses_extension",
             filterable: false,
-            width: 100
+            width: 50
         },
         {
-            Header: "Prohry prodl.",
+            Header: "P",
             accessor: "loses",
             filterable: false,
-            width: 100
+            width: 50
         },
         {
             Header: "Skóre",
