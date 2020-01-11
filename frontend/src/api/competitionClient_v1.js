@@ -53,7 +53,7 @@ export function useGetCompetitionsPending(id_competition) {
         }
 
         fetchData().then();
-    }, [api]);
+    }, [id_competition, api]);
     return [state];
 }
 
