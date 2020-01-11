@@ -4,6 +4,23 @@ export const validateCompetitionId = (id_competition) => {
 	}
 };
 
+export const validateIsGoalkeeper = (is_goalkeeper) => {
+	if (is_goalkeeper !== undefined) {
+		if (is_goalkeeper === 'true') {
+			const is_gk = 1;
+			return { is_gk };
+		} else if (is_goalkeeper === 'false') {
+			const is_gk = 0;
+			return {is_gk};
+		} else {
+			throw {status: 400, msg: "Hodnota musí být typu boolean"};
+		}
+	} else {
+		const is_gk = undefined;
+		return {is_gk};
+	}
+};
+
 export const validateNewCompetition = (name, leader, sport, type, city, start, end) => {
 
 	if (start >= end) {
