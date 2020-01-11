@@ -21,30 +21,34 @@ export function CompetitionResults() {
                 <div key={index} className="round">
                     <div className="round-date">{formatDate(item.date)}</div>
                     <div className="round-item">
-                        <table className="match-result">
-                            <tbody>
-                            <tr>
-                                <td className="team-home">{item.guest_name}</td>
-                                <td className="match-score">{item.goals_host} - {item.goals_guest}</td>
-                                <td className="team-away">{item.host_name}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <table className="match-details">
-                            <tbody>
-                            <tr>
-                                <td className="w28p">Třetiny: (2:2,4:0,1:0)</td>
-                                <td className="w18p">Střely: 37:33</td>
-                                <td className="w18p">Vyloučení: 3:3</td>
-                                <td className="w18p">Využití: 1:1</td>
-                                <td className="w18p">Oslabení: 1:1</td>
-                            </tr>
-                            <tr>
-                                <td className="w100p text-center" colSpan="5">» <Link to={'/matches/' + item.id_match } >Detail zápasu</Link> «
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                        <div className="table-responsive">
+                            <table className="match-result table">
+                                <tbody>
+                                <tr>
+                                    <td className="team-home">{item.guest_name}</td>
+                                    <td className="match-score">{item.goals_host} - {item.goals_guest}</td>
+                                    <td className="team-away">{item.host_name}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className="table-responsive">
+                            <table className="table match-details">
+                                <tbody>
+                                <tr>
+                                    <td className="w28p">Třetiny: (2:2,4:0,1:0)</td>
+                                    <td className="w18p">Střely: 37:33</td>
+                                    <td className="w18p">Vyloučení: 3:3</td>
+                                    <td className="w18p">Využití: 1:1</td>
+                                    <td className="w18p">Oslabení: 1:1</td>
+                                </tr>
+                                <tr>
+                                    <td className="w100p text-center" colSpan="5">» <Link to={'/matches/' + item.id_match } >Detail zápasu</Link> «
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 ))
