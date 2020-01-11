@@ -122,6 +122,24 @@ export default class CompetitionService {
 		}
 	}
 
+	async getCompetitionTeamStatistics(id_competition) {
+		const competition = Number(id_competition);
+		competitionValidations.validateCompetitionId(competition);
+
+		return await this.dbConnection.query(`
+			SELECT t.name, 
+				cs.id_competition_statistics, cs.id_competition, cs.id_team, cs.matches, cs.wins, cs.wins_extension, cs.draws, cs.loses, 
+				cs.loses_extension, cs.goals_scored, cs.goals_received, 
+				CONCAT(goals_scored, ':', goals_received) AS 'score', 
+				cs.points
+			FROM competition_statistics AS cs
+			JOIN teams t on cs.id_team = t.id_team
+			WHERE cs.id_competition = ?
+			ORDER BY cs.points DESC, cs.goals_scored DESC, cs.goals_received DESC, cs.wins DESC;`,
+			id_competition
+		);
+	}
+
 	async getCompetitionStatistics(id_competition, is_goalkeeper) {
 		const competition = Number(id_competition);
 		competitionValidations.validateCompetitionId(competition);

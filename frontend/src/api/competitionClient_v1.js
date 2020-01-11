@@ -84,7 +84,7 @@ export function useGetCompetitionDetail(id_competition) {
     return [state];
 }
 
-export function useGetCompetitionsTeams(id_competition) {
+export function useGetCompetitionTeamsStatistics(id_competition) {
     const api = useApi();
     const [state, setState] = useState({
         isLoading: true,
@@ -94,16 +94,16 @@ export function useGetCompetitionsTeams(id_competition) {
     useEffect(() => {
         async function fetchData() {
             await api
-                .get(`${config.API_BASE_PATH}/competitions/${id_competition}/teams`)
-                .then(({data}) => {
-                    const {competitions} = data;
-                    setState({isLoading: false, error: false, competitions_teams: competitions});
-                })
-                .catch(( { response } ) => {
-                    const {data} = response;
-                    setState({isLoading: false, error: true, competitions_teams: null});
-                    window.flash(data.msg, 'danger');
-                });
+            .get(`${config.API_BASE_PATH}/competitions/${id_competition}/teams/statistics`)
+            .then(({data}) => {
+                const competitions = data.statistics;
+                setState({isLoading: false, error: false, competitions_teams: competitions});
+            })
+            .catch(( { response } ) => {
+                const {data} = response;
+                setState({isLoading: false, error: true, competitions_teams: null});
+                window.flash(data.msg, 'danger');
+            });
         }
 
         fetchData().then();

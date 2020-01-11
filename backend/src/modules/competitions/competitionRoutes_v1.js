@@ -93,6 +93,31 @@ router.get('/:id_competition/teams', async (req, res) => {
 
 /**
  * @swagger
+ * /competitions/{id_competition}/teams/statistics:
+ *   get:
+ *     tags:
+ *       - Competitions
+ *     name: Competition teams
+ *     summary: Get competition teams by id_competition
+ *     produces: application/json
+ *     parameters:
+ *       - name: id_competition
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: All competitions returned
+ */
+router.get('/:id_competition/teams/statistics', async (req, res) => {
+	const { id_competition } = req.params;
+	const statistics = await new CompetitionService(req).getCompetitionTeamStatistics(id_competition);
+	await res.status(200).json({ error: false, msg: 'OK', statistics: statistics});
+});
+
+/**
+ * @swagger
  * /competitions/{id_competition}/statistics:
  *   get:
  *     tags:
