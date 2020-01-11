@@ -1,7 +1,7 @@
 import {useHistory, useParams} from "react-router";
 import {Table} from "../../basicComponents/Table";
 import React from "react";
-import {useGetCompetitionsTeams} from "../../api/competitionClient_v1";
+import {useGetCompetitionTeamsStatistics} from "../../api/competitionClient_v1";
 import {LoadingGif} from "../../basicComponents/LoadingGif";
 import {DataLoadingError} from "../../basicComponents/DataLoadingError";
 import {UnexpectedError} from "../../basicComponents/UnexpectedError";
@@ -13,7 +13,7 @@ function getRank(competitionData) {
 export function CompetitionTeams() {
     let {id_competition} = useParams();
     let history = useHistory();
-    const [state] = useGetCompetitionsTeams(id_competition);
+    const [state] = useGetCompetitionTeamsStatistics(id_competition);
     const columns = [
         {
             Header: "Poř.",
@@ -52,6 +52,12 @@ export function CompetitionTeams() {
         },
         {
             Header: "Prohry",
+            accessor: "loses_extension",
+            filterable: false,
+            width: 100
+        },
+        {
+            Header: "Prohry prodl.",
             accessor: "loses",
             filterable: false,
             width: 100
