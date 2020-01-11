@@ -57,6 +57,19 @@ export function useGetTeam(id_team) {
     return [state];
 }
 
+export async function getTeamAdmin(api, id_team) {
+    let result = false;
+    await api
+        .get(`${config.API_BASE_PATH}/teams/${id_team}`)
+        .then(({data}) => {
+            result = data.team.id_leader;
+        })
+        .catch(() => {
+            result =  null;
+        });
+    return result;
+}
+
 export function useGetMembers(id_team) {
     const api = useApi();
     const [state, setState] = useState({
