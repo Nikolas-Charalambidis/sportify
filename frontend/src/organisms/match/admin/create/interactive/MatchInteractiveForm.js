@@ -9,29 +9,27 @@ import { MatchDetailScore } from "../../../public/MatchDetailScore";
 import Button from "react-bootstrap/Button";
 import { MatchInteractiveTeamTab } from "./MatchInteractiveTeamTab";
 import { Events } from "../../base/Events";
-import { Modal } from "react-bootstrap";
+import { InteractiveModal } from "./InteractiveModal";
+import { InteractiveOvertimeModal } from "./InteractiveOvertimeModal";
 
-function getPeriod(time, pause, stringPeriod, firstPeriodPause, setFirstPeriodPause, secondPeriodPause, setSecondPeriodPause, thirdPeriodPause, setThirdPeriodPause, setShowModal) {
+
+function getPeriod(time, pause, stringPeriod, firstPeriodPause, setFirstPeriodPause, secondPeriodPause, setSecondPeriodPause, thirdPeriodPause, setThirdPeriodPause, setShowPeriodModal, setShowOvertimeModal) {
     if (Math.trunc(time) < 2401000 && !firstPeriodPause) {
         setFirstPeriodPause(true);
-        setShowModal(true);
-        pause();        
+        setShowPeriodModal(true);
+        pause();
     };
 
     if (Math.trunc(time) < 1201000 && !secondPeriodPause) {
         setSecondPeriodPause(true);
-        setShowModal(true);
+        setShowPeriodModal(true);
         pause();
     };
 
     if (Math.trunc(time) < 1000 && !thirdPeriodPause) {
         setThirdPeriodPause(true);
-        setShowModal(true);
+        setShowOvertimeModal(true);
         pause();
-    };
-
-    if (stringPeriod === "Prodloužení") {
-        return "Prodloužení";
     };
 
     return stringPeriod + ". třetina";
@@ -45,25 +43,39 @@ export function MatchInteractiveForm({ hostName, guestName, hostState, guestStat
     const [secondPeriodPause, setSecondPeriodPause] = useState(false);
     const [thirdPeriodPause, setThirdPeriodPause] = useState(false);
 
-    const [showModal, setShowModal] = useState(false);
+    const [showPeriodModal, setShowPeriodModal] = useState(false);
+    const [showCreateModal, setShowCreateModal] = useState(false);
+    const [showOvertimeModal, setShowOvertimeModal] = useState(false);
 
-    const closeModal = () => {
-        setShowModal(false);
+    const [timer, setTimer] = useState(35999999);
+
+    const closePeriodModal = () => {
+        setShowPeriodModal(false);
         if (stringPeriod === 3) {
             setStringPeriod("Prodloužení");
         } else {
             setStringPeriod(stringPeriod + 1);
-        }        
+        }
+    };
+
+    const closeCreateModal = () => {
+        setShowCreateModal(false);
+    };
+
+    function closeOvertimeModal(values, reset) {
+        setTimer(values.minute * 60000);
+        reset();
+        setShowOvertimeModal(false);
     };
 
     return (
 
-        <Timer initialTime={3599999}
+        <Timer initialTime={timer}
             direction="backward"
             startImmediately={true}
             onResume={() => setPlay(true)}
             onPause={() => setPlay(false)}
-        >{({ resume, pause, getTime }) => (
+        >{({ resume, pause, getTime, reset }) => (
             <div>
                 <React.Fragment>
                     <div className="mt-4">
@@ -81,8 +93,8 @@ export function MatchInteractiveForm({ hostName, guestName, hostState, guestStat
                         </div>
                     </div>
 
-                        <div className="text-center">
-                            <label>{getPeriod(getTime(), pause, stringPeriod, firstPeriodPause, setFirstPeriodPause, secondPeriodPause, setSecondPeriodPause, thirdPeriodPause, setThirdPeriodPause, setShowModal)}</label>
+                    <div className="text-center">
+                        <label>{getPeriod(getTime(), pause, stringPeriod, firstPeriodPause, setFirstPeriodPause, secondPeriodPause, setSecondPeriodPause, thirdPeriodPause, setThirdPeriodPause, setShowPeriodModal, setShowOvertimeModal)}</label>
                     </div>
 
                     <div className="text-center timerButtons">
@@ -114,25 +126,15 @@ export function MatchInteractiveForm({ hostName, guestName, hostState, guestStat
                 <Heading size="lg" className="mt-5 h3MatchDetail text-left">Události hosté</Heading>
                 <Events type="create" eventsState={guestState} fetchEvents={setGuestState} />
 
-                <Button className="mt-3 float-right" variant="primary" onClick={handleCreateMatch}>
-                    Vytvořit zápas
-                </Button>
+                <Button className="mt-3 float-right" variant="primary" onClick={() => {
+                    pause();
+                    setShowCreateModal(true);
+                }}>Vytvořit zápas</Button>
 
-                    <Modal show={showModal} onHide={closeModal}>
-                        <Modal.Header>
-                            <Modal.Title className="modal-title">
-                                <Heading size="md">Konec třetiny</Heading>
-                            </Modal.Title>
-                        </Modal.Header>
+                <InteractiveModal showModal={showPeriodModal} closeModal={closePeriodModal} heading="Konec třetiny" period={stringPeriod} bodyText=". třetina skončila" closeButtonText="Ok" />
+                <InteractiveModal showModal={showCreateModal} closeModal={closeCreateModal} handleCreateMatch={handleCreateMatch} heading="Vytvořit zápas" bodyText="Přejete si vytvořit zápas?" closeButtonText="Zrušit" />
+                <InteractiveOvertimeModal showModal={showOvertimeModal} closeModal={closeOvertimeModal} reset={reset} />
 
-                        <Modal.Body>
-                            Skončila {stringPeriod}. třetina
-                        </Modal.Body>
-
-                        <Modal.Footer>
-                            <Button variant="secondary" type="button" onClick={closeModal}>Ok</Button>
-                        </Modal.Footer>
-                    </Modal>
             </div>
         )}
         </Timer>
