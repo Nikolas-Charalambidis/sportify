@@ -18,7 +18,7 @@ export function AddSuspensionForm({ id_user, handleClose, addEvent, matchup, id_
                 id_match: id_match,
                 id_assistance1: null,
                 id_assistance2: null,
-                minute: interactive ? Math.trunc(timerState / 1000 / 60) : '',
+                minute: interactive ? Math.trunc(timerState / 10000 / 60) : '',
                 value: null,
                 host: host
             }}
