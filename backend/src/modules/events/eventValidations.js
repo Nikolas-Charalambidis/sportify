@@ -33,19 +33,23 @@ export const validateAddEventsData = (values, id_match) => {
 	if(value){
 		value = Number(value);
 	}
+	if(host){
+		host = Number(host);
+	}
 	id_match = Number(id_match);
 	if(
 		!type ||
-		!id_team ||
-		!id_user === undefined ||
-		!id_assistance1 === undefined ||
-		!id_assistance2 === undefined ||
-		!minute === undefined ||
-		!value === undefined ||
-		!host === undefined ||
+		id_team  === undefined ||
+		id_user === undefined ||
+		id_assistance1 === undefined ||
+		id_assistance2 === undefined ||
+		id_assistance2 === undefined ||
+		minute === undefined ||
+		value === undefined ||
+		host === undefined ||
 		!id_match
 	){
 		throw {status: 400, msg: 'Chybějící nebo chybná data'};
 	}
-	return { id_user, type, id_team, id_match, id_assistance1, id_assistance2, minute, value, host };
+	return { type, id_team, id_match, id_user, id_assistance1, id_assistance2, minute, value, host };
 };
