@@ -120,6 +120,10 @@ export function CompetitionList() {
             Header: "Počet týmů",
             accessor: "teams_count",
             filterable: false
+        },
+        {
+            Header: 'Vedoucí soutěže',
+            accessor: 'name_leader',
         }
     ];
 

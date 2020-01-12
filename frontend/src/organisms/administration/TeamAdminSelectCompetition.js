@@ -21,8 +21,8 @@ export function TeamAdminSelectCompetition() {
             competitions.competitions && teamsCompetitions.team_data
                 ? competitions.competitions.filter(
                 competition =>
-                    teamsCompetitions.team_data.some(
-                        item => competition.id_competition === item.id_competition,
+                    teamsCompetitions.team_data.every(
+                        item => competition.id_competition !== item.id_competition,
                     ),
                 )
                 : null,
@@ -50,9 +50,9 @@ export function TeamAdminSelectCompetition() {
                     {({ handleSubmit, setFieldValue }) => (
                         <Form noValidate onSubmit={handleSubmit}>
                             <Row>
-                                <Col xl={10} lg={10}>
+                                <Col xl={12} lg={10}>
                                     <Row>
-                                        <Col sm={{ span: 6, offset: 0 }}>
+                                        <Col sm={{ span: 6, offset: 3 }}>
                                             <CustomSelect
                                                 name="id_competition"
                                                 options={filteredCompetitions}
@@ -71,7 +71,7 @@ export function TeamAdminSelectCompetition() {
                                 </Col>
                             </Row>
                             <Row>
-                                <Col className="mb-4 mt-lg-0" lg={{ span: 5, offset: 0 }}>
+                                <Col className="mb-4 mt-lg-0" lg={{ span: 6, offset: 3 }}>
                                     <Button type="submit" block>
                                         Odeslat
                                     </Button>

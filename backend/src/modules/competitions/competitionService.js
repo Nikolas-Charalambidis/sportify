@@ -28,10 +28,11 @@ export default class CompetitionService {
 		}
 
 		return this.dbConnection.query(
-			`SELECT c.id_leader, c.id_competition, c.name, s.sport, c.city, ct.type, c.start_date, c.end_date, COUNT(cm.id_competition_membership) as teams_count
+			`SELECT c.id_leader, c.id_competition, c.name, s.sport, c.city, ct.type, c.start_date, c.end_date, CONCAT(u.name, " ", u.surname) as name_leader, COUNT(cm.id_competition_membership) as teams_count
 				FROM competitions as c 
 				JOIN sports as s ON c.id_sport=s.id_sport
 				JOIN competition_types as ct ON c.id_type=ct.id_type
+				JOIN users as u ON u.id_user=c.id_leader
 				LEFT JOIN competition_membership as cm ON cm.id_competition=c.id_competition WHERE 1=1 ` + where + ` GROUP BY c.id_competition`,
 			[...values]
 		);
@@ -42,10 +43,11 @@ export default class CompetitionService {
 		competitionValidations.validateCompetitionId(competition);
 
 		const result = await this.dbConnection.query(
-			`SELECT c.id_leader, c.id_competition, c.name, s.sport, c.city, ct.type, c.start_date, c.end_date, COUNT(cm.id_competition_membership) as teams_count
+			`SELECT c.id_leader, c.id_competition, c.name, s.sport, c.city, ct.type, c.start_date, c.end_date, COUNT(cm.id_competition_membership) as teams_count, CONCAT(u.name, " ", u.surname) as name_leader
 				FROM competitions as c 
 				JOIN sports as s ON c.id_sport=s.id_sport
 				JOIN competition_types as ct ON c.id_type=ct.id_type
+				JOIN users as u ON u.id_user=c.id_leader
 				LEFT JOIN competition_membership as cm ON cm.id_competition=c.id_competition
 				WHERE c.id_competition=?`
 			, competition

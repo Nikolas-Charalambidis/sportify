@@ -105,6 +105,7 @@ export function CompetitionEdit() {
                                     endDate: new Date(competition.end_date),
                                     id_sport: competitionSport.id_sport,
                                     id_type: competitionType[0].id_type,
+                                    name_leader: competition.name_leader
                                 }}
                                 onSubmit={values => {
                                     editCompetition(competition.id_competition, values.name, user.id_user, values.city, api, history);
@@ -118,7 +119,7 @@ export function CompetitionEdit() {
                                             </Col>
 
                                             <Col md={6} sm={6} xs={6} className="mt-sm-0 mt-3">
-                                                <Field label="Město" name="city" type="text" message="Vyplňte prosím město" isInvalid={!!errors.name} />
+                                                <Field label="Město" name="city" type="text" message="Vyplňte prosím město" isInvalid={!!errors.city} />
                                             </Col>
                                         </Row>
 
@@ -143,6 +144,7 @@ export function CompetitionEdit() {
                                                     placeholder={competitionType[0].type}
                                                     onChange={option => setFieldValue("id_type", `${option.id_type}`)}
                                                     isSearchable={true}
+                                                      isDisabled={true}
                                                 />
                                             </Col>
                                         </Row>
@@ -155,11 +157,13 @@ export function CompetitionEdit() {
                                                 <DatePickerField label="Konec soutěže" name="endDate" date={values.endDate} setFieldValue={setFieldValue} message="Vyplňte prosím datum konce" isInvalid={errors.endDate} disabled={true} />
 
                                             </Col>
+                                            <Col md={6} sm={6} xs={6} className="mt-sm-0 mt-3">
+                                                <Field label="Vedoucí soutěže" name="name_leader" type="text" disabled={true} />
+                                            </Col>
                                         </Row>
 
                                     </div>
                                     <div className="text-right">
-                                        <Button variant="danger" onClick={() => console.log("dodělat, chybí endpoint")}>Smazat</Button>
                                         <Button variant="primary" type="submit">Uložit</Button>
                                     </div>
                                 </Form>

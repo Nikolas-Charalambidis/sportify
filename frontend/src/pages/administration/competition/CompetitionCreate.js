@@ -78,7 +78,7 @@ export function CompetitionCreate() {
                                 </Col>
 
                                 <Col md={6} sm={6} xs={6} className="mt-sm-0 mt-3">
-                                    <Field label="Město" name="city" type="text" message="Vyplňte prosím město" isInvalid={!!errors.name} />
+                                    <Field label="Město" name="city" type="text" message="Vyplňte prosím město" isInvalid={!!errors.city} />
                                 </Col>
                             </Row>
 

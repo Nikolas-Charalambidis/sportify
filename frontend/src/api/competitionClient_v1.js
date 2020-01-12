@@ -148,7 +148,7 @@ export function createCompetition(name, id_leader, id_sport, id_type, city, star
         .post(`${config.API_BASE_PATH}/competitions`, { name: name, id_leader: id_leader, id_sport: id_sport, id_type: id_type, city: city, start_date: start_date, end_date: end_date })
         .then(({ data }) => {
             window.flash(data.msg, 'success');
-            history.replace(`/competitions`);
+            history.replace(`/administration/competitions`);
         })
         .catch(({ response }) => {
             const { data } = response;

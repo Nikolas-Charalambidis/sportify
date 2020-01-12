@@ -95,9 +95,11 @@ export default class UserService {
 		const user_id = Number(id_user);
 		userValidation.validateUserID(user_id);
 		return this.dbConnection.query(
-			`SELECT c.id_competition, c.name, c.city, s.sport, type.type FROM competitions as c 
+			`SELECT c.id_competition, c.name, c.city, s.sport, type.type, CONCAT(u.name, " ", u.surname) as name_leader 
+			FROM competitions as c 
 			JOIN sports AS s ON c.id_sport=s.id_sport
 		   	JOIN team_types AS type ON c.id_type=type.id_type
+			JOIN users as u ON u.id_user=c.id_leader
 			WHERE id_leader = ?;`
 			, user_id);
 	}
