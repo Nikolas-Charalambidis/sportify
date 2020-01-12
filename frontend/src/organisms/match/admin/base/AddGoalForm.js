@@ -6,12 +6,10 @@ import { CustomSelect } from "../../../../basicComponents/Select";
 
 export function AddGoalForm({ id_user, handleClose, addEvent, matchup, id_team, id_match, host, schema, interactive, timerState }) {
 
-
     const [valueUser, setValueUser] = useState({ id_user: id_user });
     const [valueAss1, setValueAss1] = useState(null);
     const [valueAss2, setValueAss2] = useState(null);
-
-    const [newMatchup] = useState([{ id_user: 0, name: "Žádný" }, ...matchup]);
+    console.log("timerState", timerState);
 
     return (
         <Formik
@@ -25,7 +23,7 @@ export function AddGoalForm({ id_user, handleClose, addEvent, matchup, id_team, 
                 name_assistance1: '',
                 id_assistance2: null,
                 name_assistance2: '',
-                minute: interactive ? Math.trunc(timerState / 1000 / 60) : '',
+                minute: interactive ? Math.trunc(timerState / 10000 / 60) : '',
                 value: null,
                 host: host
             }}
@@ -33,7 +31,7 @@ export function AddGoalForm({ id_user, handleClose, addEvent, matchup, id_team, 
                 handleClose();
                 addEvent({ ...values, id_match: id_match });
             }}
-        >{({ handleSubmit, setFieldValue, errors }) => (
+        >{({ handleSubmit, setFieldValue, errors, values }) => (
             <Form noValidate onSubmit={handleSubmit}>
 
                 <Modal.Body>
@@ -54,6 +52,8 @@ export function AddGoalForm({ id_user, handleClose, addEvent, matchup, id_team, 
                                 setValueUser(options);
                                 setValueAss1(null);
                                 setValueAss2(null);
+                                console.log("timerState", timerState);
+                                console.log("values", values);
                             }}
                         />
                     }
@@ -61,7 +61,7 @@ export function AddGoalForm({ id_user, handleClose, addEvent, matchup, id_team, 
                         <CustomSelect name="id_assistance1" label="Asistence 1"
                             value={valueAss1}
                             options={
-                                newMatchup.filter(item => item.id_user !== valueUser.id_user)
+                                matchup.filter(item => item.id_user !== valueUser.id_user)
                             }
                             getOptionLabel={option => `${option.name}`}
                             getOptionValue={option => `${option.id_user}`}
@@ -71,16 +71,15 @@ export function AddGoalForm({ id_user, handleClose, addEvent, matchup, id_team, 
                                 setFieldValue("name_assistance1", options.name);
                                 setValueAss1(options);
                                 setValueAss2(null);
+                                console.log("values", values);
                             }}
                         />
                     }
                     {valueAss1 && valueAss1.id_user !== 0 &&
                         <CustomSelect name="id_assistance2" label="Asistence 2"
                             value={valueAss2}
-                            options={newMatchup.filter(
-                                item => valueAss1.id_user === 0 ?
-                                    item.id_user !== valueUser.id_user :
-                                    item.id_user !== valueUser.id_user && item.id_user !== valueAss1.id_user
+                            options={matchup.filter(
+                                item => item.id_user !== valueUser.id_user && item.id_user !== valueAss1.id_user
                             )}
                             getOptionLabel={option => `${option.name}`}
                             getOptionValue={option => `${option.id_user}`}
@@ -89,6 +88,7 @@ export function AddGoalForm({ id_user, handleClose, addEvent, matchup, id_team, 
                                 setFieldValue("id_assistance2", options.id_user);
                                 setFieldValue("name_assistance2", options.name);
                                 setValueAss2(options);
+                                console.log("values", values);
                             }}
                         />
                     }
