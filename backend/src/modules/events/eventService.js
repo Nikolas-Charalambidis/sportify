@@ -45,7 +45,7 @@ export default class EventService {
 			`INSERT INTO events (type, id_team, id_match, id_user, id_assistance1, id_assistance2, minute, value, host)
 			 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, array
 		);
-		
+
 		if(result.affectedRows !== values.length) {
 			throw {status: 500, msg: 'Nepodařilo se uložit všechny eventy'};
 		}
