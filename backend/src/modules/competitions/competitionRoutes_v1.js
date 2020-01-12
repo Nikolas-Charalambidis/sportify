@@ -74,19 +74,51 @@ router.get('/:id_competition', async (req, res) => {
  *         required: true
  *         schema:
  *           type: integer
+ *       - name: competition_membership_status
+ *         in: query
+ *         description: Filter by a certain status
+ *         required: false
+ *         schema:
+ *           type: integer
  *     responses:
  *       200:
  *         description: All competitions returned
  */
 router.get('/:id_competition/teams', async (req, res) => {
 	const { id_competition } = req.params;
-	const competitions = await new CompetitionService(req).getCompetitionTeams(id_competition);
+	const { competition_membership_status } = req.query;
+	const competitions = await new CompetitionService(req).getCompetitionTeams(id_competition, competition_membership_status);
 	await res.status(200).json({ error: false, msg: 'OK', competitions: competitions});
 });
 
 /**
  * @swagger
- * /competitions/{id_competition}/statistics/{is_goalkeeper}:
+ * /competitions/{id_competition}/teams/statistics:
+ *   get:
+ *     tags:
+ *       - Competitions
+ *     name: Competition teams
+ *     summary: Get competition teams by id_competition
+ *     produces: application/json
+ *     parameters:
+ *       - name: id_competition
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: All competitions returned
+ */
+router.get('/:id_competition/teams/statistics', async (req, res) => {
+	const { id_competition } = req.params;
+	const statistics = await new CompetitionService(req).getCompetitionTeamStatistics(id_competition);
+	await res.status(200).json({ error: false, msg: 'OK', statistics: statistics});
+});
+
+/**
+ * @swagger
+ * /competitions/{id_competition}/statistics:
  *   get:
  *     tags:
  *       - Competitions
@@ -100,8 +132,7 @@ router.get('/:id_competition/teams', async (req, res) => {
  *         schema:
  *           type: integer
  *       - name: is_goalkeeper
- *         in: path
- *         required: true
+ *         in: query
  *         schema:
  *           type: boolean
  *     responses:

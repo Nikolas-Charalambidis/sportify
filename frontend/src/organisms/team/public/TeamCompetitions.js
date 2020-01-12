@@ -15,7 +15,7 @@ export function TeamCompetitions({admin}) {
     function handleClick(row) {
         if (row) {
             if(admin === true) {
-                history.push(`/administration/competitions/${row.original.id_competition}`);
+                history.push(`/administration/competitions/edit/${row.original.id_competition}`);
             } else {
                 history.push(`/competitions/${row.original.id_competition}`);
             }

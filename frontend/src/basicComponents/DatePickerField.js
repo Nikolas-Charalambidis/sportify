@@ -24,7 +24,7 @@ export function DatePickerField({ label, date, name, setFieldValue, message, isI
                 dateFormat="dd.MM.yyyy"
                 className="form-control"
                 name={name}
-                onChange={date => setFieldValue(name, date)}
+                onChange={d => setFieldValue(name, d)}
                 disabled={disabled}
             />
             {isInvalid &&

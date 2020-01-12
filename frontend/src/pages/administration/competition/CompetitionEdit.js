@@ -18,6 +18,7 @@ import {LoadingGif} from "../../../basicComponents/LoadingGif";
 import {DataLoadingError} from "../../../basicComponents/DataLoadingError";
 import {CompetitionEditBreadcrumbs} from "../../../organisms/breadcrumbs/CompetitionEditBreadcrumbs";
 import {UnexpectedError} from "../../../basicComponents/UnexpectedError";
+import {CompetitionTeamJoinRequests} from "./CompetitionTeamJoinRequests";
 
 function getSport(competition, sports) {
     if (competition && sports) {
@@ -163,6 +164,7 @@ export function CompetitionEdit() {
                                 </Form>
                             )}
                             </Formik>
+                                <CompetitionTeamJoinRequests/>
                         </div>
                     }
                 </div>

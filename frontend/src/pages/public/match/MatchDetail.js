@@ -54,37 +54,37 @@ export function MatchDetail() {
                         <MatchDetailScore guestGoals={stateMatch.match.goals_guest} guestName={stateMatch.match.guest_name}
                                           hostName={stateMatch.match.host_name} hostGoals={stateMatch.match.goals_host}/>
 
-                            <Heading size="lg" className="mt-5 h3MatchDetail text-left">Soupiska</Heading>
-                            <div className="eventsDiv">
-                                <Container>
-                                    <Row>
-                                        <Col>
-                                            <Heading size="sm" className="d-lg-none mt-3">Domácí</Heading>
-                                            <MatchDetailMatchSquad id_match={id_match} host={1}/>
-                                        </Col>
-                                        <Col>
-                                            <Heading size="sm" className="d-lg-none mt-3">Hosté</Heading>
-                                            <MatchDetailMatchSquad id_match={id_match} host={0}/>
-                                        </Col>
-                                    </Row>
-                                </Container>
-                            </div>
+                        <Heading size="lg" className="mt-5 h3MatchDetail text-left">Soupiska</Heading>
+                        <div className="eventsDiv">
+                            <Container>
+                                <Row>
+                                    <Col>
+                                        <Heading size="sm" className="d-lg-none mt-3">Domácí</Heading>
+                                        <MatchDetailMatchSquad id_match={id_match} host={1}/>
+                                    </Col>
+                                    <Col>
+                                        <Heading size="sm" className="d-lg-none mt-3">Hosté</Heading>
+                                        <MatchDetailMatchSquad id_match={id_match} host={0}/>
+                                    </Col>
+                                </Row>
+                            </Container>
+                        </div>
 
 
-                            <Heading size="lg" className="mt-5 h3MatchDetail text-left">Zápis z utkání</Heading>
-                            <div className="eventsDiv">
-                                <Heading size="sm" className="mt-4">1. třetina</Heading>
-                                <MatchDetailGoalEvents id_match={id_match} period={1}/>
-                                <MatchDetailSuspensionsEvents id_match={id_match} period={1}/>
+                        <Heading size="lg" className="mt-5 h3MatchDetail text-left">Zápis z utkání</Heading>
+                        <div className="eventsDiv">
+                            <Heading size="sm" className="mt-4">1. třetina</Heading>
+                            <MatchDetailGoalEvents id_match={id_match} period={1}/>
+                            <MatchDetailSuspensionsEvents id_match={id_match} period={1}/>
 
-                                <Heading size="sm" className="mt-4">2. třetina</Heading>
-                                <MatchDetailGoalEvents id_match={id_match} period={2}/>
-                                <MatchDetailSuspensionsEvents id_match={id_match} period={2}/>
+                            <Heading size="sm" className="mt-4">2. třetina</Heading>
+                            <MatchDetailGoalEvents id_match={id_match} period={2}/>
+                            <MatchDetailSuspensionsEvents id_match={id_match} period={2}/>
 
-                                <Heading size="sm" className="mt-4">3. třetina</Heading>
-                                <MatchDetailGoalEvents id_match={id_match} period={3}/>
-                                <MatchDetailSuspensionsEvents id_match={id_match} period={3}/>
-                            </div>
+                            <Heading size="sm" className="mt-4">3. třetina</Heading>
+                            <MatchDetailGoalEvents id_match={id_match} period={3}/>
+                            <MatchDetailSuspensionsEvents id_match={id_match} period={3}/>
+                        </div>
                     </div>
                 </div>
                 : <UnexpectedError/>

@@ -135,6 +135,21 @@ CREATE TABLE `team_statistics` (
  -- `goalkeeper_success_rate`                       -- rate is calculated
 );
 
+CREATE TABLE `competition_statistics` (
+    `id_competition_statistics` int PRIMARY KEY AUTO_INCREMENT,
+    `id_competition` int NOT NULL,
+    `id_team` int NOT NULL,
+    `matches` int NOT NULL,
+    `wins` int NOT NULL,
+    `wins_extension` int NOT NULL,
+    `draws` int NOT NULL,
+    `loses` int NOT NULL,
+    `loses_extension` int NOT NULL,
+    `goals_scored` int NOT NULL,
+    `goals_received` int NOT NULL,
+    `points` int NOT NULL
+);
+
 CREATE TABLE `logs` (
     `id_logs` int PRIMARY KEY AUTO_INCREMENT,
     `log` varchar(255)
@@ -863,6 +878,14 @@ INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1
 -- ---- MOCKED, START OF A SUBJECT OF A FUTURE CHANGE AND/OR REGENERATION, THE MODEL ITSELF IS CONSIDERED FINAL
 -- ---- MATCHES ARE NECESSARY FOR THESE DATA CONSISTENCY, YET THEY ARE NOT NEEDED FOR THE DEVELOPMENT OF THE STATISTICS DISPLAY
 -- ---- THE MOCKED DATA NEITHER MATCH THE MOCKED MATCHES, MATCHUPS NOR EVENTS
+
+INSERT INTO `competition_statistics` (id_competition, id_team, matches, wins, wins_extension, draws, loses, loses_extension, goals_scored, goals_received, points) VALUES
+    (1, 1, 2, 1, 0, 1, 0, 0, 2, 1, 4),
+    (1, 2, 2, 0, 0, 1, 0, 1, 1, 2, 1),
+    (1, 3, 2, 0, 0, 2, 0, 0, 0, 0, 2),
+    (3, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+    (4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+    (4, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 -- -- COMPETITION ID = 1
 -- INSERT INTO `team_statistics` (`id_team_statistics`, `id_user`, `id_team`, `id_competition`, `field_matches`, `field_goals`, `field_assists`, `field_suspensions`, `goalkeeper_matches`, `goalkeeper_minutes`, `goalkeeper_goals`, `goalkeeper_zeros`, `goalkeeper_shots` )

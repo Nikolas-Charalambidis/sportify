@@ -57,10 +57,10 @@ export function TeamDetailAdmin() {
                             <MatchList matchesState={matchesState} admin={true} id_team={id_team} />
                         </Tab>
                         <Tab eventKey="competitions" title="Soutěže">
-                            <h2 className="mt-4">Přihlášené soutěže</h2>
-                            <TeamCompetitions admin={true}/>
                             <h2 className="mt-4">Odeslání přihlášky do soutěže</h2>
                             <TeamAdminSelectCompetition/>
+                            <h2 className="mt-4">Přihlášené soutěže</h2>
+                            <TeamCompetitions admin={true}/>
                         </Tab>
                     </Tabs>
                 </div>

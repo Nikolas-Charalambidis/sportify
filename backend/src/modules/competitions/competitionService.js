@@ -58,15 +58,23 @@ export default class CompetitionService {
 		return result[0];
 	}
 
-	async getCompetitionTeams(id_competition) {
+	async getCompetitionTeams(id_competition, competition_membership_status) {
 		const competition = Number(id_competition);
 		competitionValidations.validateCompetitionId(competition);
+		const {status} = competitionValidations.validateStatus(competition_membership_status);
+
+		var where = '';
+		var values = [];
+		if (status !== undefined) {
+			where += ' AND cm.status=?';
+			values.push(status);
+		}
 
 		return await this.dbConnection.query(
 			`SELECT cm.id_competition_membership, cm.id_competition, cm.id_team, cm.status, t.id_sport, t.name, t.id_leader, t.id_contact_person, t.active, t.avatar_public_id, t.avatar_url FROM competition_membership AS cm
 				JOIN teams t ON cm.id_team = t.id_team
-				WHERE cm.id_competition=?;`
-			, competition
+				WHERE cm.id_competition=?` + where + `;`
+			, [competition, ...values]
 		);
 	}
 
@@ -114,9 +122,35 @@ export default class CompetitionService {
 		}
 	}
 
+	async getCompetitionTeamStatistics(id_competition) {
+		const competition = Number(id_competition);
+		competitionValidations.validateCompetitionId(competition);
+
+		return await this.dbConnection.query(`
+			SELECT t.name, 
+				cs.id_competition_statistics, cs.id_competition, cs.id_team, cs.matches, cs.wins, cs.wins_extension, cs.draws, cs.loses, 
+				cs.loses_extension, cs.goals_scored, cs.goals_received, 
+				CONCAT(goals_scored, ':', goals_received) AS 'score', 
+				cs.points
+			FROM competition_statistics AS cs
+			JOIN teams t on cs.id_team = t.id_team
+			WHERE cs.id_competition = ?
+			ORDER BY cs.points DESC, cs.goals_scored DESC, cs.goals_received DESC, cs.wins DESC;`,
+			id_competition
+		);
+	}
+
 	async getCompetitionStatistics(id_competition, is_goalkeeper) {
 		const competition = Number(id_competition);
 		competitionValidations.validateCompetitionId(competition);
+		const { is_gk } = competitionValidations.validateIsGoalkeeper(is_goalkeeper);
+
+		var where = '';
+		var values = [];
+		if (is_gk !== undefined) {
+			where += ' AND p.is_goalkeeper=? ';
+			values.push(is_gk);
+		}
 
 		return await this.dbConnection.query(`SELECT
 					ts.id_user,
@@ -140,8 +174,8 @@ export default class CompetitionService {
 						JOIN users AS u ON ts.id_user = u.id_user
 						JOIN team_membership tm on u.id_user = tm.id_user
 						JOIN positions AS p on tm.id_position = p.id_position
-						WHERE ts.id_competition=? AND p.is_goalkeeper=?
-						GROUP BY ts.id_user`
-			,[competition, is_goalkeeper]);
+						WHERE ts.id_competition=? ` + where +
+						`GROUP BY ts.id_user`
+			,[competition, ...values]);
 	}
 }

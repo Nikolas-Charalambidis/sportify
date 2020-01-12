@@ -8,7 +8,7 @@ export function CustomSelect({label, customTooltip, ...props}) {
         <Form.Group>
             <Form.Label>{label}&nbsp;&nbsp;</Form.Label>
             {customTooltip && CustomTooltip(customTooltip)}
-            <Select {...props} />
+            <Select {...props} isClearable={true}/>
             <Form.Control.Feedback type="invalid">
                 {"Chyba"}
             </Form.Control.Feedback>

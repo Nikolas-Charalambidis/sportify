@@ -30,6 +30,33 @@ export function useGetCompetitions() {
     return [state];
 }
 
+export function useGetCompetitionsPending(id_competition) {
+    const api = useApi();
+    const [state, setState] = useState({
+        isLoading: true,
+        error: false,
+        competitions: undefined
+    });
+    useEffect(() => {
+        async function fetchData() {
+            await api
+                .get(`${config.API_BASE_PATH}/competitions/${id_competition}/teams?competition_membership_status=pending`)
+                .then(({data}) => {
+                    const {competitions} = data;
+                    setState({isLoading: false, error: false, competitions: competitions});
+                })
+                .catch(( { response } ) => {
+                    const {data} = response;
+                    setState({isLoading: false, error: true, competitions: null});
+                    window.flash(data.msg, 'danger');
+                });
+        }
+
+        fetchData().then();
+    }, [id_competition, api]);
+    return [state];
+}
+
 export function useGetCompetitionDetail(id_competition) {
     const api = useApi();
     const [state, setState] = useState({
@@ -57,7 +84,7 @@ export function useGetCompetitionDetail(id_competition) {
     return [state];
 }
 
-export function useGetCompetitionsTeams(id_competition) {
+export function useGetCompetitionTeamsStatistics(id_competition) {
     const api = useApi();
     const [state, setState] = useState({
         isLoading: true,
@@ -67,16 +94,16 @@ export function useGetCompetitionsTeams(id_competition) {
     useEffect(() => {
         async function fetchData() {
             await api
-                .get(`${config.API_BASE_PATH}/competitions/${id_competition}/teams`)
-                .then(({data}) => {
-                    const {competitions} = data;
-                    setState({isLoading: false, error: false, competitions_teams: competitions});
-                })
-                .catch(( { response } ) => {
-                    const {data} = response;
-                    setState({isLoading: false, error: true, competitions_teams: null});
-                    window.flash(data.msg, 'danger');
-                });
+            .get(`${config.API_BASE_PATH}/competitions/${id_competition}/teams/statistics`)
+            .then(({data}) => {
+                const competitions = data.statistics;
+                setState({isLoading: false, error: false, competitions_teams: competitions});
+            })
+            .catch(( { response } ) => {
+                const {data} = response;
+                setState({isLoading: false, error: true, competitions_teams: null});
+                window.flash(data.msg, 'danger');
+            });
         }
 
         fetchData().then();
@@ -135,11 +162,26 @@ export function editCompetition(id_competition, name, id_leader, city, api, hist
         .put(`${config.API_BASE_PATH}/competitions/${id_competition}`, { name: name, id_leader: id_leader, city: city })
         .then(({ data }) => {
             window.flash(data.msg, 'success');
-            history.replace(`/administration/competitions`);
         })
         .catch(({ response }) => {
             const { data } = response;
             window.flash(data.msg, 'danger');
             return data;
         });
+}
+
+export async function changeTeamStatus(api, values , id_team, status) {
+    let result = false;
+    const{id_competition} = values;
+    await api
+        .post(`${config.API_BASE_PATH}/competitionMembership/competition/${id_competition}/team/${id_team}`, {status: status})
+        .then(({data}) => {
+            window.flash(data.msg, 'success');
+            result = true;
+        })
+        .catch(({response}) => {
+            const {data} = response;
+            window.flash(data.msg, 'danger');
+        });
+    return result;
 }
