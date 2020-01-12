@@ -110,7 +110,7 @@ export function CompetitionEdit() {
                                     editCompetition(competition.id_competition, values.name, user.id_user, values.city, api, history);
                                 }}
                             >{({ handleSubmit, setFieldValue, values, errors }) => (
-                                <Form noValidate onSubmit={handleSubmit}>
+                                <Form className="mb-5" noValidate onSubmit={handleSubmit}>
                                     <div>
                                         <Row>
                                             <Col md={6} sm={6} xs={6} className="mt-sm-0 mt-3">
@@ -158,13 +158,14 @@ export function CompetitionEdit() {
                                         </Row>
 
                                     </div>
-                                    <Button variant="danger" onClick={() => console.log("dodělat, chybí endpoint")}>Smazat</Button>
-                                    <Button variant="primary" type="submit">Uložit</Button>
-
+                                    <div className="text-right">
+                                        <Button variant="danger" onClick={() => console.log("dodělat, chybí endpoint")}>Smazat</Button>
+                                        <Button variant="primary" type="submit">Uložit</Button>
+                                    </div>
                                 </Form>
                             )}
                             </Formik>
-                                <CompetitionTeamJoinRequests/>
+                            <CompetitionTeamJoinRequests/>
                         </div>
                     }
                 </div>

@@ -1,10 +1,11 @@
 import React from "react";
-import {NavLink as Link, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {Image} from "react-bootstrap";
 import loadingGif from "../../assets/images/loading.gif";
 import {Heading} from "../../basicComponents";
 import {useGetCompetitionMatches} from "../../api/matchClient_v1";
 import {formatDate} from "../../utils/date";
+import {MatchResult} from "./competition/MatchResult";
 
 export function CompetitionResults() {
     let {id_competition} = useParams();
@@ -32,23 +33,7 @@ export function CompetitionResults() {
                                 </tbody>
                             </table>
                         </div>
-                        <div className="table-responsive">
-                            <table className="table match-details">
-                                <tbody>
-                                <tr>
-                                    <td className="w28p">Třetiny: (2:2,4:0,1:0)</td>
-                                    <td className="w18p">Střely: 37:33</td>
-                                    <td className="w18p">Vyloučení: 3:3</td>
-                                    <td className="w18p">Využití: 1:1</td>
-                                    <td className="w18p">Oslabení: 1:1</td>
-                                </tr>
-                                <tr>
-                                    <td className="w100p text-center" colSpan="5">» <Link to={'/matches/' + item.id_match } >Detail zápasu</Link> «
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        <MatchResult id_match={item.id_match} />
                     </div>
                 </div>
                 ))

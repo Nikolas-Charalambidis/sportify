@@ -46,8 +46,7 @@ export function CompetitionTeamJoinRequests() {
 
     return (
         <div>
-            <CompetitionListBreadcrumbs />
-            <Heading>Žádosti o přidání do soutěže</Heading>
+            <Heading className="mt-5">Žádosti o přidání do soutěže</Heading>
             {((!sportsState.isLoading && !sportsState.error) && (!typesState.isLoading && !typesState.error) && (!state.isLoading && !state.error)) ?
                 <Table columns={columns} data={state.competitions} getTdProps={(state, rowInfo) => {
                     return {
