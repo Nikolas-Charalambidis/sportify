@@ -861,13 +861,7 @@ INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1
     (13, 3, 2, 13, 'suspension_5', null, null, 50, null, false),
     (14, 3, 2, 13, 'suspension_2_2', null, null, 56, null, false),
     (15, 3, 1, null, 'shot', null, null, null, 32, true),
-    (16, 3, 2, null, 'shot', null, null, null, 66, false),
-
-    (17, 4, 2, null, 'shot', null, null, null, 0, true),
-    (18, 4, 3, null, 'shot', null, null, null, 0, false),
-
-    (19, 5, 3, null, 'shot', null, null, null, 0, true),
-    (20, 5, 1, null, 'shot', null, null, null, 0, false);
+    (16, 3, 2, null, 'shot', null, null, null, 66, false);
 
 
 -- --- MATCHES TABLE TRIGGERS BLOCK END
