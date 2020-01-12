@@ -812,9 +812,7 @@ INSERT INTO `competition_membership` (`id_competition_membership`, `id_competiti
 INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES
     (1, null, 1, 1, '2019-11-04'),
     (2, null, 1, 1, '2019-11-05'),
-    (3, 1, 1, 2, '2019-11-10'),
-    (4, 1, 2, 3, '2020-03-01'),
-    (5, 1, 3, 1, '2020-03-02');
+    (3, 1, 1, 2, '2019-11-10');
 
 INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES
     (1, 1, true, 1, 1, true),
