@@ -160,4 +160,24 @@ export default class MatchService {
 		}
 		return result[0];
 	}
+
+	async getCountShotsByMatchId(id_match) {
+		const match_id = Number(id_match);
+		matchValidations.validateMatchId(match_id);
+
+		const hostShots = `SELECT COUNT(e.id_event) AS count_host
+			 FROM events AS e
+			 WHERE e.id_match=? AND e.host=1 AND e.type='shot'`;
+		const resultHost = await this.dbConnection.query(hostShots, [match_id]);
+
+		const guestShots = `SELECT COUNT(e.id_event) AS count_guest
+			 FROM events AS e
+			 WHERE e.id_match=? AND e.host=0 AND e.type='shot'`;
+		const resultGuest = await this.dbConnection.query(guestShots, [match_id]);
+
+		const shots = {};
+		Object.assign(shots, resultGuest[0], resultHost[0]);
+
+		return shots;
+	}
 }

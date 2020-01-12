@@ -150,6 +150,32 @@ export function useGetShots(id_match, host) {
     return [state];
 }
 
+export function useGetCountShots(id_match) {
+    const api = useApi();
+    const [state, setState] = useState({
+        isLoading: true,
+        error: false,
+        shots: undefined
+    });
+
+    useEffect( () => {
+        const fetchData = () => {
+            setState({isLoading: true, error: false, shots: null});
+            api
+                .get(`${config.API_BASE_PATH}/matches/${id_match}/count-shots`)
+                .then(({data}) => {
+                    const {shots} = data;
+                    setState({isLoading: false, error: false, shots: shots});
+                })
+                .catch(({response}) => {
+                    setState({isLoading: false, error: true, shots: null});
+                });
+        };
+        fetchData();
+    }, [api, id_match]); // eslint-disable-line
+    return [state];
+}
+
 export async function deleteMatch(api, id_match) {
     let result = false;
     await api
