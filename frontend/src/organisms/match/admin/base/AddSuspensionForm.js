@@ -1,8 +1,8 @@
 import React from 'react';
 import { Button, Form, Modal } from "react-bootstrap";
-import { Field } from "../../../../atoms";
+import { Field } from "../../../../basicComponents";
 import { Formik } from "formik";
-import { CustomSelect } from "../../../../atoms/Select";
+import { CustomSelect } from "../../../../basicComponents/Select";
 import { suspensionTypesList } from "../../../../enums/enums";
 
 export function AddSuspensionForm({ id_user, handleClose, addEvent, matchup, id_team, id_match, host, schema, interactive, timerState }) {
@@ -18,7 +18,7 @@ export function AddSuspensionForm({ id_user, handleClose, addEvent, matchup, id_
                 id_match: id_match,
                 id_assistance1: null,
                 id_assistance2: null,
-                minute: interactive ? Math.trunc(timerState / 1000 / 60) : '',
+                minute: interactive ? Math.trunc(timerState / 10000 / 60) : '',
                 value: null,
                 host: host
             }}

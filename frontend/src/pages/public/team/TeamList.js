@@ -1,13 +1,14 @@
 import React from 'react';
-import {NavLink as Link, useHistory} from 'react-router-dom';
-import {Heading} from '../../../atoms';
-import {Breadcrumb} from "react-bootstrap";
+import {useHistory} from 'react-router-dom';
+import {Heading} from '../../../basicComponents';
 import {useGetTeams} from "../../../api/teamClient_v1";
 import "react-table/react-table.css";
-import Image from "react-bootstrap/esm/Image";
-import loadingGif from "../../../assets/images/loading.gif";
-import {Table} from "../../../atoms/Table";
+import {Table} from "../../../basicComponents/Table";
 import {useGetSports, useGetTeamTypes} from "../../../api/othersClient_v1";
+import {TeamListBreadcrumbs} from "../../../organisms/breadcrumbs/TeamListBreadcrumbs";
+import {UnexpectedError} from "../../../basicComponents/UnexpectedError";
+import {LoadingGif} from "../../../basicComponents/LoadingGif";
+import {DataLoadingError} from "../../../basicComponents/DataLoadingError";
 
 export function TeamList() {
     const [state] = useGetTeams();
@@ -84,16 +85,25 @@ export function TeamList() {
         }
     ];
 
+    const header = (
+        <div>
+            <TeamListBreadcrumbs />
+            <Heading>Přehled týmů</Heading>
+        </div>
+    );
+
+    if(state.isLoading || sportsState.isLoading || typesState.isLoading) {
+        return <LoadingGif header={header}/>;
+    }
+
+    if((!sportsState.isLoading && sportsState.error) || (!typesState.isLoading && typesState.error) || (!state.isLoading && state.error)) {
+        return <DataLoadingError header={header}/>;
+    }
+
     return (
         <div>
-            <Breadcrumb>
-                <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
-                <li className="breadcrumb-item"><span className="active">Týmy</span></li>
-            </Breadcrumb>
-            <Heading>Přehled týmů</Heading>
-            {(state.isLoading || sportsState.isLoading || typesState.isLoading) && <div className="text-center"><Image src={loadingGif}/></div>}
-            {((!sportsState.isLoading && sportsState.error) || (!typesState.isLoading && typesState.error) || (!state.isLoading && state.error)) && <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
-            {((!sportsState.isLoading && !sportsState.error) && (!typesState.isLoading && !typesState.error) && (!state.isLoading && !state.error)) && (
+            {header}
+            {((!sportsState.isLoading && !sportsState.error) && (!typesState.isLoading && !typesState.error) && (!state.isLoading && !state.error)) ?
                 <Table columns={columns} data={state.teams_data} getTdProps={(state, rowInfo) => {
                     return {
                         onClick: () => {
@@ -101,7 +111,8 @@ export function TeamList() {
                         }
                     }
                 }}/>
-            )}
+                : <UnexpectedError/>
+            }
         </div>
     );
 }

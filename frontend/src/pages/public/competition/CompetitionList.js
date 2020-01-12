@@ -1,13 +1,14 @@
 import React from 'react';
-import {NavLink as Link, useHistory} from 'react-router-dom';
-import {Heading} from '../../../atoms';
-import {Breadcrumb} from "react-bootstrap";
+import {useHistory} from 'react-router-dom';
+import {Heading} from '../../../basicComponents';
 import "react-table/react-table.css";
 import {useGetCompetitions} from "../../../api/competitionClient_v1";
-import Image from "react-bootstrap/esm/Image";
-import loadingGif from "../../../assets/images/loading.gif";
-import {Table} from "../../../atoms/Table";
-import {useGetCompetitionTypes, useGetSports} from "../../../api/othersClient_v1";
+import {Table} from "../../../basicComponents/Table";
+import { useGetCompetitionTypes, useGetSports } from "../../../api/othersClient_v1";
+import {CompetitionListBreadcrumbs} from "../../../organisms/breadcrumbs/CompetitionListBreadcrumbs";
+import {UnexpectedError} from "../../../basicComponents/UnexpectedError";
+import {LoadingGif} from "../../../basicComponents/LoadingGif";
+import {DataLoadingError} from "../../../basicComponents/DataLoadingError";
 
 function getUniqueCities(state) {
     const uniqueCities = [];
@@ -119,30 +120,42 @@ export function CompetitionList() {
             Header: "Počet týmů",
             accessor: "teams_count",
             filterable: false
+        },
+        {
+            Header: 'Vedoucí soutěže',
+            accessor: 'name_leader',
         }
     ];
 
+    const header = (
+        <div>
+            <CompetitionListBreadcrumbs />
+            <Heading>Přehled soutěží</Heading>
+        </div>
+    );
+
+    if(state.isLoading || sportsState.isLoading || typesState.isLoading) {
+        return <LoadingGif header={header}/>;
+    }
+
+    if((!sportsState.isLoading && sportsState.error) || (!typesState.isLoading && typesState.error) || (!state.isLoading && state.error)) {
+        return <DataLoadingError header={header}/>;
+    }
+
     return (
         <div>
-            <Breadcrumb>
-                <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
-                <li className="breadcrumb-item"><span className="active">Soutěže</span></li>
-            </Breadcrumb>
-            <Heading>Přehled sotěží</Heading>
-
-            {(state.isLoading || sportsState.isLoading || typesState.isLoading) &&
-            <div className="text-center"><Image src={loadingGif}/></div>}
-            {((!sportsState.isLoading && sportsState.error) || (!typesState.isLoading && typesState.error) || (!state.isLoading && state.error)) &&
-            <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
-            {((!sportsState.isLoading && !sportsState.error) && (!typesState.isLoading && !typesState.error) && (!state.isLoading && !state.error)) && (
+            {header}
+            {((!sportsState.isLoading && !sportsState.error) && (!typesState.isLoading && !typesState.error) && (!state.isLoading && !state.error)) ?
                 <Table columns={columns} data={state.competitions} getTdProps={(state, rowInfo) => {
                     return {
                         onClick: () => {
                             handleClick(rowInfo);
                         }
                     }
-                }}/>
-            )}
+                }} />
+                : <UnexpectedError/>
+            }
         </div>
     );
+
 }

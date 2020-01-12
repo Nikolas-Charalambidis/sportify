@@ -75,4 +75,27 @@ router.get('/sports', async (req, res, next) => {
 	await res.status(200).json({ error: false, msg: 'OK', sports: sports});
 });
 
+/**
+ * @swagger
+ * /others/statistics:
+ *   get:
+ *     tags:
+ *       - Others
+ *     name: Statistics
+ *     summary: Get all statistics for web
+ *     responses:
+ *       200:
+ *         description: All statistics returned
+ */
+router.get('/statistics', async (req, res, next) => {
+	const dbConnection = req[DB_CONNECTION_KEY];
+	const competitions = await dbConnection.query(`SELECT COUNT(*) AS competitions FROM competitions`);
+	const users = await dbConnection.query(`SELECT COUNT(*) AS users FROM users`);
+	const teams = await dbConnection.query(`SELECT COUNT(*) AS teams FROM teams`);
+	const matches = await dbConnection.query(`SELECT COUNT(*) AS matches FROM matches`);
+	const statistics = Object.assign(competitions[0], users[0], teams[0], matches[0]);
+
+	await res.status(200).json({ error: false, msg: 'OK', statistics: statistics});
+});
+
 export default router;

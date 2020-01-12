@@ -1,18 +1,14 @@
 import React from 'react';
-import {Heading} from '../../atoms';
-import {Breadcrumb} from 'react-bootstrap';
-import {NavLink as Link} from "react-router-dom";
+import {Heading} from '../../basicComponents';
 import {AdministrationMenuCard} from '../../organisms/administration/AdministrationMenuCard';
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import {AdministrationMenuBreadcrumbs} from "../../organisms/breadcrumbs/AdministrationMenuBreadcrumbs";
 
 export function AdministrationMenu() {
     return (
         <div>
-            <Breadcrumb>
-                <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
-                <li className="breadcrumb-item"><span className="active">Administrace</span></li>
-            </Breadcrumb>
+            <AdministrationMenuBreadcrumbs />
             <Heading className="pageHeading mt-4 mb-5 dont-break-out">Administrace</Heading>
 
             <Row className="mb-4">
@@ -29,6 +25,11 @@ export function AdministrationMenu() {
                 </Col>
                 <Col lg={6} md={6} className="mt-4 mt-md-0">
                     <AdministrationMenuCard title="Nový interaktivní zápas" text="Slouží pro vytvoření interaktivního zápasu, který je možné real time upravovat při daném utkání." click="matches/createInteractive"/>
+                </Col>
+            </Row>
+            <Row className="mb-4">
+                <Col lg={6} md={6}>
+                    <AdministrationMenuCard title="Správa soutěží" text="Správa, případné založení vlastní soutěže umožňuje editovat údaje o soutěži" click="competitions"/>
                 </Col>
             </Row>
         </div>

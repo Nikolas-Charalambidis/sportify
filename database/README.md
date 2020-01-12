@@ -11,7 +11,10 @@ In order to work with **Backend** properly, you have to run a MySQL database wit
 **Disclaimer**: The Docker set-up is described below. In case you are not happy to use Docker, feel free to use your own MySQL. Follow the installation for your OS: [https://dev.mysql.com/doc/mysql-installation-excerpt/5.5/en/windows-install-archive.html](https://dev.mysql.com/doc/mysql-installation-excerpt/5.5/en/windows-install-archive.html). 
 Don't forget to execute the initialization scripts(s) at the `\database\sql` directory to work with the data. Just keep on your mind we won't describe nor support this way since we :heartpulse: Docker and we think it's necessary for the developers to know this technology nowadays.
 
-### Docker
+### Requirements 
+ - Docker `2.1.0.1` or newer
+
+### Installation (using Docker)
 
 ##### Complete set-up from scratch
 This is useful when an unknown behavior occurs or a fully new created container is preferred:

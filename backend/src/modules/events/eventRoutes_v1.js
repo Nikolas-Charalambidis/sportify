@@ -190,7 +190,6 @@ router.post('/', async (req, res, next) => {
 router.post('/bulk', async (req, res, next) => {
 	try {
 		const {events, id_match} = req.body;
-		console.log("values inside route", {events, id_match});
 		await new EventService(req).addEvents(events, id_match);
 		res.status(201).json({ error: false, msg: 'Eventy byly úspěšně přidány'});
 	} catch(e) {

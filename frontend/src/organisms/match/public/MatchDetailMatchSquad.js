@@ -2,7 +2,7 @@ import React from 'react';
 import {useGetMatchup} from "../../../api/matchClient_v1";
 import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../assets/images/loading.gif";
-import {Heading} from "../../../atoms";
+import {Heading} from "../../../basicComponents";
 
 export function MatchDetailMatchSquad({id_match, host}) {
     const [matchupState] = useGetMatchup(id_match, host);

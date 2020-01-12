@@ -5,7 +5,9 @@ import {config} from '../config';
 export function useGetUser(id_user) {
     const api = useApi();
     const [state, setState] = useState({
-        isLoading: true
+        isLoading: true,
+        error: false,
+        user_data: undefined
     });
     useEffect( () => {
         async function fetchData() {
@@ -55,7 +57,9 @@ export function ChangePassword(api, id_user, values) {
 export function useGetUserTeams(id_user) {
     const api = useApi();
     const [state, setState] = useState({
-        isLoading: true
+        isLoading: true,
+        error: false,
+        user_data: undefined
     });
     useEffect( () => {
         async function fetchData() {
@@ -66,19 +70,9 @@ export function useGetUserTeams(id_user) {
                     setState({ isLoading: false, error: false, user_data: user });
                 })
                 .catch(( { response } ) => {
-                    const { data, status} = response;
+                    const {data} = response;
                     setState({ isLoading: false, error: true, user_data: null });
-                    switch (status) {
-                        case 400:
-                            window.flash(data.msg, 'danger');
-                            break;
-                        case 500:
-                            window.flash(data.msg, 'danger');
-                            break;
-                        default:
-                            window.flash("Neočekávaná chyba", 'danger');
-                            break;
-                    }
+                    window.flash(data.msg, 'danger');
                 });
         }
         fetchData().then();
@@ -89,7 +83,9 @@ export function useGetUserTeams(id_user) {
 export function useGetUserOwnedTeams(id_user) {
     const api = useApi();
     const [state, setState] = useState({
-        isLoading: true
+        isLoading: true,
+        error: false,
+        teams: undefined
     });
     useEffect( () => {
         async function fetchData() {
@@ -110,10 +106,38 @@ export function useGetUserOwnedTeams(id_user) {
     return [state];
 }
 
+export function useGetUserOwnedCompetitions(id_user) {
+    const api = useApi();
+    const [state, setState] = useState({
+        isLoading: true,
+        error: false,
+        competition: undefined
+    });
+    useEffect( () => {
+        async function fetchData() {
+            api
+                .get(`${config.API_BASE_PATH}/users/${id_user}/competition`)
+                .then(({ data }) => {
+                    const { user } = data;
+                    setState({ isLoading: false, error: false, competition: user });
+                })
+                .catch(( { response } ) => {
+                    const { data } = response;
+                    setState({ isLoading: false, error: true, competition: null });
+                    window.flash(data.msg, 'danger');
+                });
+        }
+        fetchData().then();
+    }, [api, id_user]);
+    return [state];
+}
+
 export function useGetUserCompetition(id_user) {
     const api = useApi();
     const [state, setState] = useState({
-        isLoading: true
+        isLoading: true,
+        error: false,
+        user_data: undefined
     });
     useEffect( () => {
         async function fetchData() {
@@ -124,19 +148,9 @@ export function useGetUserCompetition(id_user) {
                     setState({ isLoading: false, error: false, user_data: user });
                 })
                 .catch(( { response } ) => {
-                    const { data, status} = response;
+                    const {data} = response;
                     setState({ isLoading: false, error: true, user_data: null });
-                    switch (status) {
-                        case 400:
-                            window.flash(data.msg, 'danger');
-                            break;
-                        case 500:
-                            window.flash(data.msg, 'danger');
-                            break;
-                        default:
-                            window.flash("Neočekávaná chyba", 'danger');
-                            break;
-                    }
+                    window.flash(data.msg, 'danger');
                 });
         }
         fetchData().then();

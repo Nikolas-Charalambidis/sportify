@@ -1,5 +1,6 @@
 import { DB_CONNECTION_KEY } from '../../libs/connection';
 import * as matchValidations from "./matchValidations";
+import * as competitionValidations from "../competitions/competitionValidations";
 
 export default class MatchService {
 
@@ -35,7 +36,7 @@ export default class MatchService {
 			`SELECT m.id_match, m.id_competition, m.id_host, m.id_guest,
 			 IF (m.date > NOW(), NULL, m.goals_host) AS 'goals_host',
 			 IF (m.date > NOW(), NULL, m.goals_guest) AS 'goals_guest',
-			 guest.name AS guest_name, host.name AS host_name, c.name AS competition_name
+			 guest.name AS guest_name, host.name AS host_name, c.name AS competition_name, m.date
 			 FROM matches AS m
 			 LEFT JOIN competitions AS c ON c.id_competition=m.id_competition
 			 JOIN teams AS guest ON guest.id_team=m.id_guest
@@ -47,6 +48,20 @@ export default class MatchService {
 			throw {status: 404, msg: 'Zápas nebyl nalezen v databázi'};
 		}
 		return result[0];
+	}
+
+	async findMatchesByCompetitionId(id_competition) {
+		const competitionId = Number(id_competition);
+		competitionValidations.validateCompetitionId(competitionId);
+		return await this.dbConnection.query(
+			`SELECT m.id_match, m.goals_guest, m.goals_host, guest.name AS guest_name, host.name AS host_name, m.date
+			 FROM matches AS m
+			 JOIN teams AS guest ON guest.id_team=m.id_guest
+			 JOIN teams AS host ON host.id_team=m.id_host
+			 WHERE id_competition=?
+			 ORDER BY m.date DESC`,
+			competitionId
+		);
 	}
 
 	async deleteMatch(id_match) {
@@ -144,5 +159,25 @@ export default class MatchService {
 			throw {status: 404, msg: 'Zápas nebyl nalezen v databázi'};
 		}
 		return result[0];
+	}
+
+	async getCountShotsByMatchId(id_match) {
+		const match_id = Number(id_match);
+		matchValidations.validateMatchId(match_id);
+
+		const hostShots = `SELECT COUNT(e.id_event) AS count_host
+			 FROM events AS e
+			 WHERE e.id_match=? AND e.host=1 AND e.type='shot'`;
+		const resultHost = await this.dbConnection.query(hostShots, [match_id]);
+
+		const guestShots = `SELECT COUNT(e.id_event) AS count_guest
+			 FROM events AS e
+			 WHERE e.id_match=? AND e.host=0 AND e.type='shot'`;
+		const resultGuest = await this.dbConnection.query(guestShots, [match_id]);
+
+		const shots = {};
+		Object.assign(shots, resultGuest[0], resultHost[0]);
+
+		return shots;
 	}
 }

@@ -1,19 +1,17 @@
 import React, {useState} from 'react';
 import "react-table/react-table.css";
 import {useHistory} from 'react-router-dom';
-import {Heading} from "../../../atoms";
-import {Table} from "../../../atoms/Table";
-import Image from "react-bootstrap/esm/Image";
-import loadingGif from "../../../assets/images/loading.gif";
+import {Table} from "../../../basicComponents/Table";
 import {useGetTeamPositions} from "../../../api/othersClient_v1";
 import {changePlayerStatus, deleteMember} from "../../../api/teamMembershipClient_v1";
 import Button from "react-bootstrap/Button";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as Icons from "@fortawesome/free-solid-svg-icons";
 import {useApi} from "../../../hooks/useApi";
-import {UpdateStateModal} from "../../../atoms/UpdateStateModal";
-
-
+import {UpdateStateModal} from "../../../basicComponents/UpdateStateModal";
+import {LoadingGif} from "../../../basicComponents/LoadingGif";
+import {DataLoadingError} from "../../../basicComponents/DataLoadingError";
+import {UnexpectedError} from "../../../basicComponents/UnexpectedError";
 
 export function TeamSquad({status, admin, playersState, fetchActivePlayersState, fetchInactivePlayersState, fetchPlayersPendingState, fetchPlayersDeclinedState}) {
     const api = useApi();
@@ -32,7 +30,6 @@ export function TeamSquad({status, admin, playersState, fetchActivePlayersState,
             fetchInactivePlayersState();
             fetchPlayersPendingState();
             fetchPlayersDeclinedState();
-
         }
     };
 
@@ -42,9 +39,6 @@ export function TeamSquad({status, admin, playersState, fetchActivePlayersState,
             fetchPlayersDeclinedState();
         }
     };
-
-
-    
 
     let history = useHistory();
     const columns = [
@@ -151,24 +145,25 @@ export function TeamSquad({status, admin, playersState, fetchActivePlayersState,
             history.push("/users/" + row._original.id_user);
         }
     }
+
+    if(playersState.isLoading || positionsState.isLoading) {
+        return <LoadingGif />;
+    }
+
+    if((!playersState.isLoading && playersState.error) || (!positionsState.isLoading && positionsState.error)) {
+        return <DataLoadingError />;
+    }
     
     return (
         <div>
-            {(playersState.isLoading || positionsState.isLoading) &&
-            <div className="text-center"><Image src={loadingGif}/></div>}
-            {(
-                (!playersState.isLoading && playersState.error) ||
-                (!positionsState.isLoading && positionsState.error)) &&
-            <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
-            {(
-                (!playersState.isLoading && !playersState.error) &&
-                (!positionsState.isLoading && !positionsState.error)) &&
-            <Table className="defaultCursor" columns={columns} data={playersState.players}/>
-
-
+            {(  (!playersState.isLoading && !playersState.error) &&
+                (!positionsState.isLoading && !positionsState.error)) ?
+                <Table className="defaultCursor" columns={columns} data={playersState.players}/>
+                : <UnexpectedError/>
             }
             <UpdateStateModal key="players" show={show} handleClose={handleClose}
-                              updateFunction={handleUpdatePlayers} deleteFunction={handleDeletePlayers} idItem={ID} status={status} idButton={buttonID}/>
+                              updateFunction={handleUpdatePlayers} deleteFunction={handleDeletePlayers}
+                              idItem={ID} status={status} idButton={buttonID}/>
         </div>
     );
 }

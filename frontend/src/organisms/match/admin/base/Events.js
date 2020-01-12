@@ -1,15 +1,15 @@
 import React, {useState} from 'react';
-import {Table} from "../../../../atoms/Table";
-import Image from "react-bootstrap/esm/Image";
-import loadingGif from "../../../../assets/images/loading.gif";
-import {Heading} from "../../../../atoms";
+import {Table} from "../../../../basicComponents/Table";
 import {useApi} from "../../../../hooks/useApi";
 import Button from "react-bootstrap/Button";
 import {deleteEvent} from "../../../../api/eventClient_v1";
 import {eventTypesList, eventTypesEnum} from "../../../../enums/enums";
-import {DeleteModal} from "../../../../atoms/DeleteModal";
+import {DeleteModal} from "../../../../basicComponents/DeleteModal";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as Icons from "@fortawesome/free-solid-svg-icons";
+import {LoadingGif} from "../../../../basicComponents/LoadingGif";
+import {DataLoadingError} from "../../../../basicComponents/DataLoadingError";
+import {UnexpectedError} from "../../../../basicComponents/UnexpectedError";
 
 export function Events({type, eventsState, fetchEvents}) {
     const api = useApi();
@@ -129,17 +129,23 @@ export function Events({type, eventsState, fetchEvents}) {
         }
     ];
 
+    if(eventsState.isLoading) {
+        return <LoadingGif />;
+    }
+
+    if(!eventsState.isLoading && eventsState.error) {
+        return <DataLoadingError />;
+    }
+
     return (
         <div>
-            {eventsState.isLoading &&  <div className="text-center"><Image src={loadingGif}/></div>}
-            {(!eventsState.isLoading && eventsState.error) &&
-            <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
-            {(!eventsState.isLoading && !eventsState.error) &&
+            {(!eventsState.isLoading && !eventsState.error) ?
                 <div>
                     <Table className="defaultCursor" columns={columnsEvents} data={eventsState.events}/>
                     <DeleteModal key="events" show={show} heading="Delete eventu" text="Opravdu si přejete odstranit event?"
                                  handleClose={handleClose} deleteFunction={handleDeleteEvent} idItem={ID}/>
                 </div>
+                : <UnexpectedError/>
             }
         </div>
     );

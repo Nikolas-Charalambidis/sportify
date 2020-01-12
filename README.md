@@ -42,6 +42,8 @@ To develop Backend, the Database and Backend is needed. To run Frontend, all of 
 - Backend: see at[ `/backend/README.md`](https://github.com/Nikolas-Charalambidis/4IT445/blob/master/backend/README.md), port `3001`.
 - Frontend: see at [`/frontend/README.md`](https://github.com/Nikolas-Charalambidis/4IT445/blob/master/frontend/README.md), port `3000`.
 
+The requirements and installation are described in particular README files for infrastructure and each module separately.
+
 ## Contribution
 
 Read [`CONTRIBUTING.md`](https://github.com/Nikolas-Charalambidis/4IT445/blob/master/CONTRIBUTING.md) (link to the master branch).

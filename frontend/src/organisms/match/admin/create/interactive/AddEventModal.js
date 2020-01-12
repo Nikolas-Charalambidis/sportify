@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal } from "react-bootstrap";
-import { Heading } from "../../../../../atoms";
+import { Heading } from "../../../../../basicComponents";
 import * as yup from "yup";
 import { AddGoalForm } from "./../../base/AddGoalForm";
 import { AddSuspensionForm } from "./../../base/AddSuspensionForm";
@@ -11,9 +11,7 @@ const schema = yup.object().shape({
     type: yup.string().required(),
     id_team: yup.number().integer().required(),
     id_assistance1: yup.number().integer().nullable(),
-    name_assistance1: yup.string(),
     id_assistance2: yup.number().integer().nullable(),
-    name_assistance2: yup.string(),
     minute: yup.number().integer().min(1).max(60).required(),
     value: yup.number().nullable(),
     host: yup.number().required(),

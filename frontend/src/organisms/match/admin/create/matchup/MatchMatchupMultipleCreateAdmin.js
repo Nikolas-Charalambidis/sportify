@@ -4,7 +4,7 @@ import Col from "react-bootstrap/Col";
 import {MatchMatchupCreateAdmin} from "./MatchMatchupCreateAdmin";
 import {useGetMembers} from "../../../../../api/teamClient_v1";
 
-export function MatchMatchupMultipleCreateAdmin({hostState, guestState, setHostState, setGuestState}) {
+export function MatchMatchupMultipleCreateAdmin({hostState, guestState, setHostState, setGuestState, interactive}) {
     const [stateAvailablePlayersHost] = useGetMembers(hostState.id_team);
     const [statePlayersHost, setStatePlayersHost] = useState(stateAvailablePlayersHost);
 
@@ -22,7 +22,7 @@ export function MatchMatchupMultipleCreateAdmin({hostState, guestState, setHostS
     return (
         <Row>
             <Col lg={6} md={12} sm={12} xs={12} >
-                <MatchMatchupCreateAdmin host={1}
+                <MatchMatchupCreateAdmin host={1} intaractive={interactive}
                                          availablePlayers={statePlayersHost}
                                          state={hostState}
                                          setState={setHostState}
@@ -30,7 +30,7 @@ export function MatchMatchupMultipleCreateAdmin({hostState, guestState, setHostS
             </Col>
 
             <Col lg={6} md={12} sm={12} xs={12} >
-                <MatchMatchupCreateAdmin host={0}
+                <MatchMatchupCreateAdmin host={0} intaractive={interactive}
                                          availablePlayers={statePlayersGuest}
                                          state={guestState}
                                          setState={setGuestState}

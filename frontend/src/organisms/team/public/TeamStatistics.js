@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
-import {Heading} from "../../../atoms";
+import {Heading} from "../../../basicComponents";
 import {TeamStatisticsGoalkeepers} from "./statistics/TeamStatisticsGoalkeepers";
 import {TeamStatisticsPlayers} from "./statistics/TeamStatisticsPlayers";
 import {useGetTeamCompetition} from "../../../api/teamClient_v1";
 import {useParams} from "react-router-dom";
-import Image from "react-bootstrap/esm/Image";
-import loadingGif from "../../../assets/images/loading.gif";
+import {LoadingGif} from "../../../basicComponents/LoadingGif";
+import {DataLoadingError} from "../../../basicComponents/DataLoadingError";
+import {UnexpectedError} from "../../../basicComponents/UnexpectedError";
 
 export function TeamStatistics() {
     let {id_team} = useParams();
@@ -16,12 +17,17 @@ export function TeamStatistics() {
         setStatisticsFilter(event);
     };
 
+    if(state.isLoading) {
+        return <LoadingGif />;
+    }
+
+    if(!state.isLoading && state.error) {
+        return <DataLoadingError />;
+    }
+
     return (
         <div>
-            {state.isLoading && <div className="text-center"><Image src={loadingGif}/></div>}
-            {(!state.isLoading && state.error) &&
-            <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
-            {(!state.isLoading && !state.error) && (
+            {(!state.isLoading && !state.error) ?
                 <select onChange={event => handleChange(event.target.value)} className="form-control"
                         id="exampleFormControlSelect1">
                     <option value="league">Ligové statistiky</option>
@@ -32,7 +38,8 @@ export function TeamStatistics() {
                         </option>)
                     }
                 </select>
-            )}
+                : <UnexpectedError/>
+            }
 
             <Heading className="mt-4" size="lg">Hráči</Heading>
             <TeamStatisticsPlayers filterBy={statisticsFilter}/>

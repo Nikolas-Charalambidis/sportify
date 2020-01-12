@@ -24,6 +24,7 @@ const getConnection = async () => {
     conn = await pool.getConnection();
     return conn;
   } catch (err) {
+    console.log("Database connection cannot be established from the pool", err);
     throw err;
   }
 };

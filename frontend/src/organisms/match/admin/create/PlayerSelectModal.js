@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { equals } from 'ramda';
-import { Heading } from '../../../../atoms';
-import { Table } from '../../../../atoms/Table';
+import { Heading } from '../../../../basicComponents';
+import { Table } from '../../../../basicComponents/Table';
 
 export function PlayerSelectModal({ show, handleClose, players, handleAddPlayers, type }) {
   const [selectedPlayers, setSelectedPlayers] = useState([]);
@@ -10,7 +10,6 @@ export function PlayerSelectModal({ show, handleClose, players, handleAddPlayers
   useEffect(() => {
       setSelectedPlayers([]);
   },[players]);
-
 
     function onCheckEdit(original) {
         if (
@@ -47,6 +46,7 @@ export function PlayerSelectModal({ show, handleClose, players, handleAddPlayers
           id: 'checkbox',
           accessor: '',
           filterable: false,
+          sortable: false,
           width: 45,
           Cell: ({ original }) => (
               <input
@@ -70,7 +70,8 @@ export function PlayerSelectModal({ show, handleClose, players, handleAddPlayers
         },
         {
           Header: 'Jméno',
-          accessor: 'name'
+          accessor: 'name',
+          filterMethod: (filter, row) => row[filter.id].toLowerCase().startsWith(filter.value.toLowerCase())
         }
   ];
 
@@ -83,18 +84,25 @@ export function PlayerSelectModal({ show, handleClose, players, handleAddPlayers
             </Modal.Header>
 
             <Modal.Body>
-              <Table columns={columns} data={players} />
+              <Table columns={columns} data={players} getTdProps={(state, rowInfo) => {
+                  return {
+                      onClick: () => {
+                          onCheckEdit(rowInfo.original);
+                      }
+                  }
+              }}/>
             </Modal.Body>
 
+
             <Modal.Footer>
-                <Button variant="primary"  type="button" block onClick={() => {
+                <Button variant="secondary mt-0" type="button" block onClick={handleClose}>
+                    Zrušit
+                </Button>
+                <Button variant="primary mt-0" type="button" block onClick={() => {
                     handleClose();
                     handleAddPlayers(selectedPlayers);
-                }} >
+                }}>
                     Uložit
-                </Button>
-                <Button variant="secondary"  type="button" block onClick={handleClose} >
-                  Zrušit
                 </Button>
             </Modal.Footer>
     </Modal>

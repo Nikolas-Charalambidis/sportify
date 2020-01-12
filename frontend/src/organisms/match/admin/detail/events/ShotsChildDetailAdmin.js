@@ -1,12 +1,12 @@
 import React from 'react';
-import Image from "react-bootstrap/esm/Image";
-import loadingGif from "../../../../../assets/images/loading.gif";
-import {Heading} from "../../../../../atoms";
 import {Formik} from "formik";
 import * as yup from "yup";
 import {changeShots} from "../../../../../api/eventClient_v1";
 import {useApi} from "../../../../../hooks/useApi";
 import {ShotsForm} from "../../base/ShotsForm";
+import {LoadingGif} from "../../../../../basicComponents/LoadingGif";
+import {DataLoadingError} from "../../../../../basicComponents/DataLoadingError";
+import {UnexpectedError} from "../../../../../basicComponents/UnexpectedError";
 
 const schema = yup.object().shape({
     id_event: yup.number().integer().required(),
@@ -23,27 +23,33 @@ export function ShotsChildDetailAdmin({shotsState}) {
         }
     };
 
+    if(shotsState.isLoading) {
+        return <LoadingGif />;
+    }
+
+    if(!shotsState.isLoading && shotsState.error) {
+        return <DataLoadingError />;
+    }
+
     return (
         <div>
-            {shotsState.isLoading &&  <div className="text-center"><Image src={loadingGif}/></div>}
-            {(!shotsState.isLoading && shotsState.error) &&
-            <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
-            {(!shotsState.isLoading && !shotsState.error) &&
-            <div>
-                <Formik
-                    validationSchema={schema}
-                    initialValues={{
-                        id_event: shotsState.shots.id_event,
-                        value: shotsState.shots.value
-                    }}
-                    onSubmit={values => {
-                        handleChangeShots(values).then();
-                    }}
-                >{({handleSubmit, errors}) => (
-                    <ShotsForm handleSubmit={handleSubmit} errors={errors}/>
-                )}
-                </Formik>
-            </div>
+            {(!shotsState.isLoading && !shotsState.error) ?
+                <div>
+                    <Formik
+                        validationSchema={schema}
+                        initialValues={{
+                            id_event: shotsState.shots.id_event,
+                            value: shotsState.shots.value
+                        }}
+                        onSubmit={values => {
+                            handleChangeShots(values).then();
+                        }}
+                    >{({handleSubmit, errors}) => (
+                        <ShotsForm handleSubmit={handleSubmit} errors={errors}/>
+                    )}
+                    </Formik>
+                </div>
+                : <UnexpectedError/>
             }
         </div>
     );

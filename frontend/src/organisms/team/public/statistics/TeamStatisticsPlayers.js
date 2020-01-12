@@ -1,13 +1,13 @@
 import React from 'react';
 import {useParams} from "react-router-dom";
 import {useGetTeamStatistics} from "../../../../api/teamClient_v1";
-import {Heading} from "../../../../atoms";
-import {Table} from "../../../../atoms/Table";
-import Image from "react-bootstrap/esm/Image";
-import loadingGif from "../../../../assets/images/loading.gif";
-import {OverlayTriggerTable} from "../../../../atoms/OverlayTriggerTable";
+import {Table} from "../../../../basicComponents/Table";
+import {OverlayTriggerTable} from "../../../../basicComponents/OverlayTriggerTable";
 import * as Icons from "@fortawesome/free-solid-svg-icons";
 import {useHistory} from 'react-router-dom';
+import {LoadingGif} from "../../../../basicComponents/LoadingGif";
+import {DataLoadingError} from "../../../../basicComponents/DataLoadingError";
+import {UnexpectedError} from "../../../../basicComponents/UnexpectedError";
 
 function getPlayers(state, filterBy) {
     let competitionId = null;
@@ -90,19 +90,26 @@ export function TeamStatisticsPlayers({filterBy}) {
         }
     ];
 
+    if(state.isLoading) {
+        return <LoadingGif />;
+    }
+
+    if(!state.isLoading && state.error) {
+        return <DataLoadingError />;
+    }
+
     return (
         <div>
-            {state.isLoading && <div className="text-center"><Image src={loadingGif}/></div>}
-            {(!state.isLoading && state.error) &&
-            <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
-            {(!state.isLoading && !state.error) &&
+            {(!state.isLoading && !state.error) ?
                 <Table data={players} columns={columns} getTdProps={(state, rowInfo) => {
-                    return {
-                        onClick: () => {
-                            handleClick(rowInfo);
+                        return {
+                            onClick: () => {
+                                handleClick(rowInfo);
+                            }
                         }
-                    }
-                }}/>
+                    }}
+                />
+                : <UnexpectedError/>
             }
         </div>
     );

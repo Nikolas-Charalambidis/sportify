@@ -1,40 +1,63 @@
 import React from 'react';
-import {NavLink as Link, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
-import {Heading} from '../../../atoms';
-import {Breadcrumb, Image, Tabs, Tab} from 'react-bootstrap';
+import {Heading} from '../../../basicComponents';
+import {Tabs, Tab} from 'react-bootstrap';
 import {useGetCompetitionDetail} from "../../../api/competitionClient_v1";
-import loadingGif from "../../../assets/images/loading.gif";
-import {CompetitionData} from "./CompetitionData";
-import {CompetitionsTeams} from "./CompetitionsTeams";
+import {CompetitionData} from "../../../organisms/competition/CompetitionData";
+import {CompetitionTeams} from "../../../organisms/competition/CompetitionTeams";
+import {CompetitionResults} from "../../../organisms/competition/CompetitionResults";
+import {CompetitionStatisticsPlayers} from "../../../organisms/competition/statistics/CompetitionStatisticsPlayers";
+import {CompetitionStatisticsGoalkeepers} from "../../../organisms/competition/statistics/CompetitionStatisticsGoalkeepers";
+import {CompetitionDetailBreadcrumbs} from "../../../organisms/breadcrumbs/CompetitionDetailBreadcrumbs";
+import {UnexpectedError} from "../../../basicComponents/UnexpectedError";
+import {LoadingGif} from "../../../basicComponents/LoadingGif";
+import {DataLoadingError} from "../../../basicComponents/DataLoadingError";
+
 export function CompetitionDetail() {
     let {id_competition} = useParams();
     const [state] = useGetCompetitionDetail(id_competition);
 
+    const header = (
+        <div>
+            <CompetitionDetailBreadcrumbs/>
+        </div>
+    );
+
+    if(state.isLoading) {
+        return <LoadingGif header={header}/>;
+    }
+
+    if(!state.isLoading && state.error) {
+        return <DataLoadingError header={header}/>;
+    }
+
     return (
         <div>
-            {state.isLoading && <div className="text-center"><Image src={loadingGif}/></div>}
-            {(!state.isLoading && state.error) &&
-            <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
-            {(!state.isLoading && !state.error) &&
-            <div>
-                <Breadcrumb>
-                    <li className="breadcrumb-item"><Link to="/">Domů</Link></li>
-                    <li className="breadcrumb-item"><Link to="/competitions">Soutěže</Link></li>
-                    <li className="breadcrumb-item"><span className="active">{state.competition_data[0].id_competition}</span></li>
-                </Breadcrumb>
-                <Heading className="mt-4 mb-5">{state.competition_data[0].name}</Heading>
+            {header}
+            {(!state.isLoading && !state.error) ?
+                <div>
+                    <Heading className="mt-4 mb-5">{state.competition_data.name}</Heading>
 
-                <CompetitionData state={state} />
+                    <CompetitionData state={state} />
 
-                <Tabs className="mb-3" fill defaultActiveKey="squad" id="competitionTabs">
-                    <Tab eventKey="squad" title="tymy">
-                        <CompetitionsTeams/>
-                    </Tab>
-                    <Tab eventKey="competition" title="vysledky">
-                    </Tab>
-                </Tabs>
-            </div>
+                    <Tabs className="mb-3" fill defaultActiveKey="squad" id="competitionTabs">
+                        <Tab eventKey="squad" title="Týmy">
+                            <CompetitionTeams/>
+                        </Tab>
+                        <Tab eventKey="competition" title="Výsledky zápasů">
+                            <CompetitionResults/>
+                        </Tab>
+                        <Tab eventKey="statistics" title="Statistiky">
+                            <Heading className="mt-4" size="lg">Hráči</Heading>
+                            <CompetitionStatisticsPlayers isGoalKeeper={'false'}/>
+
+                            <Heading className="mt-4" size="lg">Brankáři</Heading>
+                            <CompetitionStatisticsGoalkeepers isGoalKeeper={'true'}/>
+                        </Tab>
+                    </Tabs>
+                </div>
+                : <UnexpectedError/>
             }
         </div>
     );

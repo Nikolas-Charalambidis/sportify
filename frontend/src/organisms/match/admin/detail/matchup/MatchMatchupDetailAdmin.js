@@ -1,17 +1,20 @@
 import React, {useState} from 'react';
-import {Table} from "../../../../../atoms/Table";
+import {Table} from "../../../../../basicComponents/Table";
 import {useApi} from "../../../../../hooks/useApi";
 import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../../../assets/images/loading.gif";
-import {Heading} from "../../../../../atoms";
+import {Heading} from "../../../../../basicComponents";
 import Button from "react-bootstrap/Button";
 import {AddGoalSuspensionModal} from "../../base/AddGoalSuspensionModal";
 import {addPlayer, deletePlayer, setGoalkeeper} from "../../../../../api/matchupClient_v1";
-import {DeleteModal} from "../../../../../atoms/DeleteModal";
+import {DeleteModal} from "../../../../../basicComponents/DeleteModal";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import * as Icons from "@fortawesome/free-solid-svg-icons"
 import {PlayerSelectModal} from "../../create/PlayerSelectModal";
 import {addEvent} from "../../../../../api/eventClient_v1";
+import {LoadingGif} from "../../../../../basicComponents/LoadingGif";
+import {DataLoadingError} from "../../../../../basicComponents/DataLoadingError";
+import {UnexpectedError} from "../../../../../basicComponents/UnexpectedError";
 
 export function MatchMatchupDetailAdmin({id_team, id_match, host, availablePlayers, fetchAvailablePlayers, matchupState, fetchMatchup, fetchEvents}) {
     const api = useApi();
@@ -117,12 +120,17 @@ export function MatchMatchupDetailAdmin({id_team, id_match, host, availablePlaye
         }
     };
 
+    if(matchupState.isLoading) {
+        return <LoadingGif />;
+    }
+
+    if(!matchupState.isLoading && matchupState.error) {
+        return <DataLoadingError />;
+    }
+
     return (
         <div>
-            {matchupState.isLoading &&  <div className="text-center"><Image src={loadingGif}/></div>}
-            {(!matchupState.isLoading && matchupState.error) &&
-            <Heading size="xs" className="alert-danger pt-2 pb-2 mt-2 text-center">Data se nepodařilo načíst</Heading>}
-            {(!matchupState.isLoading && !matchupState.error) &&
+            {(!matchupState.isLoading && !matchupState.error) ?
                 <div>
                     { availablePlayers.isLoading &&  <div className="text-center"><Image src={loadingGif}/></div>}
                     {(!availablePlayers.isLoading && availablePlayers.error) &&
@@ -133,7 +141,7 @@ export function MatchMatchupDetailAdmin({id_team, id_match, host, availablePlaye
                     }
                     {(!availablePlayers.isLoading && !availablePlayers.error && availablePlayers.players.length !== 0) &&
                         <div>
-                            <Button variant="primary" onClick={handleShowPlayerModal}>
+                            <Button variant="primary mb-3" onClick={handleShowPlayerModal}>
                                 Vybrat hráče do sestavy
                             </Button>
                             <PlayerSelectModal type="edit" show={showPlayerModal}
@@ -155,6 +163,7 @@ export function MatchMatchupDetailAdmin({id_team, id_match, host, availablePlaye
                                  handleClose={handleClose} deleteFunction={handleDeletePlayer} idItem={ID}/>
 
                 </div>
+                : <UnexpectedError/>
             }
         </div>
     );

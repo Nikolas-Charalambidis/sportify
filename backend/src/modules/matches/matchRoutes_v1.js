@@ -105,6 +105,41 @@ router.get('/:id_match', async (req, res, next) => {
 
 /**
  * @swagger
+ * /matches/{id_competition}/competition:
+ *   get:
+ *     tags:
+ *       - Matches
+ *     name: Match
+ *     summary: Get a match by competition ID
+ *     parameters:
+ *       - name: id_competition
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Match found
+ *       400:
+ *         description: Invalid request
+ *       404:
+ *         description: Match not found
+ *       500:
+ *         description: Unexpected error
+ */
+
+router.get('/:id_competition/competition', async (req, res, next) => {
+	try {
+		const { id_competition } = req.params;
+		const matches = await new MatchService(req).findMatchesByCompetitionId(id_competition);
+		res.status(200).json({ error: false, msg: 'OK', matches: matches});
+	} catch(e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
  * /matches/{id_match}/matchup/{host}:
  *   get:
  *     tags:
@@ -247,6 +282,41 @@ router.get('/:id_match/shots/:host', async (req, res, next) => {
 	try {
 		const { id_match, host } = req.params;
 		const shots = await new MatchService(req).getShotsByMatchId(id_match, host);
+		res.status(200).json({ error: false, msg: 'OK', shots: shots});
+	} catch(e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
+ * /matches/{id_match}/count-shots:
+ *   get:
+ *     tags:
+ *       - Matches
+ *     name: Match
+ *     summary: Get events by match ID
+ *     parameters:
+ *       - name: id_match
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Count shots found
+ *       400:
+ *         description: Invalid request
+ *       404:
+ *         description: Events not found
+ *       500:
+ *         description: Unexpected error
+ */
+
+router.get('/:id_match/count-shots', async (req, res, next) => {
+	try {
+		const { id_match } = req.params;
+		const shots = await new MatchService(req).getCountShotsByMatchId(id_match);
 		res.status(200).json({ error: false, msg: 'OK', shots: shots});
 	} catch(e) {
 		next(e);

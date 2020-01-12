@@ -3,7 +3,7 @@ import defaultTeamAvatar from "../../../assets/images/default_team_avatar.svg";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as Icons from "@fortawesome/free-solid-svg-icons";
 import {NavLink as Link} from "react-router-dom";
-import {Heading} from "../../../atoms";
+import {Heading} from "../../../basicComponents";
 import {mapSportToIcon} from "../../../utils/mapper";
 import React from "react";
 
@@ -59,5 +59,4 @@ export function TeamData({state}) {
             </Col>
         </Row>
     )
-
 }
