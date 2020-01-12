@@ -18,7 +18,9 @@ export function CarouselItems() {
                                     <h2 className="d-none d-sm-inline-block">Detailní správa vlastního profilu</h2>
                                     <p className="d-none d-sm-inline-block">Úprava profilu, soutěží, týmů a tvorba interaktivního zápasu</p>
                                     <br/>
-                                    <Link className="d-none d-sm-inline-block btn" to="/login">Registrovat se</Link>
+                                    <Link className="d-none d-sm-inline-block btn" to="/register">Registrovat se</Link>
+                                    <br/>
+                                    <Link className="d-none d-sm-inline-block btn" to="/login">Přihlásit se</Link>
                                 </div>
                             </div>
                         </div>
@@ -36,7 +38,7 @@ export function CarouselItems() {
                                     <h2 className="d-none d-sm-inline-block">Všechny soutěže na jednom místě</h2>
                                     <p className="d-none d-sm-inline-block">Statistiky, přehled hráčů a další detaily o soutěžích</p>
                                     <br/>
-                                    <Link className="d-none d-sm-inline-block btn" to="/competitions">Soutěže se</Link>
+                                    <Link className="d-none d-sm-inline-block btn" to="/competitions">Soutěže</Link>
                                 </div>
                             </div>
                         </div>
@@ -54,7 +56,7 @@ export function CarouselItems() {
                                     <h2 className="d-none d-sm-inline-block">Různorodé druhy sportovních disciplín</h2>
                                     <p className="d-none d-sm-inline-block">Hokej, hokejbal, florbal a další již brzy</p>
                                     <br/>
-                                    <Link className="d-none d-sm-inline-block btn" to="/login">Registrovat se</Link>
+                                    <Link className="d-none d-sm-inline-block btn" to="/register">Registrovat se</Link>
                                 </div>
                             </div>
                         </div>
