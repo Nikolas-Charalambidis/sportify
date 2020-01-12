@@ -812,9 +812,7 @@ INSERT INTO `competition_membership` (`id_competition_membership`, `id_competiti
 INSERT INTO `matches` (id_match, id_competition, id_host, id_guest, date) VALUES
     (1, null, 1, 1, '2019-11-04'),
     (2, null, 1, 1, '2019-11-05'),
-    (3, 1, 1, 2, '2019-11-10'),
-    (4, 1, 2, 3, '2020-03-01'),
-    (5, 1, 3, 1, '2020-03-02');
+    (3, 1, 1, 2, '2019-11-10');
 
 INSERT INTO `matchups` (id_matchup, id_match, goalkeeper, id_team, id_user, host) VALUES
     (1, 1, true, 1, 1, true),
@@ -863,13 +861,7 @@ INSERT INTO `events` (id_event, id_match, id_team, id_user, type, id_assistance1
     (13, 3, 2, 13, 'suspension_5', null, null, 50, null, false),
     (14, 3, 2, 13, 'suspension_2_2', null, null, 56, null, false),
     (15, 3, 1, null, 'shot', null, null, null, 32, true),
-    (16, 3, 2, null, 'shot', null, null, null, 66, false),
-
-    (17, 4, 2, null, 'shot', null, null, null, 0, true),
-    (18, 4, 3, null, 'shot', null, null, null, 0, false),
-
-    (19, 5, 3, null, 'shot', null, null, null, 0, true),
-    (20, 5, 1, null, 'shot', null, null, null, 0, false);
+    (16, 3, 2, null, 'shot', null, null, null, 66, false);
 
 
 -- --- MATCHES TABLE TRIGGERS BLOCK END
