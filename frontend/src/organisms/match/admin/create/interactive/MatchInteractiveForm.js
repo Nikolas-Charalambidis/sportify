@@ -12,6 +12,7 @@ import { Events } from "../../base/Events";
 import { InteractiveModal } from "./InteractiveModal";
 import { InteractiveOvertimeModal } from "./InteractiveOvertimeModal";
 
+
 function getPeriod(time, pause, stringPeriod, firstPeriodPause, setFirstPeriodPause, secondPeriodPause, setSecondPeriodPause, thirdPeriodPause, setThirdPeriodPause, setShowPeriodModal, setShowOvertimeModal) {
     if (Math.trunc(time) < 2401000 && !firstPeriodPause) {
         setFirstPeriodPause(true);

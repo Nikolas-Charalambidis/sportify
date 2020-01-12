@@ -6,6 +6,7 @@ import { CustomSelect } from "../../../../basicComponents/Select";
 
 export function AddGoalForm({ id_user, handleClose, addEvent, matchup, id_team, id_match, host, schema, interactive, timerState }) {
 
+
     const [valueUser, setValueUser] = useState({ id_user: id_user });
     const [valueAss1, setValueAss1] = useState(null);
     const [valueAss2, setValueAss2] = useState(null);
