@@ -7,7 +7,6 @@ import Image from "react-bootstrap/esm/Image";
 import loadingGif from "../../../assets/images/loading.gif";
 import {Table} from "../../../basicComponents/Table";
 import { useGetCompetitionTypes, useGetSports } from "../../../api/othersClient_v1";
-import {CompetitionListBreadcrumbs} from "../../../organisms/breadcrumbs/CompetitionListBreadcrumbs";
 import {UnexpectedError} from "../../../basicComponents/UnexpectedError";
 
 export function CompetitionTeamJoinRequests() {

@@ -35,11 +35,12 @@ export function MatchCreateParent({interactive}) {
                 const result_guest_matchup = await addPlayer(api, id_match, false, guestState.matchups.map(item => ({ ...item, id_team: guestState.id_team })));
 
                 const result_host_events = await addEvents(api, id_match, [
-                    ...hostState.events, { id_user: null, type: "shot", id_team: hostState.id_team, id_assistance1: null, id_assistance2: null, minute: null, value: hostState.shots, host: true }
+                    ...hostState.events, { id_user: null, type: "shot", id_team: hostState.id_team, id_assistance1: null, id_assistance2: null, minute: null, value: hostState.shots, host: 1 }
                 ]);
                 const result_guest_events = await addEvents(api, id_match, [
-                    ...guestState.events, { id_user: null, type: "shot", id_team: guestState.id_team, id_assistance1: null, id_assistance2: null, minute: null, value: guestState.shots, host: false }
+                    ...guestState.events, { id_user: null, type: "shot", id_team: guestState.id_team, id_assistance1: null, id_assistance2: null, minute: null, value: guestState.shots, host: 0 }
                 ]);
+
                 if (!result_host_matchup || !result_guest_matchup || !result_host_events || !result_guest_events) {
                     window.flash("Nepovedlo se uložit všechny záznamy. Pokud se zápas vytvořil, můžete ho dodatečně upravit, případně kontaktujte správce aplikace", "danger");
                 } else {

@@ -13,6 +13,8 @@ export function MatchInteractiveSelect({teamsState, hostState, guestState, setHo
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    const [display, setDisplay] = useState(false);
+
     if(teamsState.isLoading) {
         return <LoadingGif />;
     }
@@ -25,10 +27,10 @@ export function MatchInteractiveSelect({teamsState, hostState, guestState, setHo
         <div>
             {(!teamsState.isLoading && !teamsState.error) &&
                 <div>
-                    <MatchTeamSelect teams={teamsState.teams_data}
+                    <MatchTeamSelect teams={teamsState.teams_data} setDisplay={setDisplay}
                                      setHostState={setHostState} setGuestState={setGuestState} />
 
-                    {(hostState.id_team && guestState.id_team) &&
+                    {(hostState.id_team && guestState.id_team && display) &&
                         <div>
                             <Heading size="lg" className="mt-5 h3MatchDetail text-left">Soupiska</Heading>
                             {hostState.id_team === guestState.id_team ?

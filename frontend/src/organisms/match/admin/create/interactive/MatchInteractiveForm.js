@@ -12,7 +12,6 @@ import { Events } from "../../base/Events";
 import { Modal } from "react-bootstrap";
 
 function getPeriod(time, pause, stringPeriod, firstPeriodPause, setFirstPeriodPause, secondPeriodPause, setSecondPeriodPause, thirdPeriodPause, setThirdPeriodPause, setShowModal) {
-    console.log(time, firstPeriodPause, secondPeriodPause, thirdPeriodPause);
     if (Math.trunc(time) < 2401000 && !firstPeriodPause) {
         setFirstPeriodPause(true);
         setShowModal(true);
