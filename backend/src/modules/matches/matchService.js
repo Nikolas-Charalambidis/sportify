@@ -36,7 +36,7 @@ export default class MatchService {
 			`SELECT m.id_match, m.id_competition, m.id_host, m.id_guest,
 			 IF (m.date > NOW(), NULL, m.goals_host) AS 'goals_host',
 			 IF (m.date > NOW(), NULL, m.goals_guest) AS 'goals_guest',
-			 guest.name AS guest_name, host.name AS host_name, c.name AS competition_name
+			 guest.name AS guest_name, host.name AS host_name, c.name AS competition_name, m.date
 			 FROM matches AS m
 			 LEFT JOIN competitions AS c ON c.id_competition=m.id_competition
 			 JOIN teams AS guest ON guest.id_team=m.id_guest
