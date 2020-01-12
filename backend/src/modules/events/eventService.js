@@ -40,9 +40,10 @@ export default class EventService {
 				data.host
 			]);
 		});
+
 		const result = await this.dbConnection.batch(
 			`INSERT INTO events (type, id_team, id_match, id_user, id_assistance1, id_assistance2, minute, value, host)
-		 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, array
+			 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, array
 		);
 		
 		if(result.affectedRows !== values.length) {
