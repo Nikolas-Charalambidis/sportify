@@ -141,12 +141,13 @@ export function MatchMatchupCreateAdmin({interactive, host, availablePlayers, se
         return <DataLoadingError />;
     }
 
-    if(!availablePlayers.isLoading && !availablePlayers.error && availablePlayers.players.length === 0) {
-        return <Heading size="xs" className="alert-warning pt-2 pb-2 mt-2 text-center">Nejsou dostupní žádní další hráči</Heading>;
-    }
-
     return (
         <div className="mb-4">
+            {(!availablePlayers.isLoading && !availablePlayers.error && availablePlayers.players.length === 0) &&
+                <Heading size="xs" className="alert-warning pt-2 pb-2 mt-2 text-center">
+                    Nejsou dostupní žádní další  hráči
+                </Heading>
+            }
             {(!availablePlayers.isLoading && !availablePlayers.error && availablePlayers.players.length !== 0) &&
                 <div>
                     <Button variant="primary mb-3" onClick={handleShowPlayerModal}>

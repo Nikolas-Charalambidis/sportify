@@ -111,12 +111,12 @@ export function MatchInteractiveForm({ hostName, guestName, hostState, guestStat
                 <Row className="mt-3 interactiveStats">
                     <Col className="bg-white">
                         <MatchInteractiveTeamTab teamName={hostName} teamState={hostState} teamSetState={setHostState}
-                            setPlay={setPlay} timerState={getTime()} pauseMatchOnEvent={pause} />
+                            setPlay={setPlay} timerState={getTime()} pauseMatchOnEvent={pause} host={1}/>
                     </Col>
 
                     <Col className="bg-white">
                         <MatchInteractiveTeamTab teamName={guestName} teamState={guestState} teamSetState={setGuestState}
-                            setPlay={setPlay} timerState={getTime()} pauseMatchOnEvent={pause} />
+                            setPlay={setPlay} timerState={getTime()} pauseMatchOnEvent={pause} host={0}/>
                     </Col>
                 </Row>
 

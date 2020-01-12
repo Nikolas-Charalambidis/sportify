@@ -7,7 +7,7 @@ import {AddEventModal} from "./AddEventModal";
 import Col from "react-bootstrap/esm/Col";
 import Row from "react-bootstrap/Row";
 
-export function MatchInteractiveTeamTab({ teamName, teamState, teamSetState, setPlay, timerState, pauseMatchOnEvent}) {
+export function MatchInteractiveTeamTab({ teamName, teamState, teamSetState, setPlay, timerState, pauseMatchOnEvent, host}) {
     const handleAddEvent = (values) => {
         const { id_team, matchups, events, shots } = teamState;
         teamSetState({
@@ -129,7 +129,7 @@ export function MatchInteractiveTeamTab({ teamName, teamState, teamSetState, set
                 </Button>
             </div>
 
-            <AddEventModal id_team={teamState.id_team} host={1} params={showModal}
+            <AddEventModal id_team={teamState.id_team} host={host} params={showModal}
                            handleClose={closeModal} matchup={teamState.matchups}
                            handleAddEvent={handleAddEvent} timerState={timerState}
             />
