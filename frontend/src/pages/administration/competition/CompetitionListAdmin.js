@@ -34,6 +34,10 @@ export function CompetitionListAdmin() {
             Header: 'Typ',
             accessor: 'type',
         },
+        {
+            Header: 'Vedoucí soutěže',
+            accessor: 'name_leader',
+        }
     ];
 
     function handleClick(row) {
