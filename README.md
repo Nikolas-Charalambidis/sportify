@@ -6,7 +6,7 @@
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=Nikolas-Charalambidis_4IT445&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=Nikolas-Charalambidis_4IT445)
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=Nikolas-Charalambidis_4IT445&metric=sqale_index)](https://sonarcloud.io/dashboard?id=Nikolas-Charalambidis_4IT445)
 
-# 4IT445 Agile web application development | Sportify
+# Sportify
 
 A web application Sportify, as a semestral work, manages teams, leagues, matches, and players with a huge load of statistics. Developed for the 4IT445 Agile web application development course.
 
