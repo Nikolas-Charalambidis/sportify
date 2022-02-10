@@ -24,7 +24,7 @@
 		"date-fns": "2.4.1",
 		"formik": "^2.0.3",
 		"moment": "^2.24.0",
-		"node-sass": "^4.13.0",
+		"node-sass": "^7.0.0",
 		"ramda": "^0.26.1",
 		"react": "^16.9.0",
 		"react-bootstrap": "^1.0.0-beta.14",
